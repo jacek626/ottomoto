@@ -1,10 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>admin register</title>
+<meta charset="UTF-8">
+<title>admin register</title>
 </head>
 <body>
-	admin register
+	<form action="#" th:action="@{/admin/register}" th:object="${admin}" method="post">
+		<table>
+			<tr>
+				<td><label for="login">Login</label></td>
+				<td><input id="login" type="text" th:field="*{login}" size="50" /></td>
+			</tr>
+			<tr>
+				<td><label for="password">hasło</label></td>
+				<td><input id="password" type="password" th:field="*{password}"
+					size="50" /></td>
+			</tr>
+			<tr>
+				<td>repass</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><label for="email">email</label></td>
+				<td><input id="email" type="email" th:field="*{email}"
+					size="50" /></td>
+				<td>
+					  <p th:each="error: ${#fields.errors('email')}"
+         				 th:text="${error}">Validation error</p>
+				
+				</td>
+			</tr>
+			<tr>
+				<td><a th:href="@{/}">wstecz</a></td>
+				<td><input type="submit" value="zapisz" /></td>
+			</tr>
+		</table>
+	</form>
 </body>
 </html>

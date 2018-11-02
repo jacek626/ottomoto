@@ -4,16 +4,30 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.context.annotation.Primary;
 
 @MappedSuperclass
 public class Person {
-    @Id
+    
+	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+    
+    @NotNull
+    @NotEmpty
     private String login;
+    
+    @NotNull
+    @NotEmpty
     private String password;
+    
+    @NotNull
+    @NotEmpty(message = "{validation.mail.notEmpty}")
+    @Email
     private String email;
 
     public String getEmail() {

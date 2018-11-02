@@ -1,2 +1,2 @@
-INSERT INTO admin(id, email, login, password) VALUES (1, 'jacek626@gmail.com', 'jacek', 'haslo');
-INSERT INTO admin(id, email, login, password) VALUES (2, 'mieczyslaw@gmail.com', 'mietek', 'haslomietka');
+INSERT INTO admin(id, email, login, password) VALUES (-1, 'jacek626@gmail.com', 'jacek', 'haslo');
+INSERT INTO admin(id, email, login, password) VALUES (-2, 'mieczyslaw@gmail.com', 'mietek', 'haslomietka');
