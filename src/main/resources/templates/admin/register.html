@@ -10,21 +10,38 @@
 			<tr>
 				<td><label for="login">Login</label></td>
 				<td><input id="login" type="text" th:field="*{login}" size="50" /></td>
+				<td>
+					 <p th:if="${loginAlreadyExists}" th:text="#{loginAlreadyExists}"></p>
+					  <p th:each="error: ${#fields.errors('login')}"
+         				 th:text="${login}">Validation error</p>
+				
+				</td>
 			</tr>
 			<tr>
 				<td><label for="password">hasło</label></td>
 				<td><input id="password" type="password" th:field="*{password}"
 					size="50" /></td>
+				<td>
+				     <p th:each="error: ${#fields.errors('password')}"
+         				 th:text="${password}">Validation error</p>
+				</td>
 			</tr>
 			<tr>
-				<td>repass</td>
-				<td></td>
+				<td><label for="passwordConfirm">powtórz hasło</label></td>
+				<td><input id="passwordConfirm" type="password" th:field="*{passwordConfirm}"
+					size="50" /></td>
+				<td>
+				     <p th:if="${passwordsAreNotSame}" th:text="#{passwordsAreNotSame}" ></p>
+				     <p th:each="error: ${#fields.errors('password')}"
+         				 th:text="${password}">Validation error</p>
+				</td>
 			</tr>
 			<tr>
 				<td><label for="email">email</label></td>
 				<td><input id="email" type="email" th:field="*{email}"
 					size="50" /></td>
 				<td>
+					  <p th:if="${emailAlreadyExists}" th:text="#{emailAlreadyExists}"></p>
 					  <p th:each="error: ${#fields.errors('email')}"
          				 th:text="${error}">Validation error</p>
 				

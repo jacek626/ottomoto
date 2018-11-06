@@ -22,33 +22,46 @@ import com.otomoto.entity.Admin;
 @Controller
 @RequestMapping("admin/")
 public class AdminController {
-	
+
 	Logger logger = LoggerFactory.getLogger(AdminController.class);
-	
+
 	@Autowired
 	private AdminRepository adminRepository;
-	
-	@RequestMapping(value="register", method=RequestMethod.GET)
+
+	@RequestMapping(value = "register", method = RequestMethod.GET)
 	public String register(Model model) {
 		model.addAttribute("admin", new Admin());
-		
+
 		return "admin/register";
 	}
-	
-	
-	@RequestMapping(value="register", method=RequestMethod.POST)
-	public String registerPost(@ModelAttribute("admin") @Valid Admin admin,
-			 BindingResult result, WebRequest request, Errors errors) {
-		
-		
-		if(!result.hasErrors())
-			adminRepository.save(admin);
-		
-		for (ObjectError objectError : result.getAllErrors()) {
-			logger.info("error: ",objectError.getCode(), objectError.getDefaultMessage(), objectError.getObjectName());
+
+	@RequestMapping(value = "register", method = RequestMethod.POST)
+	public String  registerPost(@ModelAttribute("admin") @Valid Admin admin, BindingResult bindingResult, Model model, Errors errors) {
+
+		if (bindingResult.hasErrors()) {
+			for (ObjectError objectError : bindingResult.getAllErrors()) {
+				logger.info("error: ", objectError.getCode(), objectError.getDefaultMessage(),
+						objectError.getObjectName());
+			}
+		} 
+		else if(!admin.getPassword().equals(admin.getPasswordConfirm())) {
+			model.addAttribute("passwordsAreNotSame",true);
 		}
-		
-		return "admin/register";
-		 //return new ModelAndView("admin/register", "user", admin);
+		else if (!adminRepository.findByLogin(admin.getLogin()).isEmpty()) {
+			model.addAttribute("loginAlreadyExists", true);
+		}
+		else if (!adminRepository.countByEmail(admin.getEmail()).isEmpty()) {
+			model.addAttribute("emailAlreadyExists", true);
+		}
+	    else if (!bindingResult.hasErrors()) {
+	    	adminRepository.save(admin);
+	    	return "redirect:/";
+	    }
+
+		//return "admin/register";
+		//return 	modelAndView.setViewName("register");
+	//	modelAndView.setViewName("admin/register");
+	//	modelAndView.setViewName("redirect:/");
+		return "admin/register";  
 	}
 }
