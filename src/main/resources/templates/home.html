@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>home</title>
-</head>
-<body>
-    home  ddd
-    ffff
-    test
-    ala ma kota
-    <span th:text="'Message: ' + ${imie}"></span>${imie}
-    
-    <a href="/admin/register">register admin</a>
-</body>
+  <head>
+  		<meta charset="utf-8">
+  		<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+  
+  		<title>OTOMOTO</title>
+  </head>
+  <body>
+    <div th:replace="fragments/header :: header">
+    </div>
+    <div th:replace="fragments/search :: search">
+    </div>
+    <div style="height:400px;">
+		zawartosc    
+    </div>
+     <div th:replace="fragments/footer :: footer"></div>
+  </body>
 </html>
