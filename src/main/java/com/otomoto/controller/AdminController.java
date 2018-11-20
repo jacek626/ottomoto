@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.otomoto.AdminRepository;
 import com.otomoto.entity.Admin;
+import com.otomoto.repository.AdminRepository;
 
 @Controller
 @RequestMapping("admin/")

@@ -8,6 +8,6 @@ import com.otomoto.entity.Customer;
 import com.otomoto.entity.Person;
 
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
-	List<Person> findByLogin(String login);
-	List<Person> countByEmail(String email);
+	List<Customer> findByLogin(String login);
+	Integer countByEmail(String email);
 }

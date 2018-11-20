@@ -35,5 +35,9 @@ body {
 }
 
 .customerRegistrationForm table tr td:nth-child(3) {
-  	width:150px;
+  	width:180px;
+ }
+.customerRegistrationForm p {
+  	margin: 0px;
+  	font-size: 12px;
  }

@@ -40,8 +40,8 @@ public class CustomerController {
 		
 		if (bindingResult.hasErrors()) {
 			for (ObjectError objectError : bindingResult.getAllErrors()) {
-				logger.info("error: ", objectError.getCode(), objectError.getDefaultMessage(),
-						objectError.getObjectName());
+				logger.info("error: " + objectError.getCode() + "," + objectError.getDefaultMessage() +
+					", " + 	objectError.getObjectName());
 			}
 		} 
 		else if(!customer.getPassword().equals(customer.getPasswordConfirm())) {
@@ -50,17 +50,33 @@ public class CustomerController {
 		else if (!customerRepository.findByLogin(customer.getLogin()).isEmpty()) {
 			model.addAttribute("loginAlreadyExists", true);
 		}
-		else if (!customerRepository.countByEmail(customer.getEmail()).isEmpty()) {
+		else if (customerRepository.countByEmail(customer.getEmail()) > 0) {
 			model.addAttribute("emailAlreadyExists", true);
 		}
 	    else if (!bindingResult.hasErrors()) {
 	    	customerRepository.save(customer);
-	    	return "redirect:/";
+	    	
+	    	// wyslanie powitalnego emaila
+	    	
+	    //	return "redirect:/";
+	    	return "redirect:/customer/registrationSuccess";
 	    }
 		
 		
-		return "customer/customerRegistration";
+		return "customer/registration";
 		//return "customer/registrationSuccess";
 		
+	}
+	
+	@RequestMapping(value="registrationSuccess")
+	public String registrationSuccess() {
+		
+		return "customer/customerRegistrationSuccess";
+	}
+	
+	@RequestMapping(value="login")
+	public String login() {
+		
+		return "customer/customerLogin";
 	}
 }

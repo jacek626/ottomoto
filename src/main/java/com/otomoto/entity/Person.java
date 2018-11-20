@@ -30,7 +30,8 @@ public class Person {
     private String password;
     
     @NotNull
-    @NotEmpty(message = "{validation.mail.notEmpty}")
+   // @NotEmpty(message = "{validation.mail.notEmpty}")
+    @NotEmpty
     @Email
     private String email;
     
