@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("announcement/")
 public class AnnouncementController {
 	
-	@RequestMapping("register")
+	@RequestMapping("add")
 	public String register() {
 		
 		

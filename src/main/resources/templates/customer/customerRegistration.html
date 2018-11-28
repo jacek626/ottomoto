@@ -5,7 +5,7 @@
   		<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
   		
   		
-  		<title>Customer registration</title>
+  		<title>user registration</title>
   </head>
   <body>
     <div th:replace="fragments/header :: header">
@@ -14,7 +14,7 @@
     </div>
     <div style="height:400px; text-align:center; width:100%; margin: auto;">
     	
-		<form class="customerRegistrationForm" th:action="@{/customer/registration}" th:object="${customer}" method="post">
+		<form class="userRegistrationForm" th:action="@{/customer/registration}" th:object="${user}" method="post">
 		<!-- <span th:if="${#fields.hasErrors('all')}" th:errors="*{all}">Incorrect date</span>
 		 -->
 <!-- 			     <p th:each="error: ${#fields.errors('password')}"

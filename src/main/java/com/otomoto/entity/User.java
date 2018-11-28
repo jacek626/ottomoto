@@ -1,19 +1,25 @@
 package com.otomoto.entity;
 
+import java.util.List;
+
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import org.springframework.context.annotation.Primary;
-
-@MappedSuperclass
-public class Person {
+@Entity
+@Table(name="user_os")
+public class User {
     
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -26,7 +32,7 @@ public class Person {
     
     @NotNull
     @NotEmpty
-    @Size(min=6, max=20)
+   // @Size(min=6, max=20)
     private String password;
     
     @NotNull
@@ -37,7 +43,46 @@ public class Person {
     
     @Transient
     private String passwordConfirm;
+    
+	private String city;
+	
+	private String description;
+	
+	private int active;
 
+	@OneToMany
+	private List<Announcement> announcementList;
+	
+	@OneToOne
+	@JoinTable(name = "userRole", joinColumns = @JoinColumn(name = "user_id", referencedColumnName="id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName="id"))
+	private Role role;
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public List<Announcement> getAnnouncementList() {
+		return announcementList;
+	}
+
+	public void setAnnouncementList(List<Announcement> announcementList) {
+		this.announcementList = announcementList;
+	}
+
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+    
+    
     public String getEmail() {
         return email;
     }
@@ -78,4 +123,13 @@ public class Person {
 	public void setPasswordConfirm(String passwordConfirm) {
 		this.passwordConfirm = passwordConfirm;
 	}
+
+	public int getActive() {
+		return active;
+	}
+
+	public void setActive(int active) {
+		this.active = active;
+	}
 }
+

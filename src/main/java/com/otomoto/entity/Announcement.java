@@ -1,11 +1,9 @@
 package com.otomoto.entity;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -20,7 +18,7 @@ public class Announcement {
 	private String description;
 	
 	@ManyToOne
-	private Customer customer;
+	private User user;
 
 	public Long getId() {
 		return id;
@@ -46,13 +44,14 @@ public class Announcement {
 		this.description = description;
 	}
 
-	public Customer getCustomer() {
-		return customer;
+	public User getUser() {
+		return user;
 	}
 
-	public void setCustomer(Customer customer) {
-		this.customer = customer;
+	public void setUser(User user) {
+		this.user = user;
 	}
+
 	
 	
 }

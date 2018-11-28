@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -13,9 +14,12 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.otomoto.entity.Customer;
-import com.otomoto.repository.CustomerRepository;
+import com.otomoto.entity.Role;
+import com.otomoto.entity.User;
+import com.otomoto.repository.RoleRepository;
+import com.otomoto.repository.UserRepository;
 
 @Controller
 @RequestMapping("customer/")
@@ -24,37 +28,46 @@ public class CustomerController {
 	Logger logger = LoggerFactory.getLogger(CustomerController.class);
 	
 	@Autowired
-	CustomerRepository customerRepository;
+	UserRepository userRepository;
+	
+	@Autowired
+	RoleRepository roleRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@RequestMapping(value="registration", method = RequestMethod.GET)
 	public String register(Model model) {
-		model.addAttribute("customer", new Customer());	
+		model.addAttribute("user", new User());	
 		
 		return "customer/customerRegistration";
 	}
 	
 	@RequestMapping(value="registration", method = RequestMethod.POST)
-	public String registerPost(@ModelAttribute("customer") @Valid Customer customer,
+	public String registerPost(@ModelAttribute("customer") @Valid User user,
 			 BindingResult bindingResult, Model model, Errors errors) {
 		
 		
 		if (bindingResult.hasErrors()) {
 			for (ObjectError objectError : bindingResult.getAllErrors()) {
-				logger.info("error: " + objectError.getCode() + "," + objectError.getDefaultMessage() +
-					", " + 	objectError.getObjectName());
+				logger.error(objectError.toString());
 			}
 		} 
-		else if(!customer.getPassword().equals(customer.getPasswordConfirm())) {
+		else if(!user.getPassword().equals(user.getPasswordConfirm())) {
 			model.addAttribute("passwordsAreNotSame",true);
 		}
-		else if (!customerRepository.findByLogin(customer.getLogin()).isEmpty()) {
+		else if (!userRepository.findByLogin(user.getLogin()).isEmpty()) {
 			model.addAttribute("loginAlreadyExists", true);
 		}
-		else if (customerRepository.countByEmail(customer.getEmail()) > 0) {
+		else if (userRepository.countByEmail(user.getEmail()) > 0) {
 			model.addAttribute("emailAlreadyExists", true);
 		}
 	    else if (!bindingResult.hasErrors()) {
-	    	customerRepository.save(customer);
+	    	Role customerRole = roleRepository.findByName("customer");
+	    	user.setActive(1);
+	    	user.setRole(customerRole);
+	    	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+	    	userRepository.save(user);
 	    	
 	    	// wyslanie powitalnego emaila
 	    	
@@ -63,7 +76,7 @@ public class CustomerController {
 	    }
 		
 		
-		return "customer/registration";
+		return "customer/customerRegistration";
 		//return "customer/registrationSuccess";
 		
 	}
@@ -74,9 +87,36 @@ public class CustomerController {
 		return "customer/customerRegistrationSuccess";
 	}
 	
-	@RequestMapping(value="login")
-	public String login() {
+	@RequestMapping(value="login", method = RequestMethod.GET)
+	public String login(Model model, @RequestParam(value = "error", required = false) String error) {
+		model.addAttribute("user",new User());
+		
+		String errorMessge = null;
+        if(error != null) {
+            errorMessge = "Username or Password is incorrect !!";
+        }
+    //    if(logout != null) {
+     //       errorMessge = "You have been successfully logged out !!";
+  //      }
+        model.addAttribute("errorMessge", errorMessge);
+		
 		
 		return "customer/customerLogin";
+	}
+	
+	@RequestMapping(value="login", method = RequestMethod.POST)
+	public String loginPost(@ModelAttribute User user) {
+		System.out.println("DDDDDDDDDDD");
+		
+		
+		return "redirect:/";
+	}
+
+	public BCryptPasswordEncoder getbCryptPasswordEncoder() {
+		return bCryptPasswordEncoder;
+	}
+
+	public void setbCryptPasswordEncoder(BCryptPasswordEncoder bCryptPasswordEncoder) {
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 	}
 }

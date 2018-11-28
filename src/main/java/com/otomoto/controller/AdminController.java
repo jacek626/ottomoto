@@ -13,11 +13,9 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.otomoto.entity.Admin;
-import com.otomoto.repository.AdminRepository;
+import com.otomoto.entity.User;
+import com.otomoto.repository.UserRepository;
 
 @Controller
 @RequestMapping("admin/")
@@ -26,17 +24,17 @@ public class AdminController {
 	Logger logger = LoggerFactory.getLogger(AdminController.class);
 
 	@Autowired
-	private AdminRepository adminRepository;
+	private UserRepository userRepository;
 
 	@RequestMapping(value = "register", method = RequestMethod.GET)
 	public String register(Model model) {
-		model.addAttribute("admin", new Admin());
+		model.addAttribute("user", new User());
 
 		return "admin/register";
 	}
 
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public String  registerPost(@ModelAttribute("admin") @Valid Admin admin, BindingResult bindingResult, Model model, Errors errors) {
+	public String  registerPost(@ModelAttribute("admin") @Valid User user, BindingResult bindingResult, Model model, Errors errors) {
 
 		if (bindingResult.hasErrors()) {
 			for (ObjectError objectError : bindingResult.getAllErrors()) {
@@ -44,17 +42,17 @@ public class AdminController {
 						objectError.getObjectName());
 			}
 		} 
-		else if(!admin.getPassword().equals(admin.getPasswordConfirm())) {
+		else if(!user.getPassword().equals(user.getPasswordConfirm())) {
 			model.addAttribute("passwordsAreNotSame",true);
 		}
-		else if (!adminRepository.findByLogin(admin.getLogin()).isEmpty()) {
+		else if (!userRepository.findByLogin(user.getLogin()).isEmpty()) {
 			model.addAttribute("loginAlreadyExists", true);
 		}
-		else if (!adminRepository.countByEmail(admin.getEmail()).isEmpty()) {
+		else if (userRepository.countByEmail(user.getEmail()) > 0) {
 			model.addAttribute("emailAlreadyExists", true);
 		}
 	    else if (!bindingResult.hasErrors()) {
-	    	adminRepository.save(admin);
+	    	userRepository.save(user);
 	    	return "redirect:/";
 	    }
 
