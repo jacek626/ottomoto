@@ -9,6 +9,10 @@ body {
 	width: 100%;
 }
 
+a {
+	text-decoration: none;
+}
+
 .footer-style {
 	height: 50px;
 	width: 100%;
@@ -40,4 +44,17 @@ body {
 .customerRegistrationForm p {
   	margin: 0px;
   	font-size: 12px;
+ }
+ 
+.announcement-edit-form,
+.registration-login-form {
+ 	min-height:400px; 
+ 	text-align:center; 
+ 	width:100%; 
+ 	margin: auto;
+}
+.announcement-edit-form table {
+	margin: auto;
+}
+ 
  }

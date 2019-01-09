@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>person register</title>
-</head>
+<head th:replace="fragments/head :: head"></head>
 <body>
 	<form action="#" th:action="@{/person/register}" th:object="${person}" method="post">
 		<table>
@@ -18,7 +15,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td><label for="password">has≈Ço</label></td>
+				<td><label for="password">has≥o</label></td>
 				<td><input id="password" type="password" th:field="*{password}"
 					size="50" /></td>
 				<td>
@@ -27,7 +24,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td><label for="passwordConfirm">powt√≥rz has≈Ço</label></td>
+				<td><label for="passwordConfirm">powtÛrz has≥o</label></td>
 				<td><input id="passwordConfirm" type="password" th:field="*{passwordConfirm}"
 					size="50" /></td>
 				<td>

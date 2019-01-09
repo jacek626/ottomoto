@@ -2,18 +2,29 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
   	<meta charset="utf-8">
+  	<script type="text/javascript">
+  		alert("ddd");
+  	
+  	</script>
+  		<title>ddd</title>
   </head>
   <body>
   		 <div class="header-style" th:fragment="header">
 			<a style="color:#bf2505; font-size: 40px; font-style:italic; font-weight:bold; font-family: Helvetica, Arial, sans-serif;" class="remove-link-decoration" href="/">OTOMOTO</a> 
 			<div style="float:right;">
-				<a href="/customer/registration" style="left:-10px;" class="main-header-buttons remove-link-decoration">
-					ZALOGUJ
+				<a href="/customer/login" sec:authorize="!isAuthenticated()" style="left:-10px;" class="main-header-buttons remove-link-decoration">
+					Zaloguj
+				</a>
+				 Logged user: <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>
+				 Roles: <span sec:authorize="isAuthenticated()" sec:authentication="principal.authorities"></span>
+				 
+				<!--   <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div> -->
+				<a href="/customer/account" sec:authorize="isAuthenticated()" style="left:-10px;" class="main-header-buttons remove-link-decoration">
+					Moje konto
 				</a>
 				<a href="/announcement/add" class="main-header-buttons remove-link-decoration">
-					DODAJ OGŁOSZENIE
+					Dodaj ogłoszenie
 				</a>
-				
 			</div>
 		</div>
   </body>

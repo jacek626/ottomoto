@@ -45,7 +45,7 @@ public class AdminController {
 		else if(!user.getPassword().equals(user.getPasswordConfirm())) {
 			model.addAttribute("passwordsAreNotSame",true);
 		}
-		else if (!userRepository.findByLogin(user.getLogin()).isEmpty()) {
+		else if (userRepository.findByLogin(user.getLogin()) != null) {
 			model.addAttribute("loginAlreadyExists", true);
 		}
 		else if (userRepository.countByEmail(user.getEmail()) > 0) {

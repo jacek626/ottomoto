@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+  <body>
+    <div th:replace="fragments/header :: header">
+    </div>
+    <div th:replace="fragments/search :: search">
+    </div>
+    <div class="announcement-edit-form">
+		<p>
+			Lista ogłoszeń
+		</p>
+			
+			<table>
+				<tr></tr>
+				<tr th:each="announcement : ${announcementList}">
+					<td><a th:href="@{'/announcement/edit/' + ${announcement.id}}" th:text="${announcement.title}">title</a></td>
+					<td><a th:text="${announcement.description}">description</a></td>
+				</tr>
+			</table>
+		
+    </div>
+     <div th:replace="fragments/footer :: footer"></div>
+  </body>
+</html>

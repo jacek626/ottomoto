@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-  		<meta charset="utf-8">
-  		<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
-  		
-  		
-  		<title>user registration</title>
-  </head>
+<head th:replace="fragments/head :: head"></head>
   <body>
     <div th:replace="fragments/header :: header">
     </div>
     <div th:replace="fragments/search :: search">
     </div>
-    <div style="height:400px; text-align:center; width:100%; margin: auto;">
+    <div class="registration-login-form">
+    	
+    	<p>
+    		Formularz rejestracji nowego konta
+    	</p>
     	
 		<form class="userRegistrationForm" th:action="@{/customer/registration}" th:object="${user}" method="post">
 		<!-- <span th:if="${#fields.hasErrors('all')}" th:errors="*{all}">Incorrect date</span>
@@ -20,8 +18,8 @@
 <!-- 			     <p th:each="error: ${#fields.errors('password')}"
          				 th:text="${password}">Validation error</p> -->
          				 
-         	<p th:if="${#fields.hasErrors('password')}"
-         				 th:text="${password}">Validation error</p>
+      <!--    	<p th:if="${#fields.hasErrors('password')}"
+         				 th:text="${password}">Validation error</p> -->
 		
 			<table style="text-align:left; margin: auto; margin-top:20px; ">
 				<tr>
@@ -62,7 +60,7 @@
 				</td>
 				<tr>
 					<td></td>
-					<td  style="text-align: right;"><a class="remove-link-decoration" style="color:black;" th:href="@{/}">wstecz</a><input style="margin-left:10px;" type="submit" value="zapisz" /></td>
+					<td  style="text-align: right;"><a class="remove-link-decoration" style="color:black;" th:href="@{/}">anuluj</a><input style="margin-left:10px;" type="submit" value="zapisz" /></td>
 					<td></td>
 				</tr>
 				<tr>

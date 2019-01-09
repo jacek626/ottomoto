@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+  <body>
+    <div th:replace="fragments/header :: header">
+    </div>
+    <div th:replace="fragments/search :: search">
+    </div>
+    <div class="announcement-edit-form">
+		<p>
+			Lista marek
+		</p>
+			
+			<table>
+				<tr>
+					<td>
+						<a th:href="@{/manufacturer/new}">nowa marka</a>
+					</td>
+					<td></td>
+				</tr>
+				<tr th:each="manufacturer : ${manufacturerList}">
+					<td><a th:href="@{'/manufacturer/edit/' + ${manufacturer.id}}" th:text="${manufacturer.name}">name</a></td>
+					<td><a th:href="@{'/manufacturer/delete/' + ${manufacturerid}}" th:text="usunn">usu�</a></td>
+					<!-- <td><a th:text="${mark.description}">description</a></td> -->
+				</tr>
+			</table>
+		
+    </div>
+     <div th:replace="fragments/footer :: footer"></div>
+  </body>
+</html>

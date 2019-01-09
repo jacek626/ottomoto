@@ -1,44 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-  		<meta charset="utf-8">
-  		<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
-  
-  		<title>register user</title>
-  </head>
+<head th:replace="fragments/head :: head"></head>
   <body>
     <div th:replace="fragments/header :: header">
     </div>
     <div th:replace="fragments/search :: search">
     </div>
-    <div style="height:400px;">
-			<form class="userRegistrationForm" th:action="@{/customer/login}" th:object="${user}" method="post">
+    <div class="registration-login-form">
+    		<p>
+    			Logowanie do systemu
+    		</p>
+    
+			<form class="customerRegistrationForm" th:action="@{/customer/login}" th:object="${user}" method="post">
          				 
-         	<p th:if="${#fields.hasErrors('password')}"
-         				 th:text="${password}">Validation error</p>
+         	<p th:if="${errorMessge != null}" style="color:#bf2505; font-weight: bold;"
+         				 th:text="${errorMessge}">Validation error</p>
 		
 			<table style="text-align:left; margin: auto; margin-top:20px; ">
 				<tr>
 					<td><label for="login">login</label></td>
 					<td><input id="login" type="text" th:field="*{login}" size="30" /></td>
-						<td>
-					 <p th:if="${loginAlreadyExists}" th:text="#{loginAlreadyExists}"></p>
-					  <p th:each="error: ${#fields.errors('login')}"
-         				 th:text="${error}">Validation error</p>
-				</td>
 				</tr>
 							<tr>
 				<td><label for="password">hasło</label></td>
 				<td><input id="password" type="password" th:field="*{password}"
 					size="30" /></td>
-				<td>
-				     <p th:each="error: ${#fields.errors('password')}"
-         				 th:text="${error}">Validation error</p>
-				</td>
 			</tr>
 				<tr>
 					<td></td>
-					<td  style="text-align: right;"><a class="remove-link-decoration" style="color:black;" th:href="@{/}">wstecz</a><input style="margin-left:10px;" type="submit" value="zapisz" /></td>
+					<td  style="text-align: right;"><a class="remove-link-decoration" style="color:black;" th:href="@{/}">anuluj</a><input style="margin-left:10px;" type="submit" value="zaloguj" /></td>
 					<td></td>
 				</tr>
 				<tr>
@@ -52,6 +42,10 @@
 			</table>
 		
 		</form>
+		
+		<p>
+			<a href="/customer/registration">załóż konto</a>
+		</p>
     </div>
      <div th:replace="fragments/footer :: footer"></div>
   </body>

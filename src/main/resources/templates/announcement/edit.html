@@ -1,18 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-  		<meta charset="utf-8">
-  		<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
-  
-  		<title>OTOMOTO</title>
-  </head>
+<meta charset="utf-8"/>
+<head th:replace="fragments/head :: head"></head>
   <body>
     <div th:replace="fragments/header :: header">
     </div>
     <div th:replace="fragments/search :: search">
     </div>
-    <div style="height:400px;">
-		announcement     add or edit
+    <div class="announcement-edit-form">
+		<p>
+			Dodawanie nowego ogłoszenia
+		</p>
+		
+		<form th:action="@{/announcement/save}" th:object="${announcement}" method="post">
+			<table>
+				<tr>
+					<td><label for="title">Tytuł ogłoszenia</label></td>
+					<td><input id="title" size="80" type="text" th:field="*{title}" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><label for="description">Opis</label></td>
+					<td><textarea id="description" rows="5" cols="73" th:field="*{description}"></textarea></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td style="text-align: right;">
+						<a th:href="@{/announcement/list}">anuluj</a>
+						<input type="submit" value="zapisz" />
+					</td>
+					<td></td>
+				</tr>
+			</table>
+		</form>
     </div>
      <div th:replace="fragments/footer :: footer"></div>
   </body>

@@ -45,7 +45,7 @@ public class CustomerController {
 	
 	@RequestMapping(value="registration", method = RequestMethod.POST)
 	public String registerPost(@ModelAttribute("customer") @Valid User user,
-			 BindingResult bindingResult, Model model, Errors errors) {
+			 BindingResult bindingResult, Model model, Errors errors) throws Exception {
 		
 		
 		if (bindingResult.hasErrors()) {
@@ -56,7 +56,7 @@ public class CustomerController {
 		else if(!user.getPassword().equals(user.getPasswordConfirm())) {
 			model.addAttribute("passwordsAreNotSame",true);
 		}
-		else if (!userRepository.findByLogin(user.getLogin()).isEmpty()) {
+		else if (userRepository.findByLogin(user.getLogin()) != null) {
 			model.addAttribute("loginAlreadyExists", true);
 		}
 		else if (userRepository.countByEmail(user.getEmail()) > 0) {
@@ -64,8 +64,12 @@ public class CustomerController {
 		}
 	    else if (!bindingResult.hasErrors()) {
 	    	Role customerRole = roleRepository.findByName("customer");
-	    	user.setActive(1);
+	    	
+	    	if(customerRole == null)
+	    		throw new Exception("Role w systemie nie sa zdefiniowane");
+	    	
 	    	user.setRole(customerRole);
+	    	user.setActive(1);
 	    	user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 	    	userRepository.save(user);
 	    	
@@ -93,7 +97,7 @@ public class CustomerController {
 		
 		String errorMessge = null;
         if(error != null) {
-            errorMessge = "Username or Password is incorrect !!";
+            errorMessge = "username or password are incorrect";
         }
     //    if(logout != null) {
      //       errorMessge = "You have been successfully logged out !!";
@@ -103,13 +107,19 @@ public class CustomerController {
 		
 		return "customer/customerLogin";
 	}
-	
+/*	
 	@RequestMapping(value="login", method = RequestMethod.POST)
 	public String loginPost(@ModelAttribute User user) {
 		System.out.println("DDDDDDDDDDD");
 		
 		
 		return "redirect:/";
+	}*/
+	
+	@RequestMapping(value = "account")
+	public String customerAccount(Model model) {
+		
+		return "customer/customerAccount";
 	}
 
 	public BCryptPasswordEncoder getbCryptPasswordEncoder() {
