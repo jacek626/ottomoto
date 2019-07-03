@@ -4,28 +4,51 @@
   <body>
     <div th:replace="fragments/header :: header">
     </div>
-    <div th:replace="fragments/search :: search">
-    </div>
-    <div class="announcement-edit-form">
-		<p>
-			Lista marek
-		</p>
+    <div th:replace="fragments/search :: search"></div>
+ 	<div id="content">
+		<div id="content-middle">
+			<p th:text="#{manufacturerList}"></p>
 			
-			<table>
-				<tr>
-					<td>
-						<a th:href="@{/manufacturer/new}">nowa marka</a>
-					</td>
-					<td></td>
-				</tr>
-				<tr th:each="manufacturer : ${manufacturerList}">
-					<td><a th:href="@{'/manufacturer/edit/' + ${manufacturer.id}}" th:text="${manufacturer.name}">name</a></td>
-					<td><a th:href="@{'/manufacturer/delete/' + ${manufacturerid}}" th:text="usunn">usu�</a></td>
-					<!-- <td><a th:text="${mark.description}">description</a></td> -->
-				</tr>
+			<form th:object="${manufacturer}" method="get">
+				<table id="searchParamsTable" style="width:560px;">
+					<tr>
+						<td><label for="name" th:text="#{manufacturerName}"></label></td>
+						<td><input type="text" th:field="*{name}"></td>
+						<td><label for="vehicleModelName" th:text="#{vehicleModelName}"></label></td>
+						<td><input type="text" th:field="*{vehicleModelName}"></td> 
+					</tr>
+					<tr style="text-align: right; line-height: 40px; ">
+						<td colspan="8"><input type="submit" th:value="#{search}" /></td>
+					<tr>
+					</tr>
+				</table>
+				<input type="hidden" name="size" th:value="${size}">
+			</form>
+
+			<table id="resultsTable">
+				<thead>
+					<tr>
+						<th><a th:href="@{/manufacturer/list/(page=${page}, size=${size},orderBy=name,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+							th:text="#{manufacturer}"></a></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="manufacturer, iStat : ${pages.content}">
+						<td th:text="${manufacturer.name}" />
+						<td>
+							<a th:href="@{'/manufacturer/edit/' + ${manufacturer.id}}"
+							th:text="edycja">
+							</a>
+						</td>
+					</tr>
+				</tbody>
 			</table>
-		
-    </div>
-     <div th:replace="fragments/footer :: footer"></div>
-  </body>
+			
+			<div th:replace="fragments/pagination :: pagination"></div>
+		</div>
+	</div>
+
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
 </html>

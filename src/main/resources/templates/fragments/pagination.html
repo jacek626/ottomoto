@@ -1,0 +1,36 @@
+<!DOCTYPE html> 
+		<div id="pagination" th:fragment="pagination(link)">
+<!-- 				<div th:if="${pages.totalPages != 1}" style="margin-top: 10px;"> -->
+				<div style="margin-top: 10px;">
+					<a
+						th:href="@{ ${link} (page=${page-1}, size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
+						th:class="${page == 1} ? disabled" style="font-weight: bold;">
+					</a>
+	
+					<span th:if="${pages.totalPages > 0}" class="pagination"
+						th:each="pageNumber : ${numbers}"> 
+						<a
+						th:href="@{ ${link} (page=${pageNumber},size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
+						th:if="${pageNumber - 2 <= page && page < pageNumber + 3}"
+						th:text=${pageNumber}
+						th:class="${pageNumber==pages.number+1} ? active"> 
+						</a>
+	
+					</span> 
+					
+					<a
+						th:href="@{ ${link} (page=${1+1}, size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
+						style="font-weight: bold;">
+					</a>
+<!-- 					<a
+						th:href="@{ ${link} (page=${page+1}, size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
+						th:class="${page == pages.totalPages} ? disabled"
+						style="font-weight: bold;">
+					</a> -->
+				</div>
+	
+				<select id="pageSizeSelect" th:value="${size}"> 
+					<option th:each="pageSize : ${pageSizes}" th:value="${pageSize}"
+						th:text="${pageSize}" th:selected="${pageSize} == ${size}"></option>
+				</select>
+			</div>

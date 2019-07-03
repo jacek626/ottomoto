@@ -1,38 +1,53 @@
 package com.otomoto.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.Cascade;
 
 @Entity
 public class Manufacturer {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE,generator="seq_Manufacturer")
+	@SequenceGenerator(name="seq_Manufacturer", sequenceName="seq_Manufacturer")
 	private Long id;
 	
 	@NotNull
 	private String name;
 	
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@OrderBy(value = "name ASC")
-	private List<VehicleModel> vehicleModel;
+	private List<VehicleModel> vehicleModel = new ArrayList<VehicleModel>();
+	
+	@Transient
+	private String vehicleModelName;
+	
+	public void prepareFiledsForSearch() {
+		if (name == null)
+			name = "";
 
-	public Long getId() {
-		return id;
+		if (vehicleModelName == null)
+			vehicleModelName = "";
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public Long getId() {
+		return id;
 	}
 
 	public String getName() {
@@ -51,5 +66,12 @@ public class Manufacturer {
 		this.vehicleModel = vehicleModel;
 	}
 
+	public String getVehicleModelName() {
+		return vehicleModelName;
+	}
+
+	public void setVehicleModelName(String vehicleModelName) {
+		this.vehicleModelName = vehicleModelName;
+	}
 	
 }

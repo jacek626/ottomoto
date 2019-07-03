@@ -9,23 +9,51 @@
   		<title>ddd</title>
   </head>
   <body>
-  		 <div class="header-style" th:fragment="header">
-			<a style="color:#bf2505; font-size: 40px; font-style:italic; font-weight:bold; font-family: Helvetica, Arial, sans-serif;" class="remove-link-decoration" href="/">OTOMOTO</a> 
+  		 <div class="header-style" th:fragment="header"> 
+  		 	 <div th:if="${message}" id="background"></div>
+			<a style="color:#bf2505; font-size: 40px; font-style:italic; font-weight:bold; font-family: Helvetica, Arial, sans-serif;" class="remove-link-decoration" 
+			th:href="@{/}">OTOMOTO</a> 
 			<div style="float:right;">
-				<a href="/customer/login" sec:authorize="!isAuthenticated()" style="left:-10px;" class="main-header-buttons remove-link-decoration">
+				<a th:href="@{/user/login}" sec:authorize="!isAuthenticated()" style="left:-10px;" class="main-header-buttons remove-link-decoration">
 					Zaloguj
 				</a>
-				 Logged user: <span sec:authorize="isAuthenticated()" sec:authentication="name"></span>
-				 Roles: <span sec:authorize="isAuthenticated()" sec:authentication="principal.authorities"></span>
+				  <span sec:authorize="isAuthenticated()" class="main-header-buttons-without-hover remove-link-decoration noselect" 
+				  	style="background-color:transparent; color:#bf2505; margin-right:20px; ">
+				  	 Zalogowano jako
+				  	<span sec:authentication="name" ></span>
+				  </span>
+			<!-- 	 Roles: <span sec:authorize="isAuthenticated()" sec:authentication="principal.authorities"></span> -->
 				 
 				<!--   <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div> -->
-				<a href="/customer/account" sec:authorize="isAuthenticated()" style="left:-10px;" class="main-header-buttons remove-link-decoration">
+				<a th:href="@{/user/account}" sec:authorize="hasRole('USER')"   class="main-header-buttons remove-link-decoration">
 					Moje konto
 				</a>
-				<a href="/announcement/add" class="main-header-buttons remove-link-decoration">
+				<a th:href="@{/announcement/add}" sec:authorize="hasRole('USER')"  class="main-header-buttons remove-link-decoration">
 					Dodaj ogłoszenie
 				</a>
+				<a th:href="@{/administration/home}"  sec:authorize="hasRole('ADMIN')" class="main-header-buttons remove-link-decoration">
+					Panel administracyjny
+				</a>
+				 <a th:href="@{/logout}" sec:authorize="isAuthenticated()" class="main-header-buttons remove-link-decoration">
+					Wyloguj
+				</a> 
 			</div>
+			<!-- <input type="text" th:value="${message}" /> -->
+			<div id="popup" th:if="${message}" >
+				  <div style="">
+					      <span th:text="${message}"></span><br />
+					      <input type="button" value="OK" onclick="document.getElementById('popup').style.visibility = 'hidden';
+					    	  document.getElementById('background').style.visibility = 'hidden';"
+					      style="margin-top:10px;"/>
+				   </div>
+			</div>
+			  <div id="jsPopup" style="position: absolute; left: 50%;  top:0px; display:none;">
+			    <div id="jsPopupText" style="position: relative; left: -50%; color:white; padding:12px; background-color: #bf2505; border-radius:5px; ">
+			    </div>
+			  </div> 
 		</div>
+	<!-- 	<div class="popap" th:fragment="popup">
+				to jest POPUP
+			</div> -->
   </body>
 </html>

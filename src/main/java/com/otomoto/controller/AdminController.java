@@ -13,12 +13,11 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import com.otomoto.entity.Admin;
 import com.otomoto.entity.User;
 import com.otomoto.repository.UserRepository;
 
 @Controller
-@RequestMapping("admin/")
+@RequestMapping("administration/")
 public class AdminController {
 
 	Logger logger = LoggerFactory.getLogger(AdminController.class);
@@ -30,7 +29,7 @@ public class AdminController {
 	public String register(Model model) {
 		model.addAttribute("user", new User());
 
-		return "admin/register";
+		return "adminsitration/register";
 	}
 
 	@RequestMapping(value = "register", method = RequestMethod.POST)
@@ -61,5 +60,12 @@ public class AdminController {
 	//	modelAndView.setViewName("admin/register");
 	//	modelAndView.setViewName("redirect:/");
 		return "admin/register";  
+	}
+	
+	@RequestMapping(value = "home")
+	public String home() {
+		
+		
+		return "administration/home";
 	}
 }

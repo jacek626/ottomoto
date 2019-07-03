@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +18,8 @@ import com.otomoto.enums.VehicleType;
 public class VehicleModel {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "seq_VehicleModel")
+	@SequenceGenerator(name = "seq_VehicleModel", sequenceName = "seq_VehicleModel")
 	private Long id;
 	
 	@NotNull
@@ -31,18 +33,18 @@ public class VehicleModel {
 	@Enumerated(EnumType.STRING)
 	private VehicleType vehicleType;
 	
-	@Enumerated(EnumType.STRING)
-	private VehicleSubtype vehicleSubtype;
+/*	@Enumerated(EnumType.STRING)
+	private VehicleSubtype vehicleSubtype;*/
 	
 	@Transient
 	private Boolean toDelete = false;
 
-	public Long getId() {
-		return id;
-	}
-
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	public Long getId() {
+		return id;
 	}
 
 	public String getName() {
@@ -69,13 +71,13 @@ public class VehicleModel {
 		this.toDelete = toDelete;
 	}
 
-	public VehicleSubtype getVehicleSubtype() {
+/*	public VehicleSubtype getVehicleSubtype() {
 		return vehicleSubtype;
 	}
 
 	public void setVehicleSubtype(VehicleSubtype vehicleSubtype) {
 		this.vehicleSubtype = vehicleSubtype;
-	}
+	}*/
 
 	public Manufacturer getManufacturer() {
 		return manufacturer;
@@ -84,5 +86,6 @@ public class VehicleModel {
 	public void setManufacturer(Manufacturer manufacturer) {
 		this.manufacturer = manufacturer;
 	}
+
 	
 }

@@ -4,9 +4,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public enum VehicleType {
-	CAR,
-	MOTORCYCLE,
-	TRUCK;
+	CAR("Osobowy"),
+	MOTORCYCLE("Dostawczy/ciężarowy"),
+	TRUCK( "Motocykl");
+	
+	private String label;
+	
+	private VehicleType(String label) {
+		this.label = label;
+	}
 	
 	public static Map<VehicleType,String>vehicleTypesWithLabels() {
 		Map<VehicleType,String> mapToReturn = new LinkedHashMap<VehicleType,String>();
@@ -15,6 +21,10 @@ public enum VehicleType {
 		mapToReturn.put(VehicleType.MOTORCYCLE, "Motocykl");
 		
 		return mapToReturn;
+	}
+	
+	public String getLabel() {
+		return label;
 	}
 
 }

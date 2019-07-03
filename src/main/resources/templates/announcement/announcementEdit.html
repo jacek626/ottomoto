@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8"/>
+<head th:replace="fragments/head :: head"></head>
+  <body>
+    <div th:replace="fragments/header :: header">
+    </div>
+    <div th:replace="fragments/search :: search">
+    </div>
+    <div class="announcement-edit-form">
+		<p>
+			Dodawanie nowego ogłoszenia
+		</p>
+		
+		<script>
+			  $(document).ready(function() {
+		      $("#upload-file-input").on("change", uploadFile);
+		    });
+		  </script>
+		  
+		<style>
+				label {
+					cursor: pointer;
+					font-size: 14px;
+					
+				}
+		
+				input[type="radio"]{
+					  visibility: hidden;
+					  height: 0;
+					  width: 0;
+					}
+					
+				input[type="radio"]:checked + label{
+					  text-decoration: underline;
+					}
+					
+				table {
+					line-height: 20px;
+				}
+				
+				
+				.wrapper {
+				  height: 200px;
+				  width: 632px;
+				  position: relative;
+				  overflow: hidden;
+				  margin: 0 auto;
+				}
+				
+				.button-wrapper {
+				  width: 100%;
+				  height: 100%;
+				  display: flex;
+				  justify-content: space-between;
+				  align-items: center;
+				  position: absolute;
+				}
+				
+				.carousel {
+				  margin: 0;
+				  padding: 0;
+				  list-style: none;
+				  width: 100%;
+				  display: flex;
+				  position: absolute;
+				  left: 0;
+				  transition: all 1s ease;
+				}
+				
+				.card {
+				  background: black;
+				  min-width: 200px;
+				  height: 200px;
+				  margin-right: 1rem;
+				  display: inline-block;
+				}
+				
+				
+		</style> 
+		
+			<div>
+				  <form id="upload-file-form" style="position:relative; left:385px; top:-20px;">
+					  <label for="upload-file-input"  id="upload-file-label">Dodaj nowe zdjecia</label>
+					  <input id="upload-file-input" type="file" name="uploadfile" accept="*" multiple />
+					</form>
+			
+			</div> 
+		
+		<form th:action="@{/announcement/save}" th:object="${announcement}" method="post">
+		
+		<!-- 	<div id="wrapper" style="height: height:200px; width:600px;  overflow: hidden;   position: relative;">
+				<ul class="pictures" style="display: flex; transition: all 1s ease;  width: 100%;  list-style: none;  ">	
+					<li th:each="picture, row : *{pictures}" class="picture" style=" display: inline-block; margin-right: 1rem; ">
+					 		<input type="text" style="display:none;" class="pictureId" th:field="*{pictures[__${row.index}__].id}" />
+							<input type="text" style="display:none;" th:field="*{pictures[__${row.index}__].announcement}" />
+							<input type="text" style="display:none;" class="${row.index}" th:field="*{pictures[__${row.index}__].fileName}" />
+							<input type="text" style="display:none;" th:field="*{pictures[__${row.index}__].repositoryName}" />
+							<input type="text" style="display:none;" class="pictureToDelete" th:field="*{pictures[__${row.index}__].pictureToDelete}" /> 
+							<img th:src="*{'/images/' + pictures[__${row.index}__].repositoryName}" onclick="" style="max-height: 150px;" /> 
+							<button type="button" onclick="deletePictureInAnnouncement(this);">usuń</button>
+					</li>
+				</ul>
+			</div> -->
+			
+			
+			
+			<div id="photoGalleryMiniContainer" style="display:flex; overflow:hidden; flex-flow: row wrap;  justify-content: center;  height: auto; "
+					onmouseleave="$('.photoGalleryMiniArrow').fadeTo('fast' , 0.2 ); "  
+			 		onmouseenter ="$('.photoGalleryMiniArrow').fadeTo('fast' , 1.0 ); ">
+			<!-- 	 <div style="background-color:red; vertical-align:middle; font-size:40px;  display: flex; align-items: center; ">
+				 		<span class="photoGalleryMiniArrow" style="padding-right:3px; left: 40px;">❮</span>
+				 </div>  -->
+				<div style="width:700px; display: flex;  align-items: center;">
+					<span class="photoGalleryMiniArrow" style="padding-right:3px;" onclick="showImage(findNextImage('back'),photoContainerMiniImage);" >❮</span>
+					<div style="width:650px; height:400px; overflow: hidden;">
+						<img th:if="*{pictures.size() > 0}" th:src="*{'/images/' + pictures[0].repositoryName}" id="photoContainerMiniImage"
+						 style="max-width:650px; margin: 0 auto;" currentImageIndex="0" /> 
+					</div>
+					<span class="photoGalleryMiniArrow" style=" padding-left:3px;" onclick="showImage(findNextImage('next'),photoContainerMiniImage);">❯</span>
+				</div>
+		<!-- 		<div style="background-color:red;  display: flex;  font-size:40px; align-items: center;">
+					<span class="photoGalleryMiniArrow" style=" padding-left:3px;  left:-40px; ">❯</span>
+				</div>  -->
+				
+					<!-- <li th:each="picture, row : *{pictures}" th:unless="${row.index > 3}" > -->
+				<ul id="imagesScroll" style=" width:200px; height:400px;  overflow-y: scroll; list-style: none;  margin:0px; padding-left:0px;" >
+					<li th:each="picture, row : *{pictures}"  th:index="${row.index}" pictureToDelete="false" >
+						<img  th:src="*{'/images/' + pictures[__${row.index}__].miniatureRepositoryName}" onclick="showImage(this,$('#photoContainerMiniImage'));" th:picture="*{'/images/' + pictures[__${row.index}__].repositoryName}"
+						 class="miniatureImageInImageScroller" th:index="${row.index}" /> 
+						<button type="button" style="margin-bottom:10px;"  onclick="deletePictureInAnnouncement(this);">usuń</button>
+						<input type="text" class="pictureId displayNone" th:field="*{pictures[__${row.index}__].id}" />
+						<input type="text" class="displayNone" th:field="*{pictures[__${row.index}__].announcement}" />
+						<input type="text" class="displayNone" th:field="*{pictures[__${row.index}__].fileName}" />
+						<input type="text" class="displayNone" th:field="*{pictures[__${row.index}__].repositoryName}" />
+						<input type="text" class="displayNone" th:field="*{pictures[__${row.index}__].miniatureRepositoryName}" />
+						<input type="text" class="pictureToDelete displayNone" th:field="*{pictures[__${row.index}__].pictureToDelete}" /> 
+					</li>
+				</ul> 
+			</div>
+			
+			
+			
+			
+	<!-- 		<div id="photoContainer" style="">
+				<img th:src="*{'/images/' + pictures[0].repositoryName}" onclick="" style="height: 400px; margin: 0 auto;" /> 
+			</div>
+
+			<div id="imageScrollerWrapper" style="display:flex;">
+				<div id="moveToLeftButton" class="imageScrollerButton" onclick="moveToRight()">
+							move
+				</div>
+			<ul id="imageScroller" style="display:flex; width:500px; overflow-x: scroll;" >
+					<li th:each="picture, row : *{pictures}" >
+					
+						<img th:src="*{'/images/' + pictures[__${row.index}__].miniatureRepositoryName}" onclick="showImage(this);" th:picture="*{'/images/' + pictures[__${row.index}__].repositoryName}" style="max-height: 150px;" /> 
+						<button type="button"  onclick="deletePictureInAnnouncement(this);">usuń</button>
+						<input type="text" class="pictureId displayNone" th:field="*{pictures[__${row.index}__].id}" />
+						<input type="text" class="displayNone" th:field="*{pictures[__${row.index}__].announcement}" />
+						<input type="text" class="displayNone" th:field="*{pictures[__${row.index}__].fileName}" />
+						<input type="text" class="displayNone" th:field="*{pictures[__${row.index}__].repositoryName}" />
+						<input type="text" class="pictureToDelete displayNone" th:field="*{pictures[__${row.index}__].pictureToDelete}" /> 
+					</li>
+				</ul>
+				<div id="moveToRightButton" class="imageScrollerButton"   onclick="moveToLeft()">
+						move
+				</div>
+			</div> -->
+			
+			
+			
+			<script type="text/javascript">
+				var animationInProgress = false;
+			
+				function moveToRight() {
+				//	 document.getElementById('myScroll').scrollLeft -= 50;
+					if(animationInProgress == false) {
+						animationInProgress = true;
+					 	$('#imageScroller').animate( { scrollLeft: '-=120' }, 300, function() {  animationInProgress = false;   } );
+					}
+			//		 $('#myScroll').animate( { scrollLeft: '-=50' }, 1000, 'easeOutQuad' );
+				//	 $('myScroll').animate({scrollLeft:  document.getElementById('myScroll').scrollLeft -= 50}, 1800);
+					 console.log('dddddd');
+				}
+				function moveToLeft() {
+					if(animationInProgress == false) {
+						animationInProgress = true;
+					 	$('#imageScroller').animate( { scrollLeft: '+=120' }, 300, function() {  animationInProgress = false;  } );
+					}
+//					document.getElementById('myScroll').scrollLeft += 50;					
+				}
+			</script>
+			
+			
+			
+
+			
+<!-- 		<table class="pictures">	
+				<tr th:each="picture, row : *{pictures}" class="picture">
+					<td>
+						<input type="text" class="pictureId" th:field="*{pictures[__${row.index}__].id}" />
+						<input type="text" th:field="*{pictures[__${row.index}__].announcement}" />
+						<input type="text" class="${row.index}" th:field="*{pictures[__${row.index}__].fileName}" />
+						<input type="text" th:field="*{pictures[__${row.index}__].repositoryName}" />
+						<input type="text" class="pictureToDelete" th:field="*{pictures[__${row.index}__].pictureToDelete}" />
+						<img th:src="*{'/images/' + pictures[__${row.index}__].repositoryName}" /> 
+						<button type="button" onclick="deletePictureInAnnouncement(this);">usuń</button>
+					</td>
+				</tr>
+			</table> -->
+		
+			<table style="text-align:left;">
+	<!-- 			<tr>
+					<td colspan="3">
+		
+		<p th:each="error: ${#fields.errors('enginePower')}" class="valiationError" th:text="${error}"></p>
+		
+				<span th:if="${#fields.hasErrors('all')}" th:errors="*{all}"></span>
+					</td> -->
+				<tr>
+					<td colspan="3"><label for="vehicleType">Karegoria pojazdu</label><br/>
+						  <select id="vehicleType" onchange="loadManufacturer(this.value, false); loadVehicleSubtypes(this.value, false);"  
+							th:field="*{vehicleType}">
+								<option 
+									th:each="vehicleTypes : ${vehicleTypeList.entrySet()}"
+									th:value="${vehicleTypes.key}" th:text="${vehicleTypes.value}"
+									th:selected="*{vehicleType}"></option>
+						</select> 
+									<input type="hidden" th:field="*{id}" />
+									<input type="hidden" th:field="*{user}" />
+					</td>
+				</tr>
+				<tr>
+					<td><label for="manufacturer">Marka pojazdu</label><br/>
+						<select id="manufacturer" th:field="*{manufacturer}" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), false);" required>
+					 	 	<option 
+									th:each="manufacturers: ${manufacturerList}"
+									th:value="${manufacturers.id}" th:text="${manufacturers.name}"
+									th:selected="*{manufacturer}">
+							</option>  
+						</select>
+					</td>
+					<td><label for="vehicleModel">Model pojazdu</label><br/>
+						<select id="vehicleModel" th:field="*{vehicleModel}" required>
+					 	  	<option 
+									th:each="vehicleModels: ${vehicleModelList}"
+									th:value="${vehicleModels.id}" th:text="${vehicleModels.name}"
+									th:selected="*{vehicleModel}">
+							</option>   
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td><label for="productionYear">Rok produkcji</label><br/>
+						<select id="productionYear" th:field="*{productionYear}" required>
+					 	 	<option 
+									th:each="productionYears : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}"
+									th:value="${productionYears}" th:text="${productionYears}"
+									th:selected="*{productionYear}">
+							</option>   
+						</select>
+					</td>
+					<td><label for="mileage">Przebieg</label><br/>
+						<input id="mileage" th:title="#{numberOnly}" pattern="[0-9]*" size="9" maxlength="9" type="text" th:field="*{mileage}" required />
+					</td>
+					<td><label for="vin">VIN</label><br/>
+						<input id="vin"  type="text" size="20" maxlength="20" th:field="*{vin}" />
+					</td>
+				</tr>
+				<tr style="   vertical-align: bottom;">
+					<td colspan="3" style=" vertical-align: bottom;">
+						<label>Rodzaj paliwa</label>
+						<span style=" vertical-align: top;" th:each="fuelTypes : ${fuelTypeWithLabels.entrySet()}">
+						 	<input type="radio" th:field="*{fuelType}" th:id="${fuelTypes.key}" th:value="${fuelTypes.key}" />
+							<label th:for="${fuelTypes.key}" th:text="${fuelTypes.value}"></label>
+						</span>
+					</td>
+				</tr>
+				<tr class="emptyTableRow"><td colspan="3"></td></tr>
+				<tr>
+					<td colspan="3"><label for="price">Cena</label><br/>
+						<input id="price" size="12" th:title="#{numberOnly}" pattern="^\d+(\.\d+)*$" maxlength="12" type="text" th:field="*{price}" required />
+					
+					<select   th:field="*{currency}">
+					    <option th:each="currencies : ${T(com.otomoto.enums.Currency).values()}"
+					            th:value="${currencies}"
+					            th:text="${currencies}"
+					            th:selected="*{currency}">
+					    </option>
+					</select>
+					<input type="checkbox" id="netPrice" th:field="*{netPrice}"/>
+					<label for="netPrice">Cena netto</label>
+					<input type="checkbox" id="priceNegotiate" th:field="*{priceNegotiate}"/>
+					<label for="priceNegotiate">Do negocjacji</label> 
+					
+					</td>
+				</tr>			
+				<tr>
+					<td><label for="vehicleSubtype">typ</label><br/>
+					<select id="vehicleSubtype" th:field="*{vehicleSubtype}">
+						    <option th:each="vehicleSubtypes : ${vehicleSubtypeList}"
+						            th:value="${vehicleSubtypes.key}"
+						            th:text="${vehicleSubtypes.value}"
+						            th:selected="*{vehicleSubtype}">
+						    </option>
+						</select>
+					</td>
+					<td><label for="carColor">kolor</label><br/>
+						<select id="carColor" th:field="*{carColor}">
+						    <option th:each="colors : ${colorList}"
+						            th:value="${colors.key}"
+						            th:text="${colors.value}"
+						            th:selected="*{carColor}">
+						    </option>
+						</select>
+					</td>
+				</tr>	
+				<tr>
+					<td>
+						<label th:for="enginePower" th:text="#{enginePower}"></label><br/>
+						<input id="enginePower" th:title="#{numberOnly}" pattern="[0-9]*" size="9" maxlength="9" type="text" th:field="*{enginePower}"/>
+						
+					<!-- 	<span  th:each="errors: ${#fields.errors('enginePower')}" class="valiationError" th:text="#{incorrect.value}"></span> -->
+						<span th:each="error: ${#fields.errors('enginePower')}" class="valiationError" th:text="${error}"></span>
+					</td>
+					<td>
+						<label th:for="engineCapacity" th:text="#{engineCapacity}"></label><br/>
+						<input id="engineCapacity" th:title="#{numberOnly}" pattern="[0-9]*" size="9" maxlength="6" type="text" th:field="*{engineCapacity}" />
+						<span th:each="error: ${#fields.errors('engineCapacity')}" class="valiationError" th:text="${error}"></span>
+					</td>
+				</tr>	
+				<tr>
+					<td>
+						<input id="accidents" type="checkbox" th:field="*{accidents}" />
+						<label th:for="accidents" th:text="#{accidents}"></label>
+					</td>
+					<td>
+						<input id="firstOwner" type="checkbox" th:field="*{firstOwner}" />
+						<label th:for="firstOwner" th:text="#{firstOwner}"></label>
+					</td>
+					<td>
+						<input id="damaged" type="checkbox" th:field="*{damaged}" />
+						<label th:for="damaged" th:text="#{damaged}"></label>
+					</td>
+				</tr>	
+				<tr class="emptyTableRow">
+					<td colspan="3"></td>
+				</tr>
+				<tr>
+					<td colspan="3"><label for="title">Tytuł</label><br/>
+						<input id="title" size="9" maxlength="200" style="width:400px;" type="text" th:field="*{title}" required />
+					</td>
+				</tr>		
+				<tr>
+					<td colspan="3"><label for="description">Opis</label><br/>
+						<textarea id="description" rows="5" cols="60" maxlength="3000" th:field="*{description}"  >
+						</textarea>
+					</td>
+				</tr>	
+				</table>
+
+			
+			<table>	
+				<tr>
+					<td></td>
+					<td style="text-align: right;">
+						<a th:href="@{/announcement/list}">anuluj</a>
+						<input type="submit" value="zapisz" />
+					</td>
+					<td></td>
+				</tr>
+			</table>
+		</form>
+		
+		
+    </div>
+     <div th:replace="fragments/footer :: footer"></div>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+  <body>
+  <style>
+.admin-home-big-button {
+	height: 200px;
+	background-color: #2e3968;
+	color: white;
+	margin: auto;
+	display: inline-table;
+}
+.admin-home-big-button:hover {
+	background-color: #bf2505;
+}
+
+.admin-home-big-button-text-inside {
+	width: 200px;
+	text-align: center;
+	display: table-cell;
+	vertical-align: middle;
+}
+</style>
+    <div th:replace="fragments/header :: header">
+    </div>
+    <div th:replace="fragments/search :: search">
+    </div>
+   <div style="height:300px; text-align: center; margin-top:50px; ">
+   		<a class="admin-home-big-button" th:href="@{/announcement/list}">
+			<span class="admin-home-big-button-text-inside">ogłoszenia</span>
+   		</a>
+   		<a class="admin-home-big-button" th:href="@{/manufacturer/list}">
+			<span class="admin-home-big-button-text-inside">marki i modele aut</span>
+   		</a>
+   		<a class="admin-home-big-button" th:href="@{/user/list/}">
+			<span class="admin-home-big-button-text-inside">użytkownicy</span>
+   		</a>
+   		<a class="admin-home-big-button" th:href="@{/administration/user/adminSettings}">
+			<span class="admin-home-big-button-text-inside">ustawienia systemu</span>
+   		</a>
+    </div>
+     <div th:replace="fragments/footer :: footer"></div>
+  </body>
+</html>

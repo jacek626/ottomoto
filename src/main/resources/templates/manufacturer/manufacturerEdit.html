@@ -1,95 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head"></head>
-<body>
-	<div th:replace="fragments/header :: header"></div>
-	<div th:replace="fragments/search :: search"></div>
-	<div class="announcement-edit-form">
-		<p>Dodawanie nowej marki</p>
-		
-		<script type="text/javascript">
-	
-	function vehicleTypeChanged(vehicleType) {
-		loadVehicleSubtypes(vehicleType);
-	}
-	
-	function loadVehicleSubtypes(vehicleType) {
-		let vehicleTypeElement = vehicleType;
-		$.ajax({
-			type : "GET",
-			url : "/mark/loadVehicleSubtypes",
-			timeout : 100000,
-			data: { 
-				vehicleType: vehicleType.value 
-			  },
-			success : function(result) {
-				console.log("SUCCESS: " + result.data);
-				console.log("SUCCESS: " + result);
-				//alert(result);
-				//$('html').html(result);
-				//  $("#userListPanel").show();
-				$(vehicleTypeElement).parent().parent().find('.vehicleSubtype').
-			empty().append(result);
+  <body>
+    <div th:replace="fragments/header :: header">
+    </div>
+    <div th:replace="fragments/search :: search"></div>
+ 	<div id="content">
+		<div id="content-middle">
+			<p th:text="#{editManufacturer} + ' ' + ${manufacturer.name}"></p>
 				
-
-			},
-			error : function(result) {
-				console.log("ERROR: ", e);
-			},
-			done : function(result) {
-				console.log("DONE");
-			}
-		});
-	}
-	
-	</script>
-	
-		<form th:action="@{/manufacturer/save}" th:object="${manufacturer}" method="post">
-			<input type="text" id="vehicleToDelete" name="vehicleToDelete" /> <input
-				type="hidden" th:field="*{id}" />
-			<table>
-				<tr>
-					<td><label for="name">Nazwa marki</label></td>
-					<td><input id="name" size="80" type="text" th:field="*{name}" /></td>
-					<!-- 		<td><input id="vehicleName" size="80" type="text" 
-					th:field="*{vehicleModel[0].name}" /></td> -->
-				</tr>
-				<!-- 	<tr>
-					<td><label for="description">Opis</label></td>
-					<td><textarea id="description" rows="5" cols="73" th:field="*{description}"></textarea></td>
-					<td></td>
-				</tr> -->
-				<!-- 	<tr>
-					<td><label for="vehicleName">nazwa auto</label></td>
-					<td><input id="vehicleName" size="80" type="text" th:field="*{vehicle.name}" /></td>
-				</tr> -->
-				<tr>
-					<td></td>
-					<td>Modele aut:</td>
-				</tr>
+			
+			<form th:action="@{/manufacturer/save}" th:object="${manufacturer}" method="post">
+				<input type="hidden" th:field="*{name}" />
+			
+			<input type="hidden" id="vehicleToDelete" name="vehicleToDelete" />  
+			<input type="hidden" th:field="*{id}" />
+			<table id="resultsTable">
+		 		<thead>
+					<tr>
+						<th th:text="#{vehicleModelName}" />
+						<th th:text="#{vehicleCategory}" />
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<td class="tableFooterButtons">
+							<button type="submit" name="action" th:text="#{addNewModel}"  value="addVehicle" ></button> 
+						</td>
+						<td colspan="2" class="tableFooterButtons"  style="text-align:right; ">
+							<a th:href="@{/manufacturer/list}" th:text="#{cancel}"></a> 
+							<input type="submit"  th:value="#{save}" />
+						</td>
+					</tr>
+				</tfoot> 
+				<tbody>
 				<tr th:each="vehicle,rowStat : *{vehicleModel}">
-					<td><label for="vehicleName">Nazwa</label></td>
-					<td><input id="vehicleName" size="80" type="text" th:field="*{vehicleModel[__${rowStat.index}__].name}" /> 
-						
-				<!-- 	<select onchange="enableOrDisableVehicleSubtype2(this);" class="vehicleType" -->
-					<select onchange="vehicleTypeChanged(this);" class="vehicleType"
-						th:field="*{vehicleModel[__${rowStat.index}__].vehicleType}">
-							<option 
-								th:each="vehicleType : ${vehicleTypes.entrySet()}"
-								th:value="${vehicleType.key}" th:text="${vehicleType.value}"
-								th:selected="*{vehicleModel[__${rowStat.index}__].vehicleType}"></option>
-					</select> 
-					
-						<input type="hidden" th:field="*{vehicleModel[__${rowStat.index}__].manufacturer}" /> 
-						<input type="hidden" th:field="*{vehicleModel[__${rowStat.index}__].id}" />
+					<td>
+						<input id="vehicleName" size="15" type="text" th:field="*{vehicleModel[__${rowStat.index}__].name}" /> 
 					</td>
-					<td th:switch="*{#strings.toString(vehicleModel[__${rowStat.index}__].vehicleType)}">
-		<!-- 		<input   type="text" th:value="*{vehicleModel[__${rowStat.index}__].vehicleType}" />   -->
+					<td>	
+						<select onchange="vehicleTypeChanged(this);" class="vehicleType" 
+							th:field="*{vehicleModel[__${rowStat.index}__].vehicleType}">
+								<option 
+									th:each="vehicleType : ${vehicleTypes.entrySet()}"
+									th:value="${vehicleType.key}" th:text="${vehicleType.value}"
+									th:selected="*{vehicleModel[__${rowStat.index}__].vehicleType}"></option>
+						</select> 
+					</td> 
+		<!-- 			<td th:switch="*{#strings.toString(vehicleModel[__${rowStat.index}__].vehicleType)}">
 
 						<select th:case="'CAR'"
-						th:field="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}"
+						th:field="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}" 
 						class="vehicleSubtype">
-							<option  th:with="someVariable=${someValue}"
+							<option  th:with="someVariable=${someValue}" 
 								th:each="vehicleSubtype : ${vehicleSubtypesCar.entrySet()}"
 								th:value="${vehicleSubtype.key}"
 								th:text="${vehicleSubtype.value}"
@@ -126,85 +89,22 @@
 								th:selected="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}">
 							</option>
 					</select>
-					
-					</td>
+					</td>  -->
 					<td>
-					<input type="text" class="vehicleToDelete" th:field="*{vehicleModel[__${rowStat.index}__].toDelete}" /> 
-						<input type="text" class="rowStatIndex" th:value="${rowStat.index}" />
-						<button type="submit" name="action" value="removeVehicle"
-							class="removeVehicle"
-							onclick="$(this).parent('td').find('.vehicleToDelete').val(true);">usun</button>
-					</td>
-					<!-- 		<td><input id="vehicleName" size="80" type="text" 
-					th:value="${rowStat}" /></td>		 -->
+						<input type="hidden" class="vehicleToDelete" th:field="*{vehicleModel[__${rowStat.index}__].toDelete}" /> 
+						<input type="hidden" class="rowStatIndex" th:value="${rowStat.index}" />
+							<button type="submit" name="action" value="removeVehicle"
+								class="removeVehicle"
+								onclick="$(this).parent('td').find('.vehicleToDelete').val(true);" th:text="#{delete}"></button>
+					</td> 
+					
 				</tr>
-				<tr>
-					<td></td>
-					<td style="text-align: right;">
-						 <button type="button" onclick="runAjax();" value="addVehicle">dodaj
-							nowy ajax</button> 
-						<button type="submit" name="action" value="addVehicle">dodaj
-							nowy</button> <a th:href="@{/manufacturer/list}">anuluj</a> <input type="submit"
-						value="zapisz" />
-					</td>
-					<td></td>
-				</tr>
+				</tbody>
 			</table>
 		</form>
+
+		</div>
 	</div>
-
-	<script type="text/javascript">
-	
-	
-	
-		$(document).ready(function(){
-			$('.vehicleType').each(function() { 
-				enableOrDisableVehicleSubtype(this);  
-				});
-		});
-		
-		
-		function enableOrDisableVehicleSubtype2(currentElement) {
-			$(currentElement).parent().parent().find('.vehicleSubtype').
-			empty().append('<option value="SMALL_CAR" selected="selected">MALY2</option><option value="BIG_CAR">DUZA222</option><option value="MEDIUM_CAR">SREDNIA222</option>');
-			
-		}
-		
-		
-		function enableOrDisableVehicleSubtype(currentElement) {
-			//alert(currentElement.value );
-			if(currentElement.value == 'CAR') {
-				//$(currentElement).parent().parent().find('.vehicleSubtype').removeAttr('disabled');
-			}
-			else {
-			//	$(currentElement).parent().parent().find('.vehicleSubtype').attr('disabled', 'disabled');
-			//	$(currentElement).parent().parent().find('.vehicleSubtype option:selected').removeAttr('selected');
-			//	$(currentElement).parent().parent().find('.vehicleSubtype').val("ddd");
-			}
-		}
-
-		function runAjax() {
-			$.ajax({
-				type : "GET",
-				url : "/mark/save2",
-				timeout : 100000,
-				success : function(result) {
-					console.log("SUCCESS: " + result.data);
-					console.log("SUCCESS: " + result);
-					
-					//$('html').html(result);
-					//  $("#userListPanel").show();
-
-				},
-				error : function(result) {
-					console.log("ERROR: ", e);
-				},
-				done : function(result) {
-					console.log("DONE");
-				}
-			});
-		}
-	</script>
 
 	<div th:replace="fragments/footer :: footer"></div>
 </body>

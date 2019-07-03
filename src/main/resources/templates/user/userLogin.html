@@ -11,7 +11,7 @@
     			Logowanie do systemu
     		</p>
     
-			<form class="customerRegistrationForm" th:action="@{/customer/login}" th:object="${user}" method="post">
+			<form class="userRegistrationForm" th:action="@{/user/login}" th:object="${user}" method="post">
          				 
          	<p th:if="${errorMessge != null}" style="color:#bf2505; font-weight: bold;"
          				 th:text="${errorMessge}">Validation error</p>
@@ -44,7 +44,7 @@
 		</form>
 		
 		<p>
-			<a href="/customer/registration">załóż konto</a>
+			<a th:href="@{/user/registration}">załóż konto</a>
 		</p>
     </div>
      <div th:replace="fragments/footer :: footer"></div>

@@ -13,6 +13,226 @@ a {
 	text-decoration: none;
 }
 
+#content {
+	width: 960px;
+	margin: 0 auto;
+	min-height: 400px;
+}
+#content-middle {
+	text-align:center;
+	margin:auto;
+}
+
+.rangeDropDown,
+.valuesDropDown {
+	position:absolute; 
+	display:none; 
+	background-color:white; 
+	cursor: pointer;
+	max-height:250px; 
+	overflow: scroll; 
+	overflow-x: hidden;
+	list-style: none;
+	margin-block-start:0px;
+	margin-block-end:0px;
+}
+
+.imageScrollerButton {
+	cursor: pointer;
+	background-color: gray;
+}
+
+.miniatureImageInImageScroller {
+	width: 150px; 
+	cursor:pointer;
+}
+
+
+#imageScroller::-webkit-scrollbar {
+	width: 0px;
+	background: transparent; /* make scrollbar transparent */
+	display: none;
+}
+
+#imageScroller {
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* IE 10+ */
+}
+
+#imageScroller li {
+	display: inline-block;
+	margin-right: 10px;
+	background-color: red;
+}
+
+
+#imageScroller li button {
+ /*  position: absolute; */
+ /*  top: 50%; */
+/*   left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555; */
+/*   color: white; */
+/*   font-size: 16px;
+  padding: 12px 24px; */
+/*   border: none;
+  cursor: pointer; */
+/*   border-radius: 5px; */
+} 
+
+/* #photoGalleryMiniContainer > * {
+  flex: 1 100%;
+} */
+
+.photoGalleryMiniArrow {
+	z-index: 10;
+	position: relative;
+	color: white;
+	cursor: pointer;
+	padding: 10px 10px 10px 10px;
+	background-color: grey;
+	opacity: 0.2;
+  	filter: alpha(opacity=20);
+}
+
+#imagesScroll::-webkit-scrollbar {
+    width: 1em;
+}
+ 
+#imagesScroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+ 
+#imagesScroll::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+.rangeDropDown div {
+/* 	border-width: 0px 1px 1px 1px;
+	border-style: solid;
+	border-color: #99A7BB; */
+	padding:5px;
+}
+.valuesDropDown li:hover,
+.rangeDropDown li:hover,
+.valuesDropDown .selected,
+.rangeDropDown .selected {
+	background-color: #E8E8E8;
+}
+
+
+/* .pricesListElement:hover {
+	background-color: #E8E8E8;
+} */
+
+datalist {
+	background-color:red;
+}
+
+
+#popup {
+	 position:fixed;
+	 z-index: 100;
+	 height:100px;
+	 
+/* 	 background-color:#FFFFFF;
+	  	border:1px solid #999999; */
+	  cursor:default;
+	/*   margin-top: 15px; */
+	  text-align:left;
+	 /*  width:200px; */
+	  left: 50%;
+	  top: 50%;
+	/*   padding: 25px 25px 20px; */
+	 
+}
+#popup div {
+	position: relative; 
+	left: -50%; 
+	border: solid #2e3968 1px; 
+	padding:10px; 
+	text-align:center; 
+	background-color:white;
+}
+
+#background {
+	position: fixed; 
+	width: 100%; 
+	height: 100%; 
+	z-index: 99; 
+	overflow: auto;  
+	background-color: rgb(0,0,0); 
+	background-color: rgba(0,0,0,0.4);
+}
+
+table {
+	margin:auto;
+	border-collapse:collapse;
+}
+
+.emptyTableRow {
+	height:20px;
+}
+
+#searchParamsTable  {
+	text-align:left;
+	font-size:12px;
+}
+
+#searchParamsTable input,
+#searchParamsTable select {
+	font-size:12px;
+}
+
+#searchParamsTable tr {
+	line-height:20px;
+}
+
+#resultsTable tbody tr:hover {
+  background-color: #f2f2f2;
+}
+
+.valiationError {
+	color: #bf2505;
+	font-weight: bold;
+	font-size: 10px;
+}
+
+.inputAsSelect {
+	width:80px;
+}
+
+
+#resultsTable td, 
+#resultsTable th {
+	text-align:left;
+	padding: 4px 10px;
+	border-bottom: 1px solid #ddd;
+	 border-spacing: 0px;
+	     border-collapse: inherit;
+}
+
+#resultsTable th a, 
+#resultsTabl th a:visited {
+	color:#2e3968;
+	
+}
+
+#resultsTable  tfoot td {
+	border:none;
+}
+
+#resultsTable .tableFooterButtons {
+vertical-align: bottom; 
+line-height: 40px;
+}
+
+#pageSizeSelect {
+	margin-top:5px;
+	margin-bottom:15px;
+}
+
 .footer-style {
 	height: 50px;
 	width: 100%;
@@ -25,36 +245,116 @@ a {
 	background-color: #2e3968;
 }
 
+.disabled {
+	pointer-events: none;
+	cursor: default;
+	color: grey;
+}
+
 .remove-link-decoration {
 	text-decoration: none;
 }
 
-.main-header-buttons {
+.main-header-buttons,
+.main-header-buttons-without-hover {
 	width: 60px;
 	padding: 10px;
 	position: relative;
 	top: 16px;
 	color: white;
 	background-color: #2e3968;
+	margin-left: 10px;
 }
 
-.customerRegistrationForm table tr td:nth-child(3) {
-  	width:180px;
- }
-.customerRegistrationForm p {
-  	margin: 0px;
-  	font-size: 12px;
- }
- 
-.announcement-edit-form,
-.registration-login-form {
- 	min-height:400px; 
- 	text-align:center; 
- 	width:100%; 
- 	margin: auto;
+.userRegistrationForm table tr td:nth-child(3) {
+	width: 180px;
 }
+
+.userRegistrationForm p {
+	margin: 0px;
+/* 	font-size: 12px; */
+}
+
+.announcement-edit-form, .registration-login-form {
+	min-height: 400px;
+	text-align: center;
+	width: 100%;
+	margin: auto;
+}
+
+.announcementClearButton  {
+	background-color:white !important; 
+	padding: none !important; 
+	border: none !important; 
+	cursor: pointer !important;
+}
+
 .announcement-edit-form table {
 	margin: auto;
 }
- 
+
+.displayNone {
+	display: none;
+}
+.displayTableRow {
+	display: table-row;
+}
+
+#upload-file-input {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+#upload-file-label,
+.medium-button {
+	padding:6px;
+	color: white;
+    background-color: #2e3968;
+}
+
+#upload-file-label:hover,
+.main-header-buttons:hover  {
+	text-decoration: underline;
+}
+
+ul   { 
+    padding-inline-start: 0px !important;
+}
+/* .inputfile + label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color: white;
+    background-color: black;
+    display: inline-block;
+}
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: red;
+}   */
+
+.noselect {
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+ .input-width-150 {
+ 	width:150px;
  }
+ #searchParamsTable input, 
+ #searchParamsTable label {
+ 	/* display:block; */
+ }
+  .rangeInput {
+ 	width:50px;
+ } 
+ 

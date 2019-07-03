@@ -1,4 +1,4 @@
-package com.otomoto.config;
+package com.otomoto.security.config;
 
 import javax.sql.DataSource;
 
@@ -11,7 +11,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
+
+import com.app.handler.CustomAuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -29,6 +33,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 @Value("${spring.queries.roles-query}")
 	 private String rolesQuery;
 	 
+	// @Autowired
+	// private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+	 
+	 @Bean
+	    public AuthenticationSuccessHandler authenticationSuccessHandlerCustomImpl(){
+	        return new AuthenticationSuccessHandlerCustomImpl();
+	  }
+	 
 	 
 	    @Override
 	    protected void configure(AuthenticationManagerBuilder auth)
@@ -39,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	        .authoritiesByUsernameQuery(rolesQuery)
 	        .dataSource(dataSource)
 	        .passwordEncoder(bCryptPasswordEncoder);
+	        
 	    }
 	    
 	    
@@ -47,48 +60,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			return new SpringSecurityDialect();
 		}
 	
-/*	  @Override
-	    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-	        auth.inMemoryAuthentication()
-	          .withUser("user1").password(passwordEncoder().encode("user1Pass")).roles("USER")
-	          .and()
-	          .withUser("user2").password(passwordEncoder().encode("user2Pass")).roles("USER")
-	          .and()
-	          .withUser("admin").password(passwordEncoder().encode("adminPass")).roles("ADMIN");
-	    }
-	  
-	   @Bean
-	    public PasswordEncoder passwordEncoder() {
-	        return new BCryptPasswordEncoder();
-	    }*/
-	   
-	   
-	/*   @Bean
-	    public UserDetailsService userDetailsService() {
-	        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-	        manager.createUser(User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build());
-	        return manager;
-	    }*/
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
                 	.antMatchers("/**/favicon.ico", "/css/**","/js/**","/images/**").permitAll()
-                	.antMatchers("/customer/registration", "/customer/registrationSuccess").permitAll()
-                    .antMatchers("/", "/home","/admin/register","/registerAdmin","/admin/registerAdmin","/register","admin/register").permitAll()
+                	.antMatchers("/user/registration", "/user/registrationSuccess").permitAll()
+                    .antMatchers("/", "/home","/admin/register","/registerAdmin","/register","admin/register","/logout").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()
-                 //   .loginPage("/customer/registration")
-                    .loginPage("/customer/login").failureUrl("/customer/login?error=true")
+                 //   .loginPage("/user/registration")
+                    .loginPage("/user/login").failureUrl("/user/login?error=true")
+                    .failureHandler(new CustomAuthenticationFailureHandler())
                     .usernameParameter("login")
-                    .defaultSuccessUrl("/")
+                  //  .defaultSuccessUrl("/")
+                    .successHandler(authenticationSuccessHandlerCustomImpl())
                     .permitAll()
                     .and()
                 .logout()
-                    .permitAll();
+                	.logoutUrl("/logout")
+                	.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                	.logoutSuccessUrl("/user/login")
+                	.permitAll()
+                .and()
+                .csrf().disable();
         
-        ///announcement/add
     }
 }
