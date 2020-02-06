@@ -1,8 +1,15 @@
 package com.app.utils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.app.enums.BooleanValuesForDropDown;
+import com.app.enums.CarColor;
+import com.app.enums.FuelType;
 
 public class AnnouncementSearchFields {
 
@@ -12,6 +19,15 @@ public class AnnouncementSearchFields {
 	private String engineCapacityFrom, engineCapacityTo; 
 	private String enginePowerFrom, enginePowerTo;
 	private Byte doorsFrom, doorsTo;
+	private BooleanValuesForDropDown accidents, firstOwner, damaged, netPrice, priceNegotiate;
+	private List<CarColor> colorList = new ArrayList<CarColor>();
+	private List<FuelType> fuelTypeList = new ArrayList<FuelType>();
+	private String colorListLabelsAsString;
+	//private List<CarColor> colorList = Arrays.asList(CarColor.BLACK, CarColor.BLUE);
+	
+	Integer returnAsInteger(String numberAsString) {
+		return StringUtils.isNotBlank(numberAsString) ? Integer.valueOf(numberAsString.replaceAll("[^0-9.]","")) : 0;
+	}
 	
 	public Short getProductionYearFrom() {
 		return productionYearFrom;
@@ -32,10 +48,10 @@ public class AnnouncementSearchFields {
 		return priceFrom;
 	}
 	public String getPriceFromWithoutSpaces() {
-		return priceFrom.replaceAll("\\s+","");
+		return priceFrom.replaceAll("[^0-9.]", "");
 	}
 	public Integer getPriceFromAsInteger() {
-		return StringUtils.isNotBlank(priceFrom) ? Integer.valueOf(priceFrom.replaceAll("\\s+","")) : 0;
+		return returnAsInteger(priceFrom);
 	}
 	public void setPriceFrom(String priceFrom) {
 		this.priceFrom = priceFrom;
@@ -44,10 +60,10 @@ public class AnnouncementSearchFields {
 		return priceTo;
 	}
 	public String getPriceToWithoutSpaces() {
-		return priceTo.replaceAll("\\s+","");
+		return priceTo.replaceAll("[^0-9.]","");
 	}
 	public Integer getPriceToAsInteger() {
-		return StringUtils.isNotBlank(priceTo) ? Integer.valueOf(priceTo.replaceAll("\\s+","")) : 0;
+		return returnAsInteger(priceTo);
 	}
 	public void setPriceTo(String priceTo) {
 		this.priceTo = priceTo;
@@ -56,7 +72,7 @@ public class AnnouncementSearchFields {
 		return mileageFrom;
 	}
 	public Integer getMileageFromAsInteger() {
-		return StringUtils.isNotBlank(mileageFrom) ? Integer.valueOf(mileageFrom.replaceAll("\\s+","")) : 0;
+		return returnAsInteger(mileageFrom);
 	}
 	public void setMileageFrom(String mileageFrom) {
 		this.mileageFrom = mileageFrom;
@@ -65,7 +81,7 @@ public class AnnouncementSearchFields {
 		return mileageTo;
 	}
 	public Integer getMileageToAsInteger() {
-		return StringUtils.isNotBlank(mileageTo) ? Integer.valueOf(mileageTo.replaceAll("\\s+","")) : 0;
+		return returnAsInteger(mileageTo);
 	}
 	public void setMileageTo(String mileageTo) {
 		this.mileageTo = mileageTo;
@@ -74,7 +90,7 @@ public class AnnouncementSearchFields {
 		return engineCapacityFrom;
 	}
 	public Integer getEngineCapacityFromAsInteger() {
-		return StringUtils.isNotBlank(engineCapacityFrom) ? Integer.valueOf(engineCapacityFrom.replaceAll("\\s+","")) : 0;
+		return returnAsInteger(engineCapacityFrom);
 	}
 	public void setEngineCapacityFrom(String engineCapacityFrom) {
 		this.engineCapacityFrom = engineCapacityFrom;
@@ -83,7 +99,7 @@ public class AnnouncementSearchFields {
 		return engineCapacityTo;
 	}
 	public Integer getEngineCapacityToAsInteger() {
-		return StringUtils.isNotBlank(engineCapacityTo) ? Integer.valueOf(engineCapacityTo.replaceAll("\\s+","")) : 0;
+		return returnAsInteger(engineCapacityTo);
 	}
 	public void setEngineCapacityTo(String engineCapacityTo) {
 		this.engineCapacityTo = engineCapacityTo;
@@ -92,7 +108,7 @@ public class AnnouncementSearchFields {
 		return enginePowerFrom;
 	}
 	public Integer getEnginePowerFromAsInteger() {
-		return StringUtils.isNotBlank(enginePowerFrom) ? Integer.valueOf(enginePowerFrom.replaceAll("\\s+","")) : 0;
+		return returnAsInteger(enginePowerFrom);
 	}
 	public void setEnginePowerFrom(String enginePowerFrom) {
 		this.enginePowerFrom = enginePowerFrom;
@@ -101,7 +117,7 @@ public class AnnouncementSearchFields {
 		return enginePowerTo;
 	}
 	public Integer getEnginePowerToAsInteger() {
-		return StringUtils.isNotBlank(enginePowerTo) ? Integer.valueOf(enginePowerTo.replaceAll("\\s+","")) : 0;
+		return returnAsInteger(enginePowerTo);
 	}
 	public void setEnginePowerTo(String enginePowerTo) {
 		this.enginePowerTo = enginePowerTo;
@@ -120,6 +136,69 @@ public class AnnouncementSearchFields {
 	}
 	public void setDoorsTo(Byte doorsTo) {
 		this.doorsTo = doorsTo;
+	}
+	public BooleanValuesForDropDown getAccidents() {
+		if(accidents == null)
+			accidents = BooleanValuesForDropDown.ALL;
+		
+		return accidents;
+	}
+	public void setAccidents(BooleanValuesForDropDown accidents) {
+		this.accidents = accidents;
+	}
+	public BooleanValuesForDropDown getFirstOwner() {
+		if(firstOwner == null)
+			firstOwner = BooleanValuesForDropDown.ALL;
+		
+		return firstOwner;
+	}
+	public void setFirstOwner(BooleanValuesForDropDown firstOwner) {
+		this.firstOwner = firstOwner;
+	}
+	public BooleanValuesForDropDown getDamaged() {
+		if(damaged == null)
+			damaged = BooleanValuesForDropDown.ALL;
+		
+		return damaged;
+	}
+	public void setDamaged(BooleanValuesForDropDown damaged) {
+		this.damaged = damaged;
+	}
+	public BooleanValuesForDropDown getNetPrice() {
+		if(netPrice == null)
+			netPrice = BooleanValuesForDropDown.ALL;
+		
+		return netPrice;
+	}
+	public void setNetPrice(BooleanValuesForDropDown netPrice) {
+		this.netPrice = netPrice;
+	}
+	public BooleanValuesForDropDown getPriceNegotiate() {
+		if(priceNegotiate == null)
+			priceNegotiate = BooleanValuesForDropDown.ALL;
+		
+		return priceNegotiate;
+	}
+	public void setPriceNegotiate(BooleanValuesForDropDown priceNegotiate) {
+		this.priceNegotiate = priceNegotiate;
+	}
+	public List<CarColor> getColorList() {
+		return colorList;
+	}
+	public String getColorListLabelsAsString() {
+		return colorList.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
+	}
+	public String getFuelTypeListListLabelsAsString() {
+		return fuelTypeList.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
+	}
+	public void setColorList(List<CarColor> colorList) {
+		this.colorList = colorList;
+	}
+	public List<FuelType> getFuelTypeList() {
+		return fuelTypeList;
+	}
+	public void setFuelTypeList(List<FuelType> fuelTypeList) {
+		this.fuelTypeList = fuelTypeList;
 	}
 	
 }

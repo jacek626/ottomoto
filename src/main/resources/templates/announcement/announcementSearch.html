@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<div class="announcementSearch" th:fragment="announcementSearch(action)">
+			<form th:object="${announcement}" th:action="@{/__${action}__}" method="get">
+				<table id="searchParamsTable">
+					<tr>
+						<td colspan="5">
+							<label for="vehicleType" th:text="#{vehicleType}"></label>
+	 						<select id="vehicleType" onchange="controlElementVisibility(this.value == 'CAR' ? true : false, '.doorsRow','table-row'); clearManufacturer(); clearVehicleModel(); clearVehicleModelDropDown();clearManufacturerDropDown();  loadManufacturer(this.value, 'li');   "  
+								th:field="*{vehicleType}">
+									<option 
+										th:each="vehicleTypes : ${vehicleTypeList.entrySet()}"
+										th:value="${vehicleTypes.key}" th:text="${vehicleTypes.value}"
+										th:selected="*{vehicleType}">
+									</option>
+							</select> 
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
+							<input type="text"  id="manufacturerLabel" dropDownElementId="manufacturer" onfocusin="clearInputAndFireTrigger(this);"  
+							readonly="readonly"  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); selectValuesInDropDownByKeyboard();"   th:placeholder="#{manufacturer}"  class="inputAsSelect labelInAnnouncementSearch" th:value="*{manufacturer != null ? manufacturer.name : ''}" >
+							<input type="hidden" id="manufacturerValue"  th:field="*{manufacturer}" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'li');">
+							<ul class="valuesDropDown" id="manufacturer">
+								<li th:each="element : ${manufacturerList}" th:text="${element.name}" 
+								th:class="*{manufacturer} != null and ${element.id} == *{manufacturer.id} ? 'selected' : '' "  th:value="${element.id}"></li>
+							</ul>
+							<button type="button" class="announcementClearButton" onclick="clearManufacturer(); clearVehicleModel();">X</button>
+						</td>
+						<td>
+							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
+							<input type="text" id="vehicleModelLabel" dropDownElementId="vehicleModel"  th:placeholder="#{vehicleModelName}" onfocusin="clearInputAndFireTrigger(this);" 
+							 onkeydown="rewriteTextToHiddenInputOnKeyDown(this); selectValuesInDropDownByKeyboard();" 	readonly="readonly"    class="inputAsSelect labelInAnnouncementSearch" th:value="*{vehicleModel != null ? vehicleModel.name : ''}" >
+							
+							<input type="hidden" id="vehicleModelValue"  th:field="*{vehicleModel}">
+							<ul class="valuesDropDown" id="vehicleModel">
+								<li th:each="element : ${vehicleModelList}" th:text="${element.name}" 
+								th:class="*{vehicleModel} != null and ${element.id} == *{vehicleModel.id} ? 'selected' : '' "  th:value="${element.id}"></li>
+							</ul>
+							
+							<button type="button" class="announcementClearButton" onclick="clearVehicleModel();">X</button>
+						</td>  
+						<td>
+							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
+							<input type="text" id="vehicleSubtypeLabel" dropDownElementId="vehicleSubtype" th:placeholder="#{type}"  readonly="readonly"  class="inputAsSelect labelInAnnouncementSearch"
+							 th:value="*{vehicleSubtype != null ? vehicleSubtype.label : ''}" 
+							  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); " onfocusin="clearInputAndFireTrigger(this);" >
+						
+							<input type="hidden" id="vehicleSubtypeValue"  th:field="*{vehicleSubtype}">
+							<ul class="valuesDropDown" id="vehicleSubtype">
+								<li th:each="element : ${vehicleSubtypeList}" th:text="${element.label}" 
+								 	 th:class="*{vehicleSubtype} != null and ${element} == *{vehicleSubtype} ? 'selected' : '' "  th:value="${element}"></li> 
+							</ul>
+							
+							<button type="button" class="announcementClearButton" onclick="clearVehicleSubtype(); ">X</button>
+						</td>
+					    <td>
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('priceFrom','searchFields.priceFrom',#{priceFrom},${pricesList},'#priceFrom','#priceTo', 'zł', false)"/>  
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('priceTo','searchFields.priceTo',#{to},${pricesList},'#priceFrom','#priceTo', 'zł',true)"/>  
+						</td>  
+						<td class="yearInput">
+							<span  th:replace="components/dropDownFromTo::dropDownFromTo('productionYearFrom','searchFields.productionYearFrom',#{productionYearFrom},${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )},'#productionYearFrom','#productionYearTo', null, false)"/>  
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('productionYearTo','searchFields.productionYearTo',#{to},${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )},'#productionYearFrom','#productionYearTo', null, true)"/>  
+						</td>  
+					</tr>	
+					<tr>	
+						<td>
+						    <span th:replace="components/dropDownMultiSelect ::dropDownMultiSelect('carColor','searchFields.colorList','com.app.enums.CarColor','searchFields.getColorListLabelsAsString()',#{color})"/> 
+						</td>
+						<td> 
+							<span th:replace="components/dropDownMultiSelect ::dropDownMultiSelect('fuelType','searchFields.fuelTypeList','com.app.enums.FuelType','searchFields.getFuelTypeListListLabelsAsString()',#{fuelType})"/> 
+							
+						 </td>  
+						<td>
+							<!-- <span th:replace="components/dropDownBoolean ::dropDownBoolean('damaged','searchFields.damaged',#{damaged})"/>  -->
+						</td>  
+						<td>
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('engineCapacityFrom','searchFields.engineCapacityFrom',#{engineCapacityFrom},${engineCapacityList},'#engineCapacityFrom','#engineCapacityTo', 'cm&#179;', false)"/> 
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('engineCapacityTo','searchFields.engineCapacityTo',#{to},${engineCapacityList},'#engineCapacityFrom','#engineCapacityTo', 'cm&#179;', true)"/> 
+						</td>
+						<td>
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('enginePowerFrom','searchFields.enginePowerFrom',#{enginePowerFrom},${engineCapacityList},'#enginePowerFrom','#enginePowerTo', 'KM ', false)"/> 
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('enginePowerTo','searchFields.enginePowerTo',#{to},${engineCapacityList},'#enginePowerFrom','#enginePowerTo', 'KM ', true)"/> 
+						</td>  
+					</tr>
+					<tr>
+						<td>
+						    <span th:replace="components/dropDownBoolean ::dropDownBoolean('accidents','searchFields.accidents',#{accidents})"/> 
+						    <span th:replace="components/dropDownBoolean ::dropDownBoolean('damaged','searchFields.damaged',#{damaged})"/> 
+						</td>
+						<td>
+							<span th:replace="components/dropDownBoolean ::dropDownBoolean('firstOwner','searchFields.firstOwner',#{firstOwner})"/> 
+						</td>
+						<td>
+							<span th:replace="components/dropDownBoolean ::dropDownBoolean('netPrice','searchFields.netPrice',#{netPrice})"/> 
+						</td>
+						<td>
+							<span th:replace="components/dropDownBoolean ::dropDownBoolean('priceNegotiate','searchFields.priceNegotiate',#{priceNegotiate})"/> 
+						</td>
+						<td>
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('mileageFrom','searchFields.mileageFrom',#{mileageFrom},${mileageList},'#mileageFrom','#mileageTo', 'cm&#179;' , false)"/>  
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('mileageTo','searchFields.mileageTo',#{to},${mileageList},'#mileageFrom','#mileageTo', 'cm&#179;', true)"/>  
+						</td> 
+					</tr>
+	<!-- 				<tr>
+						<td th:style="*{vehicleType == T(com.app.enums.VehicleType).CAR} ? '' : 'display:none'" class="doorsRow">
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('doorsFrom','searchFields.doorsFrom',#{doorsFrom},${doorsList},'#doorsFrom','#doorsTo', null)"/> 
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('doorsTo','searchFields.doorsTo',#{doorsTo},${doorsList},'#doorsFrom','#doorsTo', null)"/> 
+						</td>  
+					</tr> -->
+					
+					<tr style="text-align: right;">
+						<!-- <td><a th:href="@{/announcement/add}" class="medium-button">nowe ogłoszenie</a></td> -->
+						<td colspan="7"><input type="submit" th:value="#{search}" /></td>
+					</tr>
+				</table>
+				<input type="hidden" name="size" th:value="${size}">
+			</form>
+			
+			<script type="text/javascript">
+			
+		/* 			$('.rangeInput').maskNumber({
+						  integer: true,
+						  thousands: ' '
+					});
+					
+					$('.yearInput input').maskNumber({
+						  integer: true,
+						  thousands: ''
+					}); */
+					
+					
+				/* 	 $('.rangeInput').mask('0000-0000'); */
+				 	$(document).ready(function(){
+ 						$('.rangeInput').each(function() {   
+ 							var unit = this.getAttribute('unit');
+ 							if(unit != null)
+ 								$(this).inputmask({ alias : "numeric" ,suffix : " " + unit, groupSeparator : "," });
+ 							else
+ 								$(this).inputmask({ alias : "numeric" });
+ 						})
+					}); 
+			
+/*  						$('.rangeInput').inputmask({ alias : "numeric" ,suffix: this.getAttribute('unit'), groupSeparator : "," });    */
+					$(".rangeInput").focusin(function() {
+						$('.rangeDropDown').css('display','none');
+						$(this).parent().find('.rangeDropDown').css('display','block');
+					});
+					$(".rangeInput").focusout(function() { 
+						var currentElement = this;
+						 setTimeout(function() {
+							$(currentElement).parent().find('.rangeDropDown').css('display','none');
+						}, 300); 
+					});
+					
+					$('.rangeDropDown li').on( "click", function() {
+						$(this).parent().parent().find('input').val($(this).text());
+						$(this).parent().parent().find('input').trigger('change');
+					});
+					
+		/* 			$('.valuesDropDown div').on( "click", function() {
+						$(this).parent().parent().find('input:text').val($(this).text());
+						$(this).parent().parent().find('input:hidden').val($(this).attr('value'));
+					}); */
+					
+					setDropDownListListener('.valuesDropDown  li');
+					setDropDownListMultiOptionListener('.valuesMultiDropDown  li');
+					setDropDownRangeListener('.rangeDropDown  li');
+					
+					
+					
+					$(".inputAsSelect").focusin(function() {
+						$('.valuesDropDown').css('display','none');
+						$(this).parent().find('.valuesDropDown').css('display','block');
+					});
+					$(".inputAsSelect").focusout(function() { 
+						var currentElement = this;
+						 setTimeout(function() {
+							$(currentElement).parent().find('.valuesDropDown').css('display','none');
+						}, 300); 
+					});
+					
+					$(".inputAsSelect").focusin(function() {
+						$('.valuesMultiDropDown').css('display','none');
+						$(this).parent().find('.valuesMultiDropDown').css('display','block');
+					});
+					$(".inputAsSelect").focusout(function() { 
+						var currentElement = this;
+						 setTimeout(function() {
+							$(currentElement).parent().find('.valuesMultiDropDown').css('display','none');
+						}, 300); 
+					});
+					
+					
+				/* 	$('#priceFrom, #priceTo,').maskNumber({
+						  integer: true,
+						  thousands: ' '
+		
+					}); */
+			</script>
+
+</div>

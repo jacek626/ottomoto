@@ -7,349 +7,29 @@
     <div th:replace="fragments/search :: search"></div>
  	<div id="content">
 		<div id="content-middle">
-			<p th:text="#{announcementList}"></p>
-			
-			<form th:object="${announcement}" method="get">
-				<table id="searchParamsTable" style="">
-					<tr>
-						<td>
-							<label for="vehicleType" th:text="#{vehicleType}"></label>
-	 						<select id="vehicleType" onchange="controlElementVisibility(this.value == 'CAR' ? true : false, '.doorsRow','table-row'); loadManufacturer(this.value, 'li'); loadVehicleSubtypes(this.value, 'li');"  
-								th:field="*{vehicleType}">
-									<option 
-										th:each="vehicleTypes : ${vehicleTypeList.entrySet()}"
-										th:value="${vehicleTypes.key}" th:text="${vehicleTypes.value}"
-										th:selected="*{vehicleType}"></option>
-							</select> 
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
-							<input type="text"  id="manufacturerLabel" dropDownElementId="manufacturer" onfocusin="clearInputAndFireTrigger(this);"  
-							readonly="readonly"  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); selectValuesInDropDownByKeyboard();"   th:placeholder="#{manufacturer}"  class="inputAsSelect labelInAnnouncementSearch" th:value="*{manufacturer != null ? manufacturer.name : ''}" >
-							<input type="hidden" id="manufacturerValue"  th:field="*{manufacturer}" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'li');">
-							<ul class="valuesDropDown" id="manufacturer">
-								<li th:each="element : ${manufacturerList}" th:text="${element.name}" 
-								th:class="*{manufacturer} != null and ${element.id} == *{manufacturer.id} ? 'selected' : '' "  th:value="${element.id}"></li>
-							</ul>
-							<button type="button" class="announcementClearButton" onclick="$('#manufacturerLabel').val(''); $('#manufacturerValue').val(''); $('#vehicleModelLabel').val(''); $('#vehicleModelValue').val('');">X</button>
-						</td>
-						
-						<td>
-					<!-- 		<label for="vehicleModel" th:text="#{vehicleModelName}"></label>
-							<select id="vehicleModel" th:field="*{vehicleModel}" class="input-width-150">
-						 	  	<option 
-										th:each="vehicleModels: ${vehicleModelList}"
-										th:value="${vehicleModels.id}" th:text="${vehicleModels.name}"
-										th:selected="*{vehicleModel}">
-								</option>   
-							</select> -->
-							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
-							<input type="text" id="vehicleModelLabel" dropDownElementId="vehicleModel"  th:placeholder="#{vehicleModelName}" onfocusin="clearInputAndFireTrigger(this);" 
-							 onkeydown="rewriteTextToHiddenInputOnKeyDown(this); selectValuesInDropDownByKeyboard();" 	readonly="readonly"    class="inputAsSelect labelInAnnouncementSearch" th:value="*{vehicleModel != null ? vehicleModel.name : ''}" >
-							
-							<input type="hidden" id="vehicleModelValue"  th:field="*{vehicleModel}">
-							<ul class="valuesDropDown" id="vehicleModel">
-								<li th:each="element : ${vehicleModelList}" th:text="${element.name}" 
-								th:class="*{vehicleModel} != null and ${element.id} == *{vehicleModel.id} ? 'selected' : '' "  th:value="${element.id}"></li>
-							</ul>
-							
-							<button type="button" class="announcementClearButton" onclick="$('#vehicleModelLabel').val(''); $('#vehicleModelValue').val('');">X</button>
-						</td>  
-						<td>
-							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
-							<input type="text" id="vehicleSubtypeLabel" dropDownElementId="vehicleSubtype" th:placeholder="#{type}"  readonly="readonly"  class="inputAsSelect labelInAnnouncementSearch"
-							 th:value="*{vehicleSubtype != null ? vehicleSubtype.label : ''}" 
-							  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); " onfocusin="clearInputAndFireTrigger(this);" >
-						
-							<input type="hidden" id="vehicleSubtypeValue"  th:field="*{vehicleSubtype}">
-							<ul class="valuesDropDown" id="vehicleSubtype">
-								<li th:each="element : ${vehicleSubtypeList}" th:text="${element.label}" 
-								 	 th:class="*{vehicleSubtype} != null and ${element} == *{vehicleSubtype} ? 'selected' : '' "  th:value="${element}"></li> 
-							</ul>
-							
-							<button type="button" class="announcementClearButton" onclick=" $('#vehicleSubtypeLabel').val(''); $('#vehicleSubtypeValue').val('');">X</button>
-						</td>
-						
-					    <td>
-							<input type="text" id="priceFrom" th:placeholder="#{priceFrom}"  class="rangeInput" onchange="validateRange($('#priceFrom'),$('#priceTo'),this);" th:field="*{searchFields.priceFrom}">
-								<ul class="pricesList rangeDropDown">
-									<li class="pricesListElement" th:each="element : ${pricesList}" th:text="${element} + ' ' +  #{zl}"
-									th:class="*{searchFields.priceFrom} != null and ${element} == *{searchFields.priceFrom} ? 'selected' : '' "></li>
-								</ul>
-						</td>  
-						<td>
-							<input type="text" id="priceTo" class="rangeInput" th:placeholder="#{priceTo}"  onchange="validateRange($('#priceFrom'),$('#priceTo'),this);" th:field="*{searchFields.priceTo}">
-							<ul class="pricesList rangeDropDown">
-								<li class="pricesListElement" th:each="element : ${pricesList}" th:text="${element} + ' ' +  #{zl}"
-								th:class="*{searchFields.priceTo} != null and ${element} == *{searchFields.priceTo} ? 'selected' : '' "></li>
-							</ul>
-						</td>  
-					</tr>	
-					<tr>	
-						<td>
-						
-							<input type="text" id="productionYearFrom" th:placeholder="#{productionYearFrom}"  class="rangeInput yearInput" readonly="readonly"
-							onchange="validateRange($('#productionYearFrom'),$('#productionYearTo'),this);" th:field="*{searchFields.productionYearFrom}">
-							<ul class="rangeDropDown">
-								<li class="pricesListElement" th:each="element : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}" th:text="${element}"
-								th:class="*{searchFields.productionYearFrom} != null and ${element} == *{searchFields.productionYearFrom} ? 'selected' : '' "></li>
-							</ul>	
-						</td>
-						<td>
-							<input type="text" id="productionYearTo" th:placeholder="#{to}"  class="rangeInput yearInput" readonly="readonly"
-							onchange="validateRange($('#productionYearFrom'),$('#productionYearTo'),this);" th:field="*{searchFields.productionYearTo}">
-							<ul class="rangeDropDown">
-								<li class="pricesListElement" th:each="element : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}" th:text="${element}"
-								th:class="*{searchFields.productionYearTo} != null and ${element} == *{searchFields.productionYearTo} ? 'selected' : '' "></li>
-							</ul>					 
-						
-						</td>  
-						
-						<td> 
-						
-						
-							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
-							<input type="text" id="fuelTypeLabel" dropDownElementId="fuelType" th:placeholder="#{fuelType}"  readonly="readonly"  class="inputAsSelect labelInAnnouncementSearch"
-							 th:value="*{fuelType != null ? fuelType.label : ''}" 
-							  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); " onfocusin="clearInputAndFireTrigger(this);" >
-						
-							<input type="hidden" id="fuelTypeValue"  th:field="*{fuelType}">
-							<ul class="valuesDropDown" id="fuelType">
-								<li th:each="element : ${fuelTypeList}" th:text="${element.label}" 
-								 	 th:class="*{fuelType} != null and ${element} == *{fuelType} ? 'selected' : '' "  th:value="${element}"></li> 
-							</ul>
-							
-							<button type="button" class="announcementClearButton" onclick=" $('#fuelTypeLabel').val(''); $('#fuelTypeValue').val('');">X</button>
-							
-							
-						 </td>  
-						<td>
-							<input type="text" id="mileageFrom" th:placeholder="#{mileageFrom}"  class="rangeInput" onchange="validateRange($('#mileageFrom'),$('#mileageTo'),this);" th:field="*{searchFields.mileageFrom}">
-								<ul class="pricesList rangeDropDown">
-									<li th:each="element : ${mileageList}" th:text="${element} + ' km'"
-									th:class="*{searchFields.mileageFrom} != null and ${element} == *{searchFields.mileageFrom} ? 'selected' : '' "></li>
-								</ul>
-						</td>  
-						<td>
-							<input type="text" id="mileageTo" class="rangeInput" th:placeholder="#{to}"  onchange="validateRange($('#mileageFrom'),$('#mileageTo'),this);" th:field="*{searchFields.mileageTo}">
-							<ul class="pricesList rangeDropDown">
-								<li th:each="element : ${mileageList}" th:text="${element} + ' km'"
-								th:class="*{searchFields.mileageTo} != null and ${element} == *{searchFields.mileageTo} ? 'selected' : '' "></li>
-							</ul>
-						</td>  
-						
-					</tr>
-					<tr>
-						<td>
-						
-						<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
-							<input type="text" id="carColorLabel" dropDownElementId="carColor" th:placeholder="#{color}"  readonly="readonly"  class="inputAsSelect labelInAnnouncementSearch"
-							 th:value="*{carColor != null ? carColor.label : ''}" 
-							  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); " onfocusin="clearInputAndFireTrigger(this);" >
-						
-							<input type="hidden" id="carColorValue"  th:field="*{carColor}">
-							<ul class="valuesDropDown" id="carColor">
-								<li th:each="element : ${colorList}" th:text="${element.label}" 
-								 	 th:class="*{carColor} != null and ${element} == *{carColor} ? 'selected' : '' "  th:value="${element}"></li> 
-							</ul>
-							
-							<button type="button" class="announcementClearButton" onclick=" $('#carColorLabel').val(''); $('#carColorValue').val('');">X</button>
-						
-						
-						</td>
-						<td>
-							<input id="accidents" type="checkbox" th:field="*{accidents}" />
-							<label th:for="accidents" th:text="#{accidents}"></label>
-						</td>
-						<td>
-							<input id="firstOwner" type="checkbox" th:field="*{firstOwner}" />
-							<label th:for="firstOwner" th:text="#{firstOwner}"></label>
-						</td>
-						<td>
-							<input id="damaged" type="checkbox" th:field="*{damaged}" />
-							<label th:for="damaged" th:text="#{damaged}"></label>
-						</td>
-						<td>
-							<input id="netPrice" type="checkbox" th:field="*{netPrice}" />
-							<label th:for="netPrice" th:text="#{netPrice}"></label>
-						</td>
-						<td>
-					<!-- 		<input id="priceNegotiate" type="checkbox" th:field="*{priceNegotiate}" />
-							<label th:for="priceNegotiate" th:text="#{priceNegotiate}"></label> -->
-						
-							<input type="text" id="carColorLabel" dropDownElementId="carColor" th:placeholder="#{color}"  readonly="readonly"  class="inputAsSelect labelInAnnouncementSearch"
-							 th:value="*{carColor != null ? carColor.label : ''}" 
-							  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); " onfocusin="clearInputAndFireTrigger(this);" >
-						
-							<input type="hidden" id="carColorValue"  th:field="*{carColor}">
-							<ul class="valuesDropDown" id="carColor">
-								<li th:each="element : ${colorList}" th:text="${element.label}" 
-								 	 th:class="*{carColor} != null and ${element} == *{carColor} ? 'selected' : '' "  th:value="${element}"></li> 
-							</ul>
-							
-							<button type="button" class="announcementClearButton" onclick=" $('#carColorLabel').val(''); $('#carColorValue').val('');">X</button>
-						</td>
-						
-					</tr>
-					<tr>
-					
-					<td>
-						<input type="text" id="engineCapacityFrom" th:placeholder="#{engineCapacityFrom}"  class="rangeInput yearInput" 
-							onchange="validateRange($('#engineCapacityFrom'),$('#engineCapacityTo'),this);" th:field="*{searchFields.engineCapacityFrom}">
-							<ul class="rangeDropDown">
-								<li class="pricesListElement" th:each="element : ${engineCapacityList}" th:text="${element} + ' cm'"
-								th:class="*{searchFields.engineCapacityFrom} != null and ${element} == *{searchFields.engineCapacityFrom} ? 'selected' : '' "></li>
-							</ul>	
-						</td>
-						<td>
-							<input type="text" id="engineCapacityTo" th:placeholder="#{to}"  class="rangeInput yearInput"
-							onchange="validateRange($('#engineCapacityFrom'),$('#engineCapacityTo'),this);" th:field="*{searchFields.engineCapacityTo}">
-							<ul class="rangeDropDown">
-								<li class="pricesListElement" th:each="element : ${engineCapacityList}" th:text="${element} + ' cm'"
-								th:class="*{searchFields.engineCapacityTo} != null and ${element} == *{searchFields.engineCapacityTo} ? 'selected' : '' "></li>
-							</ul>					 
-						
-						</td>
-					
-					
-					
-				<!-- 		<td>
-						<label for="engineCapacityFrom" th:text="#{engineCapacityFrom}"></label>
-						<input type="text" id="engineCapacityFrom" class="rangeInput" onchange="validateRange($('#engineCapacityFrom'),$('#engineCapacityTo'),this);" th:field="*{searchFields.engineCapacityFrom}">
-						<div class="rangeDropDown">
-							<div th:each="element : ${engineCapacityList}" th:text="${element} + ' cm'"></div>
-						</div>
-						</td>  
-						<td>
-							<label for="engineCapacityTo" th:text="#{to}"></label>
-							<input type="text" id="engineCapacityTo" class="rangeInput"  onchange="validateRange($('#engineCapacityFrom'),$('#engineCapacityTo'),this);" th:field="*{searchFields.engineCapacityTo}">
-							<div class="rangeDropDown">
-							<div th:each="element : ${engineCapacityList}" th:text="${element} + ' cm'"></div>
-							</div>
-						</td>  --> 
-					</tr>
-					<tr>
-						
-						<td>
-							<input type="text" id="enginePowerFrom" th:placeholder="#{enginePowerFrom}"  class="rangeInput" onchange="validateRange($('#enginePowerFrom'),$('#enginePowerTo'),this);" th:field="*{searchFields.enginePowerFrom}">
-								<ul class="pricesList rangeDropDown">
-									<li th:each="element : ${enginePowerList}" th:text="${element} + ' km'"
-									th:class="*{searchFields.enginePowerFrom} != null and ${element} == *{searchFields.enginePowerFrom} ? 'selected' : '' "></li>
-								</ul>
-						</td>  
-						<td>
-							<input type="text" id="enginePowerTo" class="rangeInput" th:placeholder="#{to}"  onchange="validateRange($('#enginePowerFrom'),$('#enginePowerTo'),this);" th:field="*{searchFields.enginePowerTo}">
-							<ul class="pricesList rangeDropDown">
-								<li th:each="element : ${enginePowerList}" th:text="${element} + ' km'"
-								th:class="*{searchFields.enginePowerTo} != null and ${element} == *{searchFields.enginePowerTo} ? 'selected' : '' "></li>
-							</ul>
-						</td>  
-						
-		<!-- 				 
-						<td th:style="*{vehicleType == T(com.otomoto.enums.VehicleType).CAR} ? '' : 'display:none'" class="doorsRow">
-							<label for="doorsFrom" th:text="#{doorsFrom}"></label>
-							<input type="text" id="doorsFrom" class="rangeInput" onchange="validateRange($('#doorsFrom'),$('#doorsTo'),this);" th:field="*{searchFields.doorsFrom}">
-							<div class="rangeDropDown">
-								<div th:each="element : ${doorsList}" th:text="${element}"></div>
-							</div>
-							</td>  
-						<td th:style="*{vehicleType == T(com.otomoto.enums.VehicleType).CAR} ? '' : 'display:none'" class="doorsRow">
-							<label for="doorsTo" th:text="#{to}"></label>
-							<input type="text" id="doorsTo" class="rangeInput"  onchange="validateRange($('#doorsFrom'),$('#doorsTo'),this);" th:field="*{searchFields.doorsTo}">
-							<div class="rangeDropDown">
-							<div th:each="element : ${doorsList}" th:text="${element}"></div>
-							</div>
-						</td>
-						 -->
-						<td th:style="*{vehicleType == T(com.otomoto.enums.VehicleType).CAR} ? '' : 'display:none'" class="doorsRow">
-							<input type="text" id="doorsFrom" th:placeholder="#{doorsFrom}"  class="rangeInput" onchange="validateRange($('#doorsFrom'),$('#doorsTo'),this);" th:field="*{searchFields.doorsFrom}">
-								<ul class="pricesList rangeDropDown">
-									<li th:each="element : ${doorsList}" th:text="${element}"
-									th:class="*{searchFields.doorsFrom} != null and ${element} == *{searchFields.doorsFrom} ? 'selected' : '' "></li>
-								</ul>
-						</td>  
-						<td th:style="*{vehicleType == T(com.otomoto.enums.VehicleType).CAR} ? '' : 'display:none'" class="doorsRow">
-							<input type="text" id="doorsTo" class="rangeInput" th:placeholder="#{to}"  onchange="validateRange($('#doorsFrom'),$('#doorsTo'),this);" th:field="*{searchFields.doorsTo}">
-							<ul class="pricesList rangeDropDown">
-								<li th:each="element : ${doorsList}" th:text="${element}"
-								th:class="*{searchFields.doorsTo} != null and ${element} == *{searchFields.doorsTo} ? 'selected' : '' "></li>
-							</ul>
-						</td>  
-						
-						
-						  
-					</tr>
-					
-					<tr style="text-align: right;">
-						<td><a th:href="@{/announcement/add}" class="medium-button">utworz</a></td>
-						<td colspan="7"><input type="submit" th:value="#{search}" /></td>
-					</tr>
-				</table>
-				<input type="hidden" name="size" th:value="${size}">
-			</form>
-			
-			<script type="text/javascript">
-			
-					$('.rangeInput').maskNumber({
-						  integer: true,
-						  thousands: ' '
-					});
-					
-					$('.yearInput').maskNumber({
-						  integer: true,
-						  thousands: ''
-					});
-			
-					$(".rangeInput").focusin(function() {
-						$('.rangeDropDown').css('display','none');
-						$(this).parent().find('.rangeDropDown').css('display','block');
-					});
-					$(".rangeInput").focusout(function() { 
-						var currentElement = this;
-						 setTimeout(function() {
-							$(currentElement).parent().find('.rangeDropDown').css('display','none');
-						}, 300); 
-					});
-					
-					$('.rangeDropDown li').on( "click", function() {
-						$(this).parent().parent().find('input').val($(this).text());
-						$(this).parent().parent().find('input').keyup();
-					});
-					
-		/* 			$('.valuesDropDown div').on( "click", function() {
-						$(this).parent().parent().find('input:text').val($(this).text());
-						$(this).parent().parent().find('input:hidden').val($(this).attr('value'));
-					}); */
-					
-					setDropDownListListener('.valuesDropDown  li');
-					
-					setDropDownRangeListener('.rangeDropDown  li');
-					
-					
-					$(".inputAsSelect").focusin(function() {
-						$('.valuesDropDown').css('display','none');
-						$(this).parent().find('.valuesDropDown').css('display','block');
-					});
-					$(".inputAsSelect").focusout(function() { 
-						var currentElement = this;
-						 setTimeout(function() {
-							$(currentElement).parent().find('.valuesDropDown').css('display','none');
-						}, 300); 
-					});
-					
-					
-				/* 	$('#priceFrom, #priceTo,').maskNumber({
-						  integer: true,
-						  thousands: ' '
 		
-					}); */
-			</script>
+		<style>
+			.rowInTableHeight {
+				height: 170px;
+			}
+			
+			.linkAnnouncement {
+				width:100%;  
+				display: flex; 
+				align-items: center;  
+				justify-content: center;
+			}
+		
+		</style>
+		
+		
+ 	<div th:replace="announcement/announcementSearch :: announcementSearch('announcement/list')"></div>
 
 			<table id="resultsTable" style="margin-top:20px;">
 				<thead>
 					<tr>
+						<th>
+						</th>
 						<th>
 							<a
 							th:href="@{/announcement/list/(page=${page}, size=${size},orderBy=manufacturer.name,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
@@ -385,13 +65,46 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="announcement, iStat : ${pages.content}">
-						<td th:text="${announcement.manufacturer.name}" />
-						<td th:text="${announcement.vehicleModel.name}" />
-						<td th:text="${announcement.price}" />
-						<td th:text="${announcement.productionYear}" />
-						<td th:text="${announcement.fuelType}" />
-						<td th:text="${announcement.vin}" />
+					<tr th:each="announcement, iStat : ${pages.content}" class="rowInTableHeight" style="cursor: pointer; overflow: hidden;" th:data-href="@{'/announcement/show/' + ${announcement.id}}">
+						<td>
+							<a th:href="@{'/announcement/show/' + ${announcement.id}}">
+								<img th:if="${#lists.size(announcement.pictures)} > 0" width="100%"  th:src="${'/images/' + announcement.pictures[0].miniatureRepositoryName}" ></img>
+								<img th:if="${#lists.size(announcement.pictures)} == 0" width="100%"  th:src="${'/images/noPhoto.png'}" ></img>
+							</a>
+						</td>
+						<td>
+						
+						<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
+							<div th:text="${announcement.vehicleModel.manufacturer.name}">
+	    					</div>
+						</a>
+						
+						</td>
+						<td>
+							<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
+								<div th:text="${announcement.vehicleModel.name}"></div>
+							</a>
+						</td>
+						<td>
+							<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
+								<div th:text="${announcement.price}" ></div>
+							</a>
+						</td>
+						<td>
+							<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
+								<div th:text="${announcement.productionYear}"></div>
+							</a>
+						</td>
+						<td>
+							<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
+								<div th:text="${announcement.fuelType}"></div>
+							</a>
+						</td>
+						<td>
+							<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
+								<div th:text="${announcement.vin}"></div>
+							</a>
+						</td>
 						<td>
 							<a th:href="@{'/announcement/edit/' + ${announcement.id}}"
 							th:text="edycja">
@@ -404,6 +117,15 @@
 			<div th:replace="fragments/pagination :: pagination('/announcement/list')"></div>
 		</div>
 	</div>
+	
+	<script type="text/javascript">
+	jQuery(document).ready(function($) {
+	    $(".clickable-row").click(function() {
+	        window.location = $(this).data("href");
+	    });
+	});
+	
+	</script>
 	
 
 	<div th:replace="fragments/footer :: footer"></div>

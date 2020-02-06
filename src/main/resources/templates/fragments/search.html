@@ -3,7 +3,14 @@
 <head th:replace="fragments/head :: head"></head>
 <body>
 	<div class="search-fragment" th:fragment="search">
-		wyszukiwarka
+		<div style="  position:relative; top:5px; left:-350px; text-align: center; font-size: 12px; font-weight: 600; color:white;">
+			<span th:each="element, iterStat : ${breadCrumb}" th:var="${element}" >
+				<a th:if="${iterStat.index == 0}" onclick="window.history.back();" style="margin-right:15px; cursor: pointer; ">&lt; Wstecz</a> 
+				<a th:if="${iterStat.index == 0}" onclick="window.history.back();" style=" margin-right:15px; cursor: pointer;"> | </a> 
+				<a th:href="@{'/announcement/list?' + ${element.link} }" th:text="${element.label}" style="color:white;" ></a> 
+				<span th:if="${iterStat.index < (#lists.size(breadCrumb) -1)}" style=" margin: 0 6px; "> &gt; </span> 
+			</span>
+		</div>
 	</div>
 </body>
 </html>

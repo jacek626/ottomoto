@@ -1,0 +1,19 @@
+<span th:fragment="dropDownMultiSelect(elementName,field,enum,selectedElementsAsString,label)">
+
+	<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
+	<input type="text" th:id="${elementName} + Label" dropDownElementId="${elementName}" th:placeholder="${label}"  readonly="readonly" style="cursor: pointer;"
+				class="currentLabels inputAsSelect labelInAnnouncementSearch"
+				 th:value="*{__${selectedElementsAsString}__}" 
+				onkeydown="rewriteTextToHiddenInputOnKeyDown(this); " onfocusin="clearInputAndFireTrigger(this);" />
+				
+	<input type="hidden" th:id="${elementName} + Value" class="currentValues" th:field="*{__${field}__}" /> 
+			<ul class="valuesMultiDropDown dropDown" th:id="${elementName}">
+			<li th:each="element : ${T(__${enum}__).values()}" th:text="${element.label}" 
+					th:class="*{#lists.contains(__${field}__, T(__${enum}__).__${element}__ )} ? 'selected' : '' "  th:value="${element}"></li> 
+			</ul>
+			
+	 <button type="button" class="announcementClearButton" onclick=" $(this).parent().find('.currentLabels').val(''); $(this).parent().find('.currentValues').val(''); 
+	 $(this).parent().find('.valuesMultiDropDown li').removeClass('selected');">X</button>	 
+</span>
+
+							

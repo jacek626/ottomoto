@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<div class="announcementHeader" th:fragment="announcementHeader(announcement)">
+
+			<div style=" display: inline-block; width:1000px; margin-top:5px;">
+				<div style="display: grid; grid-template-columns: 1fr 1fr; margin-top:10px; margin-bottom:5px; font-size:20px; font-weight: bold; color:#2e3968; margin-left: 54px;">
+					<div style="text-align:left;">
+						<span th:text="${announcement.vehicleModel.manufacturer.name}" ></span>
+						<span th:text="${announcement.vehicleModel.name}" ></span>
+					</div>
+					<div style="text-align:right; margin-right:27px;">
+						[[${#numbers.formatDecimal({announcement.price}, 0, 'COMMA', 2, 'POINT')}]] zł
+					</div>
+					
+				
+				</div>  
+			</div>
+			
+			<div style="border-bottom: 1px #d7d7da solid;">
+			</div>
+</div>

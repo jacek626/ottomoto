@@ -6,9 +6,121 @@
     </div>
     <div th:replace="fragments/search :: search">
     </div>
-    <div style="height:400px;">
-		zawartosc    
+    <div style="min-height:400px; background-color: #f2f2f3; margin:auto; text-align:center; ">  
+	<!-- 	<div style="display: flex; flex-wrap: wrap; width:960px;" >  -->
+	
+	<style>
+		.grid {
+			 display: grid;
+			  grid-template-columns: repeat(5, 1fr);
+			  grid-gap: .5rem;
+			  padding: .5rem;
+			  grid-auto-rows: minmax(100px, auto);
+			  flex-wrap: wrap;
+			  width:960px;
+			  margin:auto;
+		}
+		.blocks img .imageWrapper {
+			height: 100px;
+			overflow: hidden;
+		}
+		.blocks:first-child{
+		  grid-column: 1/3;
+		  grid-row: 1/3;
+		}
+		.showOffer {
+			margin-top: 10px;
+			float:right;
+			display:none;
+			padding:12px;
+			text-align: center;
+		}
+		.blocks:first-child .showOffer,
+		.blocks:last-child .showOffer
+		{
+			display: block;
+			color: white;
+			background-color: #2e3968;
+			width: 150px;
+		}
+		.blocks:first-child .imageWrapper,
+		.blocks:last-child .imageWrapper
+		{
+			height: 240px; 
+		}
+		.blocks:last-child {
+		  grid-column: 4/6;
+		  grid-row: 2/4;
+		}
+		
+		.blocks .imageWrapper {
+			overflow:hidden; 
+			height: 120px; 
+		}
+		
+		.blocks:first-child img,
+		.blocks:last-child .imageWrapper {
+			overflow: hidden;
+		}
+		.blocks {
+			
+		}
+		
+		.startPageBigPlace {
+			width:470px; 
+			height:300px; 
+			background-color:red;
+		}
+		
+		.announcementSearch {
+			font-weight: 600;
+		
+		}
+		.announcementSearch td {
+			padding:5px;
+		}
+		
+		.announcementSearch input {
+		}
+	
+	</style>
+		<div class="grid" style="display: flex;  width:934px;  margin:auto; justify-content: space-between; background-color: white;">
+			<div style="margin:auto; text-align: center;">
+				<div th:replace="announcement/announcementSearch :: announcementSearch('announcement/list')"></div>
+			</div>
+			<!-- <div class="startPageBigPlace">
+				aukcja dnia
+			</div> -->
+		
+		</div>
+		<div class="grid" >
+			<a class="blocks" th:each="announcement, row : ${newestAnnouncements}" style="  display:block;  background-color: white ; margin:5px; min-height:150px;" th:href="@{'/announcement/show/' + ${announcement.id}}">
+				<div class="imageWrapper" >
+						<img th:if="${#lists.size(announcement.pictures)} > 0" width="100%"  th:src="${'/images/' + announcement.pictures[0].miniatureRepositoryName}" ></img>
+						<img th:if="${#lists.size(announcement.pictures)} == 0" width="100%"  th:src="${'/images/noPhoto.png'}" ></img>
+				</div>
+					<div  style="border-top: 1px solid #bf2505; margin-top:3px; margin-bottom:3px;  margin:2px; text-align: left; " >
+						<div style="margin-left:2px; margin-top:2px; " th:text="${announcement.vehicleModel.manufacturer.name + ' ' + announcement.vehicleModel.name}" ></div>
+						
+						<div style=" display: grid; grid-template-columns: 1fr 2fr;">
+							<span style="text-align: left; margin:2px;"  th:text="${announcement.productionYear}" ></span>
+							<span style="text-align: right; margin:2px;">
+								[[${#numbers.formatDecimal({announcement.price}, 0, 'COMMA', 2, 'POINT')}]] zł
+							</span>
+					    </div>
+					    <div class="showOffer">
+					    		Zobacz oferte
+					    </div>
+					</div>
+				
+			</a>
+			
+		</div>  
     </div>
      <div th:replace="fragments/footer :: footer"></div>
   </body>
 </html>
+
+<!-- 
+<tr th:each="announcement, iStat : ${pages.content}">
+						<td th:text="${announcement.manufacturer.name}" /> -->

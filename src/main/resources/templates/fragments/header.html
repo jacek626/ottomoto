@@ -2,23 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
   <head>
   	<meta charset="utf-8">
-  	<script type="text/javascript">
-  		alert("ddd");
-  	
-  	</script>
-  		<title>ddd</title>
+  		<title></title>
   </head>
   <body>
-  		 <div class="header-style" th:fragment="header"> 
-  		 	 <div th:if="${message}" id="background"></div>
+  		 <div class="header-style" th:fragment="header" style="font-weight: 600"> 
+  		 	 <div th:style="${message != null ?  'visibility: visible' : 'visibility: hidden' }" id="popupBackground"></div>
 			<a style="color:#bf2505; font-size: 40px; font-style:italic; font-weight:bold; font-family: Helvetica, Arial, sans-serif;" class="remove-link-decoration" 
-			th:href="@{/}">OTOMOTO</a> 
+			th:href="@{/}">OTTOMOTO</a> 
 			<div style="float:right;">
 				<a th:href="@{/user/login}" sec:authorize="!isAuthenticated()" style="left:-10px;" class="main-header-buttons remove-link-decoration">
 					Zaloguj
 				</a>
+				<a th:href="@{/user/register}" sec:authorize="!isAuthenticated()" style="left:-10px;" class="main-header-buttons remove-link-decoration">
+					Zarejestruj
+				</a>
 				  <span sec:authorize="isAuthenticated()" class="main-header-buttons-without-hover remove-link-decoration noselect" 
-				  	style="background-color:transparent; color:#bf2505; margin-right:20px; ">
+				  	style="background-color:transparent; color:#bf2505; margin-right:20px;  ">
 				  	 Zalogowano jako
 				  	<span sec:authentication="name" ></span>
 				  </span>
@@ -38,22 +37,18 @@
 					Wyloguj
 				</a> 
 			</div>
-			<!-- <input type="text" th:value="${message}" /> -->
-			<div id="popup" th:if="${message}" >
-				  <div style="">
+			<div id="informationPopup" class="popup" th:if="${message}" >
+				  <div>
 					      <span th:text="${message}"></span><br />
-					      <input type="button" value="OK" onclick="document.getElementById('popup').style.visibility = 'hidden';
-					    	  document.getElementById('background').style.visibility = 'hidden';"
+					      <input type="button" value="OK" onclick="document.getElementById('informationPopup').style.visibility = 'hidden';
+					    	  document.getElementById('popupBackground').style.visibility = 'hidden';"
 					      style="margin-top:10px;"/>
 				   </div>
 			</div>
-			  <div id="jsPopup" style="position: absolute; left: 50%;  top:0px; display:none;">
-			    <div id="jsPopupText" style="position: relative; left: -50%; color:white; padding:12px; background-color: #bf2505; border-radius:5px; ">
+			  <div id="infoText" style="position: fixed; left: 50%;  top:0px; display:none;">
+			    <div  style="position: relative; left: -50%; color:white; padding:12px; background-color: #bf2505; border-radius:5px; ">
 			    </div>
 			  </div> 
 		</div>
-	<!-- 	<div class="popap" th:fragment="popup">
-				to jest POPUP
-			</div> -->
   </body>
 </html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+  <body>
+    <div th:replace="fragments/header :: header">
+    </div>
+    <div th:replace="fragments/search :: search">
+    </div>
+    <div style="height:400px; text-align:center; background-color: #2e3968; color:white; font-size:18px;">
+    	<br/>
+    	<p th:text="#{registrationSuccessMessageTitle}"  ></p>
+    	<p th:text="#{registrationSuccessMessage}"  ></p>
+    </div>
+     <div th:replace="fragments/footer :: footer"></div>
+  </body>
+</html>

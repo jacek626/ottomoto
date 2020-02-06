@@ -1,0 +1,18 @@
+<div th:fragment="dropDownFromTo(elementName,field,label,dropDownList, elementFrom, elementTo, unit, clearButton)" style="display:inline-block;">
+<input type="text" th:id="${elementName}" th:placeholder="${label}"
+	class="rangeInput"
+	th:from="${elementFrom}"
+	th:to="${elementTo}"
+	th:unit="${unit}"
+	onchange="validateRange($(this.getAttribute('from')),$(this.getAttribute('to')),this);"
+	th:field="*{__${field}__}" /> 
+<!--  <label th:if="${unit != null}" th:text="${unit}" th:for="${elementName}"></label> -->
+ <ul class="rangeDropDown">
+	 <li class="" th:each="element : ${dropDownList}"
+		 th:text="${unit} != null ? ${#strings.concat(element + ' ' + unit)} : ${element} "
+		 th:class="*{__${field}__} != null and ${#strings.concat(#strings.replace(element,' ',',') + ' ' + unit)} == *{__${field}__} ? 'selected' : '' "></li>
+ </ul> 
+ <button th:if="${clearButton}"  type="button" class="announcementClearButton" onclick=" $(this).parent().parent().find('.rangeInput').val(''); 
+	 $(this).parent().parent().find('.rangeDropDown li').removeClass('selected');">X</button>	 
+</div>
+

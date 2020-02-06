@@ -1,5 +1,9 @@
 package com.app.service;
 
-public interface UserService {
+import com.app.entity.User;
+import com.app.utils.Result;
 
+public interface UserService {
+	  Result saveUser(User user);
+	  Result sentEmailWithAccountActivationLink(User user);
 }

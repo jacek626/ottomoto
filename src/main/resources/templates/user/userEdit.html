@@ -51,15 +51,7 @@
 				
 			
 			</script>
-	
-	
-	
 		
-<!-- 		<p> 
-			<a th:href="@{/user/list}" th:text="#{back}" style="float:left;"></a>
-		</p> -->
-		<!-- <div th:if="${message}" th:text="${message}"></div> -->
-	<!-- 	<form th:if="*{id} != null" th:action="@{/user/insertOrUpdate}" th:object="${user}" method="post" class="userRegistrationForm"> -->
 		<form  th:action="@{*{id} != null ? '/user/update' : '/user/insert'}" th:object="${user}" method="post" class="userRegistrationForm">
 			
 			<!-- <span th:if="${#fields.hasErrors('all')}" th:errors="*{all}"></span> -->
@@ -147,6 +139,18 @@
 					<td><label for="zipCode" th:text="#{zipCode}" ></label></td>
 					<td><input type="text" pattern="[0-9]{2}\-[0-9]{3}" name="zipCode" th:field="*{zipCode}"  />
 					<span class="valiationError" th:each="error: ${#fields.errors('zipCode')}" th:text="#{incorrect.value}"></span>
+					</td>
+				</tr>
+				<tr>
+					<td><label for="province">wojewodztwo</label></td>
+					<td>
+						<select id="province" th:field="*{province}">
+						    <option th:each="province : ${T(com.app.enums.Province).values()}"
+						            th:value="${province}"
+						            th:text="#{__${province}__}"
+						            th:selected="*{province}">
+						    </option>
+						</select>
 					</td>
 				</tr>
 				<tr>

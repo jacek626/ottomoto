@@ -1,16 +1,12 @@
 package com.app.service;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.otomoto.entity.Role;
-import com.otomoto.entity.User;
-import com.otomoto.repository.UserRepository;
+import com.app.entity.User;
+import com.app.repository.UserRepository;
 
 public class MyUserDetailsService implements UserDetailsService {
 	
