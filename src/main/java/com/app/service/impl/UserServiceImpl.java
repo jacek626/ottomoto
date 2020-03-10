@@ -1,25 +1,23 @@
 package com.app.service.impl;
 
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.LocaleResolver;
-
 import com.app.entity.Role;
 import com.app.entity.User;
+import com.app.enums.ValidatorCode;
 import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
 import com.app.service.EmailService;
 import com.app.service.UserService;
 import com.app.utils.Result;
 import com.app.validator.UserValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.LocaleResolver;
+
+import java.util.Map;
+import java.util.Objects;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -46,7 +44,7 @@ public class UserServiceImpl implements UserService {
 		LocaleResolver localeResolver;
 	
 	public Result deleteUser(User user) {
-		Map<String,String> validationResult = userValidator.checkBeforeDelete(user.getId());
+		Map<String, ValidatorCode> validationResult = userValidator.checkBeforeDelete(user.getId());
 				
 		if(validationResult.isEmpty()) {
 			userRepository.delete(user);
@@ -57,7 +55,7 @@ public class UserServiceImpl implements UserService {
 	
 	
 	public Result saveUser(User user) {
-		Map<String,String> validationResult = userValidator.checkBeforeSave(user);
+		Map<String,ValidatorCode> validationResult = userValidator.checkBeforeSave(user);
 		
 		if(validationResult.isEmpty()) {
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -82,10 +80,10 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			
-			return Result.returnError();
+			return Result.Error();
 		}
 		
-		return Result.retunSuccess();
+		return Result.Success();
 	}
 
 

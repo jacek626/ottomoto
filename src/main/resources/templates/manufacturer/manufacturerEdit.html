@@ -42,8 +42,8 @@
 						<select onchange="vehicleTypeChanged(this);" class="vehicleType" 
 							th:field="*{vehicleModel[__${rowStat.index}__].vehicleType}">
 								<option 
-									th:each="vehicleType : ${vehicleTypes.entrySet()}"
-									th:value="${vehicleType.key}" th:text="${vehicleType.value}"
+									th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
+									th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
 									th:selected="*{vehicleModel[__${rowStat.index}__].vehicleType}"></option>
 						</select> 
 					</td> 

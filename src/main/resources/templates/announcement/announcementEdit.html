@@ -21,12 +21,12 @@
 			<table style="text-align:left;">
 				<tr>
 					<td colspan="3"><label for="vehicleType">Kategoria pojazdu</label><br/>
-						  <select id="vehicleType" onchange="loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');"  
-							th:field="*{vehicleType}">
-								<option 
-									th:each="vehicleTypes : ${vehicleTypeList.entrySet()}"
-									th:value="${vehicleTypes.key}" th:text="${vehicleTypes.value}"
-									th:selected="*{vehicleType}"></option>
+						  <select id="vehicleType" onchange="loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');">
+								<option
+									th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
+									th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
+									th:selected="*{vehicleType}">
+								</option>
 						</select> 
 							<span th:each="error: ${#fields.errors('vehicleType')}" class="valiationError" th:text="${error}"></span>
 									<input type="hidden" th:field="*{id}" />
@@ -34,15 +34,16 @@
 					</td>
 				</tr>
 				<tr>
-					<td><label for="manufacturer">Marka pojazdu</label><br/>
-						<select id="manufacturer" th:field="*{manufacturer}" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'option');" required>
+					<td>
+						<label for="manufacturer">Marka pojazdu</label><br/>
+						<select id="manufacturer" th:field="*{manufacturerId}" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'option');" required>
 					 	 	<option 
 									th:each="manufacturers: ${manufacturerList}"
 									th:value="${manufacturers.id}" th:text="${manufacturers.name}"
-									th:selected="*{manufacturer}">
+									th:selected="*{manufacturerId}">
 							</option>  
 						</select>
-						<span th:each="error: ${#fields.errors('manufacturer')}" class="valiationError" th:text="${error}"></span>
+						<span th:each="error: ${#fields.errors('manufacturerId')}" class="valiationError" th:text="${error}"></span>
 					</td>
 					<td><label for="vehicleModel">Model pojazdu</label><br/>
 						<select id="vehicleModel" th:field="*{vehicleModel}" required>
@@ -76,9 +77,9 @@
 				<tr style="   vertical-align: bottom;">
 					<td colspan="3" style=" vertical-align: bottom;">
 						<label>Rodzaj paliwa</label>
-						<span style=" vertical-align: top;" th:each="fuelTypes : ${fuelTypeWithLabels.entrySet()}">
-						 	<input type="radio" th:field="*{fuelType}" th:id="${fuelTypes.key}" th:value="${fuelTypes.key}" />
-							<label th:for="${fuelTypes.key}" th:text="${fuelTypes.value}"></label>
+						<span style=" vertical-align: top;" th:each="fuelTypeElement : ${T(com.app.enums.FuelType).values()}">
+						 	<input type="radio" th:field="*{fuelType}" th:id="${fuelTypeElement}" th:value="${fuelTypeElement}" />
+							<label th:for="${fuelTypeElement}" th:text="${fuelTypeElement.label}"></label>
 						</span>
 					</td>
 				</tr>
@@ -89,9 +90,9 @@
 						 <span th:each="error: ${#fields.errors('price')}" class="valiationError" th:text="${error}"></span>
 					
 					<select   th:field="*{currency}">
-					    <option th:each="currencies : ${T(com.app.enums.Currency).values()}"
-					            th:value="${currencies}"
-					            th:text="${currencies}"
+					    <option th:each="currencyItem : ${T(com.app.enums.Currency).values()}"
+					            th:value="${currencyItem}"
+					            th:text="${currencyItem}"
 					            th:selected="*{currency}">
 					    </option>
 					</select>
@@ -105,20 +106,20 @@
 				<tr>
 					<td><label for="vehicleSubtype">typ</label><br/>
 					<select id="vehicleSubtype" th:field="*{vehicleSubtype}">
-						    <option th:each="vehicleSubtypes : ${vehicleSubtypeList}"
-						            th:value="${vehicleSubtypes.key}"
-						            th:text="${vehicleSubtypes.value}"
+						    <option th:each="vehicleSubtypeElement : ${vehicleSubtypeList}"
+						            th:value="${vehicleSubtypeElement}"
+						            th:text="${vehicleSubtypeElement.label}"
 						            th:selected="*{vehicleSubtype}">
 						    </option>
 						</select>
 					</td>
 					<td><label for="carColor">kolor</label><br/>
 						<select id="carColor" th:field="*{carColor}">
-						    <option th:each="colors : ${colorList}"
-						            th:value="${colors.key}"
-						            th:text="${colors.value}"
-						            th:selected="*{carColor}">
-						    </option>
+							<option th:each="color : ${T(com.app.enums.CarColor).values()}"
+									th:value="${color}"
+									th:text="${color.label}"
+									th:selected="*{carColor}">
+							</option>
 						</select>
 					</td>
 				</tr>	
@@ -171,7 +172,7 @@
 			<div style="margin-bottom:30px;"class="spaceLineInAnnouncementView">
 			</div>
 			
-			<div th:replace="announcement/announcementImageGallery :: announcementImageGallery(${announcement}, true)"></div>	
+			<div th:replace="announcement/announcementImageGallery :: announcementImageGallery(${announcement}, true)"></div>
 			
 			<table style="margin-top:10px; margin-bottom:20px;font-size: 16px;">	
 				<tr>

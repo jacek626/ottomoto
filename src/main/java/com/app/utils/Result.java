@@ -1,6 +1,9 @@
 package com.app.utils;
 
+import com.app.enums.ValidatorCode;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Result {
@@ -10,40 +13,46 @@ public class Result {
 	
 	private OperationResult status;
 	
-	private Map<String,String> validationResult;
+	private Map<String,ValidatorCode> validationResult = new HashMap<>();
 	
 	private Result(OperationResult operationStatus) {
 		this.setStatus(operationStatus);
 	}
 	
-	public static Result retunSuccess() {
+	public static Result Success() {
 		return new Result(OperationResult.SUCCESS);
 	}
 	
-	public static Result returnError() {
+	public static Result Error() {
 		return new Result(OperationResult.ERROR);
 	}
-	
-	public static Result error(Map<String,String> validationResult) {
+
+	public static Result error(Map<String,ValidatorCode> validationResult) {
 		Result result = new Result(OperationResult.ERROR);
 		result.setValidationResult(validationResult);
 		
 		return result;
 	}
-	public static Result error(String fieldWithError, String errorDetails) {
+	public static Result error(String fieldWithError, ValidatorCode errorDetails) {
 		Result result = new Result(OperationResult.ERROR);
-		Map<String,String> validationResult = new HashMap<>();
+		Map<String,ValidatorCode> validationResult = new HashMap<>();
 		validationResult.put(fieldWithError, errorDetails);
 		result.setValidationResult(validationResult);
 		
 		return result;
 	}
 	
-	public static Result create(Map<String,String> validationResult) {
+	public static Result create(Map<String, ValidatorCode> validationResult) {
 		Result result = new Result(validationResult.isEmpty() ? OperationResult.SUCCESS : OperationResult.ERROR);
 		result.setValidationResult(validationResult);
 		
 		return result;
+	}
+
+	public void addOtherResult(Result result) {
+		this.status = result.isError() ? OperationResult.ERROR : this.status;
+		this.getValidationResult().putAll(result.getValidationResult());
+
 	}
 	
 	public boolean isSuccess() {
@@ -54,12 +63,21 @@ public class Result {
 		return (status == OperationResult.ERROR ? true : false);
 	}
 
-	public Map<String,String> getValidationResult() {
+	public void addToValidationResult(String key, ValidatorCode code) {
+		validationResult.put(key, code);
+	}
+
+	public Map<String,ValidatorCode> getValidationResult() {
 		return validationResult;
 	}
 
-	public void setValidationResult(Map<String,String> validationResult) {
+	public void setValidationResult(Map<String,ValidatorCode> validationResult) {
 		this.validationResult = validationResult;
+	}
+
+	public void addResults(List<Result> results) {
+
+
 	}
 
 	public OperationResult getStatus() {
@@ -69,25 +87,9 @@ public class Result {
 	public void setStatus(OperationResult status) {
 		this.status = status;
 	}
-	
-	
-	
-	
-	/*
-	 * public static OperationResult newInstance(Result result) { OperationResult
-	 * operationResult = new OperationResult(); operationResult.setResult(result);
-	 * 
-	 * return operationResult; }
-	 * 
-	 * public static OperationResult newInstance(Map<String,String>
-	 * validationResult) { OperationResult operationResult = new OperationResult();
-	 * operationResult.setResult(validationResult.isEmpty() ? Result.SUCCESS :
-	 * Result.ERROR); operationResult.set
-	 * 
-	 * return operationResult; }
-	 */
-	
 
-	
-	
+	public void changeStatusToError() {
+		this.status = OperationResult.ERROR;
+	}
+
 }

@@ -1,11 +1,13 @@
 package com.app.controller;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
+import com.app.entity.Manufacturer;
+import com.app.entity.QManufacturer;
+import com.app.entity.VehicleModel;
+import com.app.enums.VehicleSubtype;
+import com.app.enums.VehicleType;
+import com.app.repository.ManufacturerRepository;
+import com.app.repository.VehicleRepository;
+import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,22 +17,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.app.entity.Manufacturer;
-import com.app.entity.QManufacturer;
-import com.app.entity.VehicleModel;
-import com.app.enums.VehicleSubtype;
-import com.app.enums.VehicleType;
-import com.app.repository.ManufacturerRepository;
-import com.app.repository.VehicleRepository;
-import com.querydsl.core.BooleanBuilder;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("manufacturer/")
@@ -54,7 +47,7 @@ public class ManufacturerController {
 	@RequestMapping(value="new",method=RequestMethod.GET)
 	public String register(Model model) {
 		model.addAttribute("manufacturer", new Manufacturer());
-		model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
+	//	model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
 		
 		return "manufacturer/manufacturerEdit";
 	}
@@ -64,7 +57,7 @@ public class ManufacturerController {
 	public String addVehicle(@ModelAttribute("manufacturer") Manufacturer manufacturer,Model model,
 			Authentication authentication, RedirectAttributes redirectAttributes) {
 		
-		model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
+	//	model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
 		
 		VehicleModel vehicle =new VehicleModel();
 		manufacturer.getVehicleModel().add(vehicle);
@@ -82,7 +75,7 @@ public class ManufacturerController {
 	public String removeVehicle(@ModelAttribute("manufacturer") Manufacturer manufacturer,Model model,
 			@RequestParam("vehicleToDelete") Long vehicleId, Authentication authentication) {
 		
-		model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
+	//	model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
 		
 		manufacturer.getVehicleModel().remove(manufacturer.getVehicleModel().stream().filter(v -> v.getToDelete() == true).findFirst().get());
 		model.addAttribute("manufacturer",manufacturer);
@@ -121,7 +114,7 @@ public class ManufacturerController {
 		else
 			model.addAttribute("manufacturer",manufacturer);
 		
-		model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
+	//	model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
 		
 		return "manufacturer/manufacturerEdit";
 	}
@@ -191,14 +184,15 @@ public class ManufacturerController {
 			@RequestParam(value="typeOfHtmlElement", defaultValue = "li") String htmlElement, Model model,
 			Authentication authentication, ModelMap map) {
 	
-		Map<VehicleSubtype,String> vehicleSubtypeMap = VehicleSubtype.vehicleSubtypesWithLabels(VehicleType.valueOf(vehicleType));
-		
+	//	Map<VehicleSubtype,String> vehicleSubtypeMap = VehicleSubtype.vehicleSubtypesWithLabels(VehicleType.valueOf(vehicleType));
+		List<VehicleSubtype> vehicleSubtypes = VehicleSubtype.vehicleSubtypesWithLabels(VehicleType.valueOf(vehicleType));
+
 /*		for (Map.Entry<VehicleSubtype, String> entry: vehicleSubtypeMap.entrySet()) {
 			strBuilder.append("<option value='" + entry.getKey() + "'>" + entry.getValue() + "</option>");
 		}*/
 		
-		String fromStream =  vehicleSubtypeMap.entrySet().stream()
-				.map(e ->  "<" + htmlElement + " value='" + e.getKey() + "'>" + e.getValue() + "</"+ htmlElement +">")
+		String fromStream =  vehicleSubtypes.stream()
+				.map(e ->  "<" + htmlElement + " value='" + e.getVehicleType() + "'>" + e.getLabel() + "</"+ htmlElement +">")
 				.collect(Collectors.joining("")).toString();
 		
 /*		return (resultWithEmptyOption ? "<option value=''></option>" : "")  + fromStream;*/

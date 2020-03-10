@@ -1,13 +1,15 @@
 package com.app.controller;
 
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.validation.Valid;
-
+import com.app.entity.QUser;
+import com.app.entity.Role;
+import com.app.entity.User;
+import com.app.enums.ValidatorCode;
+import com.app.repository.RoleRepository;
+import com.app.repository.UserRepository;
+import com.app.service.EmailService;
+import com.app.service.UserService;
+import com.app.utils.Result;
+import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -19,7 +21,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,24 +29,15 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.app.entity.QUser;
-import com.app.entity.Role;
-import com.app.entity.User;
-import com.app.repository.RoleRepository;
-import com.app.repository.UserRepository;
-import com.app.service.EmailService;
-import com.app.service.UserService;
-import com.app.utils.Result;
-import com.querydsl.core.BooleanBuilder;
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 
@@ -230,8 +222,8 @@ public class UserController {
 		//	if(errors.getAllErrors() != null)
 		//		errors.getAllErrors().addAll(result.getValidationResult().entrySet().stream().map(e ->  new ObjectError(e.getKey(), e.getValue())).collect(Collectors.toList()));
 			
-			for (Entry<String,String> entry : result.getValidationResult().entrySet()) {
-				bindingResult.addError(new FieldError("user", entry.getKey(), "", false, null, null, entry.getValue()));
+			for (Entry<String, ValidatorCode> entry : result.getValidationResult().entrySet()) {
+				bindingResult.addError(new FieldError("user", entry.getKey(), "", false, null, null, entry.getValue().name()));
 			}
 			
 			model.addAttribute("user", user);
@@ -510,7 +502,13 @@ public class UserController {
 	@RequestMapping(value = "account")
 	public String userAccount(Model model) {
 		
-		return "user/userAccountDetails";
+		return "user/userHome";
+	}
+
+	@RequestMapping(value = "myAnnouncements")
+	public String myAnnouncements(Model model) {
+
+		return "redirect:/announcement/list";
 	}
 
 }

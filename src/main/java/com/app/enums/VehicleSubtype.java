@@ -1,6 +1,5 @@
 package com.app.enums;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,34 +29,12 @@ public enum VehicleSubtype {
 		this.setVehicleType(vehicleType);
 	}
 	
-	public static List<VehicleSubtype>vehicleSubtypesWithLabels2(VehicleType vehicleType) {
+	public static List<VehicleSubtype>vehicleSubtypesWithLabels(VehicleType vehicleType) {
 		return Stream.of(VehicleSubtype.values()).filter(s -> s.getVehicleType() == vehicleType).collect(Collectors.toList());
 	}
-	
-	public static Map<VehicleSubtype,String>vehicleSubtypesWithLabels(VehicleType vehicleType) {
-		Map<VehicleSubtype,String> mapToReturn = new LinkedHashMap<VehicleSubtype,String>();
-		if(vehicleType == VehicleType.CAR) {
-			mapToReturn.put(VehicleSubtype.SMALL, "Auta małe");
-			mapToReturn.put(VehicleSubtype.CITY_CAR, "Auta miejskie");
-			mapToReturn.put(VehicleSubtype.COMPACT, "Kompakt");
-			mapToReturn.put(VehicleSubtype.SEDAN, "Sedan");
-			mapToReturn.put(VehicleSubtype.COMBI, "Kombi");
-			mapToReturn.put(VehicleSubtype.MINIVAN, "Minivan");
-			mapToReturn.put(VehicleSubtype.SUV, "SUV");
-			mapToReturn.put(VehicleSubtype.CABRIO, "Kabriolet");
-			mapToReturn.put(VehicleSubtype.COUPE, "Coupe");
-		}
-		else if(vehicleType == VehicleType.TRUCK) {
-			mapToReturn.put(VehicleSubtype.VANS, "Auto dostawcze");
-			mapToReturn.put(VehicleSubtype.TRUCK, "Auto ciężarowe");
-		}
-		else if(vehicleType == VehicleType.MOTORCYCLE) {
-			mapToReturn.put(VehicleSubtype.SPORT_BIKE, "Sporotwy");
-			mapToReturn.put(VehicleSubtype.TOURIST_MOTORCYCLE, "Turystyczny");
-			mapToReturn.put(VehicleSubtype.SCOOTER, "Skuter");
-		}
-		
-		return mapToReturn;
+
+	public static Map<VehicleSubtype,String> vehicleSubtypesWMap(VehicleType vehicleType) {
+		return null;
 	}
 
 	public String getLabel() {

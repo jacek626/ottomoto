@@ -1,40 +1,15 @@
 package com.app.entity;
 
-import java.awt.Color;
+import com.app.enums.*;
+import com.app.utils.AnnouncementSearchFields;
+import com.google.common.collect.Lists;
+
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Transient;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.app.enums.CarColor;
-import com.app.enums.Currency;
-import com.app.enums.FuelType;
-import com.app.enums.VehicleSubtype;
-import com.app.enums.VehicleType;
-import com.app.utils.AnnouncementSearchFields;
 
 @Entity
 public class Announcement {
@@ -50,93 +25,100 @@ public class Announcement {
 	
 	@Size(max=3000)
 	private String description;
-	
+
 	@Transient
-	private Manufacturer manufacturer;
-	
+	private Long manufacturerId;
+
+	@Transient
+	private String manufacturerName;
+
 	@Transient
 	private VehicleType vehicleType;
-	
+
 	@NotNull
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	private VehicleModel vehicleModel;
-	
+
 	@NotNull
 	@Min(1900)
 	@Max(2100)
 	private Integer productionYear;
-	
+
 	@NotNull
 	@Min(0)
 	@Max(999_999_999)
 	//@Size(min=0, max=999_999_999, message="{validation.rangeError}")
 	private Integer mileage;
-	
+
 	@Size(max=20)
 	private String vin;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private FuelType fuelType;
- 
+
 	@NotNull
 	@Min(0)
 	@Digits(integer=9, fraction=2)
 	private BigDecimal price;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Currency currency;
-	
+
 	@NotNull
 	private Boolean netPrice;
-	
+
 	@NotNull
 	private Boolean priceNegotiate;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private VehicleSubtype vehicleSubtype;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private CarColor carColor;
-	
+
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, mappedBy = "announcement", fetch = FetchType.EAGER)
 	@OrderBy("mainPhotoInAnnouncement DESC,id DESC")
 	private List<Picture> pictures = new ArrayList<Picture>();
-	
+
 	@NotNull
-	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn
 	private User user;
-	
-	@Column(updatable = false) 
+
+	@Column(updatable = false)
 	private Date creationDate;
-	
+
 	private Date deactivationDate;
-	
+
 	//@Size(min=0,max=999_999, message="{validation.rangeError}")
+
 	@Min(0)
 	@Max(value = 50_000, message="{validation.rangeError}")
 	private Integer engineCapacity;
-	
 	//@Size(min=0,max=999_999, message="{validation.rangeError}")
+
 	@Max(value=50000, message="{validation.rangeError}")
 	private Integer enginePower;
-	
 	private Boolean accidents;
-	
+
 	private Boolean firstOwner;
-	
+
 	private Boolean damaged;
-	
+
 	private Byte doors;
-	
+
 	@Transient
 	private AnnouncementSearchFields searchFields = new AnnouncementSearchFields();
-	
+
+	public static final Announcement newInstanceForAnnouncementCreationForm() {
+		return new Announcement.AnnouncementBuilder().build();
+	}
 	public static class AnnouncementBuilder {
+
 		private String title;
 		private String description;
 		private Manufacturer manufacturer;
@@ -162,7 +144,7 @@ public class Announcement {
 		private Boolean firstOwner;
 		private Boolean damaged;
 		private Byte doors;
-		
+
 		public AnnouncementBuilder(VehicleModel vehicleModel, VehicleSubtype vehicleSubtype, Integer productionYear, Integer mileage, BigDecimal price, User user) {
 			this.vehicleModel = vehicleModel;
 			this.vehicleSubtype = vehicleSubtype;
@@ -170,13 +152,22 @@ public class Announcement {
 			this.mileage = mileage;
 			this.price = price;
 			this.user = user;
-			
-			this.title = "title";
+
+			setDefaultValues();
+		}
+
+		private AnnouncementBuilder() {
+			setDefaultValues();
+		}
+
+		private void setDefaultValues() {
+		    this.title = "Default title";
 			this.carColor = CarColor.WHITE;
 			this.currency = Currency.PLN;
 			this.netPrice = false;
-			this.priceNegotiate = true; 
+			this.priceNegotiate = true;
 			this.fuelType = FuelType.PETROL;
+			this.pictures = Lists.newArrayList();
 		}
 		
 		public Announcement build() {
@@ -316,7 +307,6 @@ public class Announcement {
 
 		if(vehicleType == null)
 			setVehicleType(VehicleType.CAR);
-		
 	}
 	
 	public Announcement() {
@@ -335,6 +325,7 @@ public class Announcement {
 		this.netPrice = announcementBuilder.netPrice;
 		this.priceNegotiate = announcementBuilder.priceNegotiate;
 		this.fuelType = announcementBuilder.fuelType;
+		this.pictures = announcementBuilder.pictures;
 	}
 
 	public Long getId() {
@@ -363,14 +354,6 @@ public class Announcement {
 
 	public void setTitle(String title) {
 		this.title = title;
-	}
-
-	public Manufacturer getManufacturer() {
-		return manufacturer;
-	}
-
-	public void setManufacturer(Manufacturer manufacturer) {
-		this.manufacturer = manufacturer;
 	}
 
 	public VehicleModel getVehicleModel() {
@@ -553,5 +536,19 @@ public class Announcement {
 		this.doors = doors;
 	}
 
-	
+	public Long getManufacturerId() {
+		return manufacturerId;
+	}
+
+	public void setManufacturerId(Long manufacturerId) {
+		this.manufacturerId = manufacturerId;
+	}
+
+	public String getManufacturerName() {
+		return manufacturerName;
+	}
+
+	public void setManufacturerName(String manufacturerName) {
+		this.manufacturerName = manufacturerName;
+	}
 }

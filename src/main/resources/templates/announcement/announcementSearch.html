@@ -7,23 +7,23 @@
 							<label for="vehicleType" th:text="#{vehicleType}"></label>
 	 						<select id="vehicleType" onchange="controlElementVisibility(this.value == 'CAR' ? true : false, '.doorsRow','table-row'); clearManufacturer(); clearVehicleModel(); clearVehicleModelDropDown();clearManufacturerDropDown();  loadManufacturer(this.value, 'li');   "  
 								th:field="*{vehicleType}">
-									<option 
-										th:each="vehicleTypes : ${vehicleTypeList.entrySet()}"
-										th:value="${vehicleTypes.key}" th:text="${vehicleTypes.value}"
-										th:selected="*{vehicleType}">
+									<option
+											th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
+											th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
+											th:selected="*{vehicleType}">
 									</option>
 							</select> 
 						</td>
 					</tr>
 					<tr>
-						<td>
+						<td>           <!--   manufacturer       -->
 							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
 							<input type="text"  id="manufacturerLabel" dropDownElementId="manufacturer" onfocusin="clearInputAndFireTrigger(this);"  
-							readonly="readonly"  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); selectValuesInDropDownByKeyboard();"   th:placeholder="#{manufacturer}"  class="inputAsSelect labelInAnnouncementSearch" th:value="*{manufacturer != null ? manufacturer.name : ''}" >
-							<input type="hidden" id="manufacturerValue"  th:field="*{manufacturer}" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'li');">
+							readonly="readonly"  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); selectValuesInDropDownByKeyboard();"   th:placeholder="#{manufacturer}"  class="inputAsSelect labelInAnnouncementSearch" th:value="*{manufacturerId != null ? manufacturerName : ''}" >
+                               <input type="hidden" id="manufacturerValue"  th:field="*{manufacturerId}" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'li');">
 							<ul class="valuesDropDown" id="manufacturer">
 								<li th:each="element : ${manufacturerList}" th:text="${element.name}" 
-								th:class="*{manufacturer} != null and ${element.id} == *{manufacturer.id} ? 'selected' : '' "  th:value="${element.id}"></li>
+								th:class="*{manufacturerId} != null and ${element.id} == *{manufacturerId} ? 'selected' : '' "  th:value="${element.id}"></li>
 							</ul>
 							<button type="button" class="announcementClearButton" onclick="clearManufacturer(); clearVehicleModel();">X</button>
 						</td>

@@ -1,29 +1,27 @@
 package com.app.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.app.entity.Announcement;
-import com.app.entity.Picture;
 import com.app.repository.AnnouncementRepository;
 import com.app.service.AnnouncementService;
 import com.app.utils.Result;
 import com.app.validator.AnnouncementValidator;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 
 @Service("announcementService")
 public class AnnouncementServiceImpl implements AnnouncementService {
 	
-	@Autowired
-	private AnnouncementRepository announcementRepository;
+	private final AnnouncementRepository announcementRepository;
 
-	@Autowired
-	private AnnouncementValidator announcementValidator;
-	
+	private final AnnouncementValidator announcementValidator;
+
+	public AnnouncementServiceImpl(AnnouncementRepository announcementRepository, AnnouncementValidator announcementValidator) {
+		this.announcementRepository = announcementRepository;
+		this.announcementValidator = announcementValidator;
+	}
+
 	@Override
 	public Result saveAnnouncement(Announcement announcement) {
 		Result result = announcementValidator.checkBeforeSave(announcement);
@@ -34,7 +32,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 		
 		return result;
 	}
-	
+
 	@Override
 	public long activateAnnouncement(Long announcementId) {
 		return announcementRepository.updateDeactivationDateByUserId(null, announcementId);
@@ -55,10 +53,5 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 	public long deactivateAllUserAnnouncements(Long userId) {
 		return announcementRepository.updateDeactivationDateByUserId(null, userId);
 	}
-
-	//@Override
-	//public int coutByVehicleModelManufacturerId(Long manufacturerId) {
-	//	return announcementRepository.coutByVehicleModelManufacturerId(manufacturerId);
-	//}
 
 }

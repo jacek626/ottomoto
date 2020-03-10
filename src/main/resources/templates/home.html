@@ -7,8 +7,7 @@
     <div th:replace="fragments/search :: search">
     </div>
     <div style="min-height:400px; background-color: #f2f2f3; margin:auto; text-align:center; ">  
-	<!-- 	<div style="display: flex; flex-wrap: wrap; width:960px;" >  -->
-	
+
 	<style>
 		.grid {
 			 display: grid;
@@ -84,6 +83,7 @@
 		}
 	
 	</style>
+
 		<div class="grid" style="display: flex;  width:934px;  margin:auto; justify-content: space-between; background-color: white;">
 			<div style="margin:auto; text-align: center;">
 				<div th:replace="announcement/announcementSearch :: announcementSearch('announcement/list')"></div>
@@ -93,11 +93,12 @@
 			</div> -->
 		
 		</div>
+
 		<div class="grid" >
-			<a class="blocks" th:each="announcement, row : ${newestAnnouncements}" style="  display:block;  background-color: white ; margin:5px; min-height:150px;" th:href="@{'/announcement/show/' + ${announcement.id}}">
+			<a class="blocks" th:each="announcement, row : ${newestAnnouncements}" style="  display:block;  background-color: white ; margin:5px; min-height:150px;" th:href="@{'/announcement/read/' + ${announcement.id}}">
 				<div class="imageWrapper" >
-						<img th:if="${#lists.size(announcement.pictures)} > 0" width="100%"  th:src="${'/images/' + announcement.pictures[0].miniatureRepositoryName}" ></img>
-						<img th:if="${#lists.size(announcement.pictures)} == 0" width="100%"  th:src="${'/images/noPhoto.png'}" ></img>
+						<img th:if="${#lists.size(announcement.pictures)} > 0" width="100%"  th:src="${'images/' + announcement.pictures[0].miniatureRepositoryName}" ></img>
+						<img th:if="${#lists.size(announcement.pictures)} == 0" width="100%"  th:src="@{'images/noPhoto.png'}" ></img>
 				</div>
 					<div  style="border-top: 1px solid #bf2505; margin-top:3px; margin-bottom:3px;  margin:2px; text-align: left; " >
 						<div style="margin-left:2px; margin-top:2px; " th:text="${announcement.vehicleModel.manufacturer.name + ' ' + announcement.vehicleModel.name}" ></div>

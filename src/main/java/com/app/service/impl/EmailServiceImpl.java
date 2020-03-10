@@ -44,11 +44,11 @@ public class EmailServiceImpl implements EmailService {
 			logger.error("EMAIL sending error");
 			e.printStackTrace();
 			
-			return Result.returnError();
+			return Result.Error();
 		}
 		
 		
-		return Result.retunSuccess();
+		return Result.Success();
 	}
 	
 	

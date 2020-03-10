@@ -1,18 +1,9 @@
 package com.app.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-
-import com.app.enums.VehicleSubtype;
 import com.app.enums.VehicleType;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class VehicleModel {
@@ -39,6 +30,14 @@ public class VehicleModel {
 	@Transient
 	private Boolean toDelete = false;
 	
+
+	public VehicleModel(@NotNull Long id,@NotNull String name, @NotNull Manufacturer manufacturer, @NotNull VehicleType vehicleType) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.manufacturer = manufacturer;
+		this.vehicleType = vehicleType;
+	}
 
 	public VehicleModel(@NotNull String name, @NotNull Manufacturer manufacturer, @NotNull VehicleType vehicleType) {
 		super();

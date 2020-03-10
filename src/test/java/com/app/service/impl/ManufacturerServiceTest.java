@@ -1,51 +1,79 @@
 package com.app.service.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import com.app.entity.Manufacturer;
 import com.app.entity.VehicleModel;
 import com.app.enums.VehicleType;
+import com.app.repository.AnnouncementRepository;
 import com.app.repository.ManufacturerRepository;
 import com.app.repository.VehicleModelRepository;
-import com.app.service.ManufacturerService;
 import com.app.utils.Result;
+import com.app.validator.ManufacturerValidator;
+import com.app.validator.VehicleModelValidator;
+import com.querydsl.core.types.Predicate;
+import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Arrays;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-//@DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 public class ManufacturerServiceTest {
 
-	@Autowired
-	private ManufacturerService manufacturerService;
-	
-	@Autowired
+	private static Validator validator;
+
+	@Mock
 	private ManufacturerRepository manufacturerRepository;
-	
-	@Autowired
+
+	@Mock
+	private AnnouncementRepository announcementRepository;
+
+	@Mock
 	private VehicleModelRepository vehicleModelRepository;
-	
+
+	@InjectMocks
+	private VehicleModelValidator vehicleModelValidator = spy(VehicleModelValidator.class);
+
+	@InjectMocks
+	private ManufacturerValidator manufacturerValidator = spy(ManufacturerValidator.class);
+
+	@InjectMocks
+	private ManufacturerServiceImpl manufacturerService;
+
+
+	public static void setUp() {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		validator = factory.getValidator();
+	}
+
 	@Test
 	public void shouldSaveManufacturer() {
-		Manufacturer manufacturer = new Manufacturer("mSTmanufacturer1");
-		
+		//given
+		Manufacturer manufacturer = new Manufacturer("Manufacturer");
+
+		//when
 		Result result = manufacturerService.saveManufacturer(manufacturer);
-		
-		assertTrue(result.isSuccess());
-		assertNotNull(manufacturer.getId());
+		Set<ConstraintViolation<Manufacturer>> manufacturerEntityValidation = validator.validate( manufacturer );
+
+		//then
+		assertThat(manufacturerEntityValidation.size()).isZero();
+		assertThat(result.isSuccess()).isTrue();
+		verify(manufacturerRepository, times(1)).save(any(Manufacturer.class));
 	}
 	
 	@Test
@@ -63,67 +91,90 @@ public class ManufacturerServiceTest {
 	}
 	
 	@Test
-	public void shouldReturnValidationErrorBecElementWithSameNameExists() {
-		Manufacturer manufacturer = new Manufacturer("mSTmanufacturer3");
-		Manufacturer manufacturer2 = new Manufacturer("mSTmanufacturer3");
-		
+	public void shouldReturnValidationErrorDuringCreateNewManufacturerBecElementWithSameNameExists() {
+		//given
+		Manufacturer manufacturer = new Manufacturer("Manufacturer");
+		when(manufacturerRepository.findByName(Mockito.anyString())).thenReturn(Arrays.asList(new Manufacturer("Manufacturer")));
+
+		//when
 		Result result = manufacturerService.saveManufacturer(manufacturer);
-		Result result2 = manufacturerService.saveManufacturer(manufacturer2);
-		
-		assertTrue(result.isSuccess());
-		assertNotNull(manufacturer.getId());
-		
-		assertTrue(result2.isError());
-		assertNull(manufacturer2.getId());
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("manufacturer")).isEqualTo("nameAlreadyExists");
 	}
-	
+
 	@Test
-	public void shouldReturnValidationErrorBecVehicleModelWithSameNameExists() {
-		Manufacturer manufacturer = new Manufacturer("mSTmanufacturer4");
-		manufacturer.setVehicleModel(Lists.list( new VehicleModel("mSTvehicleModel3", manufacturer, VehicleType.CAR), new VehicleModel("mSTvehicleModel4", manufacturer, VehicleType.CAR)));
-		
-		Manufacturer manufacturer2 = new Manufacturer("mSTmanufacturer5");
-		manufacturer2.setVehicleModel(Lists.list(new VehicleModel("mSTvehicleModel4", manufacturer2, VehicleType.CAR)));
-		
+	public void shouldReturnValidationErrorDuringEditManufacturerBecElementWithSameNameExists() {
+		//given
+		Manufacturer manufacturer = new Manufacturer("Manufacturer");
+		manufacturer.setId(-2L);
+		when(manufacturerRepository.findByName(Mockito.anyString())).thenReturn(Arrays.asList(new Manufacturer(-1L,"Manufacturer")));
+
+		//when
 		Result result = manufacturerService.saveManufacturer(manufacturer);
-		Result result2 = manufacturerService.saveManufacturer(manufacturer2);
-		
-		assertTrue(result.isSuccess());
-		assertNotNull(manufacturer.getId());
-		assertEquals(0, manufacturer.getVehicleModel().stream().filter(e -> e.getId() == null).count());
-		
-		assertTrue(result2.isError());
-		assertThat(result2.getValidationResult().get("vehicleModelNameAlreadyExists").contains("vehicleModel4"));
-		assertNull(manufacturer2.getId());
-		assertEquals(1, manufacturer2.getVehicleModel().stream().filter(e -> e.getId() == null).count());
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("manufacturer")).isEqualTo("nameAlreadyExists");
+	}
+
+	@Test
+	public void shouldEditManufacturerNameIsNotChanged() {
+		//given
+		Manufacturer manufacturer = new Manufacturer("Manufacturer");
+		manufacturer.setId(-2L);
+		when(manufacturerRepository.findByName(Mockito.anyString())).thenReturn(Arrays.asList(new Manufacturer(-2L,"Manufacturer")));
+
+		//when
+		Result result = manufacturerService.saveManufacturer(manufacturer);
+
+		//then
+		assertThat(result.isSuccess()).isTrue();
+		verify(manufacturerRepository, times(1)).save(any(Manufacturer.class));
+	}
+
+	@Test
+	public void shouldEditManufacturerNameIsChanged() {
+		//given
+		Manufacturer manufacturer = new Manufacturer("Manufacturer");
+		manufacturer.setId(-2L);
+		when(manufacturerRepository.findByName(Mockito.anyString())).thenReturn(Arrays.asList(new Manufacturer(-2L,"Manufacturer Test")));
+
+		//when
+		Result result = manufacturerService.saveManufacturer(manufacturer);
+
+		//then
+		assertThat(result.isSuccess()).isTrue();
+		verify(manufacturerRepository, times(1)).save(refEq(new Manufacturer(-2L, "Manufacturer")));
 	}
 	
 	@Test
-	public void shouldDeleteManufacturer() { 
-		Manufacturer manufacturer = new Manufacturer("mSTmanufacturer6");
-		
-		Result saveResult = manufacturerService.saveManufacturer(manufacturer);
+	public void shouldDeleteManufacturer() {
+		//given
+		Manufacturer manufacturer = new Manufacturer("Manufacturer");
+
+		//when
+		Result saveResult = manufacturerService.deleteManufacturer(manufacturer);
 		manufacturerService.deleteManufacturer(manufacturer);
-		
-		assertTrue(saveResult.isSuccess());
+
+		//then
+		assertThat(saveResult.isSuccess()).isTrue();
 		assertNotNull(manufacturer.getId());
-		assertFalse(manufacturerRepository.findById(manufacturer.getId()).isPresent());
 	}
 	
 	@Test
-	public void shouldDeleteManufacturerWithVehicleModels() { 
-		Manufacturer manufacturer = new Manufacturer("manufacturer7");
-		manufacturer.setVehicleModel(Lists.list(new VehicleModel("mSTvehicleModel6", manufacturer, VehicleType.CAR), new VehicleModel("vehicleModel7", manufacturer, VehicleType.CAR)));
-		
-		Result saveResult = manufacturerService.saveManufacturer(manufacturer);
-		manufacturerService.deleteManufacturer(manufacturer);
-		
-		assertTrue(saveResult.isSuccess());
-		assertNotNull(manufacturer.getId());
-		assertEquals(0, manufacturer.getVehicleModel().stream().filter(e -> e.getId() == null).count());
-		assertFalse(manufacturerRepository.findById(manufacturer.getId()).isPresent());
-		assertFalse(vehicleModelRepository.findById(manufacturer.getVehicleModel().get(0).getId()).isPresent());
-		assertFalse(vehicleModelRepository.findById(manufacturer.getVehicleModel().get(1).getId()).isPresent());
+	public void shouldReturnValidationErrorBecManufacturerHaveVehicleModels() {
+		//given
+		Manufacturer manufacturer = new Manufacturer("Manufacturer");
+		manufacturer.setVehicleModel(Lists.list(new VehicleModel(-1L,"Vehicle1", manufacturer, VehicleType.CAR), new VehicleModel(1L,"Vehicle2", manufacturer, VehicleType.CAR)));
+		when(announcementRepository.countByPredicates(any(Predicate.class))).thenReturn(1L);
+
+		//when
+		Result saveResult = manufacturerService.deleteManufacturer(manufacturer);
+
+		//then
+		assertThat(saveResult.isError()).isTrue();
 	}
 	
 }

@@ -1,16 +1,5 @@
 package com.app.repository.impl;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-
 import com.app.entity.Announcement;
 import com.app.entity.QAnnouncement;
 import com.app.entity.QPicture;
@@ -20,7 +9,18 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+
+@Repository
 public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom {
 	
 	@PersistenceContext
@@ -32,7 +32,16 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 	    
 		return query.from(announcement).where(predicates).fetch();
 	}
-	
+
+	@Override
+	public long countByPredicates(Predicate... predicates) {
+		QAnnouncement announcement = QAnnouncement.announcement;
+		JPAQuery<Announcement> query = new JPAQuery<>(entityManager);
+
+
+		return query.from(announcement).where(predicates).fetchCount();
+	}
+
 	public List<Announcement> findByPredicatesAndLoadMainPicture(Predicate... predicates) {
 		QAnnouncement announcement = QAnnouncement.announcement;
 		QPicture picture = QPicture.picture;
@@ -94,13 +103,7 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 				orderBy(getOrderSpecifiers(pageable, Announcement.class)).
 				fetch();
 		
-	 //       int pageSize = pageable.getPageSize();
-//		      long pageOffset = pageable.getOffset();
-//		       long total = pageOffset + result.size() + (result.size() == pageSize ? pageSize : 0);
-		       long total = query.fetchCount();
-	       Page<Announcement> page = new PageImpl<Announcement>(result, pageable,total);
-		
-	       return page;
+	       return new PageImpl<>(result, pageable,query.fetchCount());
 	}
 	
 

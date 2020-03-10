@@ -35,7 +35,9 @@ public class HtmlElement {
 			throw new IllegalArgumentException("tag is not set");
 			
 		StringBuilder htmlElement = new StringBuilder();
-		
+		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDD");
+		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDD");
+		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDD");
 	//	if(tag.get().equals("input")) {
 			htmlElement.append("<" + tag.get() + " ");
 			

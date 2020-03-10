@@ -1,133 +1,143 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head"></head>
-  <body>
-    <div th:replace="fragments/header :: header">
+<body>
+<div th:replace="fragments/header :: header">
+</div>
+<div th:replace="fragments/search :: search"></div>
+<div id="content">
+    <div id="content-middle">
+
+        <style>
+            .rowInTableHeight {
+                height: 170px;
+            }
+
+            .linkAnnouncement {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+        </style>
+
+
+    <!--    <div th:replace="announcement/announcementSearch :: announcementSearch('announcement/list')"></div>-->
+        <div th:replace="announcement/announcementSearch :: announcementSearch('announcement/' + ${requestMapping})"></div>
+
+        <table id="resultsTable" style="margin-top:20px;">
+            <thead>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    <a
+                            th:href="@{/announcement/__${requestMapping}__?(page=${page}, size=${size},orderBy=vehicleModel.manufacturer.name,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+                            th:text="#{manufacturer}"></a>
+                </th>
+                <th>
+                    <a
+                            th:href="@{/announcement/__${requestMapping}__?(page=${page}, size=${size},orderBy=vehicleModel.name,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+                            th:text="#{vehicleModelName}"></a>
+                </th>
+                <th>
+                    <a
+                            th:href="@{/announcement/__${requestMapping}__?(page=${page}, size=${size},orderBy=price,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+                            th:text="#{price}"></a>
+                </th>
+                <th>
+                    <a
+                            th:href="@{/announcement/__${requestMapping}__?(page=${page}, size=${size},orderBy=productionYear,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+                            th:text="#{productionYear}"></a>
+                </th>
+                <th>
+                    <a
+                            th:href="@{/announcement/__${requestMapping}__?(page=${page}, size=${size},orderBy=fuelType,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+                            th:text="#{fuelType}"></a>
+                </th>
+                <th>
+                    <a
+                            th:href="@{/announcement/__${requestMapping}__?(page=${page}, size=${size},orderBy=vin,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+                            th:text="#{vin}"></a>
+                </th>
+                <th>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="announcement, iStat : ${pages.content}" class="rowInTableHeight"
+                style="cursor: pointer; overflow: hidden;" th:data-href="@{'/announcement/read/' + ${announcement.id}}">
+                <td>
+                    <a th:href="@{'/announcement/read/' + ${announcement.id}}">
+                        <img th:if="${#lists.size(announcement.pictures)} > 0" width="100%"
+                             th:src="@{'/images/' + ${announcement.pictures[0].miniatureRepositoryName}}"></img>
+                        <img th:if="${#lists.size(announcement.pictures)} == 0" width="100%"
+                             th:src="@{'/images/noPhoto.png'}"></img>
+                    </a>
+                </td>
+                <td>
+
+                    <a th:href="@{'/announcement/read/' + ${announcement.id}}"
+                       class="rowInTableHeight linkAnnouncement">
+                        <div th:text="${announcement.vehicleModel.manufacturer.name}">
+                        </div>
+                    </a>
+
+                </td>
+                <td>
+                    <a th:href="@{'/announcement/read/' + ${announcement.id}}"
+                       class="rowInTableHeight linkAnnouncement">
+                        <div th:text="${announcement.vehicleModel.name}"></div>
+                    </a>
+                </td>
+                <td>
+                    <a th:href="@{'/announcement/read/' + ${announcement.id}}"
+                       class="rowInTableHeight linkAnnouncement">
+                        <div th:text="${announcement.price}"></div>
+                    </a>
+                </td>
+                <td>
+                    <a th:href="@{'/announcement/read/' + ${announcement.id}}"
+                       class="rowInTableHeight linkAnnouncement">
+                        <div th:text="${announcement.productionYear}"></div>
+                    </a>
+                </td>
+                <td>
+                    <a th:href="@{'/announcement/read/' + ${announcement.id}}"
+                       class="rowInTableHeight linkAnnouncement">
+                        <div th:text="${announcement.fuelType}"></div>
+                    </a>
+                </td>
+                <td>
+                    <a th:href="@{'/announcement/read/' + ${announcement.id}}"
+                       class="rowInTableHeight linkAnnouncement">
+                        <div th:text="${announcement.vin}"></div>
+                    </a>
+                </td>
+                <td>
+                    <a th:href="@{'/announcement/edit/' + ${announcement.id}}"
+                       th:text="edycja">
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:replace="fragments/pagination :: pagination('/announcement/' + ${requestMapping})"></div>
     </div>
-    <div th:replace="fragments/search :: search"></div>
- 	<div id="content">
-		<div id="content-middle">
-		
-		<style>
-			.rowInTableHeight {
-				height: 170px;
-			}
-			
-			.linkAnnouncement {
-				width:100%;  
-				display: flex; 
-				align-items: center;  
-				justify-content: center;
-			}
-		
-		</style>
-		
-		
- 	<div th:replace="announcement/announcementSearch :: announcementSearch('announcement/list')"></div>
+</div>
 
-			<table id="resultsTable" style="margin-top:20px;">
-				<thead>
-					<tr>
-						<th>
-						</th>
-						<th>
-							<a
-							th:href="@{/announcement/list/(page=${page}, size=${size},orderBy=manufacturer.name,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
-							th:text="#{manufacturer}"></a>
-						</th>
-						<th>
-							<a
-							th:href="@{/announcement/list/(page=${page}, size=${size},orderBy=vehicleModel.name,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
-							th:text="#{vehicleModelName}"></a>
-						</th>
-						<th>
-							<a
-							th:href="@{/announcement/list/(page=${page}, size=${size},orderBy=price,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
-							th:text="#{price}"></a>
-						</th>
-						<th>
-							<a
-							th:href="@{/announcement/list/(page=${page}, size=${size},orderBy=productionYear,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
-							th:text="#{productionYear}"></a>
-						</th>
-						<th>
-							<a
-							th:href="@{/announcement/list/(page=${page}, size=${size},orderBy=fuelType,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
-							th:text="#{fuelType}"></a>
-						</th>
-						<th>
-							<a
-							th:href="@{/announcement/list/(page=${page}, size=${size},orderBy=vin,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
-							th:text="#{vin}"></a>
-						</th>
-						<th>
-						</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="announcement, iStat : ${pages.content}" class="rowInTableHeight" style="cursor: pointer; overflow: hidden;" th:data-href="@{'/announcement/show/' + ${announcement.id}}">
-						<td>
-							<a th:href="@{'/announcement/show/' + ${announcement.id}}">
-								<img th:if="${#lists.size(announcement.pictures)} > 0" width="100%"  th:src="${'/images/' + announcement.pictures[0].miniatureRepositoryName}" ></img>
-								<img th:if="${#lists.size(announcement.pictures)} == 0" width="100%"  th:src="${'/images/noPhoto.png'}" ></img>
-							</a>
-						</td>
-						<td>
-						
-						<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
-							<div th:text="${announcement.vehicleModel.manufacturer.name}">
-	    					</div>
-						</a>
-						
-						</td>
-						<td>
-							<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
-								<div th:text="${announcement.vehicleModel.name}"></div>
-							</a>
-						</td>
-						<td>
-							<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
-								<div th:text="${announcement.price}" ></div>
-							</a>
-						</td>
-						<td>
-							<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
-								<div th:text="${announcement.productionYear}"></div>
-							</a>
-						</td>
-						<td>
-							<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
-								<div th:text="${announcement.fuelType}"></div>
-							</a>
-						</td>
-						<td>
-							<a th:href="@{'/announcement/show/' + ${announcement.id}}" class="rowInTableHeight linkAnnouncement">
-								<div th:text="${announcement.vin}"></div>
-							</a>
-						</td>
-						<td>
-							<a th:href="@{'/announcement/edit/' + ${announcement.id}}"
-							th:text="edycja">
-							</a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			
-			<div th:replace="fragments/pagination :: pagination('/announcement/list')"></div>
-		</div>
-	</div>
-	
-	<script type="text/javascript">
-	jQuery(document).ready(function($) {
-	    $(".clickable-row").click(function() {
-	        window.location = $(this).data("href");
-	    });
-	});
-	
-	</script>
-	
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $(".clickable-row").click(function () {
+            window.location = $(this).data("href");
+        });
+    });
 
-	<div th:replace="fragments/footer :: footer"></div>
+</script>
+
+
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

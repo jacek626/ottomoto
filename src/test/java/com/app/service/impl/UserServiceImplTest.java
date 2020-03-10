@@ -1,257 +1,274 @@
 package com.app.service.impl;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import com.app.entity.Role;
 import com.app.entity.User;
+import com.app.enums.ValidatorCode;
+import com.app.repository.AnnouncementRepository;
 import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
 import com.app.utils.Result;
 import com.app.validator.UserValidator;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-//@ExtendWith(SpringExtension.class)
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class UserServiceImplTest {
 
 	@Mock
-	private UserRepository userRepositoryMock;
+	private RoleRepository roleRepository;
 	
+	@Spy
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 	@Mock
-	private UserValidator userValidatorMock;
-	
-	@Mock
-	private RoleRepository roleRepositoryMock;
-	
-	@Mock
-	private BCryptPasswordEncoder bCryptPasswordEncoderMock;
-	
-	@InjectMocks
-	private UserServiceImpl userServiceMock;
-	
-	@Autowired
 	private UserRepository userRepository;
-	
-	@Autowired
+
+	@Mock
+	private AnnouncementRepository announcementRepository;
+
+	@InjectMocks
+	private UserValidator userValidator = spy(UserValidator.class);
+
+	@InjectMocks
 	private UserServiceImpl userService;
-	
+
 	private static Validator validator;
-	
-	private static User SAVED_USER;
-	
+
 	@BeforeAll
 	static void setUp() throws Exception {
-		
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-        SAVED_USER = new User();
-        SAVED_USER.setId(-1L);
+		validator = factory.getValidator();
+	}
+
+
+	@BeforeEach
+	public void mockEmailAndLoginValidation() {
+		when(userRepository.countByLogin(any(String.class))).thenReturn(0);
 	}
 
 	@Test
-	public void shouldSaveSingleAUser() {
-		User user = new User.UserBuilder("userLoginTest","testPass","testPass","mailTest@test.com", true).setRole(new Role()).build();
-		
-//		when(userRepository.save(any(User.class))).thenAnswer(e -> { User user2 = new User(); user.setId(1L); return user; });
-		/*
-		 * when(userRepository.save(any(User.class))).thenAnswer(e -> {
-		 * 
-		 * User user2 = new User(); user.setId(1L); return user;
-		 * 
-		 * });
-		 */
-		
-		Result result = userServiceMock.saveUser(user);
-		// ifRoleIsNotSetSetDefaultUserRole
-		
-		verify(userRepositoryMock, times(1)).save(any(User.class));
-		
-		assertTrue(result.isSuccess()); 
-	//	assertNotNull(user.getId());
+	public void shouldSaveUser() {
+		//given
+		User user = prepareUser();
 
-	//	Set<ConstraintViolation<User>> violations = validator.validate(user);
-	//	 assertTrue(violations.isEmpty()); 
-		
-	//	assertTrue(validationResult.isEmpty());
-		//assertNotNull(user.getId());
+		//when
+		Result result = userService.saveUser(user);
+		Set<ConstraintViolation<User>> userEntityValidation = validator.validate( user );
+
+		//then
+		assertThat(userEntityValidation.size()).isZero();
+		assertThat(result.isSuccess()).isTrue();
+		verify(userRepository, times(1)).save(user);
 	}
-	/*
-	 * public void shouldSaveSingleAUser() { User user = new
-	 * User.UserBuilder("userLoginTest","testPass","testPass","mailTest@test.com",
-	 * true).build();
-	 * 
-	 * Map<String,String> validationResult = userService.saveUser(user);
-	 * 
-	 * assertTrue(validationResult.isEmpty()); assertNotNull(user.getId()); }
-	 */	
-	
-	// Mockito.verify(foo, Mockito.times(1)).add("1");
-	
+
+	private User prepareUser() {
+		return new User.UserBuilder("User", "password", "password", "usert@mail.com", true).setRole(new Role()).build();
+	}
+
+
 	@Test
-	public void shouldSaveTwoUsers() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest1","testPass","testPass","uSTmailTest1@test.com", true).setRole(new Role()).build();
-		User user2 = new User.UserBuilder("uSTuserLoginTest2","testPass","testPass","uSTmailTest2@test.com", true).setRole(new Role()).build();
-		
-		when(userRepositoryMock.save(any(User.class))).thenReturn(SAVED_USER);
-	//	when(userRepository.save(any(User.class))).thenAnswer(e -> { User user = new User(); user.setId(1L); return user; });
-		
-		Result resultForUser1 = userServiceMock.saveUser(user1);
-		Result resultForUser2 = userServiceMock.saveUser(user2);
-		
-		verify(userRepositoryMock, times(2)).save(any(User.class));
-		
-		assertTrue(resultForUser1.isSuccess());
-		assertTrue(resultForUser2.isSuccess());
+	public void shouldReturnErrorBecUserWithSameLoginExists_idIsNull() {
+		//given
+		User user = prepareUser();
+		when(userRepository.countByLogin(any(String.class))).thenReturn(1);
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("login")).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		verify(userRepository, never()).save(user);
 	}
-	
+
 	@Test
-	public void shouldReturnValidationErrorDuringSaveSecondUserBecouseLoginsAreSame() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest3","testPass","testPass","uSTmailTest3@test.com", true).build();
-		User user2 = new User.UserBuilder("uSTuserLoginTest3","testPass","testPass","uSTmailTest3.1@test.com", true).build();
-		
-		Result result1 = userService.saveUser(user1);
-		Result result2 = userService.saveUser(user2);
-		
-		assertTrue(result1.isSuccess());
-		assertNotNull(user1.getId());
-		//verify(userRepositoryMock, times(1)).save(any(User.class));
-		
-		assertTrue(result2.isError());
-		assertTrue(result2.getValidationResult().get("login").equals("loginAlreadyExists"));
-		assertNull(user2.getId());
+	public void shouldReturnErrorBecUserWithSameLoginExists_idIsSet() {
+		//given
+		User user = prepareUser();
+		user.setId(-1L);
+		when(userRepository.countByLoginAndIdNot(any(String.class),any(Long.class))).thenReturn(1);
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("login")).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		verify(userRepository, never()).save(user);
 	}
-	
+
 	@Test
-	public void shouldReturnValidationErrorDuringSaveSecondUserBecouseEmailsAreSame() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest4","testPass","testPass","uSTmailTest4@test.com", true).build();
-		User user2 = new User.UserBuilder("uSTuserLoginTest4.1","testPass","testPass","uSTmailTest4@test.com", true).build();
-		
-		Result result1 = userService.saveUser(user1);
-		Result result2 = userService.saveUser(user2);
-		
-		assertTrue(result1.isSuccess());
-		assertNotNull(user1.getId());
-		
-		assertTrue(result2.isError());
-		assertTrue(result2.getValidationResult().get("email").equals("emailAlreadyExists"));
-		assertNull(user2.getId());
+	public void shouldReturnErrorBecUserWithSameEmailExists_idIsNull() {
+		//given
+		User user = prepareUser();
+		when(userRepository.countByEmail(any(String.class))).thenReturn(1);
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		verify(userRepository, never()).save(user);
 	}
-	
+
 	@Test
-	public void shouldReturnValidationErrorBecousePasswordsAreNotSame() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest5","testPass","testPass2","uSTmailTest5@test.com", true).build();
-		
-		Result result = userService.saveUser(user1);
-		
-		assertTrue(result.isError());
-		assertTrue(result.getValidationResult().get("password").equals("passwordsAreNotSame"));
-		assertNull(user1.getId());
-		
+	public void shouldReturnErrorBecUserWithSameEmailExists_idIsSet() {
+		//given
+		User user = prepareUser();
+		user.setId(-1L);
+		when(userRepository.countByEmailAndIdNot(any(String.class), any(Long.class))).thenReturn(1);
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		verify(userRepository, never()).save(user);
 	}
-	
+
 	@Test
-	public void shouldReturnValidationErrorBecousePasswordConfirmIsEmpty() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest6","testPass","","uSTmailTest6@test.com", true).build();
-		
-		Result result = userService.saveUser(user1);
-		
-		assertTrue(result.isError());
-		assertTrue(result.getValidationResult().get("passwordConfirm").equals("isEmpty"));
-		assertNull(user1.getId());
+	public void shouldReturnValidationErrorBecausePasswordAndPasswordConfirmAreNotSame() {
+		//given
+		User user = prepareUser();
+		user.setPasswordConfirm("OTHERPASS");
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("password")).isEqualTo(ValidatorCode.IS_NOT_SAME);
+		verify(userRepository, never()).save(user);
 	}
-	
+
 	@Test
-	public void shouldReturnValidationErrorBecousePasswordConfirmIsNull() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest7","testPass",null,"uSTmailTest7@test.com", true).build();
-		
-		Result result = userService.saveUser(user1);
-		
-		assertTrue(result.isError());
-		assertTrue(result.getValidationResult().get("passwordConfirm").equals("isEmpty"));
-		assertNull(user1.getId());
+	public void shouldReturnValidationErrorBecausePasswordConfirmIsEmpty() {
+		//given
+		User user = prepareUser();
+		user.setPasswordConfirm("");
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("passwordConfirm")).isEqualTo(ValidatorCode.IS_EMPTY);
+		verify(userRepository, never()).save(user);
 	}
-	
+
 	@Test
-	public void shouldReturnValidationErrorBecousePasswordIsEmpty() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest8",null,"testPass","uSTmailTest8@test.com", true).build();
-		
-		Result result = userService.saveUser(user1);
-		
-		assertTrue(result.isError());
-		assertTrue(result.getValidationResult().get("password").equals("isEmpty"));
-		assertNull(user1.getId());
+	public void shouldReturnValidationErrorBecauseEmailIsNotValid_test_1() {
+		//given
+		User user = prepareUser();
+		user.setEmail("test@");
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		verify(userRepository, never()).save(user);
 	}
-	
+
 	@Test
-	public void shouldReturnValidationErrorBecousePasswordIsNull() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest9", null ,"testPass","uSTmailTest9@test.com", true).build();
-		
-		Result result = userService.saveUser(user1);
-		
-		assertTrue(result.isError());
-		assertTrue(result.getValidationResult().get("password").equals("isEmpty"));
-		assertNull(user1.getId());
+	public void shouldReturnValidationErrorBecauseEmailIsNotValid_test_2() {
+		//given
+		User user = prepareUser();
+		user.setEmail("test@test");
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		verify(userRepository, never()).save(user);
 	}
-	
+
 	@Test
-	public void shouldReturnValidationErrorBecouseEmailIsNull() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest10", "testPass" ,"testPass", null, true).build();
-		
-		Result result = userService.saveUser(user1);
-		
-		assertTrue(result.isError());
-		assertTrue(result.getValidationResult().get("email").equals("isEmpty"));
-		assertNull(user1.getId());
+	public void shouldReturnValidationErrorBecauseEmailIsNotValid_test_3() {
+		//given
+		User user = prepareUser();
+		user.setEmail("testtest.pl");
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		verify(userRepository, never()).save(user);
 	}
-	
+
 	@Test
-	public void shouldReturnValidationErrorBecouseEmailIsNotValid() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest11", "testPass" ,"testPass","uSTmailTest11test.com", true).build();
-		
-		Result result = userService.saveUser(user1);
-		
-		assertTrue(result.isError());
-		assertTrue(result.getValidationResult().get("email").equals("isNotValid"));
-		assertNull(user1.getId());
+	public void shouldReturnValidationErrorBecauseEmailIsNotValid_test_4() {
+		//given
+		User user = prepareUser();
+		user.setEmail("@test.pl");
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		verify(userRepository, never()).save(user);
 	}
-	
+
+
 	@Test
 	public void shouldDeleteUser() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest12", "testPass" ,"testPass","uSTmailTest12@test.com", true).build();
-		
-		Result result = userService.saveUser(user1);
-		userService.deleteUser(user1);
-		
-		assertTrue(result.isSuccess());
-		assertNotNull(user1.getId());
-		assertFalse(userRepository.findById(user1.getId()).isPresent());
+		//given
+		User user = prepareUser();
+		when(announcementRepository.existsByUserIdAndDeactivationDateIsNull(any(Long.class))).thenReturn(false);
+
+		//when
+		Result result = userService.deleteUser(user);
+
+		//then
+		assertThat(result.isSuccess()).isTrue();
+		verify(userRepository, times(1)).delete(user);
 	}
-	
+
 	@Test
-	public void shouldReturnExceptionThatUserNotExists() {
-		User user1 = new User.UserBuilder("uSTuserLoginTest13", "testPass" ,"testPass","uSTmailTest13@test.com", true).build();
-		
-		userService.deleteUser(user1);
-		
+	public void shouldReturnErrorDuringDeleteUserBecauseUserNotExistsOrIsDeactivated() {
+		//given
+		User user = prepareUser();
+		user.setId(-1L);
+		when(announcementRepository.existsByUserIdAndDeactivationDateIsNull(any(Long.class))).thenReturn(true);
+
+		//when
+		Result result = userService.deleteUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		verify(userRepository, never()).delete(user);
 	}
-	
+
+
+	// dorobic edycje, i popatrzec czy educja w innych jest
+
+
+
 }

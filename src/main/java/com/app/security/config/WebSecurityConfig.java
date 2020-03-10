@@ -1,7 +1,6 @@
 package com.app.security.config;
 
-import javax.sql.DataSource;
-
+import com.app.handler.CustomAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.thymeleaf.extras.springsecurity5.dialect.SpringSecurityDialect;
 
-import com.app.handler.CustomAuthenticationFailureHandler;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity

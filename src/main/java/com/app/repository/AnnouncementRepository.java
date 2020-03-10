@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.querydsl.core.types.Predicate;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -14,15 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.app.entity.Announcement;
 
-@Repository("announcementRepository")
+@Repository
 public interface AnnouncementRepository extends CrudRepository<Announcement, Long>, QuerydslPredicateExecutor<Announcement>, AnnouncementRepositoryCustom {
+	@Query(value = "SELECT a FROM Announcement a LEFT JOIN FETCH a.vehicleModel vm LEFT JOIN FETCH vm.manufacturer LEFT JOIN FETCH a.user LEFT JOIN FETCH a.pictures  where a.id = :id")
 	Optional<Announcement> findById(Long id);
 	
 	boolean existsByIdAndDeactivationDateIsNull(Long id);
 	boolean existsByUserIdAndDeactivationDateIsNull(Long userId);
-	
-	
-	
+
 	/*
 	 * @Modifying
 	 * 
@@ -32,12 +32,12 @@ public interface AnnouncementRepository extends CrudRepository<Announcement, Lon
 	
 	@Transactional
 	@Modifying(clearAutomatically = true)
-	@Query("update Announcement a set deactivationDate = :deactivationDate where a.user.id = :userId")
+	@Query("update Announcement a set a.deactivationDate = :deactivationDate where a.user.id = :userId")
 	int updateDeactivationDateByUserId(@Param("deactivationDate") Date deactivationDate, @Param("userId") Long userId);
 	
 	@Transactional
 	@Modifying(clearAutomatically = true)
-	@Query("update Announcement a set deactivationDate = :deactivationDate where a.id = :announcementId")
+	@Query("update Announcement a set a.deactivationDate = :deactivationDate where a.id = :announcementId")
 	int updateDeactivationDateByAnnouncementId(@Param("deactivationDate") Date deactivationDate, @Param("announcementId") Long announcementId);
 	
 	// JOIN FETCH m.vehicleModel

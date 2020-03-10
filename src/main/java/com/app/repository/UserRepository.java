@@ -15,7 +15,8 @@ public interface UserRepository extends CrudRepository<User, Long>, QuerydslPred
 	User findByEmail(String login);
 	int countByEmail(String email);
 	int countByEmailAndIdNot(String email, long id);
-	
+	int countByLoginAndIdNot(String email, long id);
+
 	
 	
 	Page<User> findAll(Pageable pageable);

@@ -6,6 +6,8 @@ INSERT INTO public.user_os(
 	id, active, city, description, email, login, password, first_name, last_name, creation_date)
 	VALUES ( -1,true, 'Lublin', 'opis osadmin' , 'osadmin@sdd.pl', 'osadmin', '$2a$10$yRZmDPRpBNP7u7TFfYyCLuGbQAb0Jd9eDbjCsglUd5Dt3YhERmaf6','Janusz', 'Nowak',NOW());
 
+
+
 	
 INSERT INTO public.user_os(
 	id, active, city, description, email, login, password, first_name, last_name, phone_number, zip_code, street, province, creation_date)

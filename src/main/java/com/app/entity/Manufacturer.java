@@ -1,20 +1,10 @@
 package com.app.entity;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
 public class Manufacturer {
@@ -29,7 +19,7 @@ public class Manufacturer {
 	
 	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY)
 	@OrderBy(value = "name ASC")
-	private List<VehicleModel> vehicleModel = new ArrayList<VehicleModel>();
+	private List<VehicleModel> vehicleModel = new ArrayList<>();
 	
 	@Transient
 	private String vehicleModelName;
@@ -46,6 +36,11 @@ public class Manufacturer {
 		super();
 		this.name = name;
 		this.vehicleModel = vehicleModel;
+	}
+
+	public Manufacturer(Long id, String name) {
+		this.id = id;
+		this.name = name;
 	}
 
 	public void prepareFiledsForSearch() {
@@ -87,5 +82,17 @@ public class Manufacturer {
 	public void setVehicleModelName(String vehicleModelName) {
 		this.vehicleModelName = vehicleModelName;
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Manufacturer that = (Manufacturer) o;
+		return Objects.equals(id, that.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 }

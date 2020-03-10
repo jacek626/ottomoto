@@ -1,16 +1,8 @@
 package com.app.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotBlank;
-
-import org.assertj.core.util.Arrays;
+import com.app.entity.*;
+import com.app.enums.VehicleSubtype;
+import com.app.enums.VehicleType;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,15 +14,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.app.entity.Announcement;
-import com.app.entity.Manufacturer;
-import com.app.entity.Picture;
-import com.app.entity.QAnnouncement;
-import com.app.entity.QPicture;
-import com.app.entity.User;
-import com.app.entity.VehicleModel;
-import com.app.enums.VehicleSubtype;
-import com.app.enums.VehicleType;
+import java.math.BigDecimal;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -131,6 +118,10 @@ public class AnnouncementRepositoryTest {
 //		assertThat(announcementList).isNotEmpty();
 	//	assertTrue(announcementList.get(0).getPictures().size() == 1);
 	//	assertTrue(announcementList.get(0).getPictures().get(0).getRepositoryName().equals("picture2"));
+	}
+
+	public void shouldAddObservedAnnouncement() {
+
 	}
 	
 

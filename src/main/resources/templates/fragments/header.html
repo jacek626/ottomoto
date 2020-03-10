@@ -24,10 +24,15 @@
 			<!-- 	 Roles: <span sec:authorize="isAuthenticated()" sec:authentication="principal.authorities"></span> -->
 				 
 				<!--   <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div> -->
-				<a th:href="@{/user/account}" sec:authorize="hasRole('USER')"   class="main-header-buttons remove-link-decoration">
+				<a th:href="@{/announcement/create}"    class="main-header-buttons remove-link-decoration">
+					Dodaj nowe ogloszenie
+				</a>
+				<a th:href="@{/user/account}"    class="main-header-buttons remove-link-decoration">
 					Moje konto
 				</a>
-				<a th:href="@{/announcement/add}" sec:authorize="hasRole('USER')"  class="main-header-buttons remove-link-decoration">
+
+
+				<a th:href="@{/announcement/create}" sec:authorize="hasRole('USER')"  class="main-header-buttons remove-link-decoration">
 					Dodaj ogłoszenie
 				</a>
 				<a th:href="@{/administration/home}"  sec:authorize="hasRole('ADMIN')" class="main-header-buttons remove-link-decoration">
