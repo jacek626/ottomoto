@@ -2,6 +2,7 @@ package com.app.service.impl;
 
 import com.app.entity.Manufacturer;
 import com.app.entity.VehicleModel;
+import com.app.enums.ValidatorCode;
 import com.app.enums.VehicleType;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.ManufacturerRepository;
@@ -11,6 +12,7 @@ import com.app.validator.ManufacturerValidator;
 import com.app.validator.VehicleModelValidator;
 import com.querydsl.core.types.Predicate;
 import org.assertj.core.util.Lists;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -55,7 +57,7 @@ public class ManufacturerServiceTest {
 	@InjectMocks
 	private ManufacturerServiceImpl manufacturerService;
 
-
+	@BeforeAll
 	public static void setUp() {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
@@ -65,6 +67,7 @@ public class ManufacturerServiceTest {
 	public void shouldSaveManufacturer() {
 		//given
 		Manufacturer manufacturer = new Manufacturer("Manufacturer");
+		manufacturer.setId(-1L);
 
 		//when
 		Result result = manufacturerService.saveManufacturer(manufacturer);
@@ -78,16 +81,18 @@ public class ManufacturerServiceTest {
 	
 	@Test
 	public void shouldSaveManufacturerWithVehicleModels() {
-		Manufacturer manufacturer = new Manufacturer("mSTmanufacturer2");
-		manufacturer.setVehicleModel(Lists.list(new VehicleModel("mSTvehicleModel1", manufacturer, VehicleType.CAR),
-				new VehicleModel("mSTvehicleModel2", manufacturer, VehicleType.CAR)));
+		//given
+		Manufacturer manufacturer = new Manufacturer("Manufacturer");
+		manufacturer.setVehicleModel(Lists.list(
+				new VehicleModel("VehicleModel1", manufacturer, VehicleType.CAR),
+				new VehicleModel("VehicleModel2", manufacturer, VehicleType.CAR)));
 
+		//when
 		Result result = manufacturerService.saveManufacturer(manufacturer);
 
-		assertTrue(result.isSuccess());
-		assertNotNull(manufacturer.getId());
-		assertEquals(0, manufacturer.getVehicleModel().stream().filter(e -> e.getId() == null).count());
-
+		//then
+		assertThat(result.isSuccess()).isTrue();
+		verify(manufacturerRepository, times(1)).save(any(Manufacturer.class));
 	}
 	
 	@Test
@@ -101,7 +106,7 @@ public class ManufacturerServiceTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("manufacturer")).isEqualTo("nameAlreadyExists");
+		assertThat(result.getValidationResult().get("name")).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 	}
 
 	@Test
@@ -116,7 +121,7 @@ public class ManufacturerServiceTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("manufacturer")).isEqualTo("nameAlreadyExists");
+		assertThat(result.getValidationResult().get("name")).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 	}
 
 	@Test
@@ -156,11 +161,10 @@ public class ManufacturerServiceTest {
 
 		//when
 		Result saveResult = manufacturerService.deleteManufacturer(manufacturer);
-		manufacturerService.deleteManufacturer(manufacturer);
 
 		//then
 		assertThat(saveResult.isSuccess()).isTrue();
-		assertNotNull(manufacturer.getId());
+		verify(manufacturerRepository, times(1)).delete(manufacturer);
 	}
 	
 	@Test
