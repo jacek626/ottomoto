@@ -1,10 +1,12 @@
 package com.app.repository;
 
 import com.app.entity.Announcement;
+import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface AnnouncementRepositoryCustom {
@@ -13,5 +15,5 @@ public interface AnnouncementRepositoryCustom {
 	long countByPredicates(Predicate... predicates);
 	List<Announcement> findByPredicatesAndLoadMainPicture(Predicate... predicates);
 	List<Announcement> findByPredicatesAndLoadPictures(PageRequest pageable, Predicate... predicates);
-	Page<Announcement> findByPredicatesAndLoadPicturesForPagination(PageRequest pageable, Predicate... predicates);
+	Page<Announcement> findByPredicatesAndLoadMainPicture(PageRequest pageable, Collection<Predicate> predicates, EntityPath<?>... from);
 }

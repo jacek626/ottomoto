@@ -43,7 +43,7 @@ public class AnnouncementRepositoryTest {
 			userRepository.save(user);
 			Manufacturer manufacturer = new Manufacturer("announcementRepositoryTestManufacturer");
 			manufacturer.getVehicleModel().add(new VehicleModel("vehicleModel3" , manufacturer , VehicleType.CAR));
-			announcement  = new Announcement.AnnouncementBuilder(manufacturer.getVehicleModel().get(0), VehicleSubtype.COMPACT, 2_000, 180_000, new BigDecimal(100_000), user).setTitle("announcement title").build();
+			announcement  = Announcement.builder().title("announcement title").user(user).vehicleModel(manufacturer.getVehicleModel().get(0)).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
 			
 			Picture picture1 = new Picture();
 			picture1.setAnnouncement(announcement);
@@ -86,7 +86,7 @@ public class AnnouncementRepositoryTest {
 	
 	@Test
 	public void findFirst5ByUserIdAndFetchPicturesEagerlyTest() {
-		List<Announcement> announcementList = announcementRepository.findFirst5ByUserIdAndOtherThenAnnouncementIdFetchPicturesEagerly(-1L, -1L);
+		List<Announcement> announcementList = announcementRepository.findFirst5ByUserIdAndOtherThenIdFetchPictures(-1L, -1L);
 		
 	  assertThat(announcementList).isNotEmpty();
 	}
@@ -107,22 +107,9 @@ public class AnnouncementRepositoryTest {
 	}
 	
 	@Test
-	public void shouldFindAnnouncementByPredictatesAndLoadPicture() {
+	public void shouldFindAnnouncementByPredicatesAndLoadPicture() {
 		PageRequest pageable =  PageRequest.of(1, 10, Direction.fromString("ASC"), "id");
-		// announcement.vehicleModel.vehicleType = CAR
-//		List<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadPictures(pageable, QAnnouncement.announcement.vehicleModel.vehicleType.eq(VehicleType.CAR));
-//		Page<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadPicturesForPagination(pageable, QAnnouncement.announcement.vehicleModel.vehicleType.eq(VehicleType.CAR));
-//		List<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadPictures(pageable, QAnnouncement.announcement.title.eq("announcement title"), QPicture.picture.mainPhotoInAnnouncement.eq(true));
-		Page<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadPicturesForPagination(pageable, QAnnouncement.announcement.title.eq("announcement title"), QPicture.picture.mainPhotoInAnnouncement.eq(true));
-		
-//		assertThat(announcementList).isNotEmpty();
-	//	assertTrue(announcementList.get(0).getPictures().size() == 1);
-	//	assertTrue(announcementList.get(0).getPictures().get(0).getRepositoryName().equals("picture2"));
+		Page<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadMainPicture(pageable, List.of(QAnnouncement.announcement.title.eq("announcement title")) );
 	}
-
-	public void shouldAddObservedAnnouncement() {
-
-	}
-	
 
 }

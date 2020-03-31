@@ -24,12 +24,12 @@ public enum VehicleSubtype {
 	private String label;
 	private VehicleType vehicleType;
 	
-	private VehicleSubtype(String label, VehicleType vehicleType) {
+	VehicleSubtype(String label, VehicleType vehicleType) {
 		this.setLabel(label);
 		this.setVehicleType(vehicleType);
 	}
 	
-	public static List<VehicleSubtype>vehicleSubtypesWithLabels(VehicleType vehicleType) {
+	public static List<VehicleSubtype> getVehicleSubtypesByVehicleType(VehicleType vehicleType) {
 		return Stream.of(VehicleSubtype.values()).filter(s -> s.getVehicleType() == vehicleType).collect(Collectors.toList());
 	}
 

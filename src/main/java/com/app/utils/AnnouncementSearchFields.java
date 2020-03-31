@@ -1,204 +1,147 @@
 package com.app.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-
+import com.app.entity.QAnnouncement;
 import com.app.enums.BooleanValuesForDropDown;
 import com.app.enums.CarColor;
 import com.app.enums.FuelType;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanPath;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.util.Pair;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Getter
+@Setter
 public class AnnouncementSearchFields {
-
 	private Short productionYearFrom, productionYearTo;
-	private String priceFrom, priceTo;
-	private String mileageFrom, mileageTo;
-	private String engineCapacityFrom, engineCapacityTo; 
-	private String enginePowerFrom, enginePowerTo;
+	private Integer priceFrom, priceTo;
+	private Integer mileageFrom, mileageTo;
+	private Integer engineCapacityFrom, engineCapacityTo;
+	private Integer enginePowerFrom, enginePowerTo;
 	private Byte doorsFrom, doorsTo;
-	private BooleanValuesForDropDown accidents, firstOwner, damaged, netPrice, priceNegotiate;
-	private List<CarColor> colorList = new ArrayList<CarColor>();
-	private List<FuelType> fuelTypeList = new ArrayList<FuelType>();
+	private BooleanValuesForDropDown accidents = BooleanValuesForDropDown.ALL;
+	private BooleanValuesForDropDown firstOwner = BooleanValuesForDropDown.ALL;
+	private BooleanValuesForDropDown damaged = BooleanValuesForDropDown.ALL;
+	private BooleanValuesForDropDown netPrice = BooleanValuesForDropDown.ALL;
+	private BooleanValuesForDropDown priceNegotiate = BooleanValuesForDropDown.ALL;
+	private List<CarColor> colorList = new ArrayList<>();
+	private List<FuelType> fuelTypeList = new ArrayList<>();
 	private String colorListLabelsAsString;
-	//private List<CarColor> colorList = Arrays.asList(CarColor.BLACK, CarColor.BLUE);
-	
-	Integer returnAsInteger(String numberAsString) {
-		return StringUtils.isNotBlank(numberAsString) ? Integer.valueOf(numberAsString.replaceAll("[^0-9.]","")) : 0;
+
+	private List<Predicate> predicates;
+	private StringBuilder urlParams;
+
+	public Pair<List<Predicate>, String> prepareQueryAndSearchArguments() {
+		predicates = new ArrayList<>();
+		urlParams = new StringBuilder();
+
+		preparePredicateAndUrlParam(accidents, QAnnouncement.announcement.accidents, "searchFields.accidents=");
+		preparePredicateAndUrlParam(firstOwner, QAnnouncement.announcement.firstOwner, "searchFields.firstOwner=");
+		preparePredicateAndUrlParam(damaged, QAnnouncement.announcement.damaged, "searchFields.damaged=");
+		preparePredicateAndUrlParam(netPrice, QAnnouncement.announcement.netPrice, "searchFields.netPrice=");
+
+		preparePredicateAndUrlParamForYear();
+		preparePredicateAndUrlParamForMileage();
+		preparePredicateAndUrlParamForEngineCapacity();
+		preparePredicateAndUrlParamForEnginePower();
+		preparePredicateAndUrlParamForColor();
+		preparePredicateAndUrlParamForPrice();
+		preparePredicateAndUrlParamForDoors();
+
+		return Pair.of(predicates, urlParams.toString());
 	}
-	
-	public Short getProductionYearFrom() {
-		return productionYearFrom;
+
+	private void preparePredicateAndUrlParamForDoors() {
+		if(doorsFrom != null) {
+			predicates.add(QAnnouncement.announcement.doors.goe(doorsFrom));
+			urlParams.append("productionYearFrom=").append(doorsFrom).append("&");
+		}
+		if(doorsTo != null) {
+			predicates.add(QAnnouncement.announcement.doors.lt(doorsTo));
+			urlParams.append("productionYearTo=").append(doorsTo).append("&");
+		}
 	}
-	public Optional<Short> getProductionYearFromAsOpt() {
-		return Optional.ofNullable(productionYearFrom);
+
+	private void preparePredicateAndUrlParamForPrice() {
+		if(priceFrom != null) {
+			predicates.add(QAnnouncement.announcement.price.goe(priceFrom));
+			urlParams.append("searchFields.priceFrom=").append(priceFrom).append("&");
+		}
+		if(priceTo != null) {
+			predicates.add(QAnnouncement.announcement.price.loe(priceTo));
+			urlParams.append("searchFields.priceTo=").append(priceTo).append("&");
+		}
 	}
-	public void setProductionYearFrom(Short productionYearFrom) {
-		this.productionYearFrom = productionYearFrom;
+
+	private void preparePredicateAndUrlParamForColor() {
+		if(colorList.size() > 0) {
+			predicates.add(QAnnouncement.announcement.carColor.in(colorList));
+			urlParams.append("searchFields.colorList=").append(colorList.stream().map(Object::toString).collect(Collectors.joining())).append("&");
+		}
 	}
-	public Short getProductionYearTo() {
-		return productionYearTo;
+
+	private void preparePredicateAndUrlParamForEnginePower() {
+		if(enginePowerFrom != null) {
+			predicates.add(QAnnouncement.announcement.enginePower.goe(enginePowerFrom));
+			urlParams.append("searchFields.enginePowerFrom=").append(enginePowerFrom).append("&");
+		}
+		if(enginePowerTo != null) {
+			predicates.add(QAnnouncement.announcement.enginePower.lt(enginePowerTo));
+			urlParams.append("searchFields.enginePowerTo=").append(enginePowerTo).append("&");
+		}
 	}
-	public Optional<Short> getProductionYearToAsOpt() {
-		return Optional.ofNullable(productionYearTo);
+
+	private void preparePredicateAndUrlParamForEngineCapacity() {
+		if(engineCapacityFrom != null) {
+			predicates.add(QAnnouncement.announcement.engineCapacity.goe(engineCapacityFrom));
+			urlParams.append("searchFields.productionYearFrom=").append(engineCapacityFrom).append("&");
+		}
+		if(engineCapacityTo != null) {
+			predicates.add(QAnnouncement.announcement.engineCapacity.lt(engineCapacityTo));
+			urlParams.append("searchFields.productionYearTo=").append(engineCapacityTo).append("&");
+		}
 	}
-	public String getPriceFrom() {
-		return priceFrom;
+
+	private void preparePredicateAndUrlParamForMileage() {
+		if(mileageFrom != null) {
+			predicates.add(QAnnouncement.announcement.mileage.goe(mileageFrom));
+			urlParams.append("searchFields.productionYearFrom=").append(mileageFrom).append("&");
+		}
+		if(mileageTo != null) {
+			predicates.add(QAnnouncement.announcement.mileage.lt(mileageTo));
+			urlParams.append("searchFields.productionYearTo=").append(mileageTo).append("&");
+		}
 	}
-	public String getPriceFromWithoutSpaces() {
-		return priceFrom.replaceAll("[^0-9.]", "");
+
+	private void preparePredicateAndUrlParamForYear() {
+		if(productionYearFrom != null) {
+			predicates.add(QAnnouncement.announcement.productionYear.goe(productionYearFrom));
+			urlParams.append("searchFields.productionYearFrom=").append(productionYearFrom).append("&");
+		}
+
+		if(productionYearTo != null) {
+			predicates.add(QAnnouncement.announcement.productionYear.lt(productionYearTo));
+			urlParams.append("searchFields.productionYearTo=").append(productionYearTo).append("&");
+		}
 	}
-	public Integer getPriceFromAsInteger() {
-		return returnAsInteger(priceFrom);
+
+	private void preparePredicateAndUrlParam(BooleanValuesForDropDown accidents, BooleanPath accidents2, String s) {
+		if (accidents != BooleanValuesForDropDown.ALL) {
+			predicates.add(accidents2.eq(accidents.getQueryValue()));
+			urlParams.append(s).append(accidents == BooleanValuesForDropDown.YES).append("&");
+		}
 	}
-	public void setPriceFrom(String priceFrom) {
-		this.priceFrom = priceFrom;
-	}
-	public String getPriceTo() {
-		return priceTo;
-	}
-	public String getPriceToWithoutSpaces() {
-		return priceTo.replaceAll("[^0-9.]","");
-	}
-	public Integer getPriceToAsInteger() {
-		return returnAsInteger(priceTo);
-	}
-	public void setPriceTo(String priceTo) {
-		this.priceTo = priceTo;
-	}
-	public String getMileageFrom() {
-		return mileageFrom;
-	}
-	public Integer getMileageFromAsInteger() {
-		return returnAsInteger(mileageFrom);
-	}
-	public void setMileageFrom(String mileageFrom) {
-		this.mileageFrom = mileageFrom;
-	}
-	public String getMileageTo() {
-		return mileageTo;
-	}
-	public Integer getMileageToAsInteger() {
-		return returnAsInteger(mileageTo);
-	}
-	public void setMileageTo(String mileageTo) {
-		this.mileageTo = mileageTo;
-	}
-	public String getEngineCapacityFrom() {
-		return engineCapacityFrom;
-	}
-	public Integer getEngineCapacityFromAsInteger() {
-		return returnAsInteger(engineCapacityFrom);
-	}
-	public void setEngineCapacityFrom(String engineCapacityFrom) {
-		this.engineCapacityFrom = engineCapacityFrom;
-	}
-	public String getEngineCapacityTo() {
-		return engineCapacityTo;
-	}
-	public Integer getEngineCapacityToAsInteger() {
-		return returnAsInteger(engineCapacityTo);
-	}
-	public void setEngineCapacityTo(String engineCapacityTo) {
-		this.engineCapacityTo = engineCapacityTo;
-	}
-	public String getEnginePowerFrom() {
-		return enginePowerFrom;
-	}
-	public Integer getEnginePowerFromAsInteger() {
-		return returnAsInteger(enginePowerFrom);
-	}
-	public void setEnginePowerFrom(String enginePowerFrom) {
-		this.enginePowerFrom = enginePowerFrom;
-	}
-	public String getEnginePowerTo() {
-		return enginePowerTo;
-	}
-	public Integer getEnginePowerToAsInteger() {
-		return returnAsInteger(enginePowerTo);
-	}
-	public void setEnginePowerTo(String enginePowerTo) {
-		this.enginePowerTo = enginePowerTo;
-	}
-	public void setProductionYearTo(Short productionYearTo) {
-		this.productionYearTo = productionYearTo;
-	}
-	public Byte getDoorsFrom() {
-		return doorsFrom;
-	}
-	public void setDoorsFrom(Byte doorsFrom) {
-		this.doorsFrom = doorsFrom;
-	}
-	public Byte getDoorsTo() {
-		return doorsTo;
-	}
-	public void setDoorsTo(Byte doorsTo) {
-		this.doorsTo = doorsTo;
-	}
-	public BooleanValuesForDropDown getAccidents() {
-		if(accidents == null)
-			accidents = BooleanValuesForDropDown.ALL;
-		
-		return accidents;
-	}
-	public void setAccidents(BooleanValuesForDropDown accidents) {
-		this.accidents = accidents;
-	}
-	public BooleanValuesForDropDown getFirstOwner() {
-		if(firstOwner == null)
-			firstOwner = BooleanValuesForDropDown.ALL;
-		
-		return firstOwner;
-	}
-	public void setFirstOwner(BooleanValuesForDropDown firstOwner) {
-		this.firstOwner = firstOwner;
-	}
-	public BooleanValuesForDropDown getDamaged() {
-		if(damaged == null)
-			damaged = BooleanValuesForDropDown.ALL;
-		
-		return damaged;
-	}
-	public void setDamaged(BooleanValuesForDropDown damaged) {
-		this.damaged = damaged;
-	}
-	public BooleanValuesForDropDown getNetPrice() {
-		if(netPrice == null)
-			netPrice = BooleanValuesForDropDown.ALL;
-		
-		return netPrice;
-	}
-	public void setNetPrice(BooleanValuesForDropDown netPrice) {
-		this.netPrice = netPrice;
-	}
-	public BooleanValuesForDropDown getPriceNegotiate() {
-		if(priceNegotiate == null)
-			priceNegotiate = BooleanValuesForDropDown.ALL;
-		
-		return priceNegotiate;
-	}
-	public void setPriceNegotiate(BooleanValuesForDropDown priceNegotiate) {
-		this.priceNegotiate = priceNegotiate;
-	}
-	public List<CarColor> getColorList() {
-		return colorList;
-	}
-	public String getColorListLabelsAsString() {
+
+	public String getSelectedCarColors() {
 		return colorList.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
 	}
-	public String getFuelTypeListListLabelsAsString() {
+	public String getSelectedFuelTypes() {
 		return fuelTypeList.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
 	}
-	public void setColorList(List<CarColor> colorList) {
-		this.colorList = colorList;
-	}
-	public List<FuelType> getFuelTypeList() {
-		return fuelTypeList;
-	}
-	public void setFuelTypeList(List<FuelType> fuelTypeList) {
-		this.fuelTypeList = fuelTypeList;
-	}
-	
+
+
 }

@@ -236,7 +236,8 @@
 							<tr>
 								<td></td>
 								<td style="text-align:right;">
-									<input type="button" style="position:relative; left:10px;" th:value="#{sent}" onclick="validateEmailAddressAndTextBeforeSend($('#questionToSellerEmail'),$('#questionToSellerText')) ?   sentMessageToSeller($('#announcementId').val(),$('#questionToSellerEmail').val(),$('#questionToSellerText').val()) : '' "/>
+									<input type="button" style="position:relative; left:10px;" th:value="#{sent}" onclick="validateEmailAddressAndTextBeforeSend($('#questionToSellerEmail'),$('#questionToSellerText')) ?   sentMessageToSeller($('#announcementId').val(),$('#questionToSellerEmail').val(),$('#questionToSellerText').val(), $('#sellerEmail').val()) : '' "/>
+									<input type="hidden" id="sellerEmail" th:value="${announcement.user.email}" />
 								</td>
 							<tr>
 						</table>

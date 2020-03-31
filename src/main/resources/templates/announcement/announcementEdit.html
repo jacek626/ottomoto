@@ -15,10 +15,16 @@
 		 </script>
 		
 		<form th:action="@{/announcement/save}" th:object="${announcement}" method="post">
-		
 			<div th:replace="announcement/announcementHeader :: announcementHeader(${announcement})"></div>
-		
 			<table style="text-align:left;">
+				<tr>
+					<td colspan="3" style="text-align: right;">
+						<div style="margin-top: 10px;">
+							<a class="medium-button" th:href="@{/announcement/list}">anuluj</a>
+							<input class="medium-button" type="submit" value="zapisz" />
+						</div>
+					</td>
+				</tr>
 				<tr>
 					<td colspan="3"><label for="vehicleType">Kategoria pojazdu</label><br/>
 						  <select id="vehicleType" onchange="loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');">
@@ -58,11 +64,11 @@
 				<tr>
 					<td><label for="productionYear">Rok produkcji</label><br/>
 						<select id="productionYear" th:field="*{productionYear}" required>
-					 	 	<option 
+					 	 	<option
 									th:each="productionYears : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}"
 									th:value="${productionYears}" th:text="${productionYears}"
 									th:selected="*{productionYear}">
-							</option>   
+							</option>
 						</select>
 						<span th:each="error: ${#fields.errors('productionYear')}" class="valiationError" th:text="${error}"></span>
 					</td>
@@ -171,19 +177,20 @@
 			
 			<div style="margin-bottom:30px;"class="spaceLineInAnnouncementView">
 			</div>
-			
+
 			<div th:replace="announcement/announcementImageGallery :: announcementImageGallery(${announcement}, true)"></div>
-			
-			<table style="margin-top:10px; margin-bottom:20px;font-size: 16px;">	
+
+			<table style="margin-top:10px; margin-bottom:20px;font-size: 16px;">
 				<tr>
 					<td></td>
 					<td style="text-align: right;">
-						<a th:href="@{/announcement/list}">anuluj</a>
-						<input type="submit" value="zapisz" />
+						<a class="medium-button" th:href="@{/announcement/list}">anuluj</a>
+						<input class="medium-button" type="submit" value="zapisz" />
 					</td>
 					<td></td>
 				</tr>
 			</table>
+
 		</form>
 		
 		<script type="text/javascript">
@@ -191,8 +198,7 @@
 		        width: 800
 		    });
 		</script>
-		
-		
+
     </div>
      <div th:replace="fragments/footer :: footer"></div>
   </body>

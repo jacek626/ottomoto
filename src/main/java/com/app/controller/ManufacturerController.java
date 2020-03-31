@@ -5,6 +5,7 @@ import com.app.entity.QManufacturer;
 import com.app.entity.VehicleModel;
 import com.app.enums.VehicleSubtype;
 import com.app.enums.VehicleType;
+import com.app.projection.ManufacturerProjection;
 import com.app.repository.ManufacturerRepository;
 import com.app.repository.VehicleRepository;
 import com.querydsl.core.BooleanBuilder;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,9 +39,9 @@ public class ManufacturerController {
 	
 	 @ModelAttribute
 	    public void addAttributes(Model model) {
-			model.addAttribute("vehicleSubtypesCar", VehicleSubtype.vehicleSubtypesWithLabels(VehicleType.CAR));
-			model.addAttribute("vehicleSubtypesTruck", VehicleSubtype.vehicleSubtypesWithLabels(VehicleType.TRUCK));
-			model.addAttribute("vehicleSubtypesMotorcycle", VehicleSubtype.vehicleSubtypesWithLabels(VehicleType.MOTORCYCLE));
+			model.addAttribute("vehicleSubtypesCar", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.CAR));
+			model.addAttribute("vehicleSubtypesTruck", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.TRUCK));
+			model.addAttribute("vehicleSubtypesMotorcycle", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.MOTORCYCLE));
 	    }
 	
 	@RequestMapping(value="new",method=RequestMethod.GET)
@@ -128,10 +128,10 @@ public class ManufacturerController {
 	}
 	
 	@RequestMapping(value="/list")
-	public String list(@RequestParam(name = "page", required = false) Optional<Integer> page,
-			@RequestParam(name = "size", required = false, defaultValue = "10") Optional<Integer> size,
-			@RequestParam(name = "orderBy", required = false, defaultValue = "id") Optional<String> orderBy,
-			@RequestParam(name = "sort", required = false, defaultValue = "ASC") Optional<String> sort,
+	public String list(@RequestParam(name = "page", defaultValue = "1", required = false) int page,
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
+			@RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
 			@RequestParam(name = "searchArguments",required = false, defaultValue = "&") String searchArguments, 
 			@ModelAttribute("manufacturer")  Manufacturer manufacturer, 
 			Model model)  {
@@ -142,7 +142,7 @@ public class ManufacturerController {
 		searchArguments = prepareQueryAndSearchArguments(manufacturer, searchArguments, queryBuilder);
 		
 		PageRequest pageable = null;
-		pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(10), Direction.fromString(sort.orElse("ASC")), orderBy.orElse("id"));
+		pageable = PageRequest.of(page, size, Direction.fromString(sort), orderBy);
 	
 		Page<Manufacturer> manufacturerPage = manufacturerRepository.findAll(queryBuilder, pageable);
 		
@@ -152,11 +152,11 @@ public class ManufacturerController {
         }
         
         model.addAttribute("pages", manufacturerPage);
-        model.addAttribute("orderBy", orderBy.orElse(""));
-        model.addAttribute("sort", sort.orElse("ASC"));
+        model.addAttribute("orderBy", orderBy);
+        model.addAttribute("sort", sort);
         model.addAttribute("searchArguments", searchArguments);
-        model.addAttribute("page", page.orElse(1));
-        model.addAttribute("size", size.orElse(10));
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
         model.addAttribute("pageSizes", PAGE_SIZES);
         model.addAttribute("manufacturer", manufacturer);
 		
@@ -167,12 +167,12 @@ public class ManufacturerController {
 		StringBuilder stringBuilder = new StringBuilder(searchArguments);
 		if(StringUtils.isNotBlank(manufacturer.getName())) {
 			queryBuilder.and(QManufacturer.manufacturer.name.contains(manufacturer.getName()));
-			stringBuilder.append("name=" + manufacturer.getName() + "&");
+			stringBuilder.append("name=").append(manufacturer.getName()).append("&");
 		}
 		
 		if(StringUtils.isNotBlank(manufacturer.getVehicleModelName())) {
 			queryBuilder.and(QManufacturer.manufacturer.vehicleModel.any().name.contains(manufacturer.getVehicleModelName()));
-			stringBuilder.append("vehicleModelName=" + manufacturer.getVehicleModelName() + "&");
+			stringBuilder.append("vehicleModelName=").append(manufacturer.getVehicleModelName()).append("&");
 		}
 		
 		return stringBuilder.toString();
@@ -185,7 +185,7 @@ public class ManufacturerController {
 			Authentication authentication, ModelMap map) {
 	
 	//	Map<VehicleSubtype,String> vehicleSubtypeMap = VehicleSubtype.vehicleSubtypesWithLabels(VehicleType.valueOf(vehicleType));
-		List<VehicleSubtype> vehicleSubtypes = VehicleSubtype.vehicleSubtypesWithLabels(VehicleType.valueOf(vehicleType));
+		List<VehicleSubtype> vehicleSubtypes = VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.valueOf(vehicleType));
 
 /*		for (Map.Entry<VehicleSubtype, String> entry: vehicleSubtypeMap.entrySet()) {
 			strBuilder.append("<option value='" + entry.getKey() + "'>" + entry.getValue() + "</option>");
@@ -193,9 +193,26 @@ public class ManufacturerController {
 		
 		String fromStream =  vehicleSubtypes.stream()
 				.map(e ->  "<" + htmlElement + " value='" + e.getVehicleType() + "'>" + e.getLabel() + "</"+ htmlElement +">")
-				.collect(Collectors.joining("")).toString();
+				.collect(Collectors.joining(""));
 		
 /*		return (resultWithEmptyOption ? "<option value=''></option>" : "")  + fromStream;*/
+		return fromStream;
+	}
+
+
+	@RequestMapping(value="loadManufacturer",method=RequestMethod.GET)
+	public @ResponseBody String loadManufacturer(
+			@RequestParam("vehicleType") String vehicleType,
+			@RequestParam("typeOfHtmlElement") String htmlElement, Model model,
+			Authentication authentication, ModelMap map) {
+
+		List<ManufacturerProjection> manufacturerList = manufacturerRepository.findByVehicleType(VehicleType.valueOf(vehicleType));
+
+
+		String fromStream =  manufacturerList.stream()
+				.map(e -> "<" + htmlElement + " value='" + e.getId() + "'>" + e.getName() + "</"+ htmlElement +">")
+				.collect(Collectors.joining(""));
+
 		return fromStream;
 	}
 	

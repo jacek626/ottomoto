@@ -1,9 +1,9 @@
-<span th:fragment="dropDownMultiSelect(elementName,field,enum,selectedElementsAsString,label)">
+<span th:fragment="dropDownMultiSelect(elementName, field, enum, selectedElements, label)">
 
 	<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
 	<input type="text" th:id="${elementName} + Label" dropDownElementId="${elementName}" th:placeholder="${label}"  readonly="readonly" style="cursor: pointer;"
 				class="currentLabels inputAsSelect labelInAnnouncementSearch"
-				 th:value="*{__${selectedElementsAsString}__}" 
+				 th:value="*{__${selectedElements}__}"
 				onkeydown="rewriteTextToHiddenInputOnKeyDown(this); " onfocusin="clearInputAndFireTrigger(this);" />
 				
 	<input type="hidden" th:id="${elementName} + Value" class="currentValues" th:field="*{__${field}__}" /> 

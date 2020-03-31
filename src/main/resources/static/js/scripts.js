@@ -7,12 +7,12 @@ $.expr[":"].contains = $.expr.createPseudo(function(arg) {
 $(document).on('focusin', '#pageSizeSelect', function() {
 	$(this).data('val', $(this).val());
 }).on('change', '#pageSizeSelect', function() {
-	var prev = $(this).data('val');
-	var current = $(this).val();
-	var href = window.location.href;
+	let prev = $(this).data('val');
+	let current = $(this).val();
+	let href = window.location.href;
 
 	if (href.indexOf("size=") == -1) {
-		var lastCharacter = href.slice(-1);
+		let lastCharacter = href.slice(-1);
 
 		if (lastCharacter == '/') {
 			href = href.slice(0, href.length - 1);
@@ -42,13 +42,14 @@ function deletePictureInAnnouncement(element) {
 		 $(element).parent().attr('pictureToDelete','true'); 
 		 $(element).parent().css('display','none');
 		 
-		 $(element).parent().remove();
+		// $(element).parent().remove();
 		 
 		 // if picture to delete is currently displayed
 		 if($(element).parent().find('img').attr("picture") == $('#photoContainerMiniImage').attr('src')) 
 			 if($("#imagesScroll li[pictureToDelete='false'] img").length > 0) {
 				 // show first picture from all
 				 showImage($("#imagesScroll li[pictureToDelete='false'] img")[0],'#photoContainerMiniImage');
+				 markPictureInAnnouncementAsMain($("#imagesScroll li[pictureToDelete='false'] .markPictureAsMain")[0]);
 			 }
 			 else { // no other pictures to display
 				 $('#photoContainerMiniImage').attr('src','');
@@ -59,7 +60,7 @@ function deletePictureInAnnouncement(element) {
 function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 		$.ajax({
 			type : "GET",
-			url : "/otomoto/announcement/loadVehicleModel",
+			url : "/otomoto/vehicleModel/loadVehicleModel",
 			timeout : 1000,
 			data: { 
 				'manufacturer': manufacturer,
@@ -91,7 +92,7 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 */	function loadManufacturer(vehicleType, typeOfHtmlElement) {
 		$.ajax({
 			type : "GET",
-			url : "/otomoto/announcement/loadManufacturer",
+			url : "/otomoto/manufacturer/loadManufacturer",
 			timeout : 1000,
 			data: { 
 				'vehicleType': vehicleType,
@@ -142,7 +143,7 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 	
 	
 	function uploadFile() {
-		var fileName = '';
+		let fileName = '';
 		
 			
 			//upload-file-label
@@ -151,19 +152,25 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 		else
 			fileName = e.target.value.split( '\' ).pop();
 */
-		
-		  $.ajax({
-		    url:   "/otomoto/announcement/uploadImage",
-		    type: "POST",
-		    data: new FormData($("#upload-file-form")[0]),
+
+
+		let formData = new FormData();
+		formData.append('file', document.getElementById('upload-file-input').files[0]);
+
+		//   data: new FormData($("#upload-file-form")[0]),
+
+		$.ajax({
+			url:   "/otomoto/image/uploadImage",
+			type: "POST",
+		    data: formData,
 		    enctype: 'multipart/form-data',
 		    processData: false,
 		    contentType: false,
 		    cache: false,
 		    success: function (result) {
 		    	
-		    	for(i=0;i < result.length; i++) {
-		    		var currentMaxElementId = $('#imagesScroll').children('li').last().attr('index');
+		    	for(let i=0;i < result.length; i++) {
+					let currentMaxElementId = $('#imagesScroll').children('li').last().attr('index');
 		    		
 		    		if(isNaN(currentMaxElementId)) 
 		    			currentMaxElementId = 0;
@@ -191,7 +198,7 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 	
 	function showInfo(message) {
 		$('#infoText div').text(message);
-    	$('#infoText').show()	
+    	$('#infoText').show();
     	
     	 setTimeout(function() {
  		 	$('#infoText').hide()	
@@ -220,8 +227,8 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 	
 	function validateRange(from, to, currentElement) {  
 		if($(from).val() != '' && $(to).val() != '') {
-			var fromAsNumber = parseInt($(from).val().replace(/\D/g,""));
-			var toAsNumber = parseInt($(to).val().replace(/\D/g,""));
+			let fromAsNumber = parseInt($(from).val().replace(/\D/g,""));
+			let toAsNumber = parseInt($(to).val().replace(/\D/g,""));
 			
 			if(fromAsNumber > toAsNumber) {
 				if($(currentElement).attr('id') == $(from).attr('id')) {
@@ -282,10 +289,10 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 	}
 	
 	function findNextImage(direction) {
-		var currentImageIndex = $('.photoGalleryMiniArrow').parent().find('img').attr('currentImageIndex');
+		let currentImageIndex = $('.photoGalleryMiniArrow').parent().find('img').attr('currentImageIndex');
 		currentImageIndex = direction == 'next' ? parseInt(currentImageIndex) + 1 :  parseInt(currentImageIndex) - 1;
-		
-		var elementToReturn = $("#imagesScroll li[index='" +currentImageIndex +"']").find('img')[0];
+
+		let elementToReturn = $("#imagesScroll li[index='" +currentImageIndex +"']").find('img')[0];
 		
 		if(elementToReturn) {
 			$('.photoGalleryMiniArrow').parent().find('img').attr('currentImageIndex',currentImageIndex);
@@ -305,7 +312,7 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 	}
 	
 	Array.prototype.remove = function() {
-	    var what, a = arguments, L = a.length, ax;
+		let what, a = arguments, L = a.length, ax;
 	    while (L && this.length) {
 	        what = a[--L];
 	        while ((ax = this.indexOf(what)) !== -1) {
@@ -317,12 +324,12 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 
 	
 	function removeElementFromListInInput(inputWithList, valueToRemove) {
-		var arr = inputWithList.val().split(",");
+		let arr = inputWithList.val().split(",");
 		arr.remove(valueToRemove);
 		inputWithList.val(arr);
 	}
 	function addElementFromListInInput(inputWithList, valueToAdd) {
-		var arr = inputWithList.val().split(",");
+		let arr = inputWithList.val().split(",");
 		arr.push(valueToAdd);
 	//	arr.remove('');
 		
@@ -334,8 +341,8 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 
 	function setDropDownListMultiOptionListener(element) {
 		$(element).on( "click", function() {
-			var inputWithValue = $(this).parent().parent().find('.currentValues');
-			var inputWithLabel = $(this).parent().parent().find('.currentLabels');
+			let inputWithValue = $(this).parent().parent().find('.currentValues');
+			let inputWithLabel = $(this).parent().parent().find('.currentLabels');
 			
 			if($(this).hasClass('selected'))  {
 				$(this).removeClass('selected');
@@ -353,8 +360,8 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 	function setDropDownListListener(element) {
 		$(element).on( "click", function() {
 
-			var inputWithValue = $(this).parent().parent().find('input:hidden');
-			var inputWithLabel = $(this).parent().parent().find('input:text');
+			let inputWithValue = $(this).parent().parent().find('input:hidden');
+			let inputWithLabel = $(this).parent().parent().find('input:text');
 			
 			// jesli kliknieto to sama wartosc to nie wczytujemy ponownie danych
 			if(inputWithValue.val() != $(this).attr('value')) {
@@ -380,7 +387,7 @@ function loadVehicleModel(manufacturer,vehicleType, typeOfHtmlElement) {
 
 function showOrHidePositionsInDropDown(element) {
 	
-	$(element).parent().find('li:not(:contains("' + element.value + '"))').hide()
+	$(element).parent().find('li:not(:contains("' + element.value + '"))').hide();
 	$(element).parent().find('li:contains("' + element.value + '")').show()
 //	$("#manufacturer li:contains('" + element.value + "')").show()
 /*	$("#manufacturer li:not(:contains('" + element.value + "'))").hide()
@@ -449,11 +456,11 @@ function select(el) {
     if (s === -1) return;
     
     selected = s;
-    
-    var elHeight = $(el).height();
-    var scrollTop = $(ul).scrollTop();
-    var viewport = scrollTop + $(ul).height();
-    var elOffset = elHeight * selected;
+
+	let elHeight = $(el).height();
+	let scrollTop = $(ul).scrollTop();
+	let viewport = scrollTop + $(ul).height();
+	let elOffset = elHeight * selected;
     
     console.log('select', selected, ' viewport', viewport, ' elOffset', elOffset);
     if (elOffset < scrollTop || (elOffset + elHeight) > viewport)
@@ -469,7 +476,7 @@ function select(el) {
     el.classList.add('selected');
 }
 
-function sentMessageToSeller(announcementId, email, messageText) {
+function sentMessageToSeller(announcementId, email, messageText, sellerEmailAddress) {
 	$.ajax({
 		type : "GET",
 		url : "/otomoto/announcement/sentMessageToSeller",
@@ -477,10 +484,14 @@ function sentMessageToSeller(announcementId, email, messageText) {
 		data: { 
 			'announcementId': announcementId,
 			'messageText' : messageText,
-			'email' : email
+			'email' : email,
+			'sellerEmailAddress' : sellerEmailAddress
 		  },
 		success : function(result) {
-			showInfo('Wiadomosc wyslana, dziekujemy za kontakt');
+			if(result)
+				showInfo('Wiadomosc wyslana, dziekujemy za kontakt');
+			else
+				showInfo('Przepraszamy, wystapil blad');
 		},
 		error : function(result) {
 			showInfo('Przepraszamy, wystapil blad');
@@ -488,8 +499,8 @@ function sentMessageToSeller(announcementId, email, messageText) {
 		}
 	});
 	
-	$('#messageToSenderTable input').attr('disabled','true')
-	$('#messageToSenderTable textarea').attr('disabled','true')
+	$('#messageToSenderTable input').attr('disabled','true');
+	$('#messageToSenderTable textarea').attr('disabled','true');
 	showInfo('Wiadomosc do sprzedajacego w trakcie wyslki');
 }
 

@@ -3,12 +3,11 @@ package com.app.controller;
 import com.app.entity.QUser;
 import com.app.entity.Role;
 import com.app.entity.User;
-import com.app.enums.ValidatorCode;
 import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
-import com.app.service.EmailService;
 import com.app.service.UserService;
 import com.app.utils.Result;
+import com.app.utils.ValidationDetails;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
@@ -45,7 +42,7 @@ import java.util.stream.IntStream;
 @RequestMapping("user/")
 public class UserController {
 	
-	Logger logger = LoggerFactory.getLogger(UserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	@Autowired
 	UserRepository userRepository;
@@ -53,11 +50,11 @@ public class UserController {
 	@Autowired
 	RoleRepository roleRepository;
 	
-	@Autowired
-	ApplicationEventPublisher applicationEventPublisher;
+	//@Autowired
+	//ApplicationEventPublisher applicationEventPublisher;
 	
-	@Autowired
-	private EmailService emailService;
+	//@Autowired
+	//private EmailService emailService;
 	
 	//private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
@@ -85,10 +82,10 @@ public class UserController {
 	
 	
 	@RequestMapping(value="/list")
-	public String list(@RequestParam(name = "page", required = false) Optional<Integer> page,
-			@RequestParam(name = "size", required = false, defaultValue = "10") Optional<Integer> size,
-			@RequestParam(name = "orderBy", required = false, defaultValue = "id") Optional<String> orderBy,
-			@RequestParam(name = "sort", required = false, defaultValue = "ASC") Optional<String> sort,
+	public String list(@RequestParam(name = "page", defaultValue = "1", required = false) int page,
+			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
+			@RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
+			@RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
 			@RequestParam(name = "searchArguments",required = false, defaultValue = "&") String searchArguments, 
 			@ModelAttribute("user")  User user,
 			Model model) {
@@ -99,7 +96,7 @@ public class UserController {
 		searchArguments = prepareQueryAndSearchArguments(user, searchArguments, queryBuilder);
 		
 		PageRequest pageable = null;
-		pageable = PageRequest.of(page.orElse(1) - 1, size.orElse(10), Direction.fromString(sort.orElse("ASC")), orderBy.orElse("id"));
+		pageable = PageRequest.of(page, size, Direction.fromString(sort), orderBy);
 	
 		Page<User> userPage = userRepository.findAll(queryBuilder, pageable);
 		
@@ -110,11 +107,11 @@ public class UserController {
         
         
         model.addAttribute("pages", userPage);
-        model.addAttribute("orderBy", orderBy.orElse(""));
-        model.addAttribute("sort", sort.orElse("ASC"));
+        model.addAttribute("orderBy", orderBy);
+        model.addAttribute("sort", sort);
         model.addAttribute("searchArguments", searchArguments);
-        model.addAttribute("page", page.orElse(1));
-        model.addAttribute("size", size.orElse(10));
+        model.addAttribute("page", page);
+        model.addAttribute("size", size);
         model.addAttribute("pageSizes", PAGE_SIZES);
         model.addAttribute("user", user);
 		
@@ -126,27 +123,27 @@ public class UserController {
 		
 		if(StringUtils.isNotBlank(user.getLogin())) {
 			queryBuilder.and(QUser.user.login.contains(user.getLogin()));
-			stringBuilder.append("login=" + user.getLogin() + "&");
+			stringBuilder.append("login=").append(user.getLogin()).append("&");
 		}
 		if(StringUtils.isNotBlank(user.getEmail())) {
 			queryBuilder.and(QUser.user.email.contains(user.getEmail()));
-			stringBuilder.append("email=" + user.getEmail() + "&");
+			stringBuilder.append("email=").append(user.getEmail()).append("&");
 		}
 		if(StringUtils.isNotBlank(user.getFirstName())) {
 			queryBuilder.and(QUser.user.firstName.contains(user.getFirstName()));
-			stringBuilder.append("firstName=" + user.getFirstName() + "&");
+			stringBuilder.append("firstName=").append(user.getFirstName()).append("&");
 		}
 		if(StringUtils.isNotBlank(user.getLastName())) {
 			queryBuilder.and(QUser.user.lastName.contains(user.getLastName()));
-			stringBuilder.append("lastName=" + user.getLastName() + "&");
+			stringBuilder.append("lastName=").append(user.getLastName()).append("&");
 		}
 		if(user.getActive() != null) {
 			queryBuilder.and(QUser.user.active.eq(user.getActive()));
-			stringBuilder.append("active=" + user.getActive() + "&");
+			stringBuilder.append("active=").append(user.getActive()).append("&");
 		}
 		if(StringUtils.isNotBlank(user.getCity())) {
 			queryBuilder.and(QUser.user.city.contains(user.getCity()));
-			stringBuilder.append("city=" + user.getCity() + "&");
+			stringBuilder.append("city=").append(user.getCity()).append("&");
 		}
 		
 		return stringBuilder.toString();
@@ -221,9 +218,13 @@ public class UserController {
 			
 		//	if(errors.getAllErrors() != null)
 		//		errors.getAllErrors().addAll(result.getValidationResult().entrySet().stream().map(e ->  new ObjectError(e.getKey(), e.getValue())).collect(Collectors.toList()));
-			
-			for (Entry<String, ValidatorCode> entry : result.getValidationResult().entrySet()) {
-				bindingResult.addError(new FieldError("user", entry.getKey(), "", false, null, null, entry.getValue().name()));
+
+
+
+			for (Entry<String, ValidationDetails> entry : result.getValidationResult().entrySet()) {
+
+				// o to co trzeba poprawic po zmiane na ResultDetails  przestalo dzialac
+				//bindingResult.addError(new FieldError("user", entry.getKey(), "", false, null, null, entry.getValue().name()));
 			}
 			
 			model.addAttribute("user", user);
@@ -346,7 +347,7 @@ public class UserController {
    public String changePass(@PathVariable("id") Long id, Model model) {
 			Optional<User> user = userRepository.findById(id);
 			
-			if(!user.isPresent())
+			if(user.isEmpty())
 				throw new RuntimeException("brak usera o podanym id");
 		
 			model.addAttribute("user", user.get());
@@ -407,15 +408,15 @@ public class UserController {
 	
 	@RequestMapping(value="checkLoginAlreadyExists",method=RequestMethod.POST)
 	public @ResponseBody boolean checkLoginAlreadyExists(@RequestParam("login") String login) {
-		return userRepository.countByLogin(login) > 0 ? true : false; 
+		return userRepository.countByLogin(login) > 0;
 	}
 	
 	@RequestMapping(value="checkEmailAlreadyExists",method=RequestMethod.POST)
 	public @ResponseBody boolean checkEmailAlreadyExists(@RequestParam("email") String login,@RequestParam(name="id", required=false) Long id) {
 		if(id == null)
-			return userRepository.countByEmail(login) > 0 ? true : false; 
+			return userRepository.countByEmail(login) > 0;
 		else
-			return userRepository.countByEmailAndIdNot(login, id) > 0 ? true : false; 
+			return userRepository.countByEmailAndIdNot(login, id) > 0;
 	}
 	
 	@RequestMapping(value="registration", method = RequestMethod.POST)

@@ -1,10 +1,9 @@
 package com.app.controller;
 
-import javax.validation.Valid;
-
+import com.app.entity.User;
+import com.app.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,17 +13,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.app.entity.User;
-import com.app.repository.UserRepository;
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("administration/")
 public class AdminController {
 
-	Logger logger = LoggerFactory.getLogger(AdminController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
+
+	public AdminController(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
 	@RequestMapping(value = "register", method = RequestMethod.GET)
 	public String register(Model model) {

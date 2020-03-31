@@ -1,12 +1,18 @@
 package com.app.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
+@Setter
+@Getter
+@AllArgsConstructor
 public class Manufacturer {
 
 	@Id
@@ -51,48 +57,4 @@ public class Manufacturer {
 			vehicleModelName = "";
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public Long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<VehicleModel> getVehicleModel() {
-		return vehicleModel;
-	}
-
-	public void setVehicleModel(List<VehicleModel> vehicleModel) {
-		this.vehicleModel = vehicleModel;
-	}
-
-	public String getVehicleModelName() {
-		return vehicleModelName;
-	}
-
-	public void setVehicleModelName(String vehicleModelName) {
-		this.vehicleModelName = vehicleModelName;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Manufacturer that = (Manufacturer) o;
-		return Objects.equals(id, that.id);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
 }

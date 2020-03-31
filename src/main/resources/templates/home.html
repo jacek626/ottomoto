@@ -95,7 +95,7 @@
 		</div>
 
 		<div class="grid" >
-			<a class="blocks" th:each="announcement, row : ${newestAnnouncements}" style="  display:block;  background-color: white ; margin:5px; min-height:150px;" th:href="@{'/announcement/read/' + ${announcement.id}}">
+			<a class="blocks" th:each="announcement, row : ${pages}" style="  display:block;  background-color: white ; margin:5px; min-height:150px;" th:href="@{'/announcement/read/' + ${announcement.id}}">
 				<div class="imageWrapper" >
 						<img th:if="${#lists.size(announcement.pictures)} > 0" width="100%"  th:src="${'images/' + announcement.pictures[0].miniatureRepositoryName}" ></img>
 						<img th:if="${#lists.size(announcement.pictures)} == 0" width="100%"  th:src="@{'images/noPhoto.png'}" ></img>

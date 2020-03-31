@@ -5,6 +5,7 @@ import com.app.enums.ValidatorCode;
 import com.app.repository.ObservedAnnouncementRepository;
 import com.app.service.ObservedAnnouncementService;
 import com.app.utils.Result;
+import com.app.utils.ValidationDetails;
 import com.app.validator.ObservedAnnouncementValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -34,8 +35,7 @@ public class ObservedAnnouncementServiceImpl implements ObservedAnnouncementServ
         observedAnnouncementRepository.findById(observedAnnouncement.getId()).ifPresentOrElse(
                 e -> observedAnnouncementRepository.delete(e),
                 () -> {
-                    result.changeStatusToError();
-                    result.addToValidationResult("observedAnnouncement", ValidatorCode.NOT_EXISTS);
+                    result.appendValidationResult("observedAnnouncement", ValidationDetails.of(ValidatorCode.NOT_EXISTS));
                 }
         );
 

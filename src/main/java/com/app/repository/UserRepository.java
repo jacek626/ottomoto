@@ -1,16 +1,20 @@
 package com.app.repository;
 
+import com.app.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.app.entity.User;
-
 @Repository
 public interface UserRepository extends CrudRepository<User, Long>, QuerydslPredicateExecutor<User> {
 	User findByLogin(String login);
+
+	@Query("SELECT u.id FROM User u where u.login = :login")
+	long findIdByLogin(String login);
+
 	int countByLogin(String login);
 	User findByEmail(String login);
 	int countByEmail(String email);

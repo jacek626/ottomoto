@@ -1,77 +1,70 @@
 package com.app.service.impl;
 
-import java.util.Properties;
+import com.app.service.EmailService;
+import com.app.utils.EmailMessage;
+import com.app.utils.Result;
+import com.app.validator.EmailValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
 
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Service;
-
-import com.app.service.EmailService;
-import com.app.utils.Result;
+import java.util.Properties;
 
 @Service("emailService")
 public class EmailServiceImpl implements EmailService {
 	
 	Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
 
-	private String systemEmail = "mail.do.testow.app@gmail.com";
-	private String systemEmailPassword = "fk34kfj39";
-
 	@Autowired
-	MessageSource messageSource;
+	private EmailValidator emailValidator;
 
-	
-	@Override
-	public Result sendEmail(String subject, String content, Session session, String... receiverEmailAddres) throws Exception {
-		try {
-			Transport.send(createMessage(systemEmail, content, content, session, receiverEmailAddres));
-		} catch (AddressException e) {
-			logger.error("EMAIL sending error");
-			e.printStackTrace();
-			
-			return Result.Error();
-		}
-		
-		
-		return Result.Success();
-	}
-	
-	
-	@Override
-	public Result sendEmailFromSystem(String subject, String content, String... receiverEmailAddres) throws Exception {
-		Session session = setUpMailSession(setUpSystemMailProperties(), systemEmail, systemEmailPassword);
-		
-		return sendEmail(subject, content, session, receiverEmailAddres);
+
+	@Value("${system.email.address}")
+	private String systemEmail;
+	@Value("${system.email.address.pass}")
+	private String systemEmailPassword;
+
+	private final MessageSource messageSource;
+
+
+	public EmailServiceImpl(MessageSource messageSource) {
+		this.messageSource = messageSource;
 	}
 
-	private Message createMessage(String senderEmailAddress, String subject, String content , Session session, String... receiverEmailAddress)
-			throws Exception {
-		
+	public Result sendEmail(EmailMessage emailMessage) {
+		Result result = emailValidator.checkBeforeSend(emailMessage);
+
+		if(result.isSuccess())
+			try {
+				Session session = setUpMailSession(setUpSystemMailProperties(), systemEmail, systemEmailPassword);
+				Transport.send(createMessage(emailMessage ,session));
+			} catch (MessagingException e) {
+				e.printStackTrace();
+				return Result.Error();
+			}
+
+		return result;
+	}
+
+	private Message createMessage(EmailMessage emailMessage, Session session) throws MessagingException {
 		Message message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(systemEmail)); 
 		
-		if(StringUtils.isNotBlank(senderEmailAddress))
-			message.setReplyTo(new javax.mail.Address[] {new InternetAddress(senderEmailAddress)}); 
-		
-		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(String.join(",", receiverEmailAddress)));
-		message.setSubject(subject);
+		if(emailMessage.getSenderEmail().isPresent())
+			message.setReplyTo(new javax.mail.Address[] {new InternetAddress(emailMessage.getSenderEmail().get())});
+
+		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(String.join(",", emailMessage.getReceiverEmailsAddresses())));
+		message.setSubject(emailMessage.getSubject());
 		MimeBodyPart mimeBodyPart = new MimeBodyPart();
-		mimeBodyPart.setContent(content, "text/html");
+		mimeBodyPart.setContent(emailMessage.getContent(), "text/html");
 		Multipart multipart = new MimeMultipart();
 		multipart.addBodyPart(mimeBodyPart);
 		message.setContent(multipart);
@@ -91,9 +84,11 @@ public class EmailServiceImpl implements EmailService {
 	private Properties setUpSystemMailProperties() {
 		Properties properties = new Properties();
 		properties.put("mail.smtp.host", "smtp.gmail.com");
+		properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 		properties.put("mail.smtp.port", "587");
 		properties.put("mail.smtp.auth", "true");
 		properties.put("mail.smtp.starttls.enable", "true");
+
 		return properties;
 	}
 

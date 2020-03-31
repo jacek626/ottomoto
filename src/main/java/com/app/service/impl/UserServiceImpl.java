@@ -2,16 +2,15 @@ package com.app.service.impl;
 
 import com.app.entity.Role;
 import com.app.entity.User;
-import com.app.enums.ValidatorCode;
 import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
 import com.app.service.EmailService;
 import com.app.service.UserService;
 import com.app.utils.Result;
+import com.app.utils.ValidationDetails;
 import com.app.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.LocaleResolver;
@@ -44,7 +43,7 @@ public class UserServiceImpl implements UserService {
 		LocaleResolver localeResolver;
 	
 	public Result deleteUser(User user) {
-		Map<String, ValidatorCode> validationResult = userValidator.checkBeforeDelete(user.getId());
+		Map<String, ValidationDetails> validationResult = userValidator.checkBeforeDelete(user.getId());
 				
 		if(validationResult.isEmpty()) {
 			userRepository.delete(user);
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
 	
 	
 	public Result saveUser(User user) {
-		Map<String,ValidatorCode> validationResult = userValidator.checkBeforeSave(user);
+		Map<String, ValidationDetails> validationResult = userValidator.checkBeforeSave(user);
 		
 		if(validationResult.isEmpty()) {
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -69,20 +68,20 @@ public class UserServiceImpl implements UserService {
 	
 	private String prepareActivationLink() {
 		String link = "";
-		
+
 		
 		return link;
 	}
 	
-	public Result sentEmailWithAccountActivationLink(User user) { 
-		try {
-			emailService.sendEmailFromSystem(messageSource.getMessage("activationEmailSubject", null, LocaleContextHolder.getLocale()), messageSource.getMessage("activationEmailText", null, LocaleContextHolder.getLocale()), user.getEmail());
+	public Result sentEmailWithAccountActivationLink(User user) {
+	/*	try {
+			emailService.sendEmailFromSystemEmail(messageSource.getMessage("activationEmailSubject", null, LocaleContextHolder.getLocale()), messageSource.getMessage("activationEmailText", null, LocaleContextHolder.getLocale()), user.getEmail());
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 			return Result.Error();
-		}
-		
+		}*/
+
 		return Result.Success();
 	}
 

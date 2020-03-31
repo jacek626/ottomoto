@@ -53,7 +53,7 @@ public class UserServiceImplTest {
 	private static Validator validator;
 
 	@BeforeAll
-	static void setUp() throws Exception {
+	static void setUp() {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
 	}
@@ -95,7 +95,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("login")).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		assertThat(result.getDetail("login").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -111,7 +111,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("login")).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		assertThat(result.getDetail("login").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -126,7 +126,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -142,7 +142,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -157,7 +157,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("password")).isEqualTo(ValidatorCode.IS_NOT_SAME);
+		assertThat(result.getDetail("password").getCode()).isEqualTo(ValidatorCode.IS_NOT_SAME);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -172,7 +172,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("passwordConfirm")).isEqualTo(ValidatorCode.IS_EMPTY);
+		assertThat(result.getDetail("passwordConfirm").getCode()).isEqualTo(ValidatorCode.IS_EMPTY);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -187,7 +187,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -202,7 +202,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -217,7 +217,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -232,7 +232,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("email")).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
 		verify(userRepository, never()).save(user);
 	}
 

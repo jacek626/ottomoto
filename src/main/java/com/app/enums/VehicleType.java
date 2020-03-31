@@ -2,12 +2,12 @@ package com.app.enums;
 
 public enum VehicleType {
 	CAR("Osobowy"),
-	MOTORCYCLE("Dostawczy/ciężarowy"),
-	TRUCK( "Motocykl");
+	MOTORCYCLE("Motocykl"),
+	TRUCK( "Dostawczy/ciężarowy");
 	
-	private String label;
+	private final String label;
 	
-	private VehicleType(String label) {
+	VehicleType(String label) {
 		this.label = label;
 	}
 	

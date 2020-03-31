@@ -65,11 +65,10 @@
 					</tr>	
 					<tr>	
 						<td>
-						    <span th:replace="components/dropDownMultiSelect ::dropDownMultiSelect('carColor','searchFields.colorList','com.app.enums.CarColor','searchFields.getColorListLabelsAsString()',#{color})"/> 
-						</td>
-						<td> 
-							<span th:replace="components/dropDownMultiSelect ::dropDownMultiSelect('fuelType','searchFields.fuelTypeList','com.app.enums.FuelType','searchFields.getFuelTypeListListLabelsAsString()',#{fuelType})"/> 
-							
+						 	<span th:replace="components/dropDownMultiSelect ::dropDownMultiSelect('carColor','searchFields.colorList','com.app.enums.CarColor','searchFields.getSelectedCarColors()',#{color})"/>
+						<td>
+							<span th:replace="components/dropDownMultiSelect ::dropDownMultiSelect('fuelType','searchFields.fuelTypeList','com.app.enums.FuelType', 'searchFields.getSelectedFuelTypes()', #{fuelType})"/>
+
 						 </td>  
 						<td>
 							<!-- <span th:replace="components/dropDownBoolean ::dropDownBoolean('damaged','searchFields.damaged',#{damaged})"/>  -->
@@ -98,8 +97,8 @@
 							<span th:replace="components/dropDownBoolean ::dropDownBoolean('priceNegotiate','searchFields.priceNegotiate',#{priceNegotiate})"/> 
 						</td>
 						<td>
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('mileageFrom','searchFields.mileageFrom',#{mileageFrom},${mileageList},'#mileageFrom','#mileageTo', 'cm&#179;' , false)"/>  
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('mileageTo','searchFields.mileageTo',#{to},${mileageList},'#mileageFrom','#mileageTo', 'cm&#179;', true)"/>  
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('mileageFrom','searchFields.mileageFrom',#{mileageFrom},${mileageList},'#mileageFrom','#mileageTo', 'km' , false)"/>
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('mileageTo','searchFields.mileageTo',#{to},${mileageList},'#mileageFrom','#mileageTo', 'km', true)"/>
 						</td> 
 					</tr>
 	<!-- 				<tr>
@@ -133,11 +132,16 @@
 				/* 	 $('.rangeInput').mask('0000-0000'); */
 				 	$(document).ready(function(){
  						$('.rangeInput').each(function() {   
- 							var unit = this.getAttribute('unit');
- 							if(unit != null)
- 								$(this).inputmask({ alias : "numeric" ,suffix : " " + unit, groupSeparator : "," });
- 							else
- 								$(this).inputmask({ alias : "numeric" });
+ 							let unit = this.getAttribute('unit');
+ 						//	if(unit != null)
+ 							//	$(this).inputmask({ alias : "numeric" ,suffix : " " + unit, groupSeparator : "," });
+ 						//	else
+ 						//		$(this).inputmask({ alias : "numeric" });
+
+							if(unit != null)
+								$(this).inputmask({ alias : "numeric" ,suffix : " ", groupSeparator : " " });
+							else
+								$(this).inputmask({ alias : "numeric" });
  						})
 					}); 
 			

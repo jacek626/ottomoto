@@ -11,7 +11,7 @@
 	<input type="hidden" th:id="${elementName}" th:field="*{__${field}__}">
 		
  	<ul class="valuesDropDown" id="${elementName}">
-		<li th:each="element : ${booleanValuesForDropDown}"
+		<li th:each="element : ${booleanValues}"
 			th:text="${element.label}"
 			th:class="*{__${field}__} != null and ${element} == *{__${field}__} ? 'selected' : '' "
 			th:value="${element}">

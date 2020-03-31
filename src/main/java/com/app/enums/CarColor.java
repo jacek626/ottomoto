@@ -14,7 +14,7 @@ public enum CarColor {
 	
 	private String label;
 	
-	private CarColor(String label) {
+	CarColor(String label) {
 		this.setLabel(label);
 	}
 

@@ -1,11 +1,5 @@
 package com.app.enums;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public enum FuelType {
 	PETROL("Benzyna"),
 	DIESEL("Diesel"),
@@ -13,17 +7,17 @@ public enum FuelType {
 	HYBRID("Hybryda"),
 	ELECTRIC("Elektryczny");
 	
-	private String label;
+	private final String label;
 	
-	private FuelType(String label) {
-		this.setLabel(label);
+	FuelType(String label) {
+		this.label = label;
 	}
 
-	public static List<FuelType>fuelTypeWithLabels2() {
+/*	public static List<FuelType>fuelTypeWithLabels2() {
 		return Stream.of(FuelType.values()).collect(Collectors.toList());
-	}
+	}*/
 	
-	public static Map<FuelType,String>fuelTypeWithLabels() {
+/*	public static Map<FuelType,String>fuelTypeWithLabels() {
 		Map<FuelType,String> mapToReturn = new LinkedHashMap<FuelType,String>();
 		mapToReturn.put(FuelType.PETROL, "Benzyna");
 		mapToReturn.put(FuelType.DIESEL, "Diesel");
@@ -32,13 +26,13 @@ public enum FuelType {
 		mapToReturn.put(FuelType.ELECTRIC, "Elektryczny");
 		
 		return mapToReturn;
-	}
+	}*/
 
 	public String getLabel() {
 		return label;
 	}
 
-	public void setLabel(String label) {
-		this.label = label;
-	}
+	//public void setLabel(String label) {
+	//	this.label = label;
+//	}
 }

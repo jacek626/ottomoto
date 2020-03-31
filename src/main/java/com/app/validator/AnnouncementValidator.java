@@ -4,6 +4,7 @@ import com.app.entity.Announcement;
 import com.app.enums.ValidatorCode;
 import com.app.repository.AnnouncementRepository;
 import com.app.utils.Result;
+import com.app.utils.ValidationDetails;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -26,15 +27,15 @@ public class AnnouncementValidator {
 		return Result.create(validateAnnouncementBeforeSave(announcement));
 	}
 	
-	private Map<String, ValidatorCode> validateAnnouncementBeforeSave(Announcement announcement) {
-		Map<String, ValidatorCode> validation = new HashMap<>();
+	private Map<String, ValidationDetails> validateAnnouncementBeforeSave(Announcement announcement) {
+		Map<String, ValidationDetails> validation = new HashMap<>();
 
 		if (announcement.getUser() == null)
-			validation.put("user", ValidatorCode.IS_EMPTY);
+			validation.put("user", ValidationDetails.of(ValidatorCode.IS_EMPTY));
 		else if (!announcement.getUser().getActive())
-			validation.put("user", ValidatorCode.IS_DEACTIVATED);
+			validation.put("user", ValidationDetails.of(ValidatorCode.IS_DEACTIVATED));
 		else if (announcement.getPrice().compareTo(BigDecimal.ZERO) < 0)
-			validation.put("price", ValidatorCode.IS_NEGATIVE);
+			validation.put("price", ValidationDetails.of(ValidatorCode.IS_NEGATIVE));
 
 		
 		return validation;
@@ -44,24 +45,15 @@ public class AnnouncementValidator {
 		return Result.create(validateAnnouncementBeforeDeactivate(announcementId));
 	}
 	
-	private Map<String, ValidatorCode> validateAnnouncementBeforeDeactivate(Long announcementId) {
-		Map<String, ValidatorCode> validation = new HashMap<>();
+	private Map<String, ValidationDetails> validateAnnouncementBeforeDeactivate(Long announcementId) {
+		Map<String, ValidationDetails> validation = new HashMap<>();
 
 		boolean announcementToDeactivateExists = announcementRepository.existsByIdAndDeactivationDateIsNull(announcementId);
 		
 		if (!announcementToDeactivateExists)
-			validation.put("announcement", ValidatorCode.IS_DEACTIVATED);
+			validation.put("announcement", ValidationDetails.of(ValidatorCode.IS_DEACTIVATED));
 		
 		return validation;
 	}
 
-	public void setAnnouncementRepository(AnnouncementRepository announcementRepository) {
-		this.announcementRepository = announcementRepository;
-	}
-
-	/*
-	 * @Override public boolean checkUserContainsActiveAnnouncements(Long userId) {
-	 * return
-	 * announcementRepository.existsByUserIdAndDeactivationDateIsNull(userId); } }
-	 */
 }

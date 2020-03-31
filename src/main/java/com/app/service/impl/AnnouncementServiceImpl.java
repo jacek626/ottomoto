@@ -3,6 +3,7 @@ package com.app.service.impl;
 import com.app.entity.Announcement;
 import com.app.repository.AnnouncementRepository;
 import com.app.service.AnnouncementService;
+import com.app.service.PictureService;
 import com.app.utils.Result;
 import com.app.validator.AnnouncementValidator;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,12 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
 	private final AnnouncementValidator announcementValidator;
 
-	public AnnouncementServiceImpl(AnnouncementRepository announcementRepository, AnnouncementValidator announcementValidator) {
+	private final PictureService pictureService;
+
+	public AnnouncementServiceImpl(AnnouncementRepository announcementRepository, AnnouncementValidator announcementValidator, PictureService pictureService) {
 		this.announcementRepository = announcementRepository;
 		this.announcementValidator = announcementValidator;
+		this.pictureService = pictureService;
 	}
 
 	@Override

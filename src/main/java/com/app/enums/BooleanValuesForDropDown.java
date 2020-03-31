@@ -1,18 +1,21 @@
 package com.app.enums;
 
+import lombok.Getter;
+
 public enum BooleanValuesForDropDown {
-	ALL("Wszystkie"),
-	YES("Tak"),
-	NO("Nie");
+	ALL("Wszystkie",null),
+	YES("Tak", true),
+	NO("Nie", false);
+
+	@Getter
+	private final String label;
+	@Getter
+	private final Boolean queryValue;
 	
-	private String label;
-	
-	private BooleanValuesForDropDown(String label) {
+	BooleanValuesForDropDown(String label, Boolean queryValue) {
 		this.label = label;
+		this.queryValue = queryValue;
 	}
 
-	public String getLabel() {
-		return label;
-	}
 
 }

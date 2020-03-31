@@ -1,11 +1,17 @@
 package com.app.entity;
 
 import com.app.enums.VehicleType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Setter
+@Getter
+@AllArgsConstructor
 public class VehicleModel {
 	
 	@Id
@@ -29,7 +35,6 @@ public class VehicleModel {
 	
 	@Transient
 	private Boolean toDelete = false;
-	
 
 	public VehicleModel(@NotNull Long id,@NotNull String name, @NotNull Manufacturer manufacturer, @NotNull VehicleType vehicleType) {
 		super();
@@ -49,53 +54,4 @@ public class VehicleModel {
 	public VehicleModel() {
 	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public Long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public VehicleType getVehicleType() {
-		return vehicleType;
-	}
-
-	public void setVehicleType(VehicleType vehicleType) {
-		this.vehicleType = vehicleType;
-	}
-
-	public Boolean getToDelete() {
-		return toDelete;
-	}
-
-	public void setToDelete(Boolean toDelete) {
-		this.toDelete = toDelete;
-	}
-
-/*	public VehicleSubtype getVehicleSubtype() {
-		return vehicleSubtype;
-	}
-
-	public void setVehicleSubtype(VehicleSubtype vehicleSubtype) {
-		this.vehicleSubtype = vehicleSubtype;
-	}*/
-
-	public Manufacturer getManufacturer() {
-		return manufacturer;
-	}
-
-	public void setManufacturer(Manufacturer manufacturer) {
-		this.manufacturer = manufacturer;
-	}
-
-	
 }

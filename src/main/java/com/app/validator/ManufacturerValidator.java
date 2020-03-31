@@ -5,6 +5,7 @@ import com.app.entity.VehicleModel;
 import com.app.enums.ValidatorCode;
 import com.app.repository.ManufacturerRepository;
 import com.app.utils.Result;
+import com.app.utils.ValidationDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -32,23 +33,23 @@ public class ManufacturerValidator implements ValidatorCommonMethods<Manufacture
 
 		if(result.isSuccess()) {
 			for (VehicleModel vehicleModel: manufacturer.getVehicleModel()) {
-				result.addOtherResult(vehicleModelValidator.checkBeforeSave(vehicleModel));
+				result.appendResult(vehicleModelValidator.checkBeforeSave(vehicleModel));
 			}
 		}
 
 		return result;
 	}
 	
-	private Map<String, ValidatorCode> validateManufacturerBeforeSave(Manufacturer manufacturer) {
-		Map<String, ValidatorCode> errors = new HashMap<>();
+	private Map<String, ValidationDetails> validateManufacturerBeforeSave(Manufacturer manufacturer) {
+		Map<String, ValidationDetails> errors = new HashMap<>();
 		
 		List<Manufacturer> manufacturersWithSameName = manufacturerRepository.findByName(manufacturer.getName());
 		
-		if(manufacturer.getId() == null && manufacturersWithSameName.stream().filter(m -> m.getName().equals(manufacturer.getName())).findAny().isPresent()) {
-			errors.put("name", ValidatorCode.ALREADY_EXISTS);
+		if(manufacturer.getId() == null && manufacturersWithSameName.stream().anyMatch(m -> m.getName().equals(manufacturer.getName()))) {
+			errors.put("name", ValidationDetails.of(ValidatorCode.ALREADY_EXISTS));
 		}
-		else if(manufacturer.getId() != null && manufacturersWithSameName.stream().filter(m -> manufacturer.getId() != m.getId() && m.getName().equals(manufacturer.getName())).findAny().isPresent()) {
-			errors.put("name", ValidatorCode.ALREADY_EXISTS);
+		else if(manufacturer.getId() != null && manufacturersWithSameName.stream().anyMatch(m -> manufacturer.getId() != m.getId() && m.getName().equals(manufacturer.getName()))) {
+			errors.put("name", ValidationDetails.of(ValidatorCode.ALREADY_EXISTS));
 		}
 
 		return errors;
@@ -58,8 +59,8 @@ public class ManufacturerValidator implements ValidatorCommonMethods<Manufacture
 		Result result = Result.create(validateManufacturerBeforeSave(manufacturer));
 
 		if(result.isSuccess()) {
-			for (VehicleModel vehicleModel: manufacturer.getVehicleModel()) {
-				result.addOtherResult(vehicleModelValidator.checkBeforeDelete(vehicleModel));
+			for (VehicleModel vehicleModel : manufacturer.getVehicleModel()) {
+				result.appendResult(vehicleModelValidator.checkBeforeDelete(vehicleModel));
 			}
 		}
 

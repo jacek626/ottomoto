@@ -207,6 +207,10 @@ insert into picture (id,file_name,repository_name,miniature_repository_name,anno
 insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-14,'picture9.jpg','15599911776532472509249.jpg','15599911776532472509249-small.jpg',-13,true);
 insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-15,'picture10.jpg','15599910474527047691461.jpg','15599910474527047691461-small.jpg',-14,true);
 
+insert into observed_announcement(id, announcement_id, user_id) values (-1,-10,-2);
+insert into observed_announcement(id, announcement_id, user_id) values (-2,-13,-2);
+insert into observed_announcement(id, announcement_id, user_id) values (-3,-14,-2);
+
 
 --INSERT INTO admin(id, email, login, password,role) VALUES (-1, 'jacek626@gmail.com', 'jacek', 'haslo',1);
 --INSERT INTO admin(id, email, login, password,role) VALUES (-2, 'mieczyslaw@gmail.com', 'mietek', 'haslomietka',1);

@@ -31,45 +31,42 @@ public class HtmlElement {
 	}
 
 	public String returnHtml() {
-		if(!tag.isPresent())
+		if(tag.isEmpty())
 			throw new IllegalArgumentException("tag is not set");
 			
 		StringBuilder htmlElement = new StringBuilder();
-		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDD");
-		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDD");
-		System.out.println("DDDDDDDDDDDDDDDDDDDDDDDD");
 	//	if(tag.get().equals("input")) {
-			htmlElement.append("<" + tag.get() + " ");
+			htmlElement.append("<").append(tag.get()).append(" ");
 			
 			if(type.isPresent())
-				htmlElement.append("type=\""+ type.get() + "\" ");
+				htmlElement.append("type=\"").append(type.get()).append("\" ");
 			
 			if(id.isPresent())
-				htmlElement.append("id=\""+ id.get() + "\" ");
+				htmlElement.append("id=\"").append(id.get()).append("\" ");
 			
 			if(classStyle.isPresent())
-				htmlElement.append("class=\""+ classStyle.get() + "\" ");
+				htmlElement.append("class=\"").append(classStyle.get()).append("\" ");
 			
 			if(name.isPresent())
-				htmlElement.append("name=\""+ name.get() + "\" ");
+				htmlElement.append("name=\"").append(name.get()).append("\" ");
 			
 			if(value.isPresent())
-				htmlElement.append("value=\""+ value.get() + "\" ");
+				htmlElement.append("value=\"").append(value.get()).append("\" ");
 			
 			if(onclick.isPresent())
-				htmlElement.append("onclick=\""+ onclick.get() + "\" ");
+				htmlElement.append("onclick=\"").append(onclick.get()).append("\" ");
 			
 			if(src.isPresent())
-				htmlElement.append("src=\""+ src.get() + "\" ");
+				htmlElement.append("src=\"").append(src.get()).append("\" ");
 			
 			if(picture.isPresent())
-				htmlElement.append("picture=\""+ picture.get() + "\" ");
+				htmlElement.append("picture=\"").append(picture.get()).append("\" ");
 			
 			if(index.isPresent())
-				htmlElement.append("index=\""+ index.get() + "\" ");
+				htmlElement.append("index=\"").append(index.get()).append("\" ");
 			
 			if(html.isPresent()) 
-				htmlElement.append(">" + html.get()  + "</"+ tag.get() + "> ");
+				htmlElement.append(">").append(html.get()).append("</").append(tag.get()).append("> ");
 			else 
 				htmlElement.append("/>");
 		//}
@@ -82,7 +79,7 @@ public class HtmlElement {
 		private String name;
 		private String value;
 		private String type;
-		private String tag;
+		private final String tag;
 		private String onclick;
 		private String html;
 		private String src;

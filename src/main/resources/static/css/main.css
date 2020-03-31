@@ -308,9 +308,13 @@ table {
 	padding: 6px;
 	color: white;
 	background-color: #2e3968;
+	font-size: 16px;
+	font-family: Arial, Helvetica, sans-serif;
+	border: none !important;
+	cursor: pointer;
 }
 
-#upload-file-label:hover, .main-header-buttons:hover {
+#upload-file-label:hover, .main-header-buttons:hover, .medium-button:hover {
 	text-decoration: underline;
 }
 

@@ -70,10 +70,17 @@
                 style="cursor: pointer; overflow: hidden;" th:data-href="@{'/announcement/read/' + ${announcement.id}}">
                 <td>
                     <a th:href="@{'/announcement/read/' + ${announcement.id}}">
-                        <img th:if="${#lists.size(announcement.pictures)} > 0" width="100%"
+                    <!--    <img th:if="${#lists.size(announcement.pictures)} > 0" width="100%"
                              th:src="@{'/images/' + ${announcement.pictures[0].miniatureRepositoryName}}"></img>
                         <img th:if="${#lists.size(announcement.pictures)} == 0" width="100%"
+                             th:src="@{'/images/noPhoto.png'}"></img>-->
+
+                        <img th:if="${announcement.miniatureRepositoryName != null}" width="100%"
+                             th:src="@{'/images/' + ${announcement.miniatureRepositoryName}}"></img>
+                        <img th:if="${announcement.miniatureRepositoryName == null}" width="100%"
                              th:src="@{'/images/noPhoto.png'}"></img>
+
+
                     </a>
                 </td>
                 <td>

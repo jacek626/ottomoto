@@ -3,6 +3,7 @@ package com.app.service.impl;
 import com.app.entity.Announcement;
 import com.app.entity.ObservedAnnouncement;
 import com.app.entity.User;
+import com.app.entity.VehicleModel;
 import com.app.enums.VehicleSubtype;
 import com.app.repository.ObservedAnnouncementRepository;
 import com.app.utils.Result;
@@ -37,7 +38,7 @@ public class ObservedAnnouncementServiceTest {
     @Test
     public void shouldSaveObservedAnnouncement() {
         //given
-        Announcement announcement  = new Announcement.AnnouncementBuilder(null, VehicleSubtype.COMPACT, 2_000, 180_000, new BigDecimal(30_000), null).build();
+        Announcement announcement  = Announcement.builder().user(new User()).vehicleModel(new VehicleModel()).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
         User user = new User.UserBuilder("userLoginTest6","testPass","testPass","mailTest6@test.com", true).build();
         ObservedAnnouncement observedAnnouncement = new ObservedAnnouncement(announcement, user);
 
@@ -52,7 +53,7 @@ public class ObservedAnnouncementServiceTest {
     @Test
     public void shouldDeleteObservedAnnouncement() {
         //given
-        Announcement announcement  = new Announcement.AnnouncementBuilder(null, VehicleSubtype.COMPACT, 2_000, 180_000, new BigDecimal(30_000), null).build();
+        Announcement announcement  = Announcement.builder().user(new User()).vehicleModel(new VehicleModel()).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
         User user = new User.UserBuilder("userLoginTest6","testPass","testPass","mailTest6@test.com", true).build();
         ObservedAnnouncement observedAnnouncement = new ObservedAnnouncement(announcement, user);
         observedAnnouncement.setId(-2L);
