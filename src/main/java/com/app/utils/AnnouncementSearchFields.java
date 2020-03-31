@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class AnnouncementSearchFields {
-	private Short productionYearFrom, productionYearTo;
+	private Integer productionYearFrom;
+	private Integer productionYearTo;
 	private Integer priceFrom, priceTo;
 	private Integer mileageFrom, mileageTo;
 	private Integer engineCapacityFrom, engineCapacityTo;
@@ -43,6 +44,7 @@ public class AnnouncementSearchFields {
 		preparePredicateAndUrlParam(firstOwner, QAnnouncement.announcement.firstOwner, "searchFields.firstOwner=");
 		preparePredicateAndUrlParam(damaged, QAnnouncement.announcement.damaged, "searchFields.damaged=");
 		preparePredicateAndUrlParam(netPrice, QAnnouncement.announcement.netPrice, "searchFields.netPrice=");
+		preparePredicateAndUrlParam(priceNegotiate, QAnnouncement.announcement.priceNegotiate, "searchFields.priceNegotiate=");
 
 		preparePredicateAndUrlParamForYear();
 		preparePredicateAndUrlParamForMileage();
