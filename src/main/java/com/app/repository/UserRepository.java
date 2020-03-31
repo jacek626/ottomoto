@@ -21,18 +21,8 @@ public interface UserRepository extends CrudRepository<User, Long>, QuerydslPred
 	int countByEmailAndIdNot(String email, long id);
 	int countByLoginAndIdNot(String email, long id);
 
-	
-	
 	Page<User> findAll(Pageable pageable);
 	Page<User> findByLoginContainingIgnoreCase(String login, Pageable pageable);
-	// email, firstName lastname 
 	Page<User> findByLoginContainingIgnoreCaseAndEmailAndFirstNameAndLastName(String login, String email, String firstName, String lastName, Pageable pageable);
-	
-	
-	
-	
-	
-	//@Query(value = "select new com.datum.fnd.domain.Node(c.idNode, c.name,c.address, c.description, c.point) from Node c")
-	//List<User> getNodesByPage(Pageable pageable);
 }
 	

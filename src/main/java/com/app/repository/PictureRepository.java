@@ -14,9 +14,4 @@ import java.util.List;
 public interface PictureRepository extends CrudRepository<Picture, Long > {
     @Query(value="select p.miniatureRepositoryName as miniatureRepositoryName, p.announcement.id as announcementId from Picture p where p.mainPhotoInAnnouncement = true and p.announcement.id in (:announcementsIds)")
     List<PictureProjection> findMainPhotosByAnnouncementId(@Param("announcementsIds") Collection<Long> announcementsIds);
-
-
- //   List<PictureProjection> pictures2 = entityManager.createQuery("select p.miniatureRepositoryName as miniatureRepositoryName, p.announcement.id as announcementId from Picture p where p.mainPhotoInAnnouncement = true and p.announcement.id in (:announcementsIds)").
-       //     setParameter("announcementsIds", announcementsAsMap.keySet()).
-      //      getResultList();
 }

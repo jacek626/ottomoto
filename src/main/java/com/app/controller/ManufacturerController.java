@@ -10,7 +10,6 @@ import com.app.repository.ManufacturerRepository;
 import com.app.repository.VehicleRepository;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
@@ -29,15 +28,20 @@ import java.util.stream.IntStream;
 @RequestMapping("manufacturer/")
 public class ManufacturerController {
 	
-	@Autowired
+	final
 	ManufacturerRepository manufacturerRepository;
 	
-	@Autowired
+	final
 	VehicleRepository vehicleRepository;
 	
 	private final int[] PAGE_SIZES = {5,10,20};
-	
-	 @ModelAttribute
+
+	public ManufacturerController(ManufacturerRepository manufacturerRepository, VehicleRepository vehicleRepository) {
+		this.manufacturerRepository = manufacturerRepository;
+		this.vehicleRepository = vehicleRepository;
+	}
+
+	@ModelAttribute
 	    public void addAttributes(Model model) {
 			model.addAttribute("vehicleSubtypesCar", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.CAR));
 			model.addAttribute("vehicleSubtypesTruck", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.TRUCK));
@@ -47,8 +51,7 @@ public class ManufacturerController {
 	@RequestMapping(value="new",method=RequestMethod.GET)
 	public String register(Model model) {
 		model.addAttribute("manufacturer", new Manufacturer());
-	//	model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
-		
+
 		return "manufacturer/manufacturerEdit";
 	}
 	
@@ -56,8 +59,6 @@ public class ManufacturerController {
 	@RequestMapping(value="save",method=RequestMethod.POST, params="action=addVehicle")
 	public String addVehicle(@ModelAttribute("manufacturer") Manufacturer manufacturer,Model model,
 			Authentication authentication, RedirectAttributes redirectAttributes) {
-		
-	//	model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
 		
 		VehicleModel vehicle =new VehicleModel();
 		manufacturer.getVehicleModel().add(vehicle);
@@ -74,13 +75,10 @@ public class ManufacturerController {
 	@RequestMapping(value="save",method=RequestMethod.POST, params="action=removeVehicle")
 	public String removeVehicle(@ModelAttribute("manufacturer") Manufacturer manufacturer,Model model,
 			@RequestParam("vehicleToDelete") Long vehicleId, Authentication authentication) {
-		
-	//	model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
-		
+
 		manufacturer.getVehicleModel().remove(manufacturer.getVehicleModel().stream().filter(v -> v.getToDelete() == true).findFirst().get());
 		model.addAttribute("manufacturer",manufacturer);
-	//	vehicleRepository.deleteById(vehicleId);
-		
+
 		return "manufacturer/manufacturerEdit";
 	}
 	
@@ -114,8 +112,7 @@ public class ManufacturerController {
 		else
 			model.addAttribute("manufacturer",manufacturer);
 		
-	//	model.addAttribute("vehicleTypes", VehicleType.vehicleTypesWithLabels());
-		
+
 		return "manufacturer/manufacturerEdit";
 	}
 	
@@ -184,18 +181,13 @@ public class ManufacturerController {
 			@RequestParam(value="typeOfHtmlElement", defaultValue = "li") String htmlElement, Model model,
 			Authentication authentication, ModelMap map) {
 	
-	//	Map<VehicleSubtype,String> vehicleSubtypeMap = VehicleSubtype.vehicleSubtypesWithLabels(VehicleType.valueOf(vehicleType));
 		List<VehicleSubtype> vehicleSubtypes = VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.valueOf(vehicleType));
 
-/*		for (Map.Entry<VehicleSubtype, String> entry: vehicleSubtypeMap.entrySet()) {
-			strBuilder.append("<option value='" + entry.getKey() + "'>" + entry.getValue() + "</option>");
-		}*/
-		
+
 		String fromStream =  vehicleSubtypes.stream()
 				.map(e ->  "<" + htmlElement + " value='" + e.getVehicleType() + "'>" + e.getLabel() + "</"+ htmlElement +">")
 				.collect(Collectors.joining(""));
 		
-/*		return (resultWithEmptyOption ? "<option value=''></option>" : "")  + fromStream;*/
 		return fromStream;
 	}
 

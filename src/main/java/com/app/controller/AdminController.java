@@ -57,11 +57,7 @@ public class AdminController {
 	    	return "redirect:/";
 	    }
 
-		//return "admin/register";
-		//return 	modelAndView.setViewName("register");
-	//	modelAndView.setViewName("admin/register");
-	//	modelAndView.setViewName("redirect:/");
-		return "admin/register";  
+		return "admin/register";
 	}
 	
 	@RequestMapping(value = "home")
