@@ -28,11 +28,9 @@ import java.util.stream.IntStream;
 @RequestMapping("manufacturer/")
 public class ManufacturerController {
 	
-	final
-	ManufacturerRepository manufacturerRepository;
+	private final ManufacturerRepository manufacturerRepository;
 	
-	final
-	VehicleRepository vehicleRepository;
+	private final VehicleRepository vehicleRepository;
 	
 	private final int[] PAGE_SIZES = {5,10,20};
 
@@ -64,7 +62,6 @@ public class ManufacturerController {
 		manufacturer.getVehicleModel().add(vehicle);
 		model.addAttribute("manufacturer",manufacturer);
 		
-		// redirectAttributes.addFlashAttribute
 		redirectAttributes.addAttribute("manufacturer", manufacturer);
 		redirectAttributes.addFlashAttribute("manufacturerWithAddedModel", manufacturer);
 		redirectAttributes.addFlashAttribute("manufacturer", manufacturer);
