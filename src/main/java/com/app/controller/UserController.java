@@ -32,6 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -159,7 +160,7 @@ public class UserController {
 		if(user.isPresent()) 
 			model.addAttribute("user", user.get());
 		else
-			throw new RuntimeException("brak usera o podanym id");
+			throw new NoSuchElementException("User with id "+ id +" not exists");
 		
 		return "user/userEdit";
 		
@@ -242,7 +243,7 @@ public class UserController {
 		if(user.isPresent()) 
 			model.addAttribute("user", user);
 		else
-			throw new RuntimeException("brak admina o podanym id");
+			throw new NoSuchElementException ();
 		
 		return "user/userEdit";
 		
@@ -314,7 +315,7 @@ public class UserController {
 				userRepository.save(user);
 			}
 			else
-				throw new RuntimeException("brak usera o podanym id");
+				throw new NoSuchElementException ();
 		
 			return "redirect:/user/list";
 		}
@@ -337,7 +338,7 @@ public class UserController {
 				userRepository.save(userFromDB.get());
 			}
 			else
-				throw new RuntimeException("brak usera o podanym id");
+				throw new NoSuchElementException();
 			
 			return "redirect:/user/edit/" + user.getId();
 		}
@@ -348,7 +349,7 @@ public class UserController {
 			Optional<User> user = userRepository.findById(id);
 			
 			if(user.isEmpty())
-				throw new RuntimeException("brak usera o podanym id");
+				throw new NoSuchElementException();
 		
 			model.addAttribute("user", user.get());
 			
@@ -367,7 +368,7 @@ public class UserController {
 	// @Validated(User.ValidateAllFieldsWithoutPass.class) 
 	@RequestMapping(value="insert", method = RequestMethod.POST)
 	public String insert(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class, User.ValidatePassOnly.class})  User user, BindingResult bindingResult, Model model, Errors errors) {
-		boolean userIsValid = true;
+	//	boolean userIsValid = true;
 		
 /*		if(user.getId() != null) {
 			Optional<User> userFromDb = userRepository.findById(user.getId());
@@ -394,7 +395,8 @@ public class UserController {
 			errors.rejectValue("email", "emailAlreadyExists");
 		}
 		
-		if(errors.hasErrors() || !userIsValid) {
+	//	if(errors.hasErrors() || !userIsValid) {
+		if(errors.hasErrors()) {
 			model.addAttribute("user", user);
 			model.addAttribute("error",errors);
 			return "user/userEdit";
@@ -442,7 +444,7 @@ public class UserController {
 	    	Role userRole = roleRepository.findByName("ROLE_USER");
 	    	
 	    	if(userRole == null)
-	    		throw new Exception("Role w systemie nie sa zdefiniowane");
+	    		throw new NoSuchElementException("No defined roles in the system");
 	    	
 	    	user.setRole(userRole);
 	    	user.setActive(true);

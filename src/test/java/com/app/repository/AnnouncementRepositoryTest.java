@@ -38,7 +38,7 @@ public class AnnouncementRepositoryTest {
 	
 	@BeforeEach
 	public void init() {
-		if(initialized == false) {
+		if(!initialized) {
 			User user = new User.UserBuilder("announcementRepositoryTestLogin","testPass","testPass","announcementRepositoryMail@test.com", true).build();
 			userRepository.save(user);
 			Manufacturer manufacturer = new Manufacturer("announcementRepositoryTestManufacturer");

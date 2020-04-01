@@ -7,7 +7,6 @@ import com.app.enums.VehicleSubtype;
 import com.app.enums.VehicleType;
 import com.app.projection.ManufacturerProjection;
 import com.app.repository.ManufacturerRepository;
-import com.app.repository.VehicleRepository;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -30,13 +29,10 @@ public class ManufacturerController {
 	
 	private final ManufacturerRepository manufacturerRepository;
 	
-	private final VehicleRepository vehicleRepository;
-	
 	private final int[] PAGE_SIZES = {5,10,20};
 
-	public ManufacturerController(ManufacturerRepository manufacturerRepository, VehicleRepository vehicleRepository) {
+	public ManufacturerController(ManufacturerRepository manufacturerRepository) {
 		this.manufacturerRepository = manufacturerRepository;
-		this.vehicleRepository = vehicleRepository;
 	}
 
 	@ModelAttribute
@@ -73,7 +69,7 @@ public class ManufacturerController {
 	public String removeVehicle(@ModelAttribute("manufacturer") Manufacturer manufacturer,Model model,
 			@RequestParam("vehicleToDelete") Long vehicleId, Authentication authentication) {
 
-		manufacturer.getVehicleModel().remove(manufacturer.getVehicleModel().stream().filter(v -> v.getToDelete() == true).findFirst().get());
+		manufacturer.getVehicleModel().remove(manufacturer.getVehicleModel().stream().filter(v -> v.getToDelete()).findFirst().get());
 		model.addAttribute("manufacturer",manufacturer);
 
 		return "manufacturer/manufacturerEdit";

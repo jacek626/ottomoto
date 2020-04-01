@@ -4,11 +4,7 @@ import com.app.service.EmailService;
 import com.app.utils.EmailMessage;
 import com.app.utils.Result;
 import com.app.validator.EmailValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
@@ -20,23 +16,15 @@ import java.util.Properties;
 
 @Service("emailService")
 public class EmailServiceImpl implements EmailService {
-	
-	Logger logger = LoggerFactory.getLogger(EmailServiceImpl.class);
-
-	@Autowired
-	private EmailValidator emailValidator;
-
+	private final EmailValidator emailValidator;
 
 	@Value("${system.email.address}")
 	private String systemEmail;
 	@Value("${system.email.address.pass}")
 	private String systemEmailPassword;
 
-	private final MessageSource messageSource;
-
-
-	public EmailServiceImpl(MessageSource messageSource) {
-		this.messageSource = messageSource;
+	public EmailServiceImpl(EmailValidator emailValidator) {
+		this.emailValidator = emailValidator;
 	}
 
 	public Result sendEmail(EmailMessage emailMessage) {

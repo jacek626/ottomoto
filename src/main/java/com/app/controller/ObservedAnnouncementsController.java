@@ -11,14 +11,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+
 @Controller
 @RequestMapping("/observedAnnouncements")
-public class ObservedAnnouncementController {
+public class ObservedAnnouncementsController {
 
     private final SearchFormStrategy<Announcement> observedAnnouncementSearchFormStrategyDecorator;
     private final UserRepository userRepository;
 
-    public ObservedAnnouncementController(SearchFormStrategy<Announcement> observedAnnouncementSearchFormStrategyDecorator, UserRepository userRepository) {
+    public ObservedAnnouncementsController(SearchFormStrategy<Announcement> observedAnnouncementSearchFormStrategyDecorator, UserRepository userRepository) {
         this.observedAnnouncementSearchFormStrategyDecorator = observedAnnouncementSearchFormStrategyDecorator;
         this.userRepository = userRepository;
     }
@@ -36,7 +38,7 @@ public class ObservedAnnouncementController {
         if(announcement.getVehicleType() == null)
             announcement.setVehicleType(VehicleType.CAR);
 
-        //announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
+        announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
 
         PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
 

@@ -24,13 +24,13 @@ public class EmailMessage {
 
     EmailMessage(@NonNull final String subject, @NonNull final String content, final String senderEmail, @NonNull final List<String> receiverEmailsAddresses) {
         if (subject == null) {
-            throw new NullPointerException("subject is marked non-null but is null");
+            throw new IllegalArgumentException("subject is marked non-null but is null");
         }
         if (content == null) {
-            throw new NullPointerException("content is marked non-null but is null");
+            throw new IllegalArgumentException("content is marked non-null but is null");
         }
         if (receiverEmailsAddresses == null) {
-            throw new NullPointerException("receiverEmailsAddresses is marked non-null but is null");
+            throw new IllegalArgumentException("receiverEmailsAddresses is marked non-null but is null");
         }
         if (receiverEmailsAddresses.isEmpty()) {
             throw new IllegalArgumentException("receiverEmailsAddresses is empty");
