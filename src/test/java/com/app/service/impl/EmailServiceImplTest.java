@@ -88,7 +88,7 @@ public class EmailServiceImplTest {
 
 		//when
 		//then
-		Assertions.assertThrows(NullPointerException.class,() -> {
+		Assertions.assertThrows(IllegalArgumentException.class,() -> {
 			emailMessageBuilder.build();
 		});
 	}
@@ -103,7 +103,7 @@ public class EmailServiceImplTest {
 
 		//when
 		//then
-		Assertions.assertThrows(NullPointerException.class,() -> {
+		Assertions.assertThrows(IllegalArgumentException.class,() -> {
 			emailMessageBuilder.build();
 		});
 	}
@@ -118,7 +118,7 @@ public class EmailServiceImplTest {
 
 		//when
 		//then
-		Assertions.assertThrows(NullPointerException.class,() -> {
+		Assertions.assertThrows(IllegalArgumentException.class,() -> {
 			emailMessageBuilder.build();
 		});
 	}
