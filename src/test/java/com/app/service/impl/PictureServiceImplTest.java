@@ -13,15 +13,18 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.spy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class PictureServiceImplTest {
+
     @Mock
-    private MessageSource messageSource = spy(MessageSource.class);
+    private MessageSource messageSource;
 
     @InjectMocks
     private PictureServiceImpl pictureService;
@@ -29,6 +32,8 @@ public class PictureServiceImplTest {
     @Test
     public void shouldConvertPicturesToHtml() throws IOException {
         //given
+        when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class))).thenReturn("test");
+
         List<UploadedPicture> uploadedPictures = new ArrayList<>();
         uploadedPictures.add(UploadedPicture.of(new File("uploadedFile"),new File("miniatureFile"), "originalFileName"));
         uploadedPictures.add(UploadedPicture.of(new File("uploadedFile2"),new File("miniatureFile2"), "originalFileName2"));
