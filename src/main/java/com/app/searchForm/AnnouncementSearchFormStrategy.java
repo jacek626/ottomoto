@@ -60,8 +60,24 @@ public class AnnouncementSearchFormStrategy implements SearchFormStrategy<Announ
 
         List<ManufacturerProjection> manufacturerList = manufacturerRepository.findByVehicleType(announcement.getVehicleType());
         model.put("manufacturerList", manufacturerList);
+
         model.putAll(prepareVehicleModelsIfManufacturerIsSet(announcement, manufacturerList));
+
         model.put("vehicleSubtypeList", VehicleSubtype.getVehicleSubtypesByVehicleType(announcement.getVehicleType()));
+
+        return model;
+    }
+
+    private Map<String,Object> prepareVehicleModelsIfManufacturerIsSet(Announcement announcement, List<ManufacturerProjection> manufacturerList) {
+        Map<String,Object> model = new HashMap<>();
+
+        if(announcement.getVehicleModel() != null) {
+            announcement.setManufacturerName(manufacturerList.stream().filter(e -> e.getId() == announcement.getVehicleModel().getManufacturer().getId()).findAny().get().getName());
+            model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(announcement.getVehicleModel().getManufacturer().getId(), announcement.getVehicleModel().getVehicleType()));
+        }
+        else if(manufacturerList.size() > 0) {
+     //       model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(manufacturerList.get(0).getId(), announcement.getVehicleType()));
+        }
 
         return model;
     }
@@ -76,20 +92,6 @@ public class AnnouncementSearchFormStrategy implements SearchFormStrategy<Announ
         model.put("enginePowerList", SearchEngineDropDownValues.ENGINE_POWER_LIST);
         model.put("doorsList", SearchEngineDropDownValues.DOOR_LIST);
         model.put("booleanValues", BooleanValuesForDropDown.values());
-
-        return model;
-    }
-
-    private Map<String,Object> prepareVehicleModelsIfManufacturerIsSet(Announcement announcement, List<ManufacturerProjection> manufacturerList) {
-        Map<String,Object> model = new HashMap<>();
-
-        if(announcement.getManufacturerId() != null) {
-            announcement.setManufacturerName(manufacturerList.stream().filter(e -> e.getId() == announcement.getManufacturerId()).findAny().get().getName());
-            model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(announcement.getManufacturerId(), announcement.getVehicleType()));
-        }
-        else if(manufacturerList.size() > 0) {
-            model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(manufacturerList.get(0).getId(), announcement.getVehicleType()));
-        }
 
         return model;
     }

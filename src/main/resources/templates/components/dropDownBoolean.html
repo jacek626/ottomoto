@@ -1,12 +1,11 @@
-<span th:fragment="dropDownBoolean(elementName,field,label)" >
+<span th:fragment="dropDownBoolean(elementName,field,label)" xmlns:th="http://www.w3.org/1999/xhtml">
 
 	 <label th:for="${elementName}" th:text="${label}" style="display:block;"></label> 
 	 <input type="text" th:id="${elementName} + Label" th:dropDownElementId="${elementName}" style="cursor: pointer;"
 		readonly="readonly"
-		class="inputAsSelect labelInAnnouncementSearch"
+		class="inputAsSelect labelInAnnouncementSearch rewriteTextToHiddenInputOnKeyDown"
 		th:value="*{__${field}__ != null ? __${field}__.label : ''}"
-		onkeydown="rewriteTextToHiddenInputOnKeyDown(this); "
-		onfocusin="clearInputAndFireTrigger(this);"/>  
+		onfocusin="clearInputAndFireTrigger(this);"/>
 		
 	<input type="hidden" th:id="${elementName}" th:field="*{__${field}__}">
 		

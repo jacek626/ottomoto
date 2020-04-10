@@ -19,7 +19,7 @@
 						<td>           <!--   manufacturer       -->
 							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
 							<input type="text"  id="manufacturerLabel" dropDownElementId="manufacturer" onfocusin="clearInputAndFireTrigger(this);"  
-							readonly="readonly"  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); selectValuesInDropDownByKeyboard();"   th:placeholder="#{manufacturer}"  class="inputAsSelect labelInAnnouncementSearch" th:value="*{manufacturerId != null ? manufacturerName : ''}" >
+							readonly="readonly"   th:placeholder="#{manufacturer}"  class="inputAsSelect labelInAnnouncementSearch rewriteTextToHiddenInputOnKeyDown" th:value="*{manufacturerId != null ? manufacturerName : ''}" >
                                <input type="hidden" id="manufacturerValue"  th:field="*{manufacturerId}" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'li');">
 							<ul class="valuesDropDown" id="manufacturer">
 								<li th:each="element : ${manufacturerList}" th:text="${element.name}" 
@@ -30,7 +30,7 @@
 						<td>
 							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
 							<input type="text" id="vehicleModelLabel" dropDownElementId="vehicleModel"  th:placeholder="#{vehicleModelName}" onfocusin="clearInputAndFireTrigger(this);" 
-							 onkeydown="rewriteTextToHiddenInputOnKeyDown(this); selectValuesInDropDownByKeyboard();" 	readonly="readonly"    class="inputAsSelect labelInAnnouncementSearch" th:value="*{vehicleModel != null ? vehicleModel.name : ''}" >
+							 	readonly="readonly"    class="inputAsSelect labelInAnnouncementSearch rewriteTextToHiddenInputOnKeyDown" th:value="*{vehicleModel != null ? vehicleModel.name : ''}" >
 							
 							<input type="hidden" id="vehicleModelValue"  th:field="*{vehicleModel}">
 							<ul class="valuesDropDown" id="vehicleModel">
@@ -42,9 +42,9 @@
 						</td>  
 						<td>
 							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
-							<input type="text" id="vehicleSubtypeLabel" dropDownElementId="vehicleSubtype" th:placeholder="#{type}"  readonly="readonly"  class="inputAsSelect labelInAnnouncementSearch"
+							<input type="text" id="vehicleSubtypeLabel" dropDownElementId="vehicleSubtype" th:placeholder="#{type}"  readonly="readonly"  class="inputAsSelect labelInAnnouncementSearch rewriteTextToHiddenInputOnKeyDown"
 							 th:value="*{vehicleSubtype != null ? vehicleSubtype.label : ''}" 
-							  onkeydown="rewriteTextToHiddenInputOnKeyDown(this); " onfocusin="clearInputAndFireTrigger(this);" >
+							   onfocusin="clearInputAndFireTrigger(this);" >
 						
 							<input type="hidden" id="vehicleSubtypeValue"  th:field="*{vehicleSubtype}">
 							<ul class="valuesDropDown" id="vehicleSubtype">
@@ -194,13 +194,26 @@
 							$(currentElement).parent().find('.valuesMultiDropDown').css('display','none');
 						}, 300); 
 					});
-					
-					
-				/* 	$('#priceFrom, #priceTo,').maskNumber({
-						  integer: true,
-						  thousands: ' '
-		
-					}); */
+
+
+		$('input.rewriteTextToHiddenInputOnKeyDown').keydown(function(event) {
+			let element = $(event.target).parent().find('.hiddenInputToFilterResults');
+
+			if(event.key.length == 1)
+				$(element).val($(element).val() + event.key);
+			else if(event.key == 'Backspace')
+				$(element).val($(element).val().slice(0, -1));
+
+			$(element).trigger('change');
+		});
+
+
+
+		/* 	$('#priceFrom, #priceTo,').maskNumber({
+                  integer: true,
+                  thousands: ' '
+
+            }); */
 			</script>
 
 </div>

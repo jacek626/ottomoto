@@ -180,5 +180,11 @@ public class Announcement {
 		return searchFields;
 	}
 
+	public VehicleType getVehicleType() {
 
+		if(vehicleType == null)
+			vehicleType = (vehicleModel == null ? VehicleType.CAR : vehicleModel.getVehicleType());
+
+		return vehicleType;
+	}
 }

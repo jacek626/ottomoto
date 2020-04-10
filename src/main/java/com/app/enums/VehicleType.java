@@ -15,4 +15,6 @@ public enum VehicleType {
 		return label;
 	}
 
+
+
 }

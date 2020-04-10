@@ -26,14 +26,16 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3"><label for="vehicleType">Kategoria pojazdu</label><br/>
-						  <select id="vehicleType" onchange="loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');">
+					<td colspan="3"><label for="vehicleType">Kategoria pojazdu<span th:text="*{vehicleType}" /></label><br/>
+
+						<!--  <select id="vehicleType" onchange="loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');">-->
+						  <select id="vehicleType" th:field="*{vehicleType}" onchange="loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');">
 								<option
 									th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
 									th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
 									th:selected="*{vehicleType}">
 								</option>
-						</select> 
+						</select>
 							<span th:each="error: ${#fields.errors('vehicleType')}" class="valiationError" th:text="${error}"></span>
 									<input type="hidden" th:field="*{id}" />
 									<input type="hidden" th:field="*{user}"  />
