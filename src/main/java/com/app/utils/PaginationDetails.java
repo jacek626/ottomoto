@@ -6,8 +6,8 @@ import lombok.Data;
 @Builder
 @Data
 public class PaginationDetails {
-    int page;
-    int size;
-    String orderBy;
-    String sort;
+    private int page;
+    private int size;
+    private String orderBy;
+    private String sort;
 }

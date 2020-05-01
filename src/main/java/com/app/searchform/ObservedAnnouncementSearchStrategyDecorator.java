@@ -1,14 +1,12 @@
-package com.app.searchForm;
+package com.app.searchform;
 
 import com.app.entity.Announcement;
 import com.app.entity.QAnnouncement;
 import com.app.entity.QObservedAnnouncement;
 import com.app.repository.AnnouncementRepository;
-import com.app.repository.ObservedAnnouncementRepository;
 import com.app.repository.UserRepository;
 import com.app.utils.PredicatesAndUrlParams;
 import com.querydsl.core.types.Predicate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -19,18 +17,18 @@ import java.util.Map;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @Component
-public class ObservedAnnouncementSearchFormStrategyDecorator implements SearchFormStrategy<Announcement> {
+public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrategy<Announcement> {
 
-    private final AnnouncementSearchFormStrategy announcementSearchFormStrategy;
+    private final AnnouncementSearchStrategy announcementSearchFormStrategy;
 
     private final UserRepository userRepository;
 
-    @Autowired
-    private AnnouncementRepository announcementRepository;
+    private final AnnouncementRepository announcementRepository;
 
-    public ObservedAnnouncementSearchFormStrategyDecorator(AnnouncementSearchFormStrategy announcementSearchFormStrategy, ObservedAnnouncementRepository observedAnnouncementRepository, UserRepository userRepository) {
+    public ObservedAnnouncementSearchStrategyDecorator(AnnouncementSearchStrategy announcementSearchFormStrategy, UserRepository userRepository, AnnouncementRepository announcementRepository) {
         this.announcementSearchFormStrategy = announcementSearchFormStrategy;
         this.userRepository = userRepository;
+        this.announcementRepository = announcementRepository;
     }
 
     @Override

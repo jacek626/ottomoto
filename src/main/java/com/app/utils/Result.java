@@ -15,11 +15,11 @@ public class Result {
 		this.setStatus(operationStatus);
 	}
 	
-	public static Result Success() {
+	public static Result success() {
 		return new Result(OperationResult.SUCCESS);
 	}
 	
-	public static Result Error() {
+	public static Result error() {
 		return new Result(OperationResult.ERROR);
 	}
 

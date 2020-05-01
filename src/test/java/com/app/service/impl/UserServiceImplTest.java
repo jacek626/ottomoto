@@ -33,9 +33,11 @@ import static org.mockito.Mockito.*;
 public class UserServiceImplTest {
 
 	@Mock
+	@SuppressWarnings("unused")
 	private RoleRepository roleRepository;
-	
+
 	@Spy
+	@SuppressWarnings("unused")
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Mock
@@ -45,6 +47,7 @@ public class UserServiceImplTest {
 	private AnnouncementRepository announcementRepository;
 
 	@InjectMocks
+	@SuppressWarnings("unused")
 	private UserValidator userValidator = spy(UserValidator.class);
 
 	@InjectMocks
@@ -84,23 +87,9 @@ public class UserServiceImplTest {
 	}
 
 
-	@Test
-	public void shouldReturnErrorBecUserWithSameLoginExists_idIsNull() {
-		//given
-		User user = prepareUser();
-		when(userRepository.countByLogin(any(String.class))).thenReturn(1);
-
-		//when
-		Result result = userService.saveUser(user);
-
-		//then
-		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("login").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
-		verify(userRepository, never()).save(user);
-	}
 
 	@Test
-	public void shouldReturnErrorBecUserWithSameLoginExists_idIsSet() {
+	public void shouldReturnErrorDuringUserEditionBecUserWithSameLoginExists() {
 		//given
 		User user = prepareUser();
 		user.setId(-1L);
@@ -116,7 +105,23 @@ public class UserServiceImplTest {
 	}
 
 	@Test
-	public void shouldReturnErrorBecUserWithSameEmailExists_idIsNull() {
+	public void shouldReturnErrorDuringUserEditionBecUserWithSameEmailExists() {
+		//given
+		User user = prepareUser();
+		user.setId(-1L);
+		when(userRepository.countByEmailAndIdNot(any(String.class), any(Long.class))).thenReturn(1);
+
+		//when
+		Result result = userService.saveUser(user);
+
+		//then
+		assertThat(result.isError()).isTrue();
+		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		verify(userRepository, never()).save(user);
+	}
+
+	@Test
+	public void shouldReturnErrorDuringUserCreationBecUserWithSameEmailExists() {
 		//given
 		User user = prepareUser();
 		when(userRepository.countByEmail(any(String.class))).thenReturn(1);
@@ -130,19 +135,19 @@ public class UserServiceImplTest {
 		verify(userRepository, never()).save(user);
 	}
 
+
 	@Test
-	public void shouldReturnErrorBecUserWithSameEmailExists_idIsSet() {
+	public void shouldReturnErrorDuringUserCreationBecUserWithSameLoginExists() {
 		//given
 		User user = prepareUser();
-		user.setId(-1L);
-		when(userRepository.countByEmailAndIdNot(any(String.class), any(Long.class))).thenReturn(1);
+		when(userRepository.countByLogin(any(String.class))).thenReturn(1);
 
 		//when
 		Result result = userService.saveUser(user);
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		assertThat(result.getDetail("login").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -177,7 +182,7 @@ public class UserServiceImplTest {
 	}
 
 	@Test
-	public void shouldReturnValidationErrorBecauseEmailIsNotValid_test_1() {
+	public void shouldReturnValidationErrorBecauseEmailIsNotValidCase1() {
 		//given
 		User user = prepareUser();
 		user.setEmail("test@");
@@ -192,7 +197,7 @@ public class UserServiceImplTest {
 	}
 
 	@Test
-	public void shouldReturnValidationErrorBecauseEmailIsNotValid_test_2() {
+	public void shouldReturnValidationErrorBecauseEmailIsNotValidCase2() {
 		//given
 		User user = prepareUser();
 		user.setEmail("test@test");
@@ -207,7 +212,7 @@ public class UserServiceImplTest {
 	}
 
 	@Test
-	public void shouldReturnValidationErrorBecauseEmailIsNotValid_test_3() {
+	public void shouldReturnValidationErrorBecauseEmailIsNotValidCase3() {
 		//given
 		User user = prepareUser();
 		user.setEmail("testtest.pl");
@@ -222,7 +227,7 @@ public class UserServiceImplTest {
 	}
 
 	@Test
-	public void shouldReturnValidationErrorBecauseEmailIsNotValid_test_4() {
+	public void shouldReturnValidationErrorBecauseEmailIsNotValidCase4() {
 		//given
 		User user = prepareUser();
 		user.setEmail("@test.pl");

@@ -1,8 +1,8 @@
-package com.app.searchForm;
+package com.app.searchform;
 
 import com.app.entity.Announcement;
 import com.app.enums.BooleanValuesForDropDown;
-import com.app.enums.PageSize;
+import com.app.enums.PaginationPageSize;
 import com.app.enums.SearchEngineDropDownValues;
 import com.app.enums.VehicleSubtype;
 import com.app.projection.ManufacturerProjection;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class AnnouncementSearchFormStrategy implements SearchFormStrategy<Announcement> {
+public class AnnouncementSearchStrategy implements SearchStrategy<Announcement> {
 
     private final AnnouncementRepository announcementRepository;
 
@@ -30,7 +30,7 @@ public class AnnouncementSearchFormStrategy implements SearchFormStrategy<Announ
 
     private final ManufacturerRepository manufacturerRepository;
 
-    public AnnouncementSearchFormStrategy(AnnouncementRepository announcementRepository, VehicleModelRepository vehicleModelRepository, ManufacturerRepository manufacturerRepository) {
+    public AnnouncementSearchStrategy(AnnouncementRepository announcementRepository, VehicleModelRepository vehicleModelRepository, ManufacturerRepository manufacturerRepository) {
         this.announcementRepository = announcementRepository;
         this.vehicleModelRepository = vehicleModelRepository;
         this.manufacturerRepository = manufacturerRepository;
@@ -75,9 +75,9 @@ public class AnnouncementSearchFormStrategy implements SearchFormStrategy<Announ
             announcement.setManufacturerName(manufacturerList.stream().filter(e -> e.getId() == announcement.getVehicleModel().getManufacturer().getId()).findAny().get().getName());
             model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(announcement.getVehicleModel().getManufacturer().getId(), announcement.getVehicleModel().getVehicleType()));
         }
-        else if(manufacturerList.size() > 0) {
-     //       model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(manufacturerList.get(0).getId(), announcement.getVehicleType()));
-        }
+   /*     else if(manufacturerList.size() > 0) {
+           model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(manufacturerList.get(0).getId(), announcement.getVehicleType()));
+        }*/
 
         return model;
     }
@@ -85,7 +85,7 @@ public class AnnouncementSearchFormStrategy implements SearchFormStrategy<Announ
     private Map<String,Object> prepareModelAttributesFromEnums() {
         Map<String, Object> model = new HashMap<>();
 
-        model.put("pageSizes", PageSize.LIST);
+        model.put("pageSizes", PaginationPageSize.LIST);
         model.put("pricesList", SearchEngineDropDownValues.CAR_PRICES_LIST);
         model.put("mileageList", SearchEngineDropDownValues.MILEAGE_LIST);
         model.put("engineCapacityList", SearchEngineDropDownValues.ENGINE_CAPACITY_LIST);

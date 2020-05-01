@@ -9,11 +9,9 @@ import com.app.service.UserService;
 import com.app.utils.Result;
 import com.app.utils.ValidationDetails;
 import com.app.validator.UserValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.LocaleResolver;
 
 import java.util.Map;
 import java.util.Objects;
@@ -21,27 +19,28 @@ import java.util.Objects;
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserRepository userRepository; 
+	private final UserRepository userRepository;
 	
-	@Autowired
-	private UserValidator userValidator; 
+	private final UserValidator userValidator;
 	
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-	@Autowired
-	private RoleRepository roleRepository;
+	private final RoleRepository roleRepository;
 	
-	@Autowired
-	private EmailService emailService;
-	
-	 @Autowired
-	 private MessageSource messageSource;
-	 
-		@Autowired
-		LocaleResolver localeResolver;
-	
+	private final EmailService emailService;
+
+	private final MessageSource messageSource;
+
+	public UserServiceImpl(UserRepository userRepository, UserValidator userValidator, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, EmailService emailService, MessageSource messageSource) {
+		this.userRepository = userRepository;
+		this.userValidator = userValidator;
+		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+		this.roleRepository = roleRepository;
+		this.emailService = emailService;
+		this.messageSource = messageSource;
+	}
+
+
 	public Result deleteUser(User user) {
 		Map<String, ValidationDetails> validationResult = userValidator.checkBeforeDelete(user.getId());
 				
@@ -74,15 +73,16 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public Result sentEmailWithAccountActivationLink(User user) {
-	/*	try {
+/*		try {
 			emailService.sendEmailFromSystemEmail(messageSource.getMessage("activationEmailSubject", null, LocaleContextHolder.getLocale()), messageSource.getMessage("activationEmailText", null, LocaleContextHolder.getLocale()), user.getEmail());
 		} catch (Exception e) {
 			e.printStackTrace();
 
-			return Result.Error();
-		}*/
+			return Result.error();
+		}
 
-		return Result.Success();
+		return Result.success();*/
+		return Result.success();
 	}
 
 

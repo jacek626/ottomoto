@@ -12,15 +12,15 @@ import java.util.Optional;
 @Builder
 public class EmailMessage {
     @NonNull
-    private String subject;
+    private final String subject;
     @NonNull
-    private String content;
+    private final String content;
 
-    private String senderEmail;
+    private final String senderEmail;
 
     @NonNull
     @Singular
-    List<String> receiverEmailsAddresses;
+    private final List<String> receiverEmailsAddresses;
 
     EmailMessage(@NonNull final String subject, @NonNull final String content, final String senderEmail, @NonNull final List<String> receiverEmailsAddresses) {
         if (subject == null) {
@@ -36,14 +36,11 @@ public class EmailMessage {
             throw new IllegalArgumentException("receiverEmailsAddresses is empty");
         }
 
-
         this.subject = subject;
         this.content = content;
         this.senderEmail = senderEmail;
         this.receiverEmailsAddresses = receiverEmailsAddresses;
     }
-
-
 
     public Optional<String> getSenderEmail() {
         return Optional.ofNullable(senderEmail);

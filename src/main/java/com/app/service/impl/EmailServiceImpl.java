@@ -36,7 +36,7 @@ public class EmailServiceImpl implements EmailService {
 				Transport.send(createMessage(emailMessage ,session));
 			} catch (MessagingException e) {
 				e.printStackTrace();
-				return Result.Error();
+				return Result.error();
 			}
 
 		return result;
@@ -47,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
 		message.setFrom(new InternetAddress(systemEmail)); 
 		
 		if(emailMessage.getSenderEmail().isPresent())
-			message.setReplyTo(new javax.mail.Address[] {new InternetAddress(emailMessage.getSenderEmail().get())});
+			message.setReplyTo(new Address[] {new InternetAddress(emailMessage.getSenderEmail().get())});
 
 		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(String.join(",", emailMessage.getReceiverEmailsAddresses())));
 		message.setSubject(emailMessage.getSubject());

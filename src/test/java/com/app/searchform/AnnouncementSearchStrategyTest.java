@@ -1,4 +1,4 @@
-package com.app.searchForm;
+package com.app.searchform;
 
 import com.app.entity.Announcement;
 import com.app.entity.QAnnouncement;
@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class AnnouncementSearchFormStrategyTest {
+public class AnnouncementSearchStrategyTest {
 
     @Mock
     private AnnouncementRepository announcementRepository;
@@ -32,7 +32,7 @@ public class AnnouncementSearchFormStrategyTest {
     private ManufacturerRepository manufacturerRepository;
 
     @InjectMocks
-    private AnnouncementSearchFormStrategy announcementSearchFormStrategy;
+    private AnnouncementSearchStrategy announcementSearchFormStrategy;
 
     @Test
     public void shouldPreparePredicatesAndUrlParamsOnlyInAnnouncement() {

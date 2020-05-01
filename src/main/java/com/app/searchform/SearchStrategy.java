@@ -1,4 +1,4 @@
-package com.app.searchForm;
+package com.app.searchform;
 
 import com.app.utils.PaginationDetails;
 import com.app.utils.PredicatesAndUrlParams;
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public interface SearchFormStrategy<E> {
+public interface SearchStrategy<E> {
     PredicatesAndUrlParams preparePredicatesAndUrlParams(E entity);
     Page<E> loadData(PageRequest pageRequest, List<Predicate> predicates);
     Map<String, Object> prepareDataForHtmlElements(E entity);

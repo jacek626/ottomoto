@@ -15,8 +15,12 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class Picture {
 
+	@SuppressWarnings("unused")
+	public Picture() {
+	}
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_Picture")
+	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="seq_Picture")
 	@SequenceGenerator(name="seq_Picture",sequenceName="seq_Picture")
 	private Long id;
 	
@@ -39,8 +43,5 @@ public class Picture {
 	@Transient
 	@Builder.Default
 	private boolean pictureToDelete = false;
-
-	public Picture() {
-	}
 
 }

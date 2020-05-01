@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class BreadCrumb {
+public class AnnouncementBreadCrumb {
 
     public static List<BreadCrumbElement> create(Announcement announcement) {
         List<BreadCrumbElement> breadCrumbElements = Lists.newArrayList();

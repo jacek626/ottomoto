@@ -30,6 +30,7 @@ public class ObservedAnnouncementServiceTest {
     private ObservedAnnouncementRepository observedAnnouncementRepository;
 
     @InjectMocks
+    @SuppressWarnings("unused")
     private ObservedAnnouncementValidator observedAnnouncementValidator = spy(ObservedAnnouncementValidator.class);
 
     @InjectMocks

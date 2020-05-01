@@ -4,7 +4,6 @@ import com.app.utils.EmailMessage;
 import com.app.utils.Result;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.jupiter.api.Assertions;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +13,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class EmailServiceImplTest {
 
 	@Autowired
-	EmailServiceImpl emailService;
+	private EmailServiceImpl emailService;
 
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
@@ -71,9 +71,8 @@ public class EmailServiceImplTest {
 				content("content").
 				senderEmail("test@test.gmail");
 
-		//when
 		//then
-		Assertions.assertThrows(IllegalArgumentException.class,() -> {
+		assertThrows(IllegalArgumentException.class,() -> {
 			emailMessageBuilder.build();
 		});
 	}
@@ -86,9 +85,8 @@ public class EmailServiceImplTest {
 				receiverEmailsAddress("test@test.gmail").
 				senderEmail("test@test.gmail");
 
-		//when
 		//then
-		Assertions.assertThrows(IllegalArgumentException.class,() -> {
+		assertThrows(IllegalArgumentException.class,() -> {
 			emailMessageBuilder.build();
 		});
 	}
@@ -101,9 +99,8 @@ public class EmailServiceImplTest {
 				receiverEmailsAddress("test@test.gmail").
 				senderEmail("test@test.gmail");
 
-		//when
 		//then
-		Assertions.assertThrows(IllegalArgumentException.class,() -> {
+		assertThrows(IllegalArgumentException.class,() -> {
 			emailMessageBuilder.build();
 		});
 	}
@@ -116,12 +113,10 @@ public class EmailServiceImplTest {
 				content("content").
 				receiverEmailsAddress("test@test.gmail");
 
-		//when
 		//then
-		Assertions.assertThrows(IllegalArgumentException.class,() -> {
+		assertThrows(IllegalArgumentException.class,() -> {
 			emailMessageBuilder.build();
 		});
 	}
 
 }
- 

@@ -8,9 +8,9 @@ import java.util.List;
 
 public class PredicatesAndUrlParams {
     @Getter
-    List<Predicate> predicates;
+    private List<Predicate> predicates;
     @Getter
-    String urlParams;
+    private String urlParams;
 
     public static PredicatesAndUrlParams of(@NotNull List<Predicate> predicates, String urlParams) {
         return new PredicatesAndUrlParams(predicates, urlParams);

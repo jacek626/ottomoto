@@ -1,25 +1,22 @@
 package com.app.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
-
+import com.app.entity.Manufacturer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.app.entity.Manufacturer;
-import com.app.repository.ManufacturerRepository;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ManufacturerRepositoryTest {
 
 	@Autowired
-	ManufacturerRepository manufacturerRepository;
+	private ManufacturerRepository manufacturerRepository;
 
 	@Test
 	public void findAll() {

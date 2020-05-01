@@ -12,14 +12,10 @@ import java.util.regex.Pattern;
 public class EmailValidator  {
 	private static final String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
 
-	private static Pattern emailAddressPattern;
-
-	public EmailValidator() {
-		emailAddressPattern = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
-	}
+	private static Pattern emailAddressPattern = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
 
 	public Result checkBeforeSend(EmailMessage emailMessage) {
-		Result result = Result.Success();
+		Result result = Result.success();
 
 		for(String emailAddress : emailMessage.getReceiverEmailsAddresses()) {
 			if(checkEmailAddressIsNotValid(emailAddress))

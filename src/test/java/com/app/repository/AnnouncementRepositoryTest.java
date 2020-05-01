@@ -45,13 +45,13 @@ public class AnnouncementRepositoryTest {
 			manufacturer.getVehicleModel().add(new VehicleModel("vehicleModel3" , manufacturer , VehicleType.CAR));
 			announcement  = Announcement.builder().title("announcement title").user(user).vehicleModel(manufacturer.getVehicleModel().get(0)).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
 			
-			Picture picture1 = new Picture();
+			Picture picture1 = Picture.builder().build();
 			picture1.setAnnouncement(announcement);
 			picture1.setRepositoryName("picture1");
 			picture1.setMiniatureRepositoryName("picture1");
 			picture1.setMainPhotoInAnnouncement(false);
 			
-			Picture picture2= new Picture();
+			Picture picture2= Picture.builder().build();
 			picture2.setAnnouncement(announcement);
 			picture2.setRepositoryName("picture2");
 			picture2.setMiniatureRepositoryName("picture2");
@@ -88,7 +88,7 @@ public class AnnouncementRepositoryTest {
 	public void findFirst5ByUserIdAndFetchPicturesEagerlyTest() {
 		List<Announcement> announcementList = announcementRepository.findFirst5ByUserIdAndOtherThenIdFetchPictures(-1L, -1L);
 		
-	  assertThat(announcementList).isNotEmpty();
+	  	assertThat(announcementList).isNotEmpty();
 	}
 	
 	
@@ -109,7 +109,9 @@ public class AnnouncementRepositoryTest {
 	@Test
 	public void shouldFindAnnouncementByPredicatesAndLoadPicture() {
 		PageRequest pageable =  PageRequest.of(1, 10, Direction.fromString("ASC"), "id");
-		Page<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadMainPicture(pageable, List.of(QAnnouncement.announcement.title.eq("announcement title")) );
+		Page<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadMainPicture(pageable, List.of(QAnnouncement.announcement.deactivationDate.isNull()));
+
+		assertThat(announcementList).isNotEmpty();
 	}
 
 }

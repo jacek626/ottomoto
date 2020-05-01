@@ -1,4 +1,4 @@
-package com.app.searchForm;
+package com.app.searchform;
 
 import com.app.entity.Announcement;
 import com.app.repository.AnnouncementRepository;
@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class HomeSearchFormStrategyDecorator implements SearchFormStrategy<Announcement> {
+public class HomeSearchStrategyDecorator implements SearchStrategy<Announcement> {
 
-    private final AnnouncementSearchFormStrategy announcementSearchFormStrategy;
+    private final AnnouncementSearchStrategy announcementSearchFormStrategy;
 
     private final AnnouncementRepository announcementRepository;
 
-    public HomeSearchFormStrategyDecorator(AnnouncementSearchFormStrategy announcementSearchFormStrategy, AnnouncementRepository announcementRepository) {
+    public HomeSearchStrategyDecorator(AnnouncementSearchStrategy announcementSearchFormStrategy, AnnouncementRepository announcementRepository) {
         this.announcementSearchFormStrategy = announcementSearchFormStrategy;
         this.announcementRepository = announcementRepository;
     }

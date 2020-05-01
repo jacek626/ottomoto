@@ -3,7 +3,7 @@ package com.app.controller;
 import com.app.entity.Announcement;
 import com.app.enums.VehicleType;
 import com.app.repository.UserRepository;
-import com.app.searchForm.SearchFormStrategy;
+import com.app.searchform.SearchStrategy;
 import com.app.utils.PaginationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,11 +17,11 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 @RequestMapping("/observedAnnouncements")
 public class ObservedAnnouncementsController {
 
-    private final SearchFormStrategy<Announcement> observedAnnouncementSearchFormStrategyDecorator;
+    private final SearchStrategy<Announcement> observedAnnouncementSearchStrategyDecorator;
     private final UserRepository userRepository;
 
-    public ObservedAnnouncementsController(SearchFormStrategy<Announcement> observedAnnouncementSearchFormStrategyDecorator, UserRepository userRepository) {
-        this.observedAnnouncementSearchFormStrategyDecorator = observedAnnouncementSearchFormStrategyDecorator;
+    public ObservedAnnouncementsController(SearchStrategy<Announcement> observedAnnouncementSearchStrategyDecorator, UserRepository userRepository) {
+        this.observedAnnouncementSearchStrategyDecorator = observedAnnouncementSearchStrategyDecorator;
         this.userRepository = userRepository;
     }
 
@@ -42,7 +42,7 @@ public class ObservedAnnouncementsController {
 
         PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
 
-        model.addAllAttributes(observedAnnouncementSearchFormStrategyDecorator.prepareSearchForm(announcement, paginationDetails));
+        model.addAllAttributes(observedAnnouncementSearchStrategyDecorator.prepareSearchForm(announcement, paginationDetails));
 
         return "/announcement/announcementList";
     }

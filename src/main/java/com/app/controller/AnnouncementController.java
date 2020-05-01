@@ -4,18 +4,16 @@ import com.app.entity.Announcement;
 import com.app.entity.Picture;
 import com.app.enums.VehicleType;
 import com.app.repository.AnnouncementRepository;
-import com.app.repository.ObservedAnnouncementRepository;
 import com.app.repository.UserRepository;
-import com.app.searchForm.SearchFormStrategy;
+import com.app.searchform.SearchStrategy;
 import com.app.service.AnnouncementService;
 import com.app.service.EmailService;
 import com.app.service.PictureService;
-import com.app.utils.BreadCrumb;
+import com.app.utils.AnnouncementBreadCrumb;
 import com.app.utils.EmailMessage;
 import com.app.utils.PaginationDetails;
 import com.app.utils.Result;
 import org.hibernate.ObjectNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -51,28 +49,27 @@ public class AnnouncementController {
 	
 	private final MessageSource messageSource;
 
-	@Autowired
-	private SearchFormStrategy<Announcement> announcementSearchFormStrategy;
+	private final SearchStrategy<Announcement> announcementSearchStrategy;
 
-	public AnnouncementController(AnnouncementService announcementService, PictureService pictureService, AnnouncementRepository announcementRepository, UserRepository userRepository, EmailService emailService, MessageSource messageSource, ObservedAnnouncementRepository observedAnnouncementRepository) {
+	public AnnouncementController(AnnouncementService announcementService, PictureService pictureService, AnnouncementRepository announcementRepository, UserRepository userRepository, EmailService emailService, MessageSource messageSource, SearchStrategy<Announcement> announcementSearchStrategy) {
 		this.announcementService = announcementService;
 		this.pictureService = pictureService;
 		this.announcementRepository = announcementRepository;
 		this.userRepository = userRepository;
 		this.emailService = emailService;
 		this.messageSource = messageSource;
+		this.announcementSearchStrategy = announcementSearchStrategy;
 	}
 
 	@RequestMapping(value="create",method=RequestMethod.GET)
 	public String create(Model model) {
-		VehicleType vehicleType = VehicleType.CAR;
 
 		Announcement announcement = Announcement.builder().build();
 		announcement.setVehicleType(VehicleType.CAR);
 		announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
 		model.addAttribute("announcement", announcement);
 
-		model.addAllAttributes(announcementSearchFormStrategy.prepareDataForHtmlElements(announcement));
+		model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
 
 		return "announcement/announcementEdit";
 	}
@@ -81,7 +78,7 @@ public class AnnouncementController {
 	public String read(@NotNull @Valid @PathVariable("id") Long id, Model model) {
 
 		 announcementRepository.findById(id).ifPresentOrElse(announcement -> {
-			model.addAttribute("breadCrumb", BreadCrumb.create(announcement));
+			model.addAttribute("breadCrumb", AnnouncementBreadCrumb.create(announcement));
 			model.addAttribute("announcement", announcement);
 			List<Announcement> other5UserAnnouncements = announcementRepository.findFirst5ByUserIdAndOtherThenIdFetchPictures(announcement.getId(), announcement.getUser().getId());
 			model.addAttribute("otherUserAnnouncements", other5UserAnnouncements);
@@ -98,12 +95,12 @@ public class AnnouncementController {
 		if(model.asMap().containsKey("errorDuringSave")) {
 			Announcement announcementWithError = (Announcement) model.getAttribute("announcement");
 		//	model.addAllAttributes(announcementSearchAndPaginationPreparer.prepareValuesForSelects(announcementWithError.getVehicleModel().getVehicleType(), Optional.of(announcementWithError.getVehicleModel().getManufacturer().getId())));
-			model.addAllAttributes(announcementSearchFormStrategy.prepareDataForHtmlElements(announcementWithError));
+			model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcementWithError));
 		}
 		else
 			announcementRepository.findById(id).ifPresentOrElse(
 					announcement -> {
-						model.addAllAttributes(announcementSearchFormStrategy.prepareDataForHtmlElements(announcement));
+						model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
 						rewriteManufacturerIdFromVehicleModelForSearchForm(announcement);
 						model.addAttribute("announcement", announcement);
 					},
@@ -128,7 +125,7 @@ public class AnnouncementController {
 			saveResult = Optional.of(announcementService.saveAnnouncement(announcement));
 		}
 
-		if(bindingResult.hasErrors() || saveResult.orElse(Result.Error()).isError()) {
+		if(bindingResult.hasErrors() || saveResult.orElse(Result.error()).isError()) {
 			prepareFlashAttributesForErrorHandling(announcement, bindingResult, redirectAttributes);
 			return "redirect:/announcement/edit/" + announcement.getId();
 		}
@@ -166,7 +163,7 @@ public class AnnouncementController {
 
 		PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
 
-		model.addAllAttributes(announcementSearchFormStrategy.prepareSearchForm(announcement, paginationDetails));
+		model.addAllAttributes(announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails));
 
 		return "/announcement/announcementList";
 	}
@@ -178,7 +175,7 @@ public class AnnouncementController {
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
 			@RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
-			@RequestParam(name = "searchArguments",required = false, defaultValue = "&") String searchArguments,
+		//	@RequestParam(name = "searchArguments",required = false, defaultValue = "&") String searchArguments,
 			@ModelAttribute("announcement")  Announcement announcement,
 			Model model) {
 
@@ -188,7 +185,7 @@ public class AnnouncementController {
 		PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
 	//	model.addAllAttributes(announcementSearchAndPaginationPreparer.loadDataAndPrepareModelForPagination(paginationDetails, announcement));
 
-		model.addAllAttributes(announcementSearchFormStrategy.prepareSearchForm(announcement, paginationDetails));
+		model.addAllAttributes(announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails));
 
 		return "/announcement/announcementList";
 	}
@@ -231,13 +228,6 @@ public class AnnouncementController {
 		Result sentResult = emailService.sendEmail(emailToSend);
 		
 		return sentResult.isSuccess();
-	}
-
-	private Map<String, Announcement> prepareNewAnnouncement() {
-		Announcement announcement = Announcement.builder().build();
-		announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
-
-		return Map.of("announcement", announcement);
 	}
 
 	private void rewriteManufacturerIdFromVehicleModelForSearchForm(Announcement announcement) {

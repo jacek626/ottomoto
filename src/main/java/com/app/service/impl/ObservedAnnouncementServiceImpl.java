@@ -30,7 +30,7 @@ public class ObservedAnnouncementServiceImpl implements ObservedAnnouncementServ
 
     @Override
     public Result deleteObservedAnnouncement(ObservedAnnouncement observedAnnouncement) {
-        final Result result = Result.Success();
+        final Result result = Result.success();
 
         observedAnnouncementRepository.findById(observedAnnouncement.getId()).ifPresentOrElse(
                 e -> observedAnnouncementRepository.delete(e),

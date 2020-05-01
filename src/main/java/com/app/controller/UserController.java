@@ -7,7 +7,6 @@ import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
 import com.app.service.UserService;
 import com.app.utils.Result;
-import com.app.utils.ValidationDetails;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -31,7 +30,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -206,7 +204,7 @@ public class UserController {
 
 		if (result.getValidationResult().isEmpty()) {
 			
-			 
+
 			userService.sentEmailWithAccountActivationLink(user); 
 			
 	//		emailService.sendEmailFromSystem(senderEmailAddress, emailText, subject, receiverEmailAddress);
@@ -222,7 +220,7 @@ public class UserController {
 
 
 
-			for (Entry<String, ValidationDetails> entry : result.getValidationResult().entrySet()) {
+		//	for (Entry<String, ValidationDetails> entry : result.getValidationResult().entrySet()) {
 
 				// o to co trzeba poprawic po zmiane na ResultDetails  przestalo dzialac
 				//bindingResult.addError(new FieldError("user", entry.getKey(), "", false, null, null, entry.getValue().name()));
@@ -232,7 +230,7 @@ public class UserController {
 			model.addAttribute("error", bindingResult);
 			
 			return "user/registerUser";
-		}
+
 	}
 	
 	@RequestMapping(value="adminSettings/{id}", method = RequestMethod.GET)

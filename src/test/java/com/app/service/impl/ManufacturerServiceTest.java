@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -30,6 +29,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -57,7 +57,7 @@ public class ManufacturerServiceTest {
 	private ManufacturerServiceImpl manufacturerService;
 
 	@BeforeAll
-	public static void setUp() {
+	public static void init() {
 		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 		validator = factory.getValidator();
 	}
@@ -98,7 +98,7 @@ public class ManufacturerServiceTest {
 	public void shouldReturnValidationErrorDuringCreateNewManufacturerBecElementWithSameNameExists() {
 		//given
 		Manufacturer manufacturer = new Manufacturer("Manufacturer");
-		when(manufacturerRepository.findByName(Mockito.anyString())).thenReturn(List.of(new Manufacturer("Manufacturer")));
+		when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer("Manufacturer")));
 
 		//when
 		Result result = manufacturerService.saveManufacturer(manufacturer);
@@ -113,7 +113,7 @@ public class ManufacturerServiceTest {
 		//given
 		Manufacturer manufacturer = new Manufacturer("Manufacturer");
 		manufacturer.setId(-2L);
-		when(manufacturerRepository.findByName(Mockito.anyString())).thenReturn(List.of(new Manufacturer(-1L,"Manufacturer")));
+		when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer(-1L,"Manufacturer")));
 
 		//when
 		Result result = manufacturerService.saveManufacturer(manufacturer);
@@ -128,7 +128,7 @@ public class ManufacturerServiceTest {
 		//given
 		Manufacturer manufacturer = new Manufacturer("Manufacturer");
 		manufacturer.setId(-2L);
-		when(manufacturerRepository.findByName(Mockito.anyString())).thenReturn(List.of(new Manufacturer(-2L, "Manufacturer")));
+		when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer(-2L, "Manufacturer")));
 
 		//when
 		Result result = manufacturerService.saveManufacturer(manufacturer);
@@ -143,7 +143,7 @@ public class ManufacturerServiceTest {
 		//given
 		Manufacturer manufacturer = new Manufacturer("Manufacturer");
 		manufacturer.setId(-2L);
-		when(manufacturerRepository.findByName(Mockito.anyString())).thenReturn(List.of(new Manufacturer(-2L,"Manufacturer Test")));
+		when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer(-2L,"Manufacturer Test")));
 
 		//when
 		Result result = manufacturerService.saveManufacturer(manufacturer);
@@ -177,7 +177,7 @@ public class ManufacturerServiceTest {
 		Result saveResult = manufacturerService.deleteManufacturer(manufacturer);
 
 		//then
-		//assertThat(saveResult.isError()).isTrue();
+		assertThat(saveResult.isError()).isTrue();
 	}
 	
 }
