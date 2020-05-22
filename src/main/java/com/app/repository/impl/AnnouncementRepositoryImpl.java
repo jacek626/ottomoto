@@ -21,7 +21,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,70 +38,68 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 		return query.from(announcement).where(predicates).fetch();
 	}
 
-	@Override
-	public long countByPredicates(Predicate... predicates) {
-		QAnnouncement announcement = QAnnouncement.announcement;
-		JPAQuery<Announcement> query = new JPAQuery<>(entityManager);
+    @Override
+    public long countByPredicates(Predicate... predicates) {
+        QAnnouncement announcement = QAnnouncement.announcement;
+        JPAQuery<Announcement> query = new JPAQuery<>(entityManager);
 
 
-		return query.from(announcement).where(predicates).fetchCount();
-	}
+        return query.from(announcement).where(predicates).fetchCount();
+    }
 
-	public List<Announcement> findByPredicatesAndLoadMainPicture(Predicate... predicates) {
-		QAnnouncement announcement = QAnnouncement.announcement;
-		QPicture picture = QPicture.picture;
-		JPAQuery<Announcement> query = new JPAQuery<>(entityManager);
-		
-		return 
-				query.from(announcement).
-				leftJoin(announcement.pictures, picture).
-				on(picture.mainPhotoInAnnouncement.eq(true)).
-				where(predicates).fetch();
-	}
-	
-	private OrderSpecifier[] getOrderSpecifiers(@NotNull Pageable pageable, @NotNull Class klass) {
-	    String className = klass.getSimpleName();
-	    final String orderVariable = String.valueOf(Character.toLowerCase(className.charAt(0))).concat(className.substring(1));
+    public List<Announcement> findByPredicatesAndLoadMainPicture(Predicate predicates) {
+        QAnnouncement announcement = QAnnouncement.announcement;
+        QPicture picture = QPicture.picture;
+        JPAQuery<Announcement> query = new JPAQuery<>(entityManager);
 
-	    return pageable.getSort().stream()
-	            .map(order -> new OrderSpecifier(
-	                    Order.valueOf(order.getDirection().toString()),
-	                    new PathBuilder(klass, orderVariable).get(order.getProperty()))
-	            )
-	            .toArray(OrderSpecifier[]::new);
-	}
+        return
+                query.from(announcement).
+                        leftJoin(announcement.pictures, picture).
+                        on(picture.mainPhotoInAnnouncement.eq(true)).
+                        where(predicates).fetch();
+    }
+
+    private OrderSpecifier[] getOrderSpecifiers(@NotNull Pageable pageable) {
+        String className = Announcement.class.getSimpleName();
+        final String orderVariable = String.valueOf(Character.toLowerCase(className.charAt(0))).concat(className.substring(1));
+
+        return pageable.getSort().stream()
+                .map(order -> new OrderSpecifier(
+                        Order.valueOf(order.getDirection().toString()),
+                        new PathBuilder(Announcement.class, orderVariable).get(order.getProperty()))
+                )
+                .toArray(OrderSpecifier[]::new);
+    }
 	
 	public List<Announcement> findByPredicatesAndLoadPictures(PageRequest pageable, Predicate... predicates) {
-		QAnnouncement announcement = QAnnouncement.announcement;
-		QPicture picture = QPicture.picture;
-		JPAQuery<Announcement> query = new JPAQuery<>(entityManager);
-		
-		List<Announcement> result =  
-				query.from(announcement).
-				leftJoin(announcement.pictures, picture).
-				fetchJoin().
-				where(predicates).
-				offset((pageable.getPageNumber()) * pageable.getPageSize()).
-				limit(pageable.getPageSize()).
-				orderBy(getOrderSpecifiers(pageable, Announcement.class)).
-				fetch();
-		
-		return result;
-	}
+        QAnnouncement announcement = QAnnouncement.announcement;
+        QPicture picture = QPicture.picture;
+        JPAQuery<Announcement> query = new JPAQuery<>(entityManager);
 
-	public Page<Announcement> findByPredicatesAndLoadMainPicture(PageRequest pageable, Collection<Predicate> predicates, EntityPath<?> ... from) {
-		JPAQuery<Announcement> announcementQuery = new JPAQuery<>(entityManager);
-		JPAQuery<Picture> pictureQuery = new JPAQuery<>(entityManager);
+        return query.from(announcement).
+                leftJoin(announcement.pictures, picture).
+                fetchJoin().
+                where(predicates).
+                offset((pageable.getPageNumber()) * pageable.getPageSize()).
+                limit(pageable.getPageSize()).
+                orderBy(getOrderSpecifiers(pageable)).
+                fetch();
+    }
 
-		List<Announcement> announcements =
-				announcementQuery.
-				from(QAnnouncement.announcement).
-				from(from).
-				where(predicates.stream().toArray(Predicate[]::new)).
-				offset((pageable.getPageNumber()) * pageable.getPageSize()).
-				limit(pageable.getPageSize()).
-				orderBy(getOrderSpecifiers(pageable, Announcement.class)).
-				fetch();
+    @Override
+    public Page<Announcement> findByPredicatesAndLoadMainPicture(PageRequest pageable, Predicate predicate, EntityPath<?>... from) {
+        JPAQuery<Announcement> announcementQuery = new JPAQuery<>(entityManager);
+        JPAQuery<Picture> pictureQuery = new JPAQuery<>(entityManager);
+
+        List<Announcement> announcements =
+                announcementQuery.
+                        from(QAnnouncement.announcement).
+                        from(from).
+                        where(predicate).
+                        offset((pageable.getPageNumber()) * pageable.getPageSize()).
+                        limit(pageable.getPageSize()).
+                        orderBy(getOrderSpecifiers(pageable)).
+                        fetch();
 
 		Map<Long, Announcement> announcementsAsMap = announcements.stream().collect(Collectors.toMap(Announcement::getId, a -> a));
 

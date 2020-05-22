@@ -11,16 +11,14 @@ import java.util.Optional;
 @Value
 @Builder
 public class EmailMessage {
-    @NonNull
-    private final String subject;
-    @NonNull
-    private final String content;
+    @NonNull String subject;
+    @NonNull String content;
 
-    private final String senderEmail;
+    String senderEmail;
 
     @NonNull
     @Singular
-    private final List<String> receiverEmailsAddresses;
+    List<String> receiverEmailsAddresses;
 
     EmailMessage(@NonNull final String subject, @NonNull final String content, final String senderEmail, @NonNull final List<String> receiverEmailsAddresses) {
         if (subject == null) {

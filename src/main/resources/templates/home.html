@@ -2,15 +2,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head"></head>
   <body>
-    <div th:replace="fragments/header :: header">
-    </div>
-    <div th:replace="fragments/search :: search">
-    </div>
-    <div style="min-height:400px; background-color: #f2f2f3; margin:auto; text-align:center; ">  
+  <nav th:replace="fragments/header :: header">
+  </nav>
+  <!--    <div th:replace="fragments/search :: search">
+      </div>-->
+  <div style="min-height:400px; background-color: #f2f2f3; margin:auto; text-align:center; ">
 
-	<style>
-		.grid {
-			 display: grid;
+	  <style>
+		  .grid {
+			  display: grid;
 			  grid-template-columns: repeat(5, 1fr);
 			  grid-gap: .5rem;
 			  padding: .5rem;
@@ -73,55 +73,62 @@
 		
 		.announcementSearch {
 			font-weight: 600;
-		
-		}
-		.announcementSearch td {
-			padding:5px;
-		}
-		
-		.announcementSearch input {
-		}
-	
-	</style>
 
-		<div class="grid" style="display: flex;  width:934px;  margin:auto; justify-content: space-between; background-color: white;">
-			<div style="margin:auto; text-align: center;">
-				<div th:replace="announcement/announcementSearch :: announcementSearch('announcement/list')"></div>
-			</div>
-			<!-- <div class="startPageBigPlace">
-				aukcja dnia
-			</div> -->
-		
-		</div>
+		}
 
-		<div class="grid" >
-			<a class="blocks" th:each="announcement, row : ${pages}" style="  display:block;  background-color: white ; margin:5px; min-height:150px;" th:href="@{'/announcement/read/' + ${announcement.id}}">
-				<div class="imageWrapper" >
-						<img th:if="${#lists.size(announcement.pictures)} > 0" width="100%"  th:src="${'images/' + announcement.pictures[0].miniatureRepositoryName}" ></img>
-						<img th:if="${#lists.size(announcement.pictures)} == 0" width="100%"  th:src="@{'images/noPhoto.png'}" ></img>
-				</div>
-					<div  style="border-top: 1px solid #bf2505; margin-top:3px; margin-bottom:3px;  margin:2px; text-align: left; " >
-						<div style="margin-left:2px; margin-top:2px; " th:text="${announcement.vehicleModel.manufacturer.name + ' ' + announcement.vehicleModel.name}" ></div>
-						
-						<div style=" display: grid; grid-template-columns: 1fr 2fr;">
-							<span style="text-align: left; margin:2px;"  th:text="${announcement.productionYear}" ></span>
-							<span style="text-align: right; margin:2px;">
-								[[${#numbers.formatDecimal({announcement.price}, 0, 'COMMA', 2, 'POINT')}]] zł
-							</span>
-					    </div>
-					    <div class="showOffer">
-					    		Zobacz oferte
-					    </div>
-					</div>
-				
-			</a>
-			
-		</div>  
-    </div>
+		  .announcementSearch td {
+			  padding: 5px;
+		  }
+
+		  .announcementSearch input {
+		  }
+
+	  </style>
+
+	  <div th:replace="announcement/announcementSearch :: announcementSearch('announcement/list')"></div>
+
+	  <style>
+		  .card-img-top {
+			  width: 100%;
+			  height: 50%;
+			  object-fit: cover;
+		  }
+
+
+		  .card-body {
+			  padding: 0.25rem;
+		  }
+
+
+	  </style>
+
+	  <div class="container">
+		  <div class="row bg-white">
+			  <div class="col-6 col-md-3 col-lg-2  d-flex align-items-stretch my-1"
+				   th:each="announcement, row : ${pages}">
+				  <div class="card">
+					  <img class="card-img-top  img-fluid" th:if="${#lists.size(announcement.pictures)} > 0"
+						   th:src="${'images/' + announcement.pictures[0].miniatureRepositoryName}"></img>
+					  <img class="card-img-top img-fluid" th:if="${#lists.size(announcement.pictures)} == 0"
+						   th:src="@{'images/noPhoto.png'}"></img>
+					  <div class="card-body text-left" style="line-height:1;">
+						  <h5 class="card-title "
+							  th:text="${announcement.vehicleModel.manufacturer.name +  ' ' + announcement.vehicleModel.name}"></h5>
+						  <div class="card-text text-left line-height:1;">
+							  <div th:text="${announcement.productionYear + ' - ' + announcement.mileage + ' km '}"></div>
+							  <div th:text="#{__${announcement.fuelType}__} "></div>
+						  </div>
+						  <a class="card-subtitle text-primary mt-1 stretched-link btn-link h5 text-decoration-none"
+							 th:href="@{'/announcement/read/' + ${announcement.id}}">[[${#numbers.formatDecimal({announcement.price},
+							  0, 'COMMA', 2, 'POINT')}]] zł</a>
+					  </div>
+				  </div>
+			  </div>
+		  </div>
+	  </div>
+
+
+  </div>
      <div th:replace="fragments/footer :: footer"></div>
   </body>
 </html>
-
-<!-- 
-<tr th:each="announcement, iStat : ${pages.content}">
-						<td th:text="${announcement.manufacturer.name}" /> -->

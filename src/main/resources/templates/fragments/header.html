@@ -1,59 +1,38 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-  <head>
-  	<meta charset="utf-8">
-  		<title></title>
-  </head>
-  <body>
-  		 <div class="header-style" th:fragment="header" style="font-weight: 600"> 
-  		 	 <div th:style="${message != null ?  'visibility: visible' : 'visibility: hidden' }" id="popupBackground"></div>
-			<a style="color:#bf2505; font-size: 40px; font-style:italic; font-weight:bold; font-family: Helvetica, Arial, sans-serif;" class="remove-link-decoration" 
-			th:href="@{/}">OTTOMOTO</a> 
-			<div style="float:right;">
-				<a th:href="@{/user/login}" sec:authorize="!isAuthenticated()" style="left:-10px;" class="main-header-buttons remove-link-decoration">
+<nav class="navbar navbar-expand-md nav  bg-light navbar-light sticky-top " th:fragment="header">
+	<div class="container">
+		<button class="navbar-toggler" data-target="#navbarContainer" data-toggle="collapse" type="button">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<a class="navbar-brand  mx-auto  " th:href="@{/}">OTTOMOTO</a>
+		<div class="collapse navbar-collapse mx-auto justify-content-end" id="navbarContainer">
+			<div class="navbar-nav nav">
+				<a class="nav-link nav-item" sec:authorize="!isAuthenticated()" th:href="@{/user/login}">
 					Zaloguj
 				</a>
-				<a th:href="@{/user/register}" sec:authorize="!isAuthenticated()" style="left:-10px;" class="main-header-buttons remove-link-decoration">
+				<a class="nav-link nav-item" sec:authorize="!isAuthenticated()" th:href="@{/user/register}">
 					Zarejestruj
 				</a>
-				  <span sec:authorize="isAuthenticated()" class="main-header-buttons-without-hover remove-link-decoration noselect" 
-				  	style="background-color:transparent; color:#bf2505; margin-right:20px;  ">
-				  	 Zalogowano jako
-				  	<span sec:authentication="name" ></span>
-				  </span>
-			<!-- 	 Roles: <span sec:authorize="isAuthenticated()" sec:authentication="principal.authorities"></span> -->
-				 
-				<!--   <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div> -->
-				<a th:href="@{/announcement/create}"    class="main-header-buttons remove-link-decoration">
+				<a class="nav-link nav-item" th:href="@{/announcement/create}">
 					Dodaj nowe ogloszenie
 				</a>
-				<a th:href="@{/user/account}"    class="main-header-buttons remove-link-decoration">
+				<a class="  nav-link nav-item" th:href="@{/user/account}">
 					Moje konto
 				</a>
-
-
-				<a th:href="@{/announcement/create}" sec:authorize="hasRole('USER')"  class="main-header-buttons remove-link-decoration">
+				<a class="nav-link nav-item" sec:authorize="hasRole('USER')" th:href="@{/announcement/create}">
 					Dodaj ogłoszenie
 				</a>
-				<a th:href="@{/administration/home}"  sec:authorize="hasRole('ADMIN')" class="main-header-buttons remove-link-decoration">
+				<a class="nav-link nav-item" sec:authorize="hasRole('ADMIN')" th:href="@{/administration/home}">
 					Panel administracyjny
 				</a>
-				 <a th:href="@{/logout}" sec:authorize="isAuthenticated()" class="main-header-buttons remove-link-decoration">
+				<a class="nav-link nav-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">
 					Wyloguj
-				</a> 
+				</a>
 			</div>
-			<div id="informationPopup" class="popup" th:if="${message}" >
-				  <div>
-					      <span th:text="${message}"></span><br />
-					      <input type="button" value="OK" onclick="document.getElementById('informationPopup').style.visibility = 'hidden';
-					    	  document.getElementById('popupBackground').style.visibility = 'hidden';"
-					      style="margin-top:10px;"/>
-				   </div>
-			</div>
-			  <div id="infoText" style="position: fixed; left: 50%;  top:0px; display:none;">
-			    <div  style="position: relative; left: -50%; color:white; padding:12px; background-color: #bf2505; border-radius:5px; ">
-			    </div>
-			  </div> 
 		</div>
-  </body>
-</html>
+
+
+	</div>
+</nav>
+
+
+

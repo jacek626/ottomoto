@@ -15,8 +15,7 @@ public class ValidationDetails {
     }
 
     public static ValidationDetails of(ValidatorCode validatorCode) {
-        ValidationDetails validationDetails = new ValidationDetails(validatorCode);
-        return validationDetails;
+        return new ValidationDetails(validatorCode);
     }
 
     public static ValidationDetails of(ValidatorCode validatorCode, String relatedElements) {

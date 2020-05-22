@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -48,10 +46,12 @@ public class ManufacturerServiceTest {
 	private VehicleModelRepository vehicleModelRepository;
 
 	@InjectMocks
-	private VehicleModelValidator vehicleModelValidator = spy(VehicleModelValidator.class);
+    @SuppressWarnings("unused")
+    private final VehicleModelValidator vehicleModelValidator = spy(VehicleModelValidator.class);
 
-	@InjectMocks
-	private ManufacturerValidator manufacturerValidator = spy(ManufacturerValidator.class);
+    @InjectMocks
+    @SuppressWarnings("unused")
+    private final ManufacturerValidator manufacturerValidator = spy(ManufacturerValidator.class);
 
 	@InjectMocks
 	private ManufacturerServiceImpl manufacturerService;
@@ -64,27 +64,27 @@ public class ManufacturerServiceTest {
 
 	@Test
 	public void shouldSaveManufacturer() {
-		//given
-		Manufacturer manufacturer = new Manufacturer("Manufacturer");
-		manufacturer.setId(-1L);
+        //given
+        Manufacturer manufacturer = Manufacturer.builder().name("Manufacturer").build();
+        manufacturer.setId(-1L);
 
-		//when
-		Result result = manufacturerService.saveManufacturer(manufacturer);
-		Set<ConstraintViolation<Manufacturer>> manufacturerEntityValidation = validator.validate( manufacturer );
+        //when
+        Result result = manufacturerService.saveManufacturer(manufacturer);
+        Set<ConstraintViolation<Manufacturer>> manufacturerEntityValidation = validator.validate(manufacturer);
 
-		//then
-		assertThat(manufacturerEntityValidation.size()).isZero();
-		assertThat(result.isSuccess()).isTrue();
-		verify(manufacturerRepository, times(1)).save(any(Manufacturer.class));
+        //then
+        assertThat(manufacturerEntityValidation.size()).isZero();
+        assertThat(result.isSuccess()).isTrue();
+        verify(manufacturerRepository, times(1)).save(any(Manufacturer.class));
 	}
 	
 	@Test
 	public void shouldSaveManufacturerWithVehicleModels() {
 		//given
 		Manufacturer manufacturer = new Manufacturer("Manufacturer");
-		manufacturer.setVehicleModel(Lists.list(
-				new VehicleModel("VehicleModel1", manufacturer, VehicleType.CAR),
-				new VehicleModel("VehicleModel2", manufacturer, VehicleType.CAR)));
+        manufacturer.setVehicleModel(Lists.list(
+                VehicleModel.builder().name("VehicleModel1").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build(),
+                VehicleModel.builder().name("VehicleModel2").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build()));
 
 		//when
 		Result result = manufacturerService.saveManufacturer(manufacturer);
@@ -125,59 +125,60 @@ public class ManufacturerServiceTest {
 
 	@Test
 	public void shouldEditManufacturerNameIsNotChanged() {
-		//given
-		Manufacturer manufacturer = new Manufacturer("Manufacturer");
-		manufacturer.setId(-2L);
-		when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer(-2L, "Manufacturer")));
+        //given
+        Manufacturer manufacturer = Manufacturer.builder().name("Manufacturer").id(-2L).build();
+        when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer(-2L, "Manufacturer")));
 
-		//when
-		Result result = manufacturerService.saveManufacturer(manufacturer);
+        //when
+        Result result = manufacturerService.saveManufacturer(manufacturer);
 
-		//then
-		assertThat(result.isSuccess()).isTrue();
-		verify(manufacturerRepository, times(1)).save(any(Manufacturer.class));
-	}
+        //then
+        assertThat(result.isSuccess()).isTrue();
+        verify(manufacturerRepository, times(1)).save(any(Manufacturer.class));
+    }
 
-	@Test
-	public void shouldEditManufacturerNameIsChanged() {
-		//given
-		Manufacturer manufacturer = new Manufacturer("Manufacturer");
-		manufacturer.setId(-2L);
-		when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer(-2L,"Manufacturer Test")));
+    @Test
+    public void shouldChangeManufacturerName() {
+        //given
+        Manufacturer baseManufacturer = Manufacturer.builder().name("Manufacturer").id(-2L).build();
+        Manufacturer manufacturerAfterEdit = Manufacturer.builder().name("Edited manufacturer").id(-2L).build();
+        when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(baseManufacturer));
 
-		//when
-		Result result = manufacturerService.saveManufacturer(manufacturer);
+        //when
+        Result result = manufacturerService.saveManufacturer(manufacturerAfterEdit);
 
-		//then
-		assertThat(result.isSuccess()).isTrue();
-		verify(manufacturerRepository, times(1)).save(refEq(new Manufacturer(-2L, "Manufacturer")));
-	}
+        //then
+        assertThat(result.isSuccess()).isTrue();
+        verify(manufacturerRepository, times(1)).save(refEq(manufacturerAfterEdit));
+    }
 	
 	@Test
 	public void shouldDeleteManufacturer() {
-		//given
-		Manufacturer manufacturer = new Manufacturer("Manufacturer");
+        //given
+        Manufacturer manufacturer = Manufacturer.builder().name("Manufacturer").build();
 
-		//when
-		Result saveResult = manufacturerService.deleteManufacturer(manufacturer);
+        //when
+        Result saveResult = manufacturerService.deleteManufacturer(manufacturer);
 
-		//then
-		assertThat(saveResult.isSuccess()).isTrue();
-		verify(manufacturerRepository, times(1)).delete(manufacturer);
-	}
+        //then
+        assertThat(saveResult.isSuccess()).isTrue();
+        verify(manufacturerRepository, times(1)).delete(manufacturer);
+    }
 	
 	@Test
 	public void shouldReturnValidationErrorBecManufacturerHaveVehicleModels() {
-		//given
-		Manufacturer manufacturer = new Manufacturer("Manufacturer");
-		manufacturer.setVehicleModel(Lists.list(new VehicleModel(-1L,"Vehicle1", manufacturer, VehicleType.CAR), new VehicleModel(1L,"Vehicle2", manufacturer, VehicleType.CAR)));
-		when(announcementRepository.countByPredicates(any(Predicate.class))).thenReturn(1L);
+        //given
+        Manufacturer manufacturer = new Manufacturer("Manufacturer");
+        manufacturer.setVehicleModel(Lists.list(
+                VehicleModel.builder().id(-1L).name("Vehicle1").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build(),
+                VehicleModel.builder().id(-1L).name("Vehicle2").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build()));
+        when(announcementRepository.countByPredicates(any(Predicate.class))).thenReturn(1L);
 
-		//when
-		Result saveResult = manufacturerService.deleteManufacturer(manufacturer);
+        //when
+        Result saveResult = manufacturerService.deleteManufacturer(manufacturer);
 
-		//then
-		assertThat(saveResult.isError()).isTrue();
-	}
+        //then
+        assertThat(saveResult.isError()).isTrue();
+    }
 	
 }

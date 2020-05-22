@@ -4,11 +4,11 @@ import com.app.entity.QAnnouncement;
 import com.app.enums.BooleanValuesForDropDown;
 import com.app.enums.CarColor;
 import com.app.enums.FuelType;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanPath;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,139 +16,169 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class AnnouncementSearchFields {
-	private Integer productionYearFrom;
-	private Integer productionYearTo;
-	private Integer priceFrom;
-	private Integer priceTo;
-	private Integer mileageFrom;
-	private Integer mileageTo;
-	private Integer engineCapacityFrom;
-	private Integer engineCapacityTo;
-	private Integer enginePowerFrom;
-	private Integer enginePowerTo;
+public class AnnouncementSearchFields implements UrlParamsPreparer {
+    private Integer productionYearFrom;
+    private Integer productionYearTo;
+    private Integer priceFrom;
+    private Integer priceTo;
+    private Integer mileageFrom;
+    private Integer mileageTo;
+    private Integer engineCapacityFrom;
+    private Integer engineCapacityTo;
+    private Integer enginePowerFrom;
+    private Integer enginePowerTo;
 	private Byte doorsFrom;
-	private Byte doorsTo;
-	private BooleanValuesForDropDown accidents = BooleanValuesForDropDown.ALL;
-	private BooleanValuesForDropDown firstOwner = BooleanValuesForDropDown.ALL;
-	private BooleanValuesForDropDown damaged = BooleanValuesForDropDown.ALL;
-	private BooleanValuesForDropDown netPrice = BooleanValuesForDropDown.ALL;
-	private BooleanValuesForDropDown priceNegotiate = BooleanValuesForDropDown.ALL;
-	private List<CarColor> colorList = new ArrayList<>();
-	private List<FuelType> fuelTypeList = new ArrayList<>();
-	private String colorListLabelsAsString;
+    private Byte doorsTo;
+    private BooleanValuesForDropDown accidents = BooleanValuesForDropDown.ALL;
+    private BooleanValuesForDropDown firstOwner = BooleanValuesForDropDown.ALL;
+    private BooleanValuesForDropDown damaged = BooleanValuesForDropDown.ALL;
+    private BooleanValuesForDropDown netPrice = BooleanValuesForDropDown.ALL;
+    private BooleanValuesForDropDown priceNegotiate = BooleanValuesForDropDown.ALL;
+    private List<CarColor> colorList = new ArrayList<>();
+    private List<FuelType> fuelTypeList = new ArrayList<>();
+    private String colorListLabelsAsString;
 
-	private List<Predicate> predicates;
-	private StringBuilder urlParams;
+    private BooleanBuilder predicate;
+    private StringBuilder urlParams;
 
-	public Pair<List<Predicate>, String> prepareQueryAndSearchArguments() {
-		predicates = new ArrayList<>();
-		urlParams = new StringBuilder();
+    public Predicate prepareQueryAndSearchArguments() {
+        predicate = new BooleanBuilder();
 
-		preparePredicateAndUrlParam(accidents, QAnnouncement.announcement.accidents, "searchFields.accidents=");
-		preparePredicateAndUrlParam(firstOwner, QAnnouncement.announcement.firstOwner, "searchFields.firstOwner=");
-		preparePredicateAndUrlParam(damaged, QAnnouncement.announcement.damaged, "searchFields.damaged=");
-		preparePredicateAndUrlParam(netPrice, QAnnouncement.announcement.netPrice, "searchFields.netPrice=");
-		preparePredicateAndUrlParam(priceNegotiate, QAnnouncement.announcement.priceNegotiate, "searchFields.priceNegotiate=");
+        preparePredicate(accidents, QAnnouncement.announcement.accidents);
+        preparePredicate(firstOwner, QAnnouncement.announcement.firstOwner);
+        preparePredicate(damaged, QAnnouncement.announcement.damaged);
+        preparePredicate(netPrice, QAnnouncement.announcement.netPrice);
+        preparePredicate(priceNegotiate, QAnnouncement.announcement.priceNegotiate);
 
-		preparePredicateAndUrlParamForYear();
-		preparePredicateAndUrlParamForMileage();
-		preparePredicateAndUrlParamForEngineCapacity();
-		preparePredicateAndUrlParamForEnginePower();
-		preparePredicateAndUrlParamForColor();
-		preparePredicateAndUrlParamForPrice();
-		preparePredicateAndUrlParamForDoors();
+        preparePredicateForYear();
+        preparePredicateForMileage();
+        preparePredicateForEngineCapacity();
+        preparePredicateForEnginePower();
+        preparePredicateForColor();
+        preparePredicateForPrice();
+        preparePredicateForDoors();
+        preparePredicateForFuelType();
+        preparePredicateForCarColor();
 
-		return Pair.of(predicates, urlParams.toString());
-	}
+        return predicate;
+    }
 
-	private void preparePredicateAndUrlParamForDoors() {
-		if(doorsFrom != null) {
-			predicates.add(QAnnouncement.announcement.doors.goe(doorsFrom));
-			urlParams.append("productionYearFrom=").append(doorsFrom).append("&");
-		}
-		if(doorsTo != null) {
-			predicates.add(QAnnouncement.announcement.doors.lt(doorsTo));
-			urlParams.append("productionYearTo=").append(doorsTo).append("&");
-		}
-	}
+    @Override
+    public String prepareUrlParams() {
+        urlParams = new StringBuilder();
 
-	private void preparePredicateAndUrlParamForPrice() {
-		if(priceFrom != null) {
-			predicates.add(QAnnouncement.announcement.price.goe(priceFrom));
-			urlParams.append("searchFields.priceFrom=").append(priceFrom).append("&");
-		}
-		if(priceTo != null) {
-			predicates.add(QAnnouncement.announcement.price.loe(priceTo));
-			urlParams.append("searchFields.priceTo=").append(priceTo).append("&");
-		}
-	}
+        addUrlParam("searchFields.accidents", accidents);
+        addUrlParam("searchFields.firstOwner", firstOwner);
+        addUrlParam("searchFields.damaged", damaged);
+        addUrlParam("searchFields.netPrice", netPrice);
+        addUrlParam("searchFields.priceNegotiate", priceNegotiate);
 
-	private void preparePredicateAndUrlParamForColor() {
-		if(colorList.size() > 0) {
-			predicates.add(QAnnouncement.announcement.carColor.in(colorList));
-			urlParams.append("searchFields.colorList=").append(colorList.stream().map(Object::toString).collect(Collectors.joining())).append("&");
-		}
-	}
+        addUrlParam("searchFields.productionYearFrom", productionYearFrom);
+        addUrlParam("searchFields.productionYearTo", productionYearTo);
 
-	private void preparePredicateAndUrlParamForEnginePower() {
-		if(enginePowerFrom != null) {
-			predicates.add(QAnnouncement.announcement.enginePower.goe(enginePowerFrom));
-			urlParams.append("searchFields.enginePowerFrom=").append(enginePowerFrom).append("&");
-		}
-		if(enginePowerTo != null) {
-			predicates.add(QAnnouncement.announcement.enginePower.lt(enginePowerTo));
-			urlParams.append("searchFields.enginePowerTo=").append(enginePowerTo).append("&");
-		}
-	}
+        addUrlParam("searchFields.priceFrom", priceFrom);
+        addUrlParam("searchFields.priceTo", priceTo);
 
-	private void preparePredicateAndUrlParamForEngineCapacity() {
-		if(engineCapacityFrom != null) {
-			predicates.add(QAnnouncement.announcement.engineCapacity.goe(engineCapacityFrom));
-			urlParams.append("searchFields.productionYearFrom=").append(engineCapacityFrom).append("&");
-		}
-		if(engineCapacityTo != null) {
-			predicates.add(QAnnouncement.announcement.engineCapacity.lt(engineCapacityTo));
-			urlParams.append("searchFields.productionYearTo=").append(engineCapacityTo).append("&");
-		}
-	}
+        addUrlParam("searchFields.mileageFrom", mileageFrom);
+        addUrlParam("searchFields.mileageTo", mileageTo);
 
-	private void preparePredicateAndUrlParamForMileage() {
-		if(mileageFrom != null) {
-			predicates.add(QAnnouncement.announcement.mileage.goe(mileageFrom));
-			urlParams.append("searchFields.productionYearFrom=").append(mileageFrom).append("&");
-		}
-		if(mileageTo != null) {
-			predicates.add(QAnnouncement.announcement.mileage.lt(mileageTo));
-			urlParams.append("searchFields.productionYearTo=").append(mileageTo).append("&");
-		}
-	}
+        addUrlParam("searchFields.engineCapacityFrom", engineCapacityFrom);
+        addUrlParam("searchFields.engineCapacityTo", engineCapacityTo);
 
-	private void preparePredicateAndUrlParamForYear() {
-		if(productionYearFrom != null) {
-			predicates.add(QAnnouncement.announcement.productionYear.goe(productionYearFrom));
-			urlParams.append("searchFields.productionYearFrom=").append(productionYearFrom).append("&");
-		}
+        addUrlParam("searchFields.enginePowerFrom", enginePowerFrom);
+        addUrlParam("searchFields.enginePowerTo", enginePowerTo);
 
-		if(productionYearTo != null) {
-			predicates.add(QAnnouncement.announcement.productionYear.lt(productionYearTo));
-			urlParams.append("searchFields.productionYearTo=").append(productionYearTo).append("&");
-		}
-	}
+        urlParams.append("searchFields.colorList=").append(colorList.stream().map(Object::toString).collect(Collectors.joining(","))).append("&");
+        urlParams.append("searchFields.fuelTypeList=").append(fuelTypeList.stream().map(Object::toString).collect(Collectors.joining(","))).append("&");
 
-	private void preparePredicateAndUrlParam(BooleanValuesForDropDown accidents, BooleanPath accidents2, String s) {
-		if (accidents != BooleanValuesForDropDown.ALL) {
-			predicates.add(accidents2.eq(accidents.getQueryValue()));
-			urlParams.append(s).append(accidents == BooleanValuesForDropDown.YES).append("&");
-		}
-	}
+        return urlParams.toString();
+    }
 
-	public String getSelectedCarColors() {
-		return colorList.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
-	}
-	public String getSelectedFuelTypes() {
-		return fuelTypeList.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
-	}
+    private void preparePredicateForDoors() {
+        if (doorsFrom != null) {
+            predicate.and(QAnnouncement.announcement.doors.goe(doorsFrom));
+        }
+        if (doorsTo != null) {
+            predicate.and(QAnnouncement.announcement.doors.lt(doorsTo));
+        }
+    }
 
+    private void preparePredicateForPrice() {
+        if (priceFrom != null) {
+            predicate.and(QAnnouncement.announcement.price.goe(priceFrom));
+        }
+        if (priceTo != null) {
+            predicate.and(QAnnouncement.announcement.price.loe(priceTo));
+        }
+    }
+
+    private void preparePredicateForColor() {
+        if (colorList.size() > 0) {
+            predicate.and(QAnnouncement.announcement.carColor.in(colorList));
+        }
+    }
+
+    private void preparePredicateForEnginePower() {
+        if (enginePowerFrom != null) {
+            predicate.and(QAnnouncement.announcement.enginePower.goe(enginePowerFrom));
+        }
+        if (enginePowerTo != null) {
+            predicate.and(QAnnouncement.announcement.enginePower.lt(enginePowerTo));
+        }
+    }
+
+    private void preparePredicateForEngineCapacity() {
+        if (engineCapacityFrom != null) {
+            predicate.and(QAnnouncement.announcement.engineCapacity.goe(engineCapacityFrom));
+        }
+        if (engineCapacityTo != null) {
+            predicate.and(QAnnouncement.announcement.engineCapacity.lt(engineCapacityTo));
+        }
+    }
+
+    private void preparePredicateForMileage() {
+        if (mileageFrom != null) {
+            predicate.and(QAnnouncement.announcement.mileage.goe(mileageFrom));
+        }
+        if (mileageTo != null) {
+            predicate.and(QAnnouncement.announcement.mileage.lt(mileageTo));
+        }
+    }
+
+    private void preparePredicateForYear() {
+        if (productionYearFrom != null) {
+            predicate.and(QAnnouncement.announcement.productionYear.goe(productionYearFrom));
+        }
+
+        if (productionYearTo != null) {
+            predicate.and(QAnnouncement.announcement.productionYear.lt(productionYearTo));
+        }
+    }
+
+    private void preparePredicate(BooleanValuesForDropDown booleanValuesForDropDown, BooleanPath booleanPath) {
+        if (booleanValuesForDropDown != BooleanValuesForDropDown.ALL) {
+            predicate.and(booleanPath.eq(booleanValuesForDropDown.getQueryValue()));
+        }
+    }
+
+    private void preparePredicateForFuelType() {
+        if (fuelTypeList.size() > 0) {
+            predicate.and(QAnnouncement.announcement.fuelType.in(fuelTypeList));
+        }
+    }
+
+    private void preparePredicateForCarColor() {
+        if (colorList.size() > 0) {
+            predicate.and(QAnnouncement.announcement.carColor.in(colorList));
+        }
+    }
+
+    public String getSelectedCarColors() {
+        return colorList.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
+    }
+
+    public String getSelectedFuelTypes() {
+        return fuelTypeList.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
+    }
 
 }

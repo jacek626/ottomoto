@@ -223,9 +223,12 @@
 					<div class="block">
 						<table id="messageToSenderTable" style="text-align:left;">
 							<tr>
-								<td colspan="2" style="text-align:left; padding-top:0px; width:380px; padding-bottom:10px; font-weight: 550;">Wyslij wiadomosc do sprzedajacego</td>
-							<tr>
-							<tr>
+                                <td colspan="2"
+                                    style="text-align:left; padding-top:0px; width:380px; padding-bottom:10px; font-weight: 500;">
+                                    Wyslij wiadomosc do sprzedajacego
+                                </td>
+                            <tr>
+                            <tr>
 								<td style=""><label for="questionToSellerEmail">E-mail</label></td>
 								<td><input id="questionToSellerEmail" type="email" style="width:100%;"/></td>
 							<tr>
@@ -244,18 +247,21 @@
 						
 						
 						<div>
-							<div id="aboutSeller" style="background-color:white; width:300px; text-align:left; margin:auto;">
-								<div style="background-color:#ebebec; font-weight: 550; padding-bottom:10px;">
-									O sprzedajacym
-								</div>
-								<div  style="border-bottom: solid 1px #d7d7da;"  th:text="${announcement.user.firstName + ' ' + announcement.user.lastName}">
-								</div>
-								<div  th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}">
-								</div>
-								<div th:text="${announcement.user.city}">
-								</div>
-								<div th:if="${announcement.user.province != null}" th:text="#{__${announcement.user.province}__}">
-								</div>
+                            <div id="aboutSeller"
+                                 style="background-color:white; width:300px; text-align:left; margin:auto;">
+                                <div style="background-color:#ebebec; font-weight: 500; padding-bottom:10px;">
+                                    O sprzedajacym
+                                </div>
+                                <div style="border-bottom: solid 1px #d7d7da;"
+                                     th:text="${announcement.user.firstName + ' ' + announcement.user.lastName}">
+                                </div>
+                                <div th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}">
+                                </div>
+                                <div th:text="${announcement.user.city}">
+                                </div>
+                                <div th:if="${announcement.user.province != null}"
+                                     th:text="#{__${announcement.user.province}__}">
+                                </div>
 								<div th:if="${announcement.user.phoneNumber != null}" th:text="#{__${announcement.user.phoneNumber}__}">
 								</div>
 							</div> 

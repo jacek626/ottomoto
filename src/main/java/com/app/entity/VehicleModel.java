@@ -2,6 +2,7 @@ package com.app.entity;
 
 import com.app.enums.VehicleType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Getter
 @AllArgsConstructor
+@Builder
 public class VehicleModel {
 	
 	@Id
@@ -36,7 +38,7 @@ public class VehicleModel {
 	@Transient
 	private Boolean toDelete = false;
 
-	public VehicleModel(@NotNull Long id,@NotNull String name, @NotNull Manufacturer manufacturer, @NotNull VehicleType vehicleType) {
+/*	public VehicleModel(@NotNull Long id,@NotNull String name, @NotNull Manufacturer manufacturer, @NotNull VehicleType vehicleType) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -49,7 +51,7 @@ public class VehicleModel {
 		this.name = name;
 		this.manufacturer = manufacturer;
 		this.vehicleType = vehicleType;
-	}
+	}*/
 	
 	public VehicleModel() {
 	}

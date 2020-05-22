@@ -4,16 +4,17 @@ function checkEmailAlreadyExists(email, id) {
         url: "/otomoto/user/checkEmailAlreadyExists",
         timeout: 5000,
         data: {
-            id: id,
-            email: email
+            id,
+            email
         },
-        success: function (result) {
-            if (result === true)
+        success(result) {
+            if (result === true) {
                 $("#emailAlreadyExists").css("display", "block");
-            else
+            } else {
                 $("#emailAlreadyExists").css("display", "none");
+            }
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
         }
     });
@@ -25,15 +26,16 @@ function checkLoginAlreadyExists(login) {
         url: "/otomoto/user/checkLoginAlreadyExists",
         timeout: 5000,
         data: {
-            login: login
+            login
         },
-        success: function (result) {
-            if (result === true)
+        success(result) {
+            if (result === true) {
                 $("#loginAlreadyExists").css("display", "block");
-            else
+            } else {
                 $("#loginAlreadyExists").css("display", "none");
+            }
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
         }
     });

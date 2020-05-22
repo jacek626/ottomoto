@@ -2,7 +2,6 @@ package com.app.searchform;
 
 import com.app.entity.Announcement;
 import com.app.repository.AnnouncementRepository;
-import com.app.utils.PredicatesAndUrlParams;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -24,13 +23,13 @@ public class HomeSearchStrategyDecorator implements SearchStrategy<Announcement>
         this.announcementRepository = announcementRepository;
     }
 
-    @Override
-    public PredicatesAndUrlParams preparePredicatesAndUrlParams(Announcement entity) {
-        return announcementSearchFormStrategy.preparePredicatesAndUrlParams(entity);
-    }
+/*    @Override
+    public Predicate preparePredicate(Announcement entity) {
+        return announcementSearchFormStrategy.preparePredicate(entity);
+    }*/
 
     @Override
-    public Page<Announcement> loadData(PageRequest pageRequest, List<Predicate> predicates) {
+    public Page<Announcement> loadData(PageRequest pageRequest, Predicate predicate) {
         List<Announcement> announcements = announcementRepository.findFirst20ByDeactivationDateIsNullOrderByCreationDateDesc();
 
         return new PageImpl<>(announcements);

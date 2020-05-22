@@ -47,8 +47,8 @@ public class UserServiceImplTest {
 	private AnnouncementRepository announcementRepository;
 
 	@InjectMocks
-	@SuppressWarnings("unused")
-	private UserValidator userValidator = spy(UserValidator.class);
+    @SuppressWarnings("unused")
+    private final UserValidator userValidator = spy(UserValidator.class);
 
 	@InjectMocks
 	private UserServiceImpl userService;
@@ -83,8 +83,8 @@ public class UserServiceImplTest {
 	}
 
 	private User prepareUser() {
-		return new User.UserBuilder("User", "password", "password", "usert@mail.com", true).setRole(new Role()).build();
-	}
+        return User.builder().login("User").password("password").passwordConfirm("password").email("usert@mail.com").active(true).role(new Role()).build();
+    }
 
 
 

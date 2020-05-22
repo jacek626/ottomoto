@@ -1,11 +1,11 @@
 package com.app.entity;
 
 import com.app.enums.*;
+import com.app.searchform.EntityForSearchStrategy;
 import com.app.utils.AnnouncementSearchFields;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.NumberPath;
 import lombok.*;
-import org.springframework.data.util.Pair;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -13,21 +13,23 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Entity
 @Builder
 @Setter
 @Getter
 @AllArgsConstructor
-public class Announcement {
+public class Announcement implements EntityForSearchStrategy {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_Announcement")
-	@SequenceGenerator(name="seq_Announcement",sequenceName="seq_Announcement")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_Announcement")
+	@SequenceGenerator(name = "seq_Announcement", sequenceName = "seq_Announcement")
 	private Long id;
-	
+
 	@NotBlank
-	@Size(max=200)
+	@Size(max = 200)
 	@Builder.Default
 	private String title = "Default title";
 	
@@ -121,55 +123,68 @@ public class Announcement {
 	@Transient
 	private VehicleType vehicleType;
 	@Transient
-	private AnnouncementSearchFields searchFields;
-	@Transient
-	private List<Predicate> predicates;
-	@Transient
 	private StringBuilder urlParams;
+	@Transient
+	@Builder.Default
+	private AnnouncementSearchFields searchFields = new AnnouncementSearchFields();
+	@Transient
+	@Getter(AccessLevel.NONE)
+	private BooleanBuilder predicates;
 
 	public Announcement() {
-		searchFields = new AnnouncementSearchFields();
 	}
 
-	public Pair<List<Predicate>, String> preparePredicatesAndUrlParams() {
-		predicates = new ArrayList<>();
+	@Override
+	public String prepareUrlParams() {
 		urlParams = new StringBuilder();
 
-		preparePredicateAndUrlParam(user != null, QAnnouncement.announcement.user.id, (user != null ? user.getId() : null), "user=");
-		preparePredicateAndUrlParam(manufacturerId != null, QAnnouncement.announcement.vehicleModel.manufacturer.id, manufacturerId, "manufacturerId=");
-		preparePredicateAndUrlParam(vehicleModel != null, QAnnouncement.announcement.vehicleModel.id, (vehicleModel != null ? vehicleModel.getId() : null) , "vehicleModel=");
-		preparePredicateAndUrlParamForVehicleType();
-		preparePredicateAndUrlParamForVehicleSubtype();
+		addUrlParam("user", user);
+		addUrlParam("manufacturerId", manufacturerId);
+		addUrlParam("vehicleModel", vehicleModel);
+		addUrlParam("vehicleType", vehicleModel);
+		addUrlParam("vehicleSubtype", vehicleModel);
 
-		return Pair.of(predicates, urlParams.toString());
+		urlParams.append(getSearchFields().prepareUrlParams());
+
+		return urlParams.toString();
 	}
 
-	private void preparePredicateAndUrlParamForVehicleSubtype() {
-		if(vehicleSubtype != null) {
-			predicates.add(QAnnouncement.announcement.vehicleSubtype.eq(vehicleSubtype));
-			urlParams.append("vehicleSubtype=").append(vehicleSubtype).append("&");
+	@Override
+	public Predicate preparePredicates() {
+		predicates = new BooleanBuilder();
+
+		preparePredicates(QAnnouncement.announcement.user.id, (user == null ? null : user.getId()));
+		preparePredicates(QAnnouncement.announcement.vehicleModel.manufacturer.id, manufacturerId);
+		preparePredicates(QAnnouncement.announcement.vehicleModel.id, (vehicleModel == null ? null : vehicleModel.getId()));
+		preparePredicateForVehicleType();
+		preparePredicateForVehicleSubtype();
+
+		predicates.and(getSearchFields().prepareQueryAndSearchArguments());
+
+		return predicates;
+	}
+
+	@Override
+	public BooleanBuilder getPredicate() {
+		return predicates;
+	}
+
+	private void preparePredicateForVehicleSubtype() {
+		if (vehicleSubtype != null) {
+			predicates.and(QAnnouncement.announcement.vehicleSubtype.eq(vehicleSubtype));
 		}
 	}
 
-	private void preparePredicateAndUrlParamForVehicleType() {
-		if(vehicleType != null) {
-			predicates.add(QAnnouncement.announcement.vehicleModel.vehicleType.eq(vehicleType));
-			urlParams.append("vehicleType=").append(vehicleType).append("&");
-		}
-	}
-
-	private void preparePredicateAndUrlParam(boolean objectIsNotNull, NumberPath<Long> predicate, Long fieldValue, String urlParam) {
-		if (objectIsNotNull) {
-			predicates.add(predicate.eq(fieldValue));
-			urlParams.append(urlParam).append(fieldValue).append("&");
-		}
+	private void preparePredicateForVehicleType() {
+		if (vehicleType != null)
+			predicates.and(QAnnouncement.announcement.vehicleModel.vehicleType.eq(vehicleType));
 	}
 
 	public void prepareFieldsForSearch() {
-		if(title == null)
+		if (title == null)
 			title = "";
 
-		if(vehicleType == null)
+		if (vehicleType == null)
 			setVehicleType(VehicleType.CAR);
 	}
 
@@ -181,10 +196,37 @@ public class Announcement {
 	}
 
 	public VehicleType getVehicleType() {
-
-		if(vehicleType == null)
+		if (vehicleType == null)
 			vehicleType = (vehicleModel == null ? VehicleType.CAR : vehicleModel.getVehicleType());
 
 		return vehicleType;
+	}
+
+	public void preparePicturesToSaveAndDelete() {
+		Map<Boolean, List<Picture>> picturesToSaveAndDeleteInSeparateLists = getPictures().stream().collect(Collectors.partitioningBy(Picture::isPictureToDelete));
+		List<Picture> imagesToDelete = picturesToSaveAndDeleteInSeparateLists.get(Boolean.TRUE);
+		List<Picture> imagesToSave = picturesToSaveAndDeleteInSeparateLists.get(Boolean.FALSE);
+		imagesToSave = setAnnouncementForNewPictures(imagesToSave);
+
+		setPictures(imagesToSave);
+		setImagesToDelete(imagesToDelete);
+
+
+	}
+
+	private List<Picture> setAnnouncementForNewPictures(List<Picture> pictures) {
+		for (Picture picture : pictures) {
+			if (picture == null)
+				picture.setAnnouncement(this);
+		}
+
+		return pictures;
+	}
+
+	public Long getManufacturerId() {
+		if (vehicleModel != null && vehicleModel.getManufacturer() != null)
+			return vehicleModel.getManufacturer().getId();
+		else
+			return null;
 	}
 }

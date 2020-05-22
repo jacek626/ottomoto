@@ -33,27 +33,25 @@ public class AnnouncementRepositoryTest {
 	private UserRepository userRepository;
 	
 	private static boolean initialized = false;
-	
-	private static Announcement announcement;
-	
+
 	@BeforeEach
 	public void init() {
 		if(!initialized) {
-			User user = new User.UserBuilder("announcementRepositoryTestLogin","testPass","testPass","announcementRepositoryMail@test.com", true).build();
-			userRepository.save(user);
-			Manufacturer manufacturer = new Manufacturer("announcementRepositoryTestManufacturer");
-			manufacturer.getVehicleModel().add(new VehicleModel("vehicleModel3" , manufacturer , VehicleType.CAR));
-			announcement  = Announcement.builder().title("announcement title").user(user).vehicleModel(manufacturer.getVehicleModel().get(0)).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
-			
-			Picture picture1 = Picture.builder().build();
-			picture1.setAnnouncement(announcement);
-			picture1.setRepositoryName("picture1");
-			picture1.setMiniatureRepositoryName("picture1");
-			picture1.setMainPhotoInAnnouncement(false);
-			
-			Picture picture2= Picture.builder().build();
-			picture2.setAnnouncement(announcement);
-			picture2.setRepositoryName("picture2");
+            User user = User.builder().login("announcementRepositoryTestLogin").password("testPass").passwordConfirm("testPass").email("announcementRepositoryMail@test.com").active(true).build();
+            userRepository.save(user);
+            Manufacturer manufacturer = Manufacturer.builder().name("announcementRepositoryTestManufacturer").build();
+            manufacturer.getVehicleModel().add(VehicleModel.builder().name("vehicleModel3").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build());
+            Announcement announcement = Announcement.builder().title("announcement title").user(user).vehicleModel(manufacturer.getVehicleModel().get(0)).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
+
+            Picture picture1 = Picture.builder().build();
+            picture1.setAnnouncement(announcement);
+            picture1.setRepositoryName("picture1");
+            picture1.setMiniatureRepositoryName("picture1");
+            picture1.setMainPhotoInAnnouncement(false);
+
+            Picture picture2 = Picture.builder().build();
+            picture2.setAnnouncement(announcement);
+            picture2.setRepositoryName("picture2");
 			picture2.setMiniatureRepositoryName("picture2");
 			picture2.setMainPhotoInAnnouncement(true);
 			
@@ -108,10 +106,10 @@ public class AnnouncementRepositoryTest {
 	
 	@Test
 	public void shouldFindAnnouncementByPredicatesAndLoadPicture() {
-		PageRequest pageable =  PageRequest.of(1, 10, Direction.fromString("ASC"), "id");
-		Page<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadMainPicture(pageable, List.of(QAnnouncement.announcement.deactivationDate.isNull()));
+        PageRequest pageable = PageRequest.of(1, 10, Direction.fromString("ASC"), "id");
+        Page<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadMainPicture(pageable, QAnnouncement.announcement.deactivationDate.isNull());
 
-		assertThat(announcementList).isNotEmpty();
-	}
+        assertThat(announcementList).isNotEmpty();
+    }
 
 }

@@ -14,11 +14,6 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @AllArgsConstructor
 public class Picture {
-
-	@SuppressWarnings("unused")
-	public Picture() {
-	}
-
 	@Id
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="seq_Picture")
 	@SequenceGenerator(name="seq_Picture",sequenceName="seq_Picture")
@@ -33,15 +28,19 @@ public class Picture {
 	
 	@NotBlank
 	private String repositoryName;
-	
-	@NotBlank
-	private String miniatureRepositoryName;
 
-	private String fileName;
-	private boolean mainPhotoInAnnouncement;
-	
-	@Transient
-	@Builder.Default
-	private boolean pictureToDelete = false;
+    @NotBlank
+    private String miniatureRepositoryName;
+
+    private String fileName;
+    private boolean mainPhotoInAnnouncement;
+
+    @Transient
+    @Builder.Default
+    private boolean pictureToDelete = false;
+
+    @SuppressWarnings("unused")
+    public Picture() {
+    }
 
 }

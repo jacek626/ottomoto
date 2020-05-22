@@ -8,7 +8,7 @@ function validateEmailAndReportTextInAnnouncementReport() {
     if ($("#reportText")[0].checkValidity()) {
         $("#reportText").removeClass("elementValidationError");
     } else {
-        $('#reportText').addClass("elementValidationError");
+        $("#reportText").addClass("elementValidationError");
         return false;
     }
 
@@ -22,25 +22,25 @@ function sentMessageToSeller(announcementId, email, messageText, sellerEmailAddr
         url: "/otomoto/announcement/sentMessageToSeller",
         timeout: 15000,
         data: {
-            announcementId: announcementId,
-            messageText: messageText,
-            email: email,
-            sellerEmailAddress: sellerEmailAddress
+            announcementId,
+            messageText,
+            email,
+            sellerEmailAddress
         },
-        success: function (result) {
+        success(result) {
             if (result) {
                 showInfo("Wiadomosc wyslana, dziekujemy za kontakt");
             } else {
                 showInfo("Przepraszamy, wystapil blad");
             }
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
         }
     });
 
-    $('#messageToSenderTable input').attr("disabled", "true");
-    $('#messageToSenderTable textarea').attr("disabled", "true");
+    $("#messageToSenderTable input").attr("disabled", "true");
+    $("#messageToSenderTable textarea").attr("disabled", "true");
     showInfo("Wiadomosc do sprzedajacego w trakcie wyslki");
 }
 
@@ -50,22 +50,22 @@ function reportAnnouncment(announcementId, reportText, email) {
         url: "/otomoto/announcement/reportAnnouncement",
         timeout: 15000,
         data: {
-            announcementId: announcementId,
-            reportText: reportText,
-            email: email
+            announcementId,
+            reportText,
+            email
         },
-        success: function (result) {
+        success(result) {
             $("#reporterEmailAddress").val("");
             $("#reportText").val("");
             showInfo("Wiadomosc wyslana, dziekujemy za kontakt");
 
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
         }
     });
 
-    document.getElementById('reportAnnouncementPopup').style.visibility = "hidden";
+    document.getElementById("reportAnnouncementPopup").style.visibility = "hidden";
     hidePopupBacground();
     showInfo("Wiadomosc w trakcie wyslki");
 }

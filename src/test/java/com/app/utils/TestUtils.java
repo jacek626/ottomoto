@@ -11,12 +11,12 @@ import java.math.BigDecimal;
 
 public class TestUtils {
 
-    public static  Announcement prepareAnnouncementWithAllNeededObjects() {
-        User user = new User.UserBuilder("user","testPass","testPass", "user@test.com", true).build();
-        Manufacturer manufacturer = new Manufacturer("manufacturer");
-        manufacturer.getVehicleModel().add(new VehicleModel("vehicleModel" , manufacturer , VehicleType.CAR));
+    public static Announcement prepareAnnouncement() {
+        User user = User.builder().login("user").password("testPass").passwordConfirm("testPass").email("user@test.com").active(true).build();
+        Manufacturer manufacturer = Manufacturer.builder().name("manufacturer").build();
+        manufacturer.getVehicleModel().add(VehicleModel.builder().name("vehicleModel").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build());
 
-        Announcement announcement =  Announcement.builder().user(user).vehicleModel(manufacturer.getVehicleModel().get(0)).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
+        Announcement announcement = Announcement.builder().user(user).vehicleModel(manufacturer.getVehicleModel().get(0)).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
         announcement.setVehicleSubtype(VehicleSubtype.CABRIO);
         announcement.getUser().setId(-1L);
         announcement.getVehicleModel().setId(-5L);

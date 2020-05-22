@@ -4,20 +4,20 @@ function loadVehicleModel(manufacturer, vehicleType, typeOfHtmlElement) {
         url: "/otomoto/vehicleModel/loadVehicleModel",
         timeout: 1000,
         data: {
-            manufacturer: manufacturer,
-            vehicleType: vehicleType,
-            typeOfHtmlElement: typeOfHtmlElement
+            manufacturer,
+            vehicleType,
+            typeOfHtmlElement
         },
-        success: function (result) {
+        success(result) {
             $("#vehicleModel").empty().append(result);
 
-            if (typeOfHtmlElement === 'li') {
+            if (typeOfHtmlElement === "li") {
                 setDropDownListListener("#vehicleModel li");
                 $("#vehicleModelValue").val("");
                 $("#vehicleModelLabel").val("");
             }
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
         }
     });
@@ -30,10 +30,10 @@ function loadManufacturer(vehicleType, typeOfHtmlElement) {
         url: "/otomoto/manufacturer/loadManufacturer",
         timeout: 1000,
         data: {
-            vehicleType: vehicleType,
-            typeOfHtmlElement: typeOfHtmlElement
+            vehicleType,
+            typeOfHtmlElement
         },
-        success: function (result) {
+        success(result) {
             $("#manufacturer").empty().append(result);
             setDropDownListListener(".valuesDropDown  li");
 
@@ -41,7 +41,7 @@ function loadManufacturer(vehicleType, typeOfHtmlElement) {
                 $("#manufacturer").change();
             }
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
         }
     });
@@ -53,24 +53,24 @@ function loadVehicleSubtypes(vehicleType, typeOfHtmlElement) {
         url: "/otomoto/manufacturer/loadVehicleSubtypes",
         timeout: 5000,
         data: {
-            vehicleType: vehicleType,
-            typeOfHtmlElement: typeOfHtmlElement
+            vehicleType,
+            typeOfHtmlElement
         },
-        success: function (result) {
+        success(result) {
             $("#vehicleSubtype").empty().append(result);
             setDropDownListListener(".valuesDropDown  li");
 
         },
-        error: function (jqXHR, textStatus, errorThrown) {
+        error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
         }
     });
 }
 
 function validateRange(from, to, currentElement) {
-    if ($(from).val() !== '' && $(to).val() !== '') {
-        let fromAsNumber = parseInt($(from).val().replace(/\D/g, ""));
-        let toAsNumber = parseInt($(to).val().replace(/\D/g, ""));
+    if ($(from).val() !== "" && $(to).val() !== "") {
+        let fromAsNumber = parseInt($(from).val().replace(/\D/g, ""), 10);
+        let toAsNumber = parseInt($(to).val().replace(/\D/g, ""), 10);
 
         if (fromAsNumber > toAsNumber) {
             if ($(currentElement).attr("id") === $(from).attr("id")) {

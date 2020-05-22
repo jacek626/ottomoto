@@ -9,20 +9,20 @@ import org.springframework.stereotype.Component;
 import java.util.regex.Pattern;
 
 @Component
-public class EmailValidator  {
-	private static final String EMAIL_REGEX = "^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+public class EmailValidator {
+    private static final String EMAIL_REGEX = "^[\\w-+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
 
-	private static Pattern emailAddressPattern = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
+    private static final Pattern emailAddressPattern = Pattern.compile(EMAIL_REGEX, Pattern.CASE_INSENSITIVE);
 
-	public Result checkBeforeSend(EmailMessage emailMessage) {
-		Result result = Result.success();
+    public Result checkBeforeSend(EmailMessage emailMessage) {
+        Result result = Result.success();
 
-		for(String emailAddress : emailMessage.getReceiverEmailsAddresses()) {
-			if(checkEmailAddressIsNotValid(emailAddress))
-				result.appendValidationResult("receiveAddress", ValidationDetails.of(ValidatorCode.IS_NOT_VALID).appendDetail(emailAddress));
-		}
+        for (String emailAddress : emailMessage.getReceiverEmailsAddresses()) {
+            if (checkEmailAddressIsNotValid(emailAddress))
+                result.appendValidationResult("receiveAddress", ValidationDetails.of(ValidatorCode.IS_NOT_VALID).appendDetail(emailAddress));
+        }
 
-		emailMessage.getSenderEmail().filter(this::checkEmailAddressIsNotValid).ifPresent(e -> {
+        emailMessage.getSenderEmail().filter(this::checkEmailAddressIsNotValid).ifPresent(e -> {
 				result.appendValidationResult("senderAddress",  ValidationDetails.of(ValidatorCode.IS_NOT_VALID));
 		});
 

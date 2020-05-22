@@ -1,7 +1,6 @@
 package com.app.controller;
 
 import com.app.entity.Announcement;
-import com.app.entity.Picture;
 import com.app.enums.VehicleType;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.UserRepository;
@@ -27,9 +26,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
@@ -117,35 +114,23 @@ public class AnnouncementController {
 			BindingResult bindingResult, Model model, Authentication authentication,
 			RedirectAttributes redirectAttributes) {
 
-		announcement = preparePicturesToSaveAndDelete(announcement);
+        announcement.preparePicturesToSaveAndDelete();
 
-		Optional<Result> saveResult = Optional.empty();
+        Optional<Result> saveResult = Optional.empty();
 
-		if(!bindingResult.hasErrors()) {
-			saveResult = Optional.of(announcementService.saveAnnouncement(announcement));
-		}
+        if (!bindingResult.hasErrors()) {
+            saveResult = Optional.of(announcementService.saveAnnouncement(announcement));
+        }
 
-		if(bindingResult.hasErrors() || saveResult.orElse(Result.error()).isError()) {
-			prepareFlashAttributesForErrorHandling(announcement, bindingResult, redirectAttributes);
-			return "redirect:/announcement/edit/" + announcement.getId();
+        if (bindingResult.hasErrors() || saveResult.orElse(Result.error()).isError()) {
+            prepareFlashAttributesForErrorHandling(announcement, bindingResult, redirectAttributes);
+            return "redirect:/announcement/edit/" + announcement.getId();
 		}
 		else {
 			pictureService.deleteFromFileRepository(announcement.getImagesToDelete());
 		}
 
 		return "redirect:/announcement/list";
-	}
-
-	private Announcement preparePicturesToSaveAndDelete(@Validated @ModelAttribute("announcement") Announcement announcement) {
-		Map<Boolean,List<Picture>> picturesToSaveAndDeleteInSeparateLists = announcement.getPictures().stream().collect(Collectors.partitioningBy(Picture::isPictureToDelete));
-		List<Picture> imagesToDelete = picturesToSaveAndDeleteInSeparateLists.get(Boolean.TRUE);
-		List<Picture> imagesToSave = picturesToSaveAndDeleteInSeparateLists.get(Boolean.FALSE);
-		imagesToSave = setAnnouncementForNewPictures(imagesToSave, announcement);
-
-		announcement.setPictures(imagesToSave);
-		announcement.setImagesToDelete(imagesToDelete);
-
-		return announcement;
 	}
 
 	@RequestMapping(value="/list")
@@ -240,13 +225,5 @@ public class AnnouncementController {
 		redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.announcement", bindingResult);
 	}
 
-	private List<Picture> setAnnouncementForNewPictures(List<Picture> pictures, Announcement announcement) {
-		for (Picture picture : pictures) {
-			if(picture == null)
-				picture.setAnnouncement(announcement);
-		}
-
-		return pictures;
-	}
 
 }

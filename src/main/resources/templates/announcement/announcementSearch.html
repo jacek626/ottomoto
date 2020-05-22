@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<div class="announcementSearch" th:fragment="announcementSearch(action)">
-			<form th:object="${announcement}" th:action="@{/__${action}__}" method="get">
-				<table id="searchParamsTable">
-					<tr>
-						<td colspan="5">
-							<label for="vehicleType" th:text="#{vehicleType}"></label>
-	 						<select id="vehicleType" onchange="controlElementVisibility(this.value == 'CAR' ? true : false, '.doorsRow','table-row'); clearManufacturer(); clearVehicleModel(); clearVehicleModelDropDown();clearManufacturerDropDown();  loadManufacturer(this.value, 'li');   "  
-								th:field="*{vehicleType}">
-									<option
-											th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
-											th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
+
+<!-- jumbotron dodac -->
+<div class="container bg-white my-2" th:fragment="announcementSearch(action)">
+	<form th:object="${announcement}" th:action="@{/__${action}__}" method="get">
+		<table id="searchParamsTable">
+			<tr>
+				<td colspan="5">
+					<label for="vehicleType" th:text="#{vehicleType}"></label>
+					<select id="vehicleType"
+							onchange="controlElementVisibility(this.value == 'CAR' ? true : false, '.doorsRow','table-row'); clearManufacturer(); clearVehicleModel(); clearVehicleModelDropDown();clearManufacturerDropDown();  loadManufacturer(this.value, 'li');   "
+							th:field="*{vehicleType}">
+						<option
+								th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
+								th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
 											th:selected="*{vehicleType}">
 									</option>
 							</select> 
@@ -115,105 +118,4 @@
 				</table>
 				<input type="hidden" name="size" th:value="${size}">
 			</form>
-			
-			<script type="text/javascript">
-			
-		/* 			$('.rangeInput').maskNumber({
-						  integer: true,
-						  thousands: ' '
-					});
-					
-					$('.yearInput input').maskNumber({
-						  integer: true,
-						  thousands: ''
-					}); */
-					
-					
-				/* 	 $('.rangeInput').mask('0000-0000'); */
-				 	$(document).ready(function(){
- 						$('.rangeInput').each(function() {   
- 							let unit = this.getAttribute('unit');
- 						//	if(unit != null)
- 							//	$(this).inputmask({ alias : "numeric" ,suffix : " " + unit, groupSeparator : "," });
- 						//	else
- 						//		$(this).inputmask({ alias : "numeric" });
-
-							if(unit != null)
-								$(this).inputmask({ alias : "numeric" ,suffix : " ", groupSeparator : " " });
-							else
-								$(this).inputmask({ alias : "numeric" });
- 						})
-					}); 
-			
-/*  						$('.rangeInput').inputmask({ alias : "numeric" ,suffix: this.getAttribute('unit'), groupSeparator : "," });    */
-					$(".rangeInput").focusin(function() {
-						$('.rangeDropDown').css('display','none');
-						$(this).parent().find('.rangeDropDown').css('display','block');
-					});
-					$(".rangeInput").focusout(function() { 
-						var currentElement = this;
-						 setTimeout(function() {
-							$(currentElement).parent().find('.rangeDropDown').css('display','none');
-						}, 300); 
-					});
-					
-					$('.rangeDropDown li').on( "click", function() {
-						$(this).parent().parent().find('input').val($(this).text());
-						$(this).parent().parent().find('input').trigger('change');
-					});
-					
-		/* 			$('.valuesDropDown div').on( "click", function() {
-						$(this).parent().parent().find('input:text').val($(this).text());
-						$(this).parent().parent().find('input:hidden').val($(this).attr('value'));
-					}); */
-					
-					setDropDownListListener(".valuesDropDown  li");
-					setDropDownListMultiOptionListener('.valuesMultiDropDown  li');
-					setDropDownRangeListener('.rangeDropDown  li');
-					
-					
-					
-					$(".inputAsSelect").focusin(function() {
-						$('.valuesDropDown').css('display','none');
-						$(this).parent().find('.valuesDropDown').css('display','block');
-					});
-					$(".inputAsSelect").focusout(function() { 
-						var currentElement = this;
-						 setTimeout(function() {
-							$(currentElement).parent().find('.valuesDropDown').css('display','none');
-						}, 300); 
-					});
-					
-					$(".inputAsSelect").focusin(function() {
-						$('.valuesMultiDropDown').css('display','none');
-						$(this).parent().find('.valuesMultiDropDown').css('display','block');
-					});
-					$(".inputAsSelect").focusout(function() { 
-						var currentElement = this;
-						 setTimeout(function() {
-							$(currentElement).parent().find('.valuesMultiDropDown').css('display','none');
-						}, 300); 
-					});
-
-
-		$('input.rewriteTextToHiddenInputOnKeyDown').keydown(function(event) {
-			let element = $(event.target).parent().find('.hiddenInputToFilterResults');
-
-			if(event.key.length == 1)
-				$(element).val($(element).val() + event.key);
-			else if(event.key == 'Backspace')
-				$(element).val($(element).val().slice(0, -1));
-
-			$(element).trigger('change');
-		});
-
-
-
-		/* 	$('#priceFrom, #priceTo,').maskNumber({
-                  integer: true,
-                  thousands: ' '
-
-            }); */
-			</script>
-
 </div>

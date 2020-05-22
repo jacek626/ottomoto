@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -38,7 +37,8 @@ public class AnnouncementServiceTest {
 	private AnnouncementRepository announcementRepository;
 
 	@InjectMocks
-	private AnnouncementValidator announcementValidator = spy(AnnouncementValidator.class);
+    @SuppressWarnings("unused")
+    private final AnnouncementValidator announcementValidator = spy(AnnouncementValidator.class);
 
 	@InjectMocks
 	private AnnouncementServiceImpl announcementService;
@@ -51,94 +51,94 @@ public class AnnouncementServiceTest {
 
 	@Test
 	public void shouldSaveAnnouncement() {
-		//given
-		Announcement announcement  = TestUtils.prepareAnnouncementWithAllNeededObjects();
+        //given
+        Announcement announcement = TestUtils.prepareAnnouncement();
 
-		//when
-		Result result = announcementService.saveAnnouncement(announcement);
-		Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate( announcement );
+        //when
+        Result result = announcementService.saveAnnouncement(announcement);
+        Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate(announcement);
 
-		//then
-		assertThat(announcementEntityValidation.size()).isZero();
-		assertThat(result.isSuccess()).isTrue();
-		verify(announcementRepository, times(1)).save(Mockito.any(Announcement.class));
-	}
+        //then
+        assertThat(announcementEntityValidation.size()).isZero();
+        assertThat(result.isSuccess()).isTrue();
+        verify(announcementRepository, times(1)).save(any(Announcement.class));
+    }
 
 	@Test
 	public void shouldSaveAnnouncementWithPictures() {
-		//given
-		Announcement announcement  = TestUtils.prepareAnnouncementWithAllNeededObjects();
-		List<Picture> pictures = List.of(Picture.builder().fileName("test").announcement(announcement).repositoryName("test").build(),
-				Picture.builder().fileName("test2").announcement(announcement).pictureToDelete(true).repositoryName("test2").build());
-		announcement.setPictures(pictures);
+        //given
+        Announcement announcement = TestUtils.prepareAnnouncement();
+        List<Picture> pictures = List.of(Picture.builder().fileName("test").announcement(announcement).repositoryName("test").build(),
+                Picture.builder().fileName("test2").announcement(announcement).pictureToDelete(true).repositoryName("test2").build());
+        announcement.setPictures(pictures);
 
-		//when
-		Result result = announcementService.saveAnnouncement(announcement);
-		Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate( announcement );
+        //when
+        Result result = announcementService.saveAnnouncement(announcement);
+        Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate(announcement);
 
-		//then
-		assertThat(announcementEntityValidation.size()).isZero();
-		assertThat(result.isSuccess()).isTrue();
-		verify(announcementRepository, times(1)).save(Mockito.any(Announcement.class));
-	}
+        //then
+        assertThat(announcementEntityValidation.size()).isZero();
+        assertThat(result.isSuccess()).isTrue();
+        verify(announcementRepository, times(1)).save(any(Announcement.class));
+    }
 	
 	@Test
 	public void shouldReturnErrorBecUserIsNull() {
-		//given
-		Announcement announcement  = TestUtils.prepareAnnouncementWithAllNeededObjects();
-		announcement.setUser(null);
+        //given
+        Announcement announcement = TestUtils.prepareAnnouncement();
+        announcement.setUser(null);
 
-		//when
-		Result result = announcementService.saveAnnouncement(announcement);
-		Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate( announcement );
+        //when
+        Result result = announcementService.saveAnnouncement(announcement);
+        Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate(announcement);
 
-		//then
-		assertThat(announcementEntityValidation.size()).isOne();
-		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("user").getCode()).isEqualTo( ValidatorCode.IS_EMPTY);
+        //then
+        assertThat(announcementEntityValidation.size()).isOne();
+        assertThat(result.isError()).isTrue();
+        assertThat(result.getDetail("user").getCode()).isEqualTo(ValidatorCode.IS_EMPTY);
 	}
 	
 	@Test
 	public void shouldReturnValidationErrorBecausePriceIsBelowZero() {
-		//given
-		Announcement announcement  = TestUtils.prepareAnnouncementWithAllNeededObjects();
-		announcement.setPrice(BigDecimal.valueOf(-100));
+        //given
+        Announcement announcement = TestUtils.prepareAnnouncement();
+        announcement.setPrice(BigDecimal.valueOf(-100));
 
-		//when
-		Result result = announcementService.saveAnnouncement(announcement);
+        //when
+        Result result = announcementService.saveAnnouncement(announcement);
 
-		//then
-		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("price").getCode()).isEqualTo( ValidatorCode.IS_NEGATIVE);
-	}
+        //then
+        assertThat(result.isError()).isTrue();
+        assertThat(result.getDetail("price").getCode()).isEqualTo(ValidatorCode.IS_NEGATIVE);
+    }
 	
 	@Test
 	public void shouldReturnValidationErrorBecauseUserIsDeactivated() {
-		//given
-		Announcement announcement  = TestUtils.prepareAnnouncementWithAllNeededObjects();
-		announcement.getUser().setActive(false);
+        //given
+        Announcement announcement = TestUtils.prepareAnnouncement();
+        announcement.getUser().setActive(false);
 
-		//when
-		Result result = announcementService.saveAnnouncement(announcement);
+        //when
+        Result result = announcementService.saveAnnouncement(announcement);
 
-		//then
-		assertThat(result.isError()).isTrue();
-		assertThat(result.getValidationResult().get("user").getCode()).isEqualTo( ValidatorCode.IS_DEACTIVATED);
-	}
+        //then
+        assertThat(result.isError()).isTrue();
+        assertThat(result.getValidationResult().get("user").getCode()).isEqualTo(ValidatorCode.IS_DEACTIVATED);
+    }
 	
 	@Test
 	public void shouldDeactivateAnnouncement() {
-		//given
-		Announcement announcement  = TestUtils.prepareAnnouncementWithAllNeededObjects();
-		announcement.setId(-999L);
-		when(announcementRepository.existsByIdAndDeactivationDateIsNull(any(Long.class))).thenReturn(true);
+        //given
+        Announcement announcement = TestUtils.prepareAnnouncement();
+        announcement.setId(-999L);
+        when(announcementRepository.existsByIdAndDeactivationDateIsNull(any(Long.class))).thenReturn(true);
 
-		//when
-		Result deactivationResult = announcementService.deactivateAnnouncement(announcement.getId());
+        //when
+        Result deactivationResult = announcementService.deactivateAnnouncement(announcement.getId());
 
-		//then
-		assertThat(deactivationResult.isSuccess()).isTrue();
-		verify(announcementRepository, times(1)).updateDeactivationDateByAnnouncementId(any(Date.class), any(Long.class));
+        //then
+        assertThat(deactivationResult.isSuccess()).isTrue();
+        verify(announcementRepository, times(1)).updateDeactivationDateByAnnouncementId(any(Date.class), any(Long.class));
 
 	}
 

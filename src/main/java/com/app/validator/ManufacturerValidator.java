@@ -45,12 +45,11 @@ public class ManufacturerValidator implements ValidatorCommonMethods<Manufacture
 		
 		List<Manufacturer> manufacturersWithSameName = manufacturerRepository.findByName(manufacturer.getName());
 		
-		if(manufacturer.getId() == null && manufacturersWithSameName.stream().anyMatch(m -> m.getName().equals(manufacturer.getName()))) {
-			errors.put("name", ValidationDetails.of(ValidatorCode.ALREADY_EXISTS));
-		}
-		else if(manufacturer.getId() != null && manufacturersWithSameName.stream().anyMatch(m -> manufacturer.getId() != m.getId() && m.getName().equals(manufacturer.getName()))) {
-			errors.put("name", ValidationDetails.of(ValidatorCode.ALREADY_EXISTS));
-		}
+		if (manufacturer.getId() == null && manufacturersWithSameName.stream().anyMatch(m -> m.getName().equals(manufacturer.getName()))) {
+            errors.put("name", ValidationDetails.of(ValidatorCode.ALREADY_EXISTS));
+        } else if (manufacturer.getId() != null && manufacturersWithSameName.stream().anyMatch(m -> !manufacturer.getId().equals(m.getId()) && m.getName().equals(manufacturer.getName()))) {
+            errors.put("name", ValidationDetails.of(ValidatorCode.ALREADY_EXISTS));
+        }
 
 		return errors;
 	}

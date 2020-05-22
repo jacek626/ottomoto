@@ -22,6 +22,8 @@ public class VehicleModelValidator implements ValidatorCommonMethods<VehicleMode
 	@Autowired
 	private AnnouncementRepository announcementRepository;
 
+
+
 /*	public Map<String, ValidatorCode> checkBeforeSave(List<VehicleModel> vehicleModels) {
 		List<String> namesThatAlreadyExists = new ArrayList<>();
 		

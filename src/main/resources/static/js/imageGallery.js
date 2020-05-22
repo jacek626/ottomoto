@@ -1,9 +1,9 @@
 function markPictureInAnnouncementAsMain(element) {
     let mainPhotoInAnnouncement = $(".mainPhotoInAnnouncement");
     mainPhotoInAnnouncement.val("false");
-    mainPhotoInAnnouncement.css("text-decoration", 'none');
+    mainPhotoInAnnouncement.css("text-decoration", "none");
 
-    $(element).parent().find('input.mainPhotoInAnnouncement').val("true");
+    $(element).parent().find("input.mainPhotoInAnnouncement").val("true");
     $(element).css("text-decoration", "underline");
 
 
@@ -19,9 +19,9 @@ function showImage(element, target) {
         target = $("#photoContainer img");
     }
 
-    if ($(target).attr('src') !== element.getAttribute("picture")) {
+    if ($(target).attr("src") !== element.getAttribute("picture")) {
         $(target).fadeOut(100, function () {
-            $(target).attr('src', element.getAttribute("picture"));
+            $(target).attr("src", element.getAttribute("picture"));
         })
             .fadeIn(200);
     }
@@ -31,7 +31,7 @@ function showImage(element, target) {
     if (target) {
         $(target).attr("src", element.getAttribute("picture"));
     } else {
-        $('#photoContainer img').attr("src", element.getAttribute("picture"));
+        $("#photoContainer img").attr("src", element.getAttribute("picture"));
     }
 }
 
@@ -40,14 +40,15 @@ function deletePictureInAnnouncement(element) {
     $(element).parent().attr("pictureToDelete", "true");
     $(element).parent().css("display", "none");
 
-    if ($(element).parent().find("img").attr("picture") === $("#photoContainerMiniImage").attr("src"))
+    if ($(element).parent().find("img").attr("picture") === $("#photoContainerMiniImage").attr("src")) {
         if ($("#imagesScroll li[pictureToDelete='false'] img").length > 0) {
             // show first picture from all
             showImage($("#imagesScroll li[pictureToDelete='false'] img")[0], "#photoContainerMiniImage");
             markPictureInAnnouncementAsMain($("#imagesScroll li[pictureToDelete='false'] .markPictureAsMain")[0]);
         } else { // no other pictures to display
-            $('#photoContainerMiniImage').attr("src", "");
+            $("#photoContainerMiniImage").attr("src", "");
         }
+    }
 }
 
 
@@ -63,20 +64,18 @@ function uploadFile() {
         processData: false,
         contentType: false,
         cache: false,
-        success: function (result) {
+        success(result) {
 
             for (let i = 0; i < result.length; i++) {
-                $('#imagesScroll').children("li").last
-                let currentMaxElementId = $('#imagesScroll li:last-child').attr("index");
+                let currentMaxElementId = $("#imagesScroll li:last-child").attr("index");
 
                 if (isNaN(currentMaxElementId)) {
                     currentMaxElementId = 0;
                 } else {
-                    currentMaxElementId = parseInt(currentMaxElementId) + 1;
+                    currentMaxElementId = parseInt(currentMaxElementId, 10) + 1;
                 }
 
                 result[i] = result[i].replace(new RegExp("LIST_ID", "g"), currentMaxElementId);
-
                 $("#imagesScroll").append(result[i]);
             }
 
@@ -84,16 +83,15 @@ function uploadFile() {
 
 
         },
-        error: function () {
-            // Handle upload error
-            // ...
+        error(jqXHR, textStatus, errorThrown) {
+            showError(errorThrown);
         }
     });
 }
 
 function findNextImage(direction) {
     let currentImageIndex = $(".photoGalleryMiniArrow").parent().find("img").attr("currentImageIndex");
-    currentImageIndex = direction === "next" ? parseInt(currentImageIndex) + 1 : parseInt(currentImageIndex) - 1;
+    currentImageIndex = direction === "next" ? parseInt(currentImageIndex, 10) + 1 : parseInt(currentImageIndex, 10) - 1;
 
     let elementToReturn = $("#imagesScroll li[index='" + currentImageIndex + "']").find("img")[0];
 

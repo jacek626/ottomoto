@@ -66,11 +66,10 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	private String prepareActivationLink() {
-		String link = "";
 
-		
-		return link;
-	}
+
+        return "";
+    }
 	
 	public Result sentEmailWithAccountActivationLink(User user) {
 /*		try {

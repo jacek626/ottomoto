@@ -41,10 +41,8 @@ public class VehicleModelController {
                 vehicleModelRepository.findByManufacturerIdAndVehicleType(Long.valueOf(manufacturer),vehicleType);
 
 
-        String fromStream =  vehicleModelList.stream()
-                .map(e -> "<" + htmlElement + " value='" + e.getId() + "'>" + e.getName() + "</"+ htmlElement +">")
+        return vehicleModelList.stream()
+                .map(e -> "<" + htmlElement + " value='" + e.getId() + "'>" + e.getName() + "</" + htmlElement + ">")
                 .collect(Collectors.joining(""));
-
-        return fromStream;
     }
 }

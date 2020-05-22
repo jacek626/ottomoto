@@ -5,13 +5,12 @@ import com.app.entity.QAnnouncement;
 import com.app.entity.QObservedAnnouncement;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.UserRepository;
-import com.app.utils.PredicatesAndUrlParams;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
@@ -31,19 +30,21 @@ public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrate
         this.announcementRepository = announcementRepository;
     }
 
-    @Override
-    public PredicatesAndUrlParams preparePredicatesAndUrlParams(Announcement entity) {
-        return announcementSearchFormStrategy.preparePredicatesAndUrlParams(entity);
-    }
+/*    @Override
+    public Predicate preparePredicate(Announcement entity) {
+        return announcementSearchFormStrategy.preparePredicate(entity);
+    }*/
 
     @Override
-    public Page<Announcement> loadData(PageRequest pageRequest, List<Predicate> predicates) {
-        predicates.add(QAnnouncement.announcement.id.eq(QObservedAnnouncement.observedAnnouncement.id));
+    public Page<Announcement> loadData(PageRequest pageRequest, Predicate predicate) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder(predicate);
+
+        booleanBuilder.and(QAnnouncement.announcement.id.eq(QObservedAnnouncement.observedAnnouncement.id));
 
         long userId = userRepository.findIdByLogin(getContext().getAuthentication().getName());
-        predicates.add(QObservedAnnouncement.observedAnnouncement.user.id.eq(userId));
+        booleanBuilder.and(QObservedAnnouncement.observedAnnouncement.user.id.eq(userId));
 
-        return announcementRepository.findByPredicatesAndLoadMainPicture(pageRequest, predicates, QObservedAnnouncement.observedAnnouncement);
+        return announcementRepository.findByPredicatesAndLoadMainPicture(pageRequest, booleanBuilder, QObservedAnnouncement.observedAnnouncement);
     }
 
     @Override

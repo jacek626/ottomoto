@@ -19,10 +19,11 @@ function showInfo(message) {
 
 function controlElementVisibility(flagShowOrHide, elementToHideOrShow, displayType) {
     if (flagShowOrHide) {
-        if (displayType)
+        if (displayType) {
             $(elementToHideOrShow).css("display", displayType);
-        else
+        } else {
             $(elementToHideOrShow).css("display", "block");
+        }
     } else {
         $(elementToHideOrShow).css("display", "none");
     }
@@ -107,21 +108,36 @@ function showOrHidePositionsInDropDown(element) {
 }
 
 
-/*function selectValuesInDropDownByKeyboard() {
-	if(event.key === 'ArrowDown') {
-		console.log('1');
-	} 
-	else if(event.key == 'ArrowUp') {
-		console.log('2');
-	} 
-}*/
+function select(el) {
+    let s = [].indexOf.call(nodes, el);
+    if (s === -1) {
+        return;
+    }
+
+    selected = s;
+
+    let elHeight = $(el).height();
+    let scrollTop = $(ul).scrollTop();
+    let viewport = scrollTop + $(ul).height();
+    let elOffset = elHeight * selected;
+
+    if (elOffset < scrollTop || (elOffset + elHeight) > viewport) {
+        $(ul).scrollTop(elOffset);
+    }
+
+    if ($(ul).find("li.selected"))
+        $(ul).find("li.selected").removeClass("selected");
+
+
+    el.classList.add("selected");
+}
 
 let nodes;
 let ul;
 let selected = 0;
 $(document).keyup(function (e) {
     if ($(document.activeElement).hasClass("labelInAnnouncementSearch")) {
-        let dropDownId = '#' + $(document.activeElement).attr("dropDownElementId");
+        let dropDownId = "#" + $(document.activeElement).attr("dropDownElementId");
 
         nodes = $(dropDownId + " li:visible");
         ul = $(dropDownId);
@@ -139,29 +155,9 @@ $(document).keyup(function (e) {
 });
 
 function clearInputAndFireTrigger(element) {
-    $(element).prev('.hiddenInputToFilterResults').val('');
-    $(element).prev('.hiddenInputToFilterResults').trigger('change');
+    $(element).prev(".hiddenInputToFilterResults").val("");
+    $(element).prev(".hiddenInputToFilterResults").trigger("change");
 }
 
 
-function select(el) {
-    let s = [].indexOf.call(nodes, el);
-    if (s === -1) return;
 
-    selected = s;
-
-    let elHeight = $(el).height();
-    let scrollTop = $(ul).scrollTop();
-    let viewport = scrollTop + $(ul).height();
-    let elOffset = elHeight * selected;
-
-    console.log('select', selected, ' viewport', viewport, ' elOffset', elOffset);
-    if (elOffset < scrollTop || (elOffset + elHeight) > viewport)
-        $(ul).scrollTop(elOffset);
-
-    if ($(ul).find('li.selected'))
-        $(ul).find('li.selected').removeClass('selected');
-
-
-    el.classList.add('selected');
-}

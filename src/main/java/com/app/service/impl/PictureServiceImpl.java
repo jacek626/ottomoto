@@ -110,17 +110,14 @@ public class PictureServiceImpl implements PictureService {
     }
 
     private String prepareHtmlAfterFileUpload(UploadedPicture uploadedPicture) {
-        StringBuilder elementsToReturn = new StringBuilder();
 
-        elementsToReturn.append("<li index='LIST_ID' picturetodelete='false'>");
-        elementsToReturn.append(generateImageElement(uploadedPicture));
-        elementsToReturn.append(generateInputForRepositoryName(uploadedPicture));
-        elementsToReturn.append(generateInputForFileName(uploadedPicture));
-        elementsToReturn.append(generateInputForMiniatureRepositoryName(uploadedPicture));
-        elementsToReturn.append(generateDeleteButton());
-        elementsToReturn.append("</li>");
-
-        return elementsToReturn.toString();
+        return "<li index='LIST_ID' picturetodelete='false'>" +
+                generateImageElement(uploadedPicture) +
+                generateInputForRepositoryName(uploadedPicture) +
+                generateInputForFileName(uploadedPicture) +
+                generateInputForMiniatureRepositoryName(uploadedPicture) +
+                generateDeleteButton() +
+                "</li>";
     }
 
     private String generateDeleteButton() {

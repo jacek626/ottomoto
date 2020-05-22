@@ -9,12 +9,9 @@ import com.app.projection.ManufacturerProjection;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.ManufacturerRepository;
 import com.app.repository.VehicleModelRepository;
-import com.app.utils.PredicatesAndUrlParams;
 import com.querydsl.core.types.Predicate;
-import org.apache.commons.collections.ListUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -37,19 +34,8 @@ public class AnnouncementSearchStrategy implements SearchStrategy<Announcement> 
     }
 
     @Override
-    public PredicatesAndUrlParams preparePredicatesAndUrlParams(Announcement announcement) {
-        Pair<List<Predicate>, String> predicatesAndUrlParamsFromAnnouncement = announcement.preparePredicatesAndUrlParams();
-        Pair<List<Predicate>, String> predicatesAndUrlParamsFromSearchFields = announcement.getSearchFields().prepareQueryAndSearchArguments();
-
-        List<Predicate> predicates = ListUtils.union(predicatesAndUrlParamsFromAnnouncement.getFirst(), predicatesAndUrlParamsFromSearchFields.getFirst());
-        String urlParams = new StringBuilder().append("&").append(predicatesAndUrlParamsFromAnnouncement.getSecond()).append(predicatesAndUrlParamsFromSearchFields.getSecond()).toString();
-
-        return PredicatesAndUrlParams.of(predicates, urlParams);
-    }
-
-    @Override
-    public Page<Announcement> loadData(PageRequest pageRequest, List<Predicate>  predicates) {
-        return announcementRepository.findByPredicatesAndLoadMainPicture(pageRequest, predicates);
+    public Page<Announcement> loadData(PageRequest pageRequest, Predicate predicate) {
+        return announcementRepository.findByPredicatesAndLoadMainPicture(pageRequest, predicate);
     }
 
     @Override
@@ -72,7 +58,7 @@ public class AnnouncementSearchStrategy implements SearchStrategy<Announcement> 
         Map<String,Object> model = new HashMap<>();
 
         if(announcement.getVehicleModel() != null) {
-            announcement.setManufacturerName(manufacturerList.stream().filter(e -> e.getId() == announcement.getVehicleModel().getManufacturer().getId()).findAny().get().getName());
+            announcement.setManufacturerName(manufacturerList.stream().filter(e -> e.getId().equals(announcement.getVehicleModel().getManufacturer().getId())).findAny().get().getName());
             model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(announcement.getVehicleModel().getManufacturer().getId(), announcement.getVehicleModel().getVehicleType()));
         }
    /*     else if(manufacturerList.size() > 0) {

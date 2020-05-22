@@ -7,11 +7,10 @@ import com.app.enums.VehicleSubtype;
 import com.app.enums.VehicleType;
 import com.app.projection.ManufacturerProjection;
 import com.app.repository.ManufacturerRepository;
+import com.app.searchform.SearchStrategy;
+import com.app.utils.PaginationDetails;
 import com.querydsl.core.BooleanBuilder;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,26 +20,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Controller
 @RequestMapping("manufacturer/")
 public class ManufacturerController {
-	
-	private final ManufacturerRepository manufacturerRepository;
-	
-	private final int[] PAGE_SIZES = {5,10,20};
 
-	public ManufacturerController(ManufacturerRepository manufacturerRepository) {
-		this.manufacturerRepository = manufacturerRepository;
-	}
+    private final ManufacturerRepository manufacturerRepository;
 
-	@ModelAttribute
-	    public void addAttributes(Model model) {
-			model.addAttribute("vehicleSubtypesCar", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.CAR));
-			model.addAttribute("vehicleSubtypesTruck", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.TRUCK));
-			model.addAttribute("vehicleSubtypesMotorcycle", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.MOTORCYCLE));
-	    }
+    private final SearchStrategy manufacturerSearchStrategy;
+
+
+    public ManufacturerController(ManufacturerRepository manufacturerRepository, SearchStrategy manufacturerSearchStrategy) {
+        this.manufacturerRepository = manufacturerRepository;
+        this.manufacturerSearchStrategy = manufacturerSearchStrategy;
+    }
+
+    @ModelAttribute
+    public void addAttributes(Model model) {
+        model.addAttribute("vehicleSubtypesCar", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.CAR));
+        model.addAttribute("vehicleSubtypesTruck", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.TRUCK));
+        model.addAttribute("vehicleSubtypesMotorcycle", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.MOTORCYCLE));
+    }
 	
 	@RequestMapping(value="new",method=RequestMethod.GET)
 	public String register(Model model) {
@@ -69,11 +69,14 @@ public class ManufacturerController {
 	public String removeVehicle(@ModelAttribute("manufacturer") Manufacturer manufacturer,Model model,
 			@RequestParam("vehicleToDelete") Long vehicleId, Authentication authentication) {
 
-		manufacturer.getVehicleModel().remove(manufacturer.getVehicleModel().stream().filter(v -> v.getToDelete()).findFirst().get());
-		model.addAttribute("manufacturer",manufacturer);
+        manufacturer.getVehicleModel().stream().filter(v -> v.getToDelete()).findFirst().ifPresent(vehicleModel -> {
+            manufacturer.getVehicleModel().remove(vehicleModel);
+        });
 
-		return "manufacturer/manufacturerEdit";
-	}
+        model.addAttribute("manufacturer", manufacturer);
+
+        return "manufacturer/manufacturerEdit";
+    }
 	
 	@RequestMapping(value="save",method=RequestMethod.POST)
 	public String registerPost(@ModelAttribute("manufacturer") Manufacturer manufacturer, Model model,
@@ -85,73 +88,79 @@ public class ManufacturerController {
 				}
 
 		manufacturerRepository.save(manufacturer);
-		
-		return "redirect:/manufacturer/list";
-	}
-	
-	@RequestMapping(value="addVehicle")
-	public String addVehicle() {
-		
-		
-		return "manufacturer/edit/";
-	}
-	
-	@RequestMapping(value="edit/{id}",method=RequestMethod.GET)
-	public String edit(@PathVariable("id") Long id, Model model) {
-		Manufacturer manufacturer = manufacturerRepository.findById(id).get();
-		
-		if(model.asMap().containsKey("manufacturerWithAddedModel"))
-			model.addAttribute("manufacturer",model.asMap().get("manufacturerWithAddedModel"));
-		else
-			model.addAttribute("manufacturer",manufacturer);
-		
 
-		return "manufacturer/manufacturerEdit";
-	}
-	
-	@RequestMapping(value="delete/{id}",method=RequestMethod.GET)
-	public String delete(@PathVariable("id") Long id, Model model) {
-		
-		manufacturerRepository.deleteById(id);
-		
-		return "redirect:/mark/list";
-	}
-	
-	@RequestMapping(value="/list")
-	public String list(@RequestParam(name = "page", defaultValue = "1", required = false) int page,
-			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
-			@RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
-			@RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
-			@RequestParam(name = "searchArguments",required = false, defaultValue = "&") String searchArguments, 
-			@ModelAttribute("manufacturer")  Manufacturer manufacturer, 
-			Model model)  {
-		
-		manufacturer.prepareFiledsForSearch();
-		
-		BooleanBuilder queryBuilder = new BooleanBuilder();
-		searchArguments = prepareQueryAndSearchArguments(manufacturer, searchArguments, queryBuilder);
-		
-		PageRequest pageable = null;
-		pageable = PageRequest.of(page, size, Direction.fromString(sort), orderBy);
-	
-		Page<Manufacturer> manufacturerPage = manufacturerRepository.findAll(queryBuilder, pageable);
-		
-	    if(manufacturerPage.getTotalPages() > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1 ,manufacturerPage.getTotalPages()).boxed().collect(Collectors.toList());
-            model.addAttribute("numbers", pageNumbers);
-        }
-        
-        model.addAttribute("pages", manufacturerPage);
-        model.addAttribute("orderBy", orderBy);
-        model.addAttribute("sort", sort);
-        model.addAttribute("searchArguments", searchArguments);
-        model.addAttribute("page", page);
-        model.addAttribute("size", size);
-        model.addAttribute("pageSizes", PAGE_SIZES);
-        model.addAttribute("manufacturer", manufacturer);
-		
-		return "/manufacturer/manufacturerList";
-	}
+        return "redirect:/manufacturer/list";
+    }
+
+    @RequestMapping(value = "addVehicle")
+    public String addVehicle() {
+
+
+        return "manufacturer/edit/";
+    }
+
+    @RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
+    public String edit(@PathVariable("id") Long id, Model model) {
+
+        manufacturerRepository.findById(id).ifPresentOrElse(manufacturer -> {
+            model.addAttribute("manufacturer", model.asMap().getOrDefault("manufacturerWithAddedModel", manufacturer));
+        }, () -> {
+            throw new IllegalArgumentException("Manufacturer not found");
+        });
+
+
+        return "manufacturer/manufacturerEdit";
+    }
+
+    @RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
+    public String delete(@PathVariable("id") Long id, Model model) {
+
+        manufacturerRepository.deleteById(id);
+
+        return "redirect:/mark/list";
+    }
+
+    @RequestMapping(value = "/list")
+    public String list(@RequestParam(name = "page", defaultValue = "1", required = false) int page,
+                       @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+                       @RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
+                       @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
+                       @RequestParam(name = "searchArguments", required = false, defaultValue = "&") String usedSearchArguments,
+                       @ModelAttribute("manufacturer") Manufacturer manufacturer,
+                       Model model) {
+
+
+        model.addAttribute("requestMapping", "list");
+
+        PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
+
+        model.addAllAttributes(manufacturerSearchStrategy.prepareSearchForm(manufacturer, paginationDetails));
+
+        //manufacturer.prepareFiledsForSearch();
+
+//	BooleanBuilder queryBuilder = new BooleanBuilder();
+//		String searchArguments = prepareQueryAndSearchArguments(manufacturer, usedSearchArguments, queryBuilder);
+
+        //	PageRequest pageable = PageRequest.of(page, size, Direction.fromString(sort), orderBy);
+
+        //	Page<Manufacturer> manufacturerPage = manufacturerRepository.findAll(queryBuilder, pageable);
+
+	/*		if (manufacturerPage.getTotalPages() > 0) {
+			List<Integer> pageNumbers = IntStream.rangeClosed(1, manufacturerPage.getTotalPages()).boxed().collect(Collectors.toList());
+			model.addAttribute("numbers", pageNumbers);
+		}
+
+		model.addAttribute("pages", manufacturerPage);
+		model.addAttribute("orderBy", orderBy);
+		model.addAttribute("sort", sort);
+		model.addAttribute("searchArguments", searchArguments);
+		model.addAttribute("page", page);
+		model.addAttribute("size", size);
+		model.addAttribute("pageSizes", PAGE_SIZES);
+		model.addAttribute("manufacturer", manufacturer);*/
+
+        return "/manufacturer/manufacturerList";
+    }
 	
 	private String prepareQueryAndSearchArguments(Manufacturer manufacturer, String searchArguments, BooleanBuilder queryBuilder) {
 		StringBuilder stringBuilder = new StringBuilder(searchArguments);
@@ -173,16 +182,14 @@ public class ManufacturerController {
 	public @ResponseBody String loadVehicleSubtypes(@RequestParam("vehicleType") String vehicleType,
 			@RequestParam(value="typeOfHtmlElement", defaultValue = "li") String htmlElement, Model model,
 			Authentication authentication, ModelMap map) {
-	
-		List<VehicleSubtype> vehicleSubtypes = VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.valueOf(vehicleType));
+
+        List<VehicleSubtype> vehicleSubtypes = VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.valueOf(vehicleType));
 
 
-		String fromStream =  vehicleSubtypes.stream()
-				.map(e ->  "<" + htmlElement + " value='" + e.getVehicleType() + "'>" + e.getLabel() + "</"+ htmlElement +">")
-				.collect(Collectors.joining(""));
-		
-		return fromStream;
-	}
+        return vehicleSubtypes.stream()
+                .map(e -> "<" + htmlElement + " value='" + e.getVehicleType() + "'>" + e.getLabel() + "</" + htmlElement + ">")
+                .collect(Collectors.joining(""));
+    }
 
 
 	@RequestMapping(value="loadManufacturer",method=RequestMethod.GET)
@@ -191,15 +198,13 @@ public class ManufacturerController {
 			@RequestParam("typeOfHtmlElement") String htmlElement, Model model,
 			Authentication authentication, ModelMap map) {
 
-		List<ManufacturerProjection> manufacturerList = manufacturerRepository.findByVehicleType(VehicleType.valueOf(vehicleType));
+        List<ManufacturerProjection> manufacturerList = manufacturerRepository.findByVehicleType(VehicleType.valueOf(vehicleType));
 
 
-		String fromStream =  manufacturerList.stream()
-				.map(e -> "<" + htmlElement + " value='" + e.getId() + "'>" + e.getName() + "</"+ htmlElement +">")
-				.collect(Collectors.joining(""));
-
-		return fromStream;
-	}
+        return manufacturerList.stream()
+                .map(e -> "<" + htmlElement + " value='" + e.getId() + "'>" + e.getName() + "</" + htmlElement + ">")
+                .collect(Collectors.joining(""));
+    }
 	
 	
 

@@ -1,86 +1,72 @@
 @charset "UTF-8";
 
-* {
-	font-family: Arial, Helvetica, sans-serif;
-}
-
-body {
-	margin: 0px;
-}
-
-.header-style {
-	height: 50px;
-	width: 100%;
-}
-
-a {
-	text-decoration: none;
-}
 
 #content {
-	width: 960px;
-	margin: 0 auto;
-	min-height: 400px;
+    width: 960px;
+    margin: 0 auto;
+    min-height: 400px;
 }
 
 #content-middle {
-	text-align: center;
-	margin: auto;
+    text-align: center;
+    margin: auto;
 }
 
-.dropDown, .rangeDropDown, .valuesDropDown {
-	position: absolute;
-	display: none;
-	background-color: white;
-	cursor: pointer;
-	max-height: 250px;
-	overflow: scroll;
-	overflow-x: hidden;
-	list-style: none;
-	margin-block-start: 0px;
-	margin-block-end: 0px;
+.dropDown,
+.rangeDropDown,
+.valuesDropDown {
+    position: absolute;
+    display: none;
+    background-color: white;
+    cursor: pointer;
+    max-height: 250px;
+    overflow: scroll;
+    overflow-x: hidden;
+    list-style: none;
+    margin-block-start: 0;
+    margin-block-end: 0;
 }
 
 .imageScrollerButton {
-	cursor: pointer;
-	background-color: gray;
+    cursor: pointer;
+    background-color: gray;
 }
 
 .miniatureImageInImageScroller {
-	width: 150px;
-	cursor: pointer;
+    width: 150px;
+    cursor: pointer;
 }
 
 #imageScroller::-webkit-scrollbar {
-	width: 0px;
-	background: transparent; /* make scrollbar transparent */
-	display: none;
+    width: 0;
+    background: transparent; /* make scrollbar transparent */
+    display: none;
 }
 
 #imageScroller {
-	scrollbar-width: none; /* Firefox */
-	-ms-overflow-style: none; /* IE 10+ */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
 }
 
 #imageScroller li {
-	display: inline-block;
-	margin-right: 10px;
-	background-color: red;
+    display: inline-block;
+    margin-right: 10px;
+    background-color: red;
 }
 
 #imageScroller li button {
-	/*  position: absolute; */
-	/*  top: 50%; */
-	/*   left: 50%;
+    /*  position: absolute; */
+    /*  top: 50%; */
+    /*   left: 50%;
   transform: translate(-50%, -50%);
   -ms-transform: translate(-50%, -50%);
   background-color: #555; */
-	/*   color: white; */
-	/*   font-size: 16px;
+    /*   color: white; */
+    /*   font-size: 16px;
   padding: 12px 24px; */
-	/*   border: none;
+    /*   border: none;
   cursor: pointer; */
-	/*   border-radius: 5px; */
+    /*   border-radius: 5px; */
 
 }
 
@@ -88,244 +74,249 @@ a {
   flex: 1 100%;
 } */
 .photoGalleryMiniArrow {
-	z-index: 10;
-	position: relative;
-	color: white;
-	cursor: pointer;
-	padding: 10px 10px 10px 10px;
-	background-color: grey;
-	opacity: 0.2;
-	filter: alpha(opacity = 20);
+    z-index: 10;
+    position: relative;
+    color: white;
+    cursor: pointer;
+    padding: 10px 10px 10px 10px;
+    background-color: grey;
+    opacity: 0.2;
+    filter: alpha(opacity=20);
 }
 
 #imagesScroll::-webkit-scrollbar {
-	width: 8px;
+    width: 8px;
 }
 
 #imagesScroll::-webkit-scrollbar-track {
-	-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
 #imagesScroll::-webkit-scrollbar-thumb {
-	background-color: lightgray;
-	outline: 1px solid slategrey;
+    background-color: lightgray;
+    outline: 1px solid slategrey;
 }
 
 .rangeDropDown div {
-	/* 	border-width: 0px 1px 1px 1px;
-	border-style: solid;
-	border-color: #99A7BB; */
-	padding: 5px;
+    /* 	border-width: 0px 1px 1px 1px;
+    border-style: solid;
+    border-color: #99A7BB; */
+    padding: 5px;
 }
 
-.valuesDropDown li:hover, .rangeDropDown li:hover, .valuesDropDown .selected,
-.rangeDropDown .selected, .dropDown li:hover, .dropDown .selected {
-	background-color: #E8E8E8;
+.valuesDropDown li:hover,
+.rangeDropDown li:hover,
+.valuesDropDown .selected,
+.rangeDropDown .selected,
+.dropDown li:hover,
+.dropDown .selected {
+    background-color: #E8E8E8;
 }
 
 /* .pricesListElement:hover {
 	background-color: #E8E8E8;
 } */
 datalist {
-	background-color: red;
+    background-color: red;
 }
 
 .popup {
-	position: fixed;
-	z-index: 100;
-	height: 100px;
-	cursor: default;
-	text-align: left;
-	left: 50%;
-	top: 35%;
+    position: fixed;
+    z-index: 100;
+    height: 100px;
+    cursor: default;
+    text-align: left;
+    left: 50%;
+    top: 35%;
 }
 
 .popup div {
-	position: relative;
-	left: -50%;
-	border: solid #2e3968 1px;
-	padding: 10px;
-	text-align: center;
-	background-color: white;
+    position: relative;
+    left: -50%;
+    border: solid #2e3968 1px;
+    padding: 10px;
+    text-align: center;
+    background-color: white;
 }
 
 .popup div table {
-	text-align: left;
+    text-align: left;
 }
 
 .popup div table .popupButtons {
-	text-align: right;
+    text-align: right;
 }
 
 #popupBackground {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	z-index: 99;
-	overflow: auto;
-	background-color: rgb(0, 0, 0);
-	background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 table {
-	margin: auto;
-	border-collapse: collapse;
+    margin: auto;
+    border-collapse: collapse;
 }
 
 .emptyTableRow {
-	height: 20px;
+    height: 20px;
 }
 
 #searchParamsTable {
-	text-align: left;
-	font-size: 12px;
+    text-align: left;
+    font-size: 12px;
 }
 
 #searchParamsTable input, #searchParamsTable select {
-	font-size: 12px;
+    font-size: 12px;
 }
 
 #searchParamsTable tr {
-	line-height: 20px;
+    line-height: 20px;
 }
 
 #resultsTable tbody tr:hover {
-	background-color: #f2f2f2;
+    background-color: #f2f2f2;
 }
 
 .valiationError {
-	color: #bf2505;
-	font-weight: bold;
-	font-size: 10px;
+    color: #bf2505;
+    font-weight: bold;
+    font-size: 10px;
 }
 
 .inputAsSelect {
-	width: 80px;
+    width: 80px;
 }
 
 #resultsTable td, #resultsTable th {
-	text-align: left;
-	padding: 4px 10px;
-	border-bottom: 1px solid #ddd;
-	border-spacing: 0px;
-	border-collapse: inherit;
+    text-align: left;
+    padding: 4px 10px;
+    border-bottom: 1px solid #ddd;
+    border-spacing: 0;
+    border-collapse: inherit;
 }
 
 #resultsTable th a, #resultsTabl th a:visited {
-	color: #2e3968;
+    color: #2e3968;
 }
 
-#resultsTable  tfoot td {
-	border: none;
+#resultsTable tfoot td {
+    border: none;
 }
 
 #resultsTable .tableFooterButtons {
-	vertical-align: bottom;
-	line-height: 40px;
+    vertical-align: bottom;
+    line-height: 40px;
 }
 
 #pageSizeSelect {
-	margin-top: 5px;
-	margin-bottom: 15px;
+    margin-top: 5px;
+    margin-bottom: 15px;
 }
 
 .footer-style {
-	height: 50px;
-	width: 100%;
-	background-color: #2e3968;
+    height: 50px;
+    width: 100%;
+    background-color: #2e3968;
 }
 
 .search-fragment {
-	height: 25px;
-	width: 100%;
-	background-color: #2e3968;
+    height: 25px;
+    width: 100%;
+    background-color: #2e3968;
 }
 
 .disabled {
-	pointer-events: none;
-	cursor: default;
-	color: grey;
+    pointer-events: none;
+    cursor: default;
+    color: grey;
 }
 
 .remove-link-decoration {
-	text-decoration: none;
+    text-decoration: none;
 }
 
-.main-header-buttons, .main-header-buttons-without-hover {
-	width: 60px;
-	padding: 10px;
-	position: relative;
-	top: 16px;
-	color: white;
-	background-color: #2e3968;
-	margin-left: 10px;
-}
+/*.main-header-buttons, .main-header-buttons-without-hover {
+    width: 60px;
+    padding: 10px;
+    position: relative;
+    top: 16px;
+    color: white;
+    background-color: #2e3968;
+    margin-left: 10px;
+}*/
 
 .userRegistrationForm table tr td:nth-child(3) {
-	width: 180px;
+    width: 180px;
 }
 
 .userRegistrationForm p {
-	margin: 0px;
-	/* 	font-size: 12px; */
+    margin: 0;
+    /* 	font-size: 12px; */
 }
 
 .announcement-edit-form, .registration-login-form {
-	min-height: 400px;
-	text-align: center;
-	width: 100%;
-	margin: auto;
+    min-height: 400px;
+    text-align: center;
+    width: 100%;
+    margin: auto;
 }
 
 .announcementClearButton {
-	/*background-color: white !important;
-	border: none !important;
-	cursor: pointer !important;*/
-	background-color: white;
-	border: none;
-	cursor: pointer;
+    /*background-color: white !important;
+    border: none !important;
+    cursor: pointer !important;*/
+    background-color: white;
+    border: none;
+    cursor: pointer;
 }
 
 .announcement-edit-form table {
-	margin: auto;
+    margin: auto;
 }
 
 .displayNone {
-	display: none;
+    display: none;
 }
 
 .displayTableRow {
-	display: table-row;
+    display: table-row;
 }
 
 #upload-file-input {
-	width: 0.1px;
-	height: 0.1px;
-	opacity: 0;
-	overflow: hidden;
-	position: absolute;
-	z-index: -1;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
 }
 
 #upload-file-label, .medium-button {
-	padding: 6px;
-	color: white;
-	background-color: #2e3968;
-	font-size: 16px;
-	font-family: Arial, Helvetica, sans-serif;
-	/*border: none !important;*/
-	border: none;
-	cursor: pointer;
+    padding: 6px;
+    color: white;
+    background-color: #2e3968;
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+    /*border: none !important;*/
+    border: none;
+    cursor: pointer;
 }
 
 #upload-file-label:hover, .main-header-buttons:hover, .medium-button:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 ul {
-	/*	padding-inline-start: 0px !important;*/
-	padding-inline-start: 0px;
+    /*	padding-inline-start: 0px !important;*/
+    padding-inline-start: 0;
 }
+
 /* .inputfile + label {
     font-size: 1.25em;
     font-weight: 700;
@@ -339,161 +330,163 @@ ul {
     background-color: red;
 }   */
 .noselect {
-	-webkit-touch-callout: none; /* iOS Safari */
-	-webkit-user-select: none; /* Safari */
-	-khtml-user-select: none; /* Konqueror HTML */
-	-moz-user-select: none; /* Firefox */
-	-ms-user-select: none; /* Internet Explorer/Edge */
-	user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                     supported by Chrome and Opera */
 }
 
 .input-width-150 {
-	width: 150px;
+    width: 150px;
 }
 
 #searchParamsTable input, #searchParamsTable label {
-	/* display:block; */
+    /* display:block; */
 
 }
 
 #searchParamsTable td {
-	padding-left: 15px;
+    padding-left: 15px;
 }
 
 .rangeInput {
-	width: 80px;
-	/*text-align: left !important;*/
-	text-align: left;
+    width: 80px;
+    /*text-align: left !important;*/
+    text-align: left;
 }
 
 .elementValidationError {
-	border: solid red 1px;
+    border: solid red 1px;
 }
 
 .blankTableRow {
-	/*	height: 10px !important;*/
-	height: 10px;
+    /*	height: 10px !important;*/
+    height: 10px;
 }
 
-style>label {
-	cursor: pointer;
-	font-size: 14px;
+style > label {
+    cursor: pointer;
+    font-size: 14px;
 }
 
 input[type="radio"] {
-	visibility: hidden;
-	height: 0;
-	width: 0;
+    visibility: hidden;
+    height: 0;
+    width: 0;
 }
 
-input[type="radio"]:checked+label {
-	text-decoration: underline;
+input[type="radio"]:checked + label {
+    text-decoration: underline;
 }
 
 table {
-	line-height: 20px;
+    line-height: 20px;
 }
 
 .wrapper {
-	height: 200px;
-	width: 632px;
-	position: relative;
-	overflow: hidden;
-	margin: 0 auto;
+    height: 200px;
+    width: 632px;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
 }
 
 .button-wrapper {
-	width: 100%;
-	height: 100%;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
 }
 
 .carousel {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	width: 100%;
-	display: flex;
-	position: absolute;
-	left: 0;
-	transition: all 1s ease;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+    display: flex;
+    position: absolute;
+    left: 0;
+    transition: all 1s ease;
 }
 
-.card {
-	background: black;
-	min-width: 200px;
-	height: 200px;
-	margin-right: 1rem;
-	display: inline-block;
-}
+/*.card {
+    background: black;
+    min-width: 200px;
+    height: 200px;
+    margin-right: 1rem;
+    display: inline-block;
+}*/
 
 .sellerDetails table td {
-	padding: 5px 2px;
+    padding: 5px 2px;
 }
 
 #aboutSeller tr {
-	background-color: white;
+    background-color: white;
 }
 
 #aboutSeller td {
-	padding: 10px;
+    padding: 10px;
 }
 
 #aboutSeller {
-	/*	vertical-align: top !important;*/
-	vertical-align: top;
+    /*	vertical-align: top !important;*/
+    vertical-align: top;
 }
 
 #aboutSeller tbody {
-	/*vertical-align: top !important;*/
-	vertical-align: top;
+    /*vertical-align: top !important;*/
+    vertical-align: top;
 }
 
 #aboutSeller div {
-	padding: 5px;
+    padding: 5px;
 }
 
 .carDetails div, .sellerDetails div.block {
-	display: grid;
-	width: 800px;
-	grid-template-columns: 1fr 1fr;
-	align-self: flex-start;
+    display: grid;
+    width: 800px;
+    grid-template-columns: 1fr 1fr;
+    align-self: flex-start;
 }
 
 .carDetails table td {
-	padding-left: 15px;
+    padding-left: 15px;
 }
 
 #creationDate {
-	font-size: 12px;
-	width: 800px;
-	text-align: left;
-	margin: auto;
-	margin-top: 7px;
+    font-size: 12px;
+    width: 800px;
+    text-align: left;
+    margin: auto;
+    margin-top: 7px;
 }
 
 .spaceLineInAnnouncementView {
-	border-bottom: 1px #d7d7da solid;
+    border-bottom: 1px #d7d7da solid;
 }
 
 .admin-home-big-button {
-	height: 200px;
-	background-color: #2e3968;
-	color: white;
-	margin: auto;
-	display: inline-table;
+    height: 200px;
+    background-color: #2e3968;
+    color: white;
+    margin: auto;
+    display: inline-table;
 }
+
 .admin-home-big-button:hover {
-	background-color: #bf2505;
+    background-color: #bf2505;
 }
 
 .admin-home-big-button-text-inside {
-	width: 200px;
-	text-align: center;
-	display: table-cell;
-	vertical-align: middle;
+    width: 200px;
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
 }
