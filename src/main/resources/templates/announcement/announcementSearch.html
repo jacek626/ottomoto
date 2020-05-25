@@ -19,18 +19,34 @@
 						</td>
 					</tr>
 					<tr>
-						<td>           <!--   manufacturer       -->
+			<!--			<td>
 							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
 							<input type="text"  id="manufacturerLabel" dropDownElementId="manufacturer" onfocusin="clearInputAndFireTrigger(this);"  
-							readonly="readonly"   th:placeholder="#{manufacturer}"  class="inputAsSelect labelInAnnouncementSearch rewriteTextToHiddenInputOnKeyDown" th:value="*{manufacturerId != null ? manufacturerName : ''}" >
+							readonly="readonly"   th:placeholder="#{manufacturer}"  class="inputAsSelect labelInAnnouncementSearch rewriteTextToHiddenInputOnKeyDown"
+							th:value="*{manufacturerId != null ? manufacturerName : ''}" >
                                <input type="hidden" id="manufacturerValue"  th:field="*{manufacturerId}" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'li');">
 							<ul class="valuesDropDown" id="manufacturer">
 								<li th:each="element : ${manufacturerList}" th:text="${element.name}" 
 								th:class="*{manufacturerId} != null and ${element.id} == *{manufacturerId} ? 'selected' : '' "  th:value="${element.id}"></li>
 							</ul>
 							<button type="button" class="announcementClearButton" onclick="clearManufacturer(); clearVehicleModel();">X</button>
-						</td>
+						</td>-->
+
+					<!--	onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'li');-->
+
 						<td>
+							<select class="selectpicker" data-live-search="true" title="Marka" data-actions-box="true" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'option')">
+								<option th:each="element : ${manufacturerList}" th:text="${element.name}" th:value="${element.id}"></option>
+							</select>
+						</td>
+
+						<td>
+							<select class="selectpicker" id="modelSelect" data-live-search="true" title="Model" data-actions-box="true">
+								<option th:each="element : ${vehicleModelList}" th:text="${element.name}" th:value="${element.id}"></option>
+							</select>
+						</td>
+
+	<!--					<td>
 							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
 							<input type="text" id="vehicleModelLabel" dropDownElementId="vehicleModel"  th:placeholder="#{vehicleModelName}" onfocusin="clearInputAndFireTrigger(this);" 
 							 	readonly="readonly"    class="inputAsSelect labelInAnnouncementSearch rewriteTextToHiddenInputOnKeyDown" th:value="*{vehicleModel != null ? vehicleModel.name : ''}" >
@@ -42,7 +58,7 @@
 							</ul>
 							
 							<button type="button" class="announcementClearButton" onclick="clearVehicleModel();">X</button>
-						</td>  
+						</td>  -->
 						<td>
 							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
 							<input type="text" id="vehicleSubtypeLabel" dropDownElementId="vehicleSubtype" th:placeholder="#{type}"  readonly="readonly"  class="inputAsSelect labelInAnnouncementSearch rewriteTextToHiddenInputOnKeyDown"

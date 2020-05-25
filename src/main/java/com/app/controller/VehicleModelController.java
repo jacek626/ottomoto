@@ -40,9 +40,14 @@ public class VehicleModelController {
         List<VehicleModel> vehicleModelList =
                 vehicleModelRepository.findByManufacturerIdAndVehicleType(Long.valueOf(manufacturer),vehicleType);
 
+        model.addAttribute("vehicleModelList",vehicleModelList);
 
         return vehicleModelList.stream()
                 .map(e -> "<" + htmlElement + " value='" + e.getId() + "'>" + e.getName() + "</" + htmlElement + ">")
                 .collect(Collectors.joining(""));
+
+   /*     return vehicleModelList.stream()
+                .map(e -> "<" + htmlElement + " value='" + e.getId() + "'>" + e.getName() + "</" + htmlElement + ">")
+                .collect(Collectors.joining(""));*/
     }
 }

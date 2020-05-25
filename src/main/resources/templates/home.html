@@ -102,15 +102,19 @@
 
 	  </style>
 
+  </div>
+
 	  <div class="container">
 		  <div class="row bg-white">
 			  <div class="col-6 col-md-3 col-lg-2  d-flex align-items-stretch my-1"
 				   th:each="announcement, row : ${pages}">
 				  <div class="card">
-					  <img class="card-img-top  img-fluid" th:if="${#lists.size(announcement.pictures)} > 0"
+					<!--  <img class="card-img-top  img-fluid" th:if="${#lists.size(announcement.pictures)} > 0"
 						   th:src="${'images/' + announcement.pictures[0].miniatureRepositoryName}"></img>
 					  <img class="card-img-top img-fluid" th:if="${#lists.size(announcement.pictures)} == 0"
-						   th:src="@{'images/noPhoto.png'}"></img>
+						   th:src="@{'images/noPhoto.png'}"></img>-->
+					  <img class="card-img-top img-fluid"
+						   th:src="@{'images/noPhoto.png'}">
 					  <div class="card-body text-left" style="line-height:1;">
 						  <h5 class="card-title "
 							  th:text="${announcement.vehicleModel.manufacturer.name +  ' ' + announcement.vehicleModel.name}"></h5>
@@ -125,10 +129,26 @@
 				  </div>
 			  </div>
 		  </div>
+
+
+
 	  </div>
 
 
+
+
   </div>
+
+
+
      <div th:replace="fragments/footer :: footer"></div>
+	  <script type="text/javascript">
+				$(document).ready(function() {
+
+					$('.selectpicker').selectpicker();
+
+				});
+
+			</script>
   </body>
 </html>

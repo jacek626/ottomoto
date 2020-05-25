@@ -102,6 +102,7 @@ function setDropDownRangeListener(element) {
     });
 }
 
+// chyba usunac
 function showOrHidePositionsInDropDown(element) {
     $(element).parent().find('li:not(:contains("' + element.value + '"))').hide();
     $(element).parent().find('li:contains("' + element.value + '")').show()

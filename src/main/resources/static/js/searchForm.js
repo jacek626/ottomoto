@@ -9,13 +9,17 @@ function loadVehicleModel(manufacturer, vehicleType, typeOfHtmlElement) {
             typeOfHtmlElement
         },
         success(result) {
-            $("#vehicleModel").empty().append(result);
+         //   $("#vehicleModel").empty().append(result);
+            $("#modelSelect").empty().append(result);
+            $('#modelSelect').selectpicker('refresh');
 
-            if (typeOfHtmlElement === "li") {
+  /*          if (typeOfHtmlElement === "li") {
                 setDropDownListListener("#vehicleModel li");
                 $("#vehicleModelValue").val("");
                 $("#vehicleModelLabel").val("");
-            }
+            }*/
+
+      //      $('.selectpicker').selectpicker('val', ['Mustard','Relish']);
         },
         error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
