@@ -1,31 +1,43 @@
 <!DOCTYPE html> 
 		<div id="pagination" th:fragment="pagination(link)">
 
-				<div style="margin-top: 10px;">
-					<a
-						th:href="@{ ${link} (page=${page-1}, size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
-						th:class="${page == 1} ? disabled" style="font-weight: bold;">
-					</a>
-	
-					<span th:if="${pages.totalPages > 0}" class="pagination"
-						th:each="pageNumber : ${pageNumbers}">
-						<a
-						th:href="@{ ${link} (page=${pageNumber},size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
-						th:if="${pageNumber - 2 <= page && page < pageNumber + 3}"
-						th:text="${pageNumber}"
-						th:class="${pageNumber==pages.number+1} ? active">
-						</a>
-	
-					</span> 
+			<nav>
+				<ul class="pagination justify-content-center">
 
-					<a
-						th:href="@{ ${link} (page=${1+1}, size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
-						style="font-weight: bold;">
-					</a>
-				</div>
-	
-				<select id="pageSizeSelect" th:value="${size}"> 
-					<option th:each="pageSize : ${pageSizes}" th:value="${pageSize}"
-						th:text="${pageSize}" th:selected="${pageSize} == ${size}"></option>
-				</select>
-			</div>
+					<li class="page-item">
+						<a style="font-weight: bold;"
+						   th:class="${page == 1} ? 'disabled page-link' : 'page-link'"
+						   th:href="@{ ${link} (page=${page-1}, size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}">&laquo;
+						</a>
+					</li>
+
+					<li class="page-item" th:class="${pageNumber==pages.number+1} ? 'active page-item' : 'page-item'"
+						th:each="pageNumber : ${pageNumbers}"
+						th:if="${pages.totalPages > 0}">
+						<a
+								class="page-link"
+								th:href="@{ ${link} (page=${pageNumber},size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
+								th:if="${pageNumber - 2 <= page && page < pageNumber + 3}"
+								th:text="${pageNumber}">
+						</a>
+					</li>
+
+					<li class="page-item">
+						<a th:class="${page<totalPages} ? ' page-link' : 'disabled page-link'"
+						   th:href="@{ ${link} (page=${page+1}, size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
+						>&raquo;
+						</a>
+					</li>
+				</ul>
+
+			</nav>
+
+			<!--			<select id="pageSizeSelect" th:value="${size}">
+                            <option th:each="pageSize : ${pageSizes}" th:value="${pageSize}" th:text="${pageSize}" th:selected="${pageSize} == ${size}"></option>
+                        </select>-->
+			<select class="selectpicker" id="pageSizeSelect" th:value="${size}">
+				<option th:each="pageSize : ${pageSizes}" th:selected="${pageSize} == ${size}" th:text="${pageSize}"
+						th:value="${pageSize}"></option>
+			</select>
+
+		</div>

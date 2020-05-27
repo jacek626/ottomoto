@@ -224,9 +224,9 @@ public class Announcement implements EntityForSearchStrategy {
 	}
 
 	public Long getManufacturerId() {
-		if (vehicleModel != null && vehicleModel.getManufacturer() != null)
-			return vehicleModel.getManufacturer().getId();
-		else
-			return null;
-	}
+        if (vehicleModel != null && vehicleModel.getManufacturer() != null)
+            return vehicleModel.getManufacturer().getId();
+
+        return manufacturerId;
+    }
 }

@@ -192,14 +192,13 @@ public class ManufacturerController {
     }
 
 
-	@RequestMapping(value="loadManufacturer",method=RequestMethod.GET)
-	public @ResponseBody String loadManufacturer(
-			@RequestParam("vehicleType") String vehicleType,
-			@RequestParam("typeOfHtmlElement") String htmlElement, Model model,
-			Authentication authentication, ModelMap map) {
+	@RequestMapping(value = "loadManufacturer", method = RequestMethod.GET)
+    public @ResponseBody
+    String loadManufacturer(
+            @RequestParam("vehicleType") String vehicleType,
+            @RequestParam("typeOfHtmlElement") String htmlElement) {
 
         List<ManufacturerProjection> manufacturerList = manufacturerRepository.findByVehicleType(VehicleType.valueOf(vehicleType));
-
 
         return manufacturerList.stream()
                 .map(e -> "<" + htmlElement + " value='" + e.getId() + "'>" + e.getName() + "</" + htmlElement + ">")

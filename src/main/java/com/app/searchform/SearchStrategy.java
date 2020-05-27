@@ -43,6 +43,7 @@ public interface SearchStrategy<E extends EntityForSearchStrategy> {
         model.put("sort", paginationDetails.getSort());
         model.put("size", paginationDetails.getSize());
         model.put("pageSizes", PaginationPageSize.LIST);
+        model.put("totalPages", totalPages);
 
         if(totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1 ,totalPages).boxed().collect(Collectors.toList());

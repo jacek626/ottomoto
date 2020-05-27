@@ -7,17 +7,25 @@
 			<tr>
 				<td colspan="5">
 					<label for="vehicleType" th:text="#{vehicleType}"></label>
-					<select id="vehicleType"
-							onchange="controlElementVisibility(this.value == 'CAR' ? true : false, '.doorsRow','table-row'); clearManufacturer(); clearVehicleModel(); clearVehicleModelDropDown();clearManufacturerDropDown();  loadManufacturer(this.value, 'li');   "
+					<!--					<select id="vehicleTypeOld"
+                                                onchange="controlElementVisibility(this.value == 'CAR' ? true : false, '.doorsRow','table-row'); clearManufacturer(); clearVehicleModel(); clearVehicleModelDropDown();clearManufacturerDropDown();  loadManufacturer(this.value, 'li');   "
+                                                th:field="*{vehicleType}">
+                                            <option
+                                                    th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
+                                                    th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
+                                                                th:selected="*{vehicleType}">
+                                            </option>
+                                        </select>-->
+					<select class="form-control selectpicker" data-actions-box="true" data-live-search="true"
+							id="vehicleType" onchange="clearVehicleModel(); loadManufacturer(this.value, 'option');"
 							th:field="*{vehicleType}">
-						<option
-								th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
-								th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
-											th:selected="*{vehicleType}">
-									</option>
-							</select> 
-						</td>
-					</tr>
+						<option th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
+								th:selected="*{vehicleType}" th:text="${vehicleTypeElement.label}"
+								th:value="${vehicleTypeElement}"></option>
+					</select>
+
+				</td>
+			</tr>
 					<tr>
 			<!--			<td>
 							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
@@ -35,14 +43,21 @@
 					<!--	onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'li');-->
 
 						<td>
-							<select class="selectpicker" data-live-search="true" title="Marka" data-actions-box="true" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'option')">
-								<option th:each="element : ${manufacturerList}" th:text="${element.name}" th:value="${element.id}"></option>
+							<select class="form-control selectpicker" data-actions-box="true" data-live-search="true"
+									id="manufacturer"
+									onchange="loadVehicleModel(this.value, $('#vehicleType').val(), 'option');"
+									th:field="*{manufacturerId}"
+									title="Marka">
+								<option th:each="manufacturer : ${manufacturerList}" th:selected="*{manufacturerId}"
+										th:text="${manufacturer.name}" th:value="${manufacturer.id}"></option>
 							</select>
 						</td>
 
 						<td>
-							<select class="selectpicker" id="modelSelect" data-live-search="true" title="Model" data-actions-box="true">
-								<option th:each="element : ${vehicleModelList}" th:text="${element.name}" th:value="${element.id}"></option>
+							<select class="selectpicker" data-actions-box="true" data-live-search="true"
+									id="vehicleModel" th:field="*{vehicleModel}" title="Model">
+								<option th:each="element : ${vehicleModelList}" th:selected="*{vehicleModel.id}"
+										th:text="${element.name}" th:value="${element.id}"></option>
 							</select>
 						</td>
 
@@ -60,70 +75,222 @@
 							<button type="button" class="announcementClearButton" onclick="clearVehicleModel();">X</button>
 						</td>  -->
 						<td>
-							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
-							<input type="text" id="vehicleSubtypeLabel" dropDownElementId="vehicleSubtype" th:placeholder="#{type}"  readonly="readonly"  class="inputAsSelect labelInAnnouncementSearch rewriteTextToHiddenInputOnKeyDown"
-							 th:value="*{vehicleSubtype != null ? vehicleSubtype.label : ''}" 
-							   onfocusin="clearInputAndFireTrigger(this);" >
-						
-							<input type="hidden" id="vehicleSubtypeValue"  th:field="*{vehicleSubtype}">
-							<ul class="valuesDropDown" id="vehicleSubtype">
-								<li th:each="element : ${vehicleSubtypeList}" th:text="${element.label}" 
-								 	 th:class="*{vehicleSubtype} != null and ${element} == *{vehicleSubtype} ? 'selected' : '' "  th:value="${element}"></li> 
-							</ul>
-							
-							<button type="button" class="announcementClearButton" onclick="clearVehicleSubtype(); ">X</button>
-						</td>
-					    <td>
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('priceFrom','searchFields.priceFrom',#{priceFrom},${pricesList},'#priceFrom','#priceTo', 'zł', false)"/>  
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('priceTo','searchFields.priceTo',#{to},${pricesList},'#priceFrom','#priceTo', 'zł',true)"/>  
-						</td>  
-						<td class="yearInput">
-							<span  th:replace="components/dropDownFromTo::dropDownFromTo('productionYearFrom','searchFields.productionYearFrom',#{productionYearFrom},${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )},'#productionYearFrom','#productionYearTo', null, false)"/>  
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('productionYearTo','searchFields.productionYearTo',#{to},${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )},'#productionYearFrom','#productionYearTo', null, true)"/>  
-						</td>  
-					</tr>	
-					<tr>	
-						<td>
-						 	<span th:replace="components/dropDownMultiSelect ::dropDownMultiSelect('carColor','searchFields.colorList','com.app.enums.CarColor','searchFields.getSelectedCarColors()',#{color})"/>
-						<td>
-							<span th:replace="components/dropDownMultiSelect ::dropDownMultiSelect('fuelType','searchFields.fuelTypeList','com.app.enums.FuelType', 'searchFields.getSelectedFuelTypes()', #{fuelType})"/>
+							<select class="selectpicker" data-actions-box="true" data-live-search="true"
+									th:field="*{vehicleSubtype}" th:title="#{type}">
+								<option th:each="element : ${vehicleSubtypeList}" th:selected="*{vehicleSubtype}"
+										th:text="${element.label}" th:value="${element}"></option>
+							</select>
 
-						 </td>  
-						<td>
-							<!-- <span th:replace="components/dropDownBoolean ::dropDownBoolean('damaged','searchFields.damaged',#{damaged})"/>  -->
-						</td>  
-						<td>
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('engineCapacityFrom','searchFields.engineCapacityFrom',#{engineCapacityFrom},${engineCapacityList},'#engineCapacityFrom','#engineCapacityTo', 'cm&#179;', false)"/> 
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('engineCapacityTo','searchFields.engineCapacityTo',#{to},${engineCapacityList},'#engineCapacityFrom','#engineCapacityTo', 'cm&#179;', true)"/> 
+							<!--							<input type="hidden" class="hiddenInputToFilterResults" onchange="showOrHidePositionsInDropDown(this);"  />
+                                                        <input type="text" id="vehicleSubtypeLabel" dropDownElementId="vehicleSubtype" th:placeholder="#{type}"  readonly="readonly"  class="inputAsSelect labelInAnnouncementSearch rewriteTextToHiddenInputOnKeyDown"
+                                                         th:value="*{vehicleSubtype != null ? vehicleSubtype.label : ''}"
+                                                           onfocusin="clearInputAndFireTrigger(this);" >
+
+                                                        <input type="hidden" id="vehicleSubtypeValue"  th:field="*{vehicleSubtype}">
+                                                        <ul class="valuesDropDown" id="vehicleSubtype">
+                                                            <li th:each="element : ${vehicleSubtypeList}" th:text="${element.label}"
+                                                                  th:class="*{vehicleSubtype} != null and ${element} == *{vehicleSubtype} ? 'selected' : '' "  th:value="${element}"></li>
+                                                        </ul>
+
+                                                        <button type="button" class="announcementClearButton" onclick="clearVehicleSubtype(); ">X</button>-->
 						</td>
 						<td>
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('enginePowerFrom','searchFields.enginePowerFrom',#{enginePowerFrom},${engineCapacityList},'#enginePowerFrom','#enginePowerTo', 'KM ', false)"/> 
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('enginePowerTo','searchFields.enginePowerTo',#{to},${engineCapacityList},'#enginePowerFrom','#enginePowerTo', 'KM ', true)"/> 
-						</td>  
-					</tr>
+							<select class="selectpicker" data-actions-box="true" data-live-search="true"
+									data-show-subtext="true" id="priceFrom"
+									onchange="validateRange($(this), $('#priceTo'), $(this).val());"
+									th:field="*{searchFields.priceFrom}" th:title="#{priceFrom}">
+								<option data-subtext="zł" th:each="element : ${prices}"
+										th:selected="*{searchFields.priceFrom}" th:text="${element}"
+										th:value="${element}"></option>
+							</select>
+
+							<select class="selectpicker" data-actions-box="true" data-live-search="true"
+									data-show-subtext="true" id="priceTo"
+									onchange="validateRange($('#priceFrom'), $(this), $(this).val());"
+									th:field="*{searchFields.priceTo}" th:title="#{to}">
+								<option data-subtext="zł" th:each="element : ${prices}"
+										th:selected="*{searchFields.priceTo}" th:text="${element}"
+										th:value="${element}"></option>
+							</select>
+						</td>
+						<td>
+							<select class="selectpicker" data-actions-box="true" data-live-search="true"
+									id="productionYearFrom"
+									onchange="validateRange($(this), $('#productionYearFrom'), $(this).val());"
+									th:field="*{searchFields.productionYearFrom}" th:title="#{productionYearFrom}">
+								<option th:each="element : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}"
+										th:selected="*{searchFields.productionYearFrom}" th:text="${element}"
+										th:value="${element}"></option>
+							</select>
+
+							<select class="selectpicker" data-live-search="true" id="productionYearTo"
+									onchange="validateRange($('#productionYearFrom'), $(this), $(this).val());"
+									th:field="*{searchFields.productionYearTo}" th:title="#{to}">
+								<option th:each="element : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}"
+										th:selected="*{searchFields.productionYearTo}" th:text="${element}"
+										th:value="${element}"></option>
+							</select>
+						</td>
+						<!--			<td>
+                                        <span th:replace="components/dropDownFromTo::dropDownFromTo('priceFrom','searchFields.priceFrom',#{priceFrom},${pricesList},'#priceFrom','#priceTo', 'zł', false)"/>
+                                        <span th:replace="components/dropDownFromTo::dropDownFromTo('priceTo','searchFields.priceTo',#{to},${pricesList},'#priceFrom','#priceTo', 'zł',true)"/>
+                                    </td> -->
+						<!--				<td class="yearInput">
+                                            <span  th:replace="components/dropDownFromTo::dropDownFromTo('productionYearFrom','searchFields.productionYearFrom',#{productionYearFrom},${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )},'#productionYearFrom','#productionYearTo', null, false)"/>
+                                            <span th:replace="components/dropDownFromTo::dropDownFromTo('productionYearTo','searchFields.productionYearTo',#{to},${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )},'#productionYearFrom','#productionYearTo', null, true)"/>
+                                        </td>  -->
+					</tr>	
 					<tr>
 						<td>
-						    <span th:replace="components/dropDownBoolean ::dropDownBoolean('accidents','searchFields.accidents',#{accidents})"/> 
-						    <span th:replace="components/dropDownBoolean ::dropDownBoolean('damaged','searchFields.damaged',#{damaged})"/> 
+							<!--	<span th:replace="components/dropDownMultiSelect ::dropDownMultiSelect('carColor','searchFields.colorList','com.app.enums.CarColor','searchFields.getSelectedCarColors()',#{color})"/>-->
+
+							<select class="selectpicker" data-live-search="true" id="carColor" multiple
+									th:field="*{searchFields.carColors}" th:title="#{color}">
+								<option th:each="element : ${T(com.app.enums.CarColor).values()}"
+										th:selected="*{searchFields.carColors}" th:text="${element.label}"
+										th:value="${element}"></option>
+							</select>
+
+						<td>
+							<select class="selectpicker" data-live-search="true" id="fuelType" multiple
+									th:field="*{searchFields.fuelTypes}" th:title="#{fuelType}">
+								<option th:each="element : ${T(com.app.enums.FuelType).values()}"
+										th:selected="*{searchFields.fuelTypes}" th:text="${element.label}"
+										th:value="${element}"></option>
+							</select>
+							<!--<span th:replace="components/dropDownMultiSelect ::dropDownMultiSelect('fuelType','searchFields.fuelTypeList','com.app.enums.FuelType', 'searchFields.getSelectedFuelTypes()', #{fuelType})"/>-->
+
 						</td>
 						<td>
-							<span th:replace="components/dropDownBoolean ::dropDownBoolean('firstOwner','searchFields.firstOwner',#{firstOwner})"/> 
+							<!-- <span th:replace="components/dropDownBoolean ::dropDownBoolean('damaged','searchFields.damaged',#{damaged})"/>  -->
 						</td>
 						<td>
-							<span th:replace="components/dropDownBoolean ::dropDownBoolean('netPrice','searchFields.netPrice',#{netPrice})"/> 
+
+							<select class="selectpicker" data-actions-box="true" data-live-search="true"
+									data-show-subtext="true" id="engineCapacityFrom"
+									onchange="validateRange($(this), $('#engineCapacityTo'), $(this).val());"
+									th:field="*{searchFields.engineCapacityFrom}" th:title="#{engineCapacityFrom}">
+								<option data-subtext="cm&#179;" th:each="element : ${engineCapacities}"
+										th:selected="*{searchFields.engineCapacityFrom}" th:text="${element}"
+										th:value="${element}"></option>
+							</select>
+
+							<select class="selectpicker" data-actions-box="true" data-live-search="true"
+									data-show-subtext="true" id="engineCapacityTo"
+									onchange="validateRange($('#engineCapacityTo'), $(this), $(this).val());"
+									th:field="*{searchFields.engineCapacityTo}" th:title="#{to}">
+								<option data-subtext="cm&#179;" th:each="element : ${engineCapacities}"
+										th:selected="*{searchFields.engineCapacityTo}" th:text="${element}"
+										th:value="${element}"></option>
+							</select>
+
+							<!--	<span th:replace="components/dropDownFromTo::dropDownFromTo('engineCapacityFrom','searchFields.engineCapacityFrom',#{engineCapacityFrom},${engineCapacities},'#engineCapacityFrom','#engineCapacityTo', 'cm&#179;', false)"/>
+                                <span th:replace="components/dropDownFromTo::dropDownFromTo('engineCapacityTo','searchFields.engineCapacityTo',#{to},${engineCapacities},'#engineCapacityFrom','#engineCapacityTo', 'cm&#179;', true)"/>-->
 						</td>
 						<td>
-							<span th:replace="components/dropDownBoolean ::dropDownBoolean('priceNegotiate','searchFields.priceNegotiate',#{priceNegotiate})"/> 
+
+							<select class="selectpicker" data-actions-box="true" data-live-search="true"
+									data-show-subtext="true" id="enginePowerFrom"
+									onchange="validateRange($(this), $('#enginePowerTo'), $(this).val());"
+									th:field="*{searchFields.enginePowerFrom}" th:title="#{enginePowerFrom}">
+								<option data-subtext="KM" th:each="element : ${enginePowers}"
+										th:selected="*{searchFields.enginePowerFrom}" th:text="${element}"
+										th:value="${element}"></option>
+							</select>
+
+							<select class="selectpicker" data-actions-box="true" data-live-search="true"
+									data-show-subtext="true" id="enginePowerTo"
+									onchange="validateRange($('#engineCapacityFrom'), $(this), $(this).val());"
+									th:field="*{searchFields.enginePowerTo}" th:title="#{to}">
+								<option data-subtext="KM" th:each="element : ${enginePowers}"
+										th:selected="*{searchFields.enginePowerTo}" th:text="${element}"
+										th:value="${element}"></option>
+							</select>
+
+
+							<!--
+                            <span th:replace="components/dropDownFromTo::dropDownFromTo('enginePowerFrom','searchFields.enginePowerFrom',#{enginePowerFrom},${engineCapacityList},'#enginePowerFrom','#enginePowerTo', 'KM ', false)"/>
+                            <span th:replace="components/dropDownFromTo::dropDownFromTo('enginePowerTo','searchFields.enginePowerTo',#{to},${engineCapacityList},'#enginePowerFrom','#enginePowerTo', 'KM ', true)"/>
+                                                    -->
+
 						</td>
-						<td>
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('mileageFrom','searchFields.mileageFrom',#{mileageFrom},${mileageList},'#mileageFrom','#mileageTo', 'km' , false)"/>
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('mileageTo','searchFields.mileageTo',#{to},${mileageList},'#mileageFrom','#mileageTo', 'km', true)"/>
-						</td> 
+					</tr>
+			<tr>
+				<td class="form-group">
+					<label for="accidents" th:text="#{accidents}"></label>
+					<select class="selectpicker" id="accidents" th:field="*{searchFields.accidents}"
+							th:title="#{accidents}">
+						<option th:each="element : ${booleanValues}" th:selected="*{searchFields.accidents}"
+								th:text="${element.label}" th:value="${element}"></option>
+					</select>
+
+
+					<!--    <span th:replace="components/dropDownBoolean ::dropDownBoolean('accidents','searchFields.accidents',#{accidents})"/> -->
+					<!--    <span th:replace="components/dropDownBoolean ::dropDownBoolean('damaged','searchFields.damaged',#{damaged})"/>-->
+
+					<label for="damaged" th:text="#{damaged}"></label>
+					<select class="selectpicker" id="damaged" th:field="*{searchFields.damaged}" th:title="#{damaged}">
+						<option th:each="element : ${booleanValues}" th:selected="*{searchFields.damaged}"
+								th:text="${element.label}" th:value="${element}"></option>
+					</select>
+				</td>
+				<td>
+					<!--<span th:replace="components/dropDownBoolean ::dropDownBoolean('firstOwner','searchFields.firstOwner',#{firstOwner})"/>-->
+					<label for="firstOwner" th:text="#{firstOwner}"></label>
+					<select class="selectpicker" id="firstOwner" th:field="*{searchFields.firstOwner}"
+							th:title="#{firstOwner}">
+						<option th:each="element : ${booleanValues}" th:selected="*{searchFields.firstOwner}"
+								th:text="${element.label}" th:value="${element}"></option>
+					</select>
+				</td>
+				<td>
+					<label for="netPrice" th:text="#{netPrice}"></label>
+					<select class="selectpicker" id="netPrice" th:field="*{searchFields.netPrice}"
+							th:title="#{netPrice}">
+						<option th:each="element : ${booleanValues}" th:selected="*{searchFields.netPrice}"
+								th:text="${element.label}" th:value="${element}"></option>
+					</select>
+					<!--	<span th:replace="components/dropDownBoolean ::dropDownBoolean('netPrice','searchFields.netPrice',#{netPrice})"/> -->
+				</td>
+				<td>
+					<label for="priceNegotiate" th:text="#{priceNegotiate}"></label>
+					<select class="selectpicker" id="priceNegotiate" th:field="*{searchFields.priceNegotiate}"
+							th:title="#{priceNegotiate}">
+						<option th:each="element : ${booleanValues}" th:selected="*{searchFields.priceNegotiate}"
+								th:text="${element.label}" th:value="${element}"></option>
+					</select>
+					<!--<span th:replace="components/dropDownBoolean ::dropDownBoolean('priceNegotiate','searchFields.priceNegotiate',#{priceNegotiate})"/> -->
+				</td>
+				<td>
+					<!--			<span th:replace="components/dropDownFromTo::dropDownFromTo('mileageFrom','searchFields.mileageFrom',#{mileageFrom},${mileages},'#mileageFrom','#mileageTo', 'km' , false)"/>
+                                <span th:replace="components/dropDownFromTo::dropDownFromTo('mileageTo','searchFields.mileageTo',#{to},${mileages},'#mileageFrom','#mileageTo', 'km', true)"/>
+    -->
+
+
+					<select class="selectpicker" data-actions-box="true" data-live-search="true"
+							data-show-subtext="true" id="mileageFrom"
+							onchange="validateRange($(this), $('#mileageTo'), $(this).val());"
+							th:field="*{searchFields.enginePowerFrom}" th:title="#{mileageFrom}">
+						<option data-subtext="km" th:each="element : ${mileages}"
+								th:selected="*{searchFields.mileageFrom}" th:text="${element}"
+								th:value="${element}"></option>
+					</select>
+
+					<select class="selectpicker" data-actions-box="true" data-live-search="true"
+							data-show-subtext="true" id="mileageTo"
+							onchange="validateRange($('#mileageFrom'), $(this), $(this).val());"
+							th:field="*{searchFields.mileageTo}" th:title="#{to}">
+						<option data-subtext="km" th:each="element : ${mileages}"
+								th:selected="*{searchFields.mileageTo}" th:text="${element}"
+								th:value="${element}"></option>
+					</select>
+
+				</td>
 					</tr>
 	<!-- 				<tr>
 						<td th:style="*{vehicleType == T(com.app.enums.VehicleType).CAR} ? '' : 'display:none'" class="doorsRow">
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('doorsFrom','searchFields.doorsFrom',#{doorsFrom},${doorsList},'#doorsFrom','#doorsTo', null)"/> 
-							<span th:replace="components/dropDownFromTo::dropDownFromTo('doorsTo','searchFields.doorsTo',#{doorsTo},${doorsList},'#doorsFrom','#doorsTo', null)"/> 
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('doorsFrom','searchFields.doorsFrom',#{doorsFrom},${doors},'#doorsFrom','#doorsTo', null)"/>
+							<span th:replace="components/dropDownFromTo::dropDownFromTo('doorsTo','searchFields.doorsTo',#{doorsTo},${doors},'#doorsFrom','#doorsTo', null)"/>
 						</td>  
 					</tr> -->
 					
@@ -132,6 +299,6 @@
 						<td colspan="7"><input type="submit" th:value="#{search}" /></td>
 					</tr>
 				</table>
-				<input type="hidden" name="size" th:value="${size}">
-			</form>
+		<!--<input type="text" name="size" th:value="${size}">-->
+	</form>
 </div>

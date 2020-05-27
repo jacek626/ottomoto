@@ -129,26 +129,15 @@
 				  </div>
 			  </div>
 		  </div>
-
-
-
 	  </div>
-
-
-
-
   </div>
 
+  <div th:replace="fragments/footer :: footer"></div>
+  <script type="text/javascript">
+	  $(document).ready(function () {
+		  $('.selectpicker').selectpicker();
+	  });
+  </script>
 
-
-     <div th:replace="fragments/footer :: footer"></div>
-	  <script type="text/javascript">
-				$(document).ready(function() {
-
-					$('.selectpicker').selectpicker();
-
-				});
-
-			</script>
   </body>
 </html>

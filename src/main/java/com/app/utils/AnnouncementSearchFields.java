@@ -27,15 +27,15 @@ public class AnnouncementSearchFields implements UrlParamsPreparer {
     private Integer engineCapacityTo;
     private Integer enginePowerFrom;
     private Integer enginePowerTo;
-	private Byte doorsFrom;
+    private Byte doorsFrom;
     private Byte doorsTo;
     private BooleanValuesForDropDown accidents = BooleanValuesForDropDown.ALL;
     private BooleanValuesForDropDown firstOwner = BooleanValuesForDropDown.ALL;
     private BooleanValuesForDropDown damaged = BooleanValuesForDropDown.ALL;
     private BooleanValuesForDropDown netPrice = BooleanValuesForDropDown.ALL;
     private BooleanValuesForDropDown priceNegotiate = BooleanValuesForDropDown.ALL;
-    private List<CarColor> colorList = new ArrayList<>();
-    private List<FuelType> fuelTypeList = new ArrayList<>();
+    private List<CarColor> carColors = new ArrayList<>();
+    private List<FuelType> fuelTypes = new ArrayList<>();
     private String colorListLabelsAsString;
 
     private BooleanBuilder predicate;
@@ -88,8 +88,8 @@ public class AnnouncementSearchFields implements UrlParamsPreparer {
         addUrlParam("searchFields.enginePowerFrom", enginePowerFrom);
         addUrlParam("searchFields.enginePowerTo", enginePowerTo);
 
-        urlParams.append("searchFields.colorList=").append(colorList.stream().map(Object::toString).collect(Collectors.joining(","))).append("&");
-        urlParams.append("searchFields.fuelTypeList=").append(fuelTypeList.stream().map(Object::toString).collect(Collectors.joining(","))).append("&");
+        urlParams.append("searchFields.colorList=").append(carColors.stream().map(Object::toString).collect(Collectors.joining(","))).append("&");
+        urlParams.append("searchFields.fuelTypeList=").append(fuelTypes.stream().map(Object::toString).collect(Collectors.joining(","))).append("&");
 
         return urlParams.toString();
     }
@@ -113,8 +113,8 @@ public class AnnouncementSearchFields implements UrlParamsPreparer {
     }
 
     private void preparePredicateForColor() {
-        if (colorList.size() > 0) {
-            predicate.and(QAnnouncement.announcement.carColor.in(colorList));
+        if (carColors.size() > 0) {
+            predicate.and(QAnnouncement.announcement.carColor.in(carColors));
         }
     }
 
@@ -162,23 +162,23 @@ public class AnnouncementSearchFields implements UrlParamsPreparer {
     }
 
     private void preparePredicateForFuelType() {
-        if (fuelTypeList.size() > 0) {
-            predicate.and(QAnnouncement.announcement.fuelType.in(fuelTypeList));
+        if (fuelTypes.size() > 0) {
+            predicate.and(QAnnouncement.announcement.fuelType.in(fuelTypes));
         }
     }
 
     private void preparePredicateForCarColor() {
-        if (colorList.size() > 0) {
-            predicate.and(QAnnouncement.announcement.carColor.in(colorList));
+        if (carColors.size() > 0) {
+            predicate.and(QAnnouncement.announcement.carColor.in(carColors));
         }
     }
 
     public String getSelectedCarColors() {
-        return colorList.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
+        return carColors.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
     }
 
     public String getSelectedFuelTypes() {
-        return fuelTypeList.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
+        return fuelTypes.stream().map(e -> e.getLabel()).collect(Collectors.joining(","));
     }
 
 }

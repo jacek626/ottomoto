@@ -9,17 +9,7 @@ function loadVehicleModel(manufacturer, vehicleType, typeOfHtmlElement) {
             typeOfHtmlElement
         },
         success(result) {
-         //   $("#vehicleModel").empty().append(result);
-            $("#modelSelect").empty().append(result);
-            $('#modelSelect').selectpicker('refresh');
-
-  /*          if (typeOfHtmlElement === "li") {
-                setDropDownListListener("#vehicleModel li");
-                $("#vehicleModelValue").val("");
-                $("#vehicleModelLabel").val("");
-            }*/
-
-      //      $('.selectpicker').selectpicker('val', ['Mustard','Relish']);
+            $('#vehicleModel').empty().append(result).selectpicker('refresh');
         },
         error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
@@ -38,12 +28,7 @@ function loadManufacturer(vehicleType, typeOfHtmlElement) {
             typeOfHtmlElement
         },
         success(result) {
-            $("#manufacturer").empty().append(result);
-            setDropDownListListener(".valuesDropDown  li");
-
-            if ($("#vehicleModel")) {
-                $("#manufacturer").change();
-            }
+            $('#manufacturer').empty().append(result).selectpicker('refresh');
         },
         error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
@@ -71,7 +56,30 @@ function loadVehicleSubtypes(vehicleType, typeOfHtmlElement) {
     });
 }
 
-function validateRange(from, to, currentElement) {
+function validateRange(from, to, currentElementValue) {
+    if (from === undefined || to === undefined)
+        return;
+
+    let fromAsNumber = parseInt(from.val().replace(/\D/g, ""));
+    let toAsNumber = parseInt(to.val().replace(/\D/g, ""));
+
+    if (fromAsNumber > toAsNumber) {
+        if (currentElementValue === undefined) {
+            from.val("");
+            from.selectpicker('refresh')
+        } else {
+            if (currentElementValue === from.val()) {
+                to.val("");
+                to.selectpicker('refresh')
+            } else {
+                from.val("");
+                from.selectpicker('refresh')
+            }
+        }
+    }
+}
+
+function validateRangeOld(from, to, currentElement) {
     if ($(from).val() !== "" && $(to).val() !== "") {
         let fromAsNumber = parseInt($(from).val().replace(/\D/g, ""), 10);
         let toAsNumber = parseInt($(to).val().replace(/\D/g, ""), 10);
@@ -86,7 +94,34 @@ function validateRange(from, to, currentElement) {
     }
 }
 
-$(document).on("focusin", "#pageSizeSelect", function () {
+$('#pageSizeSelect').on('changed.bs.select', function (event, clickedIndex, isSelected, previousValue) {
+    let current = $(this).val();
+    let href = window.location.href;
+
+    if (href.indexOf("size=") === -1) {
+        let lastCharacter = href.slice(-1);
+
+        if (lastCharacter === "/") {
+            href = href.slice(0, href.length - 1);
+        }
+
+        if (href.indexOf("?") === -1) {
+            window.location.replace(href + "?size=" + current);
+        } else {
+            window.location.replace(href + "&size=" + current);
+        }
+    } else {
+        href = href.replace("size=" + previousValue, "size=" + current);
+
+        window.location.replace(href);
+    }
+
+    //   previousValue = current;
+    //  $(this).selectpicker('refresh');
+});
+
+
+/*$(document).on("focusin", "#pageSizeSelect", function () {
     $(this).data("val", $(this).val());
 }).on("change", "#pageSizeSelect", function () {
     let prev = $(this).data("val");
@@ -110,7 +145,7 @@ $(document).on("focusin", "#pageSizeSelect", function () {
 
         window.location.replace(href);
     }
-});
+});*/
 
 
 function clearManufacturer() {
@@ -127,8 +162,7 @@ function clearVehicleModelDropDown() {
 }
 
 function clearVehicleModel() {
-    $("#manufacturerLabel").val("");
-    $("#manufacturerValue").val("");
+    $("#vehicleModel").empty().selectpicker('refresh');
 }
 
 function clearVehicleSubtype() {

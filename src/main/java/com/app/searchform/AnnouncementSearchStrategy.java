@@ -72,11 +72,11 @@ public class AnnouncementSearchStrategy implements SearchStrategy<Announcement> 
         Map<String, Object> model = new HashMap<>();
 
         model.put("pageSizes", PaginationPageSize.LIST);
-        model.put("pricesList", SearchEngineDropDownValues.CAR_PRICES_LIST);
-        model.put("mileageList", SearchEngineDropDownValues.MILEAGE_LIST);
-        model.put("engineCapacityList", SearchEngineDropDownValues.ENGINE_CAPACITY_LIST);
-        model.put("enginePowerList", SearchEngineDropDownValues.ENGINE_POWER_LIST);
-        model.put("doorsList", SearchEngineDropDownValues.DOOR_LIST);
+        model.put("prices", SearchEngineDropDownValues.CAR_PRICES);
+        model.put("mileages", SearchEngineDropDownValues.MILEAGES);
+        model.put("engineCapacities", SearchEngineDropDownValues.ENGINE_CAPACITIES);
+        model.put("enginePowers", SearchEngineDropDownValues.ENGINE_POWERS);
+        model.put("doors", SearchEngineDropDownValues.DOORS);
         model.put("booleanValues", BooleanValuesForDropDown.values());
 
         return model;

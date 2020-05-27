@@ -1,5 +1,25 @@
 <!DOCTYPE html>
-<div class="footer-style" th:fragment="footer">
+<footer class="page-footer font-small text-light mt-3" style="background-color: #2e3968" th:fragment="footer">
+    <!--<div class="footer-style" th:fragment="footer">-->
+
+    <div class="text-center py-5">Strona powstała w celach edukacyjnych
+    </div>
+
+    <div class="container ">
+        <div class="row text-justify">
+            <div class="col-sm-5">
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua.
+            </div>
+            <div class="col-sm-7 mb-4">
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua.
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua.
+            </div>
+        </div>
+    </div>
+
 
     <script th:src="@{/js/jquery-3.3.1.min.js}" type="text/javascript"></script>
     <script th:src="@{/js/jodit.min.js}" type="text/javascript"></script>
@@ -16,25 +36,16 @@
 
     <script type="text/javascript">
 
-        /* 			$('.rangeInput').maskNumber({
-                          integer: true,
-                          thousands: ' '
-                    });
 
-                    $('.yearInput input').maskNumber({
-                          integer: true,
-                          thousands: ''
-                    }); */
+        $(document).on("focusin", "#pageSizeSelect", function () {
+            alert(1);
+            $(this).data("val", $(this).val());
+        });
 
 
-        /* 	 $('.rangeInput').mask('0000-0000'); */
         $(document).ready(function () {
             $('.rangeInput').each(function () {
                 let unit = this.getAttribute('unit');
-                //	if(unit != null)
-                //	$(this).inputmask({ alias : "numeric" ,suffix : " " + unit, groupSeparator : "," });
-                //	else
-                //		$(this).inputmask({ alias : "numeric" });
 
                 if (unit != null)
                     $(this).inputmask({alias: "numeric", suffix: " ", groupSeparator: " "});
@@ -43,7 +54,6 @@
             })
         });
 
-        /*  						$('.rangeInput').inputmask({ alias : "numeric" ,suffix: this.getAttribute('unit'), groupSeparator : "," });    */
         $(".rangeInput").focusin(function () {
             $('.rangeDropDown').css('display', 'none');
             $(this).parent().find('.rangeDropDown').css('display', 'block');
@@ -105,4 +115,4 @@
         });
     </script>
 
-</div>
+</footer>
