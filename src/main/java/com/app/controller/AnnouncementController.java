@@ -81,9 +81,8 @@ public class AnnouncementController {
 		announcementRepository.findById(id).ifPresentOrElse(announcement -> {
 			model.addAttribute("breadCrumb", AnnouncementBreadCrumb.create(announcement));
 			model.addAttribute("announcement", announcement);
-			List<Announcement> other5UserAnnouncements = announcementRepository.findOtherUserAnnouncements(announcement.getId(), -1L);
-			//	List<Announcement> other5UserAnnouncements = announcementRepository.findOtherUserAnnouncements(announcement.getId(), announcement.getUser().getId());
-			//	model.addAttribute("otherUserAnnouncements", other5UserAnnouncements);
+			List<Announcement> otherUserAnnouncements = announcementRepository.findOtherUserAnnouncements(announcement.getId(), announcement.getUser().getId());
+			model.addAttribute("otherUserAnnouncements", otherUserAnnouncements);
 			model.addAttribute("observedAnnouncement", observedAnnouncementRepository.existsByUserLoginAndAnnouncement(authentication.getName(), id));
 		}, () -> {
 			throw new ObjectNotFoundException(id, "Announcement");

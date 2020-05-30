@@ -59,21 +59,21 @@ public class AnnouncementSearchStrategyTest {
         Map<String, Object> announcements = announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails);
 
         //then
-        assertThat(announcements).containsKey("mileageList");
+        assertThat(announcements).containsKey("mileages");
         assertThat(announcements).containsKey("pageSizes");
         assertThat(announcements).containsKey("pageNumbers");
         assertThat(announcements).containsKey("orderBy");
-        assertThat(announcements).containsKey("engineCapacityList");
+        assertThat(announcements).containsKey("engineCapacities");
         assertThat(announcements).containsKey("sort");
-        assertThat(announcements).containsKey("doorsList");
+        assertThat(announcements).containsKey("doors");
         assertThat(announcements).containsKey("pages");
         assertThat(announcements).containsKey("booleanValues");
         assertThat(announcements).containsKey("searchArguments");
         assertThat(announcements).containsKey("manufacturerList");
         assertThat(announcements).containsKey("vehicleSubtypeList");
-        assertThat(announcements).containsKey("pricesList");
+        assertThat(announcements).containsKey("prices");
         assertThat(announcements).containsKey("page");
-        assertThat(announcements).containsKey("enginePowerList");
+        assertThat(announcements).containsKey("enginePowers");
     }
 
     @Test

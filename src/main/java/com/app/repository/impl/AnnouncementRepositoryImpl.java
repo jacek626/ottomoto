@@ -118,17 +118,23 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 
 
     public List<Announcement> findOtherUserAnnouncements(@Param("announcementId") Long announcementId, @Param("userId") Long userId) {
-        return entityManager.createQuery("SELECT a FROM Announcement a JOIN FETCH a.vehicleModel v  JOIN FETCH v.manufacturer  JOIN FETCH a.pictures p  " +
+        List<Long> announcementIds = entityManager.createQuery("SELECT a.id FROM Announcement a  " +
                         "WHERE " +
-                        "p.mainPhotoInAnnouncement = true and " +
                         "a.user.id = :userId and " +
                         "a.id != :announcementId and " +
-                        "a.deactivationDate is NULL " +
-                        "order by a.creationDate",
-                Announcement.class).
+                        "a.deactivationDate is NULL ",
+                Long.class).
                 setParameter("announcementId", announcementId).
                 setParameter("userId", userId).
-                setMaxResults(6).
+                        setMaxResults(6).
+                        getResultList();
+
+        return entityManager.createQuery("SELECT a FROM Announcement a JOIN FETCH a.vehicleModel v  JOIN FETCH v.manufacturer  JOIN FETCH a.pictures p  " +
+                        "WHERE " +
+                        "a.id in (:announcementIds) and " +
+                        "p.mainPhotoInAnnouncement = true ",
+                Announcement.class).
+                setParameter("announcementIds", announcementIds).
                 getResultList();
     }
 
