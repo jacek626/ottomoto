@@ -1,5 +1,8 @@
 @charset "UTF-8";
 
+html {
+    scroll-behavior: smooth;
+}
 
 #content {
     width: 960px;
@@ -10,6 +13,12 @@
 #content-middle {
     text-align: center;
     margin: auto;
+}
+
+.breadcrumb {
+    background: none;
+    padding: 0;
+
 }
 
 .dropDown,
@@ -404,7 +413,7 @@ table {
     position: absolute;
 }
 
-.carousel {
+/*.carousel {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -413,7 +422,7 @@ table {
     position: absolute;
     left: 0;
     transition: all 1s ease;
-}
+}*/
 
 /*.card {
     background: black;

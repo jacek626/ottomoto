@@ -39,7 +39,7 @@ public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrate
     public Page<Announcement> loadData(PageRequest pageRequest, Predicate predicate) {
         BooleanBuilder booleanBuilder = new BooleanBuilder(predicate);
 
-        booleanBuilder.and(QAnnouncement.announcement.id.eq(QObservedAnnouncement.observedAnnouncement.id));
+        booleanBuilder.and(QAnnouncement.announcement.id.eq(QObservedAnnouncement.observedAnnouncement.announcement.id));
 
         long userId = userRepository.findIdByLogin(getContext().getAuthentication().getName());
         booleanBuilder.and(QObservedAnnouncement.observedAnnouncement.user.id.eq(userId));

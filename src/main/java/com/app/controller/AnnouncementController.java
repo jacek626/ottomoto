@@ -3,6 +3,7 @@ package com.app.controller;
 import com.app.entity.Announcement;
 import com.app.enums.VehicleType;
 import com.app.repository.AnnouncementRepository;
+import com.app.repository.ObservedAnnouncementRepository;
 import com.app.repository.UserRepository;
 import com.app.searchform.SearchStrategy;
 import com.app.service.AnnouncementService;
@@ -37,18 +38,20 @@ public class AnnouncementController {
 	private final AnnouncementService announcementService;
 
 	private final PictureService pictureService;
-	
+
 	private final AnnouncementRepository announcementRepository;
-	
+
 	private final UserRepository userRepository;
 
 	private final EmailService emailService;
-	
+
 	private final MessageSource messageSource;
 
 	private final SearchStrategy<Announcement> announcementSearchStrategy;
 
-	public AnnouncementController(AnnouncementService announcementService, PictureService pictureService, AnnouncementRepository announcementRepository, UserRepository userRepository, EmailService emailService, MessageSource messageSource, SearchStrategy<Announcement> announcementSearchStrategy) {
+	private final ObservedAnnouncementRepository observedAnnouncementRepository;
+
+	public AnnouncementController(AnnouncementService announcementService, PictureService pictureService, AnnouncementRepository announcementRepository, UserRepository userRepository, EmailService emailService, MessageSource messageSource, SearchStrategy<Announcement> announcementSearchStrategy, ObservedAnnouncementRepository observedAnnouncementRepository) {
 		this.announcementService = announcementService;
 		this.pictureService = pictureService;
 		this.announcementRepository = announcementRepository;
@@ -56,6 +59,7 @@ public class AnnouncementController {
 		this.emailService = emailService;
 		this.messageSource = messageSource;
 		this.announcementSearchStrategy = announcementSearchStrategy;
+		this.observedAnnouncementRepository = observedAnnouncementRepository;
 	}
 
 	@RequestMapping(value="create",method=RequestMethod.GET)
@@ -71,16 +75,18 @@ public class AnnouncementController {
 		return "announcement/announcementEdit";
 	}
 
-	@RequestMapping(value="read/{id}",method=RequestMethod.GET)
-	public String read(@NotNull @Valid @PathVariable("id") Long id, Model model) {
+	@RequestMapping(value = "read/{id}", method = RequestMethod.GET)
+	public String read(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
 
-		 announcementRepository.findById(id).ifPresentOrElse(announcement -> {
+		announcementRepository.findById(id).ifPresentOrElse(announcement -> {
 			model.addAttribute("breadCrumb", AnnouncementBreadCrumb.create(announcement));
 			model.addAttribute("announcement", announcement);
-			List<Announcement> other5UserAnnouncements = announcementRepository.findFirst5ByUserIdAndOtherThenIdFetchPictures(announcement.getId(), announcement.getUser().getId());
-			model.addAttribute("otherUserAnnouncements", other5UserAnnouncements);
+			List<Announcement> other5UserAnnouncements = announcementRepository.findOtherUserAnnouncements(announcement.getId(), -1L);
+			//	List<Announcement> other5UserAnnouncements = announcementRepository.findOtherUserAnnouncements(announcement.getId(), announcement.getUser().getId());
+			//	model.addAttribute("otherUserAnnouncements", other5UserAnnouncements);
+			model.addAttribute("observedAnnouncement", observedAnnouncementRepository.existsByUserLoginAndAnnouncement(authentication.getName(), id));
 		}, () -> {
-			 throw new ObjectNotFoundException(id, "Announcement");
+			throw new ObjectNotFoundException(id, "Announcement");
 		 });
 
 		return "announcement/announcementRead";

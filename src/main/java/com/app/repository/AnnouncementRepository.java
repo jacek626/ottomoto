@@ -29,17 +29,18 @@ public interface AnnouncementRepository extends CrudRepository<Announcement, Lon
 	@Modifying(clearAutomatically = true)
 	@Query("update Announcement a set a.deactivationDate = :deactivationDate where a.user.id = :userId")
 	int updateDeactivationDateByUserId(@Param("deactivationDate") Date deactivationDate, @Param("userId") Long userId);
-	
+
 	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query("update Announcement a set a.deactivationDate = :deactivationDate where a.id = :announcementId")
 	void updateDeactivationDateByAnnouncementId(@Param("deactivationDate") Date deactivationDate, @Param("announcementId") Long announcementId);
-	
-	@Query("SELECT a FROM Announcement a JOIN FETCH a.vehicleModel v  JOIN FETCH v.manufacturer  JOIN FETCH a.pictures p  WHERE p.mainPhotoInAnnouncement = true and a.user.id = :userId and a.id != :announcementId and a.deactivationDate is NULL order by a.creationDate")
-	List<Announcement> findFirst5ByUserIdAndOtherThenIdFetchPictures(@Param("announcementId") Long announcementId, @Param("userId") Long userId);
+
+	List<Announcement> findOtherUserAnnouncements(@Param("announcementId") Long announcementId, @Param("userId") Long userId);
 
 	List<Announcement> findFirst10ByDeactivationDateIsNullOrderByCreationDateDesc();
+
 	List<Announcement> findFirst20ByDeactivationDateIsNullOrderByCreationDateDesc();
+
 	List<Announcement> findFirst5ByUserIdAndDeactivationDateIsNullOrderByCreationDateDesc(Long userId);
-	
+
 }

@@ -3,197 +3,184 @@
 <meta charset="utf-8"/>
 <head th:replace="fragments/head :: head"></head>
   <body>
-    <div th:replace="fragments/header :: header">
-    </div>
-    <div th:replace="fragments/search :: search">
-    </div>
-    <div class="announcement-edit-form" style=" margin-top:15px; text-align:center;  margin:auto; ">
-		
-		  
-		<style>
-				label {
-					cursor: pointer;
-					font-size: 14px;
-					
-				}
-		
-				input[type="radio"]{
-					  visibility: hidden;
-					  height: 0;
-					  width: 0;
-					}
-					
-				input[type="radio"]:checked + label{
-					  text-decoration: underline;
-					}
-					
-				
-				.wrapper {
-				  height: 200px;
-				  width: 632px;
-				  position: relative;
-				  overflow: hidden;
-				  margin: 0 auto;
-				}
-				
-				.button-wrapper {
-				  width: 100%;
-				  height: 100%;
-				  display: flex;
-				  justify-content: space-between;
-				  align-items: center;
-				  position: absolute;
-				}
-				
-				.carousel {
-				  margin: 0;
-				  padding: 0;
-				  list-style: none;
-				  width: 100%;
-				  display: flex;
-				  position: absolute;
-				  left: 0;
-				  transition: all 1s ease;
-				}
-				
-				.card {
-				  background: black;
-				  min-width: 200px;
-				  height: 200px;
-				  margin-right: 1rem;
-				  display: inline-block;
-				}
-				
-				.carDetails,
-				.carDescription {
-				font-size: 14px;
-				}
-				
-				.descriptionHeader {
-					font-size: 16px;
-					font-weight: bold;
-					margin-top:10px;
-					margin-bottom:10px;
-					
-				}
-				
-				
-		</style> 
-		
-		 	<div th:replace="announcement/announcementHeader :: announcementHeader(${announcement})"></div> 
-			<div th:replace="announcement/announcementImageGallery :: announcementImageGallery(${announcement}, false)"></div>
-			
-			<div class="descriptionHeader" th:text="#{details}"></div>
-			<div class="carDetails" style="display: inline-block; align-self: flex-start;   ">
-				<div>
-					<table style="text-align:left;">
-				 		<tr>
-							<td th:text="#{vehicleType}"></td>
-							<td th:text="${announcement.vehicleSubtype.vehicleType.label}"></td>
-						<tr> 
-						<tr>
-							<td th:text="#{type}"></td>
-							<td th:text="${announcement.vehicleSubtype.label}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{manufacturer}"></td>
-							<td th:text="${announcement.vehicleModel.manufacturer.name}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{vehicleModelName}"></td>
-							<td th:text="${announcement.vehicleModel.name}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{productionYear}"></td>
-							<td th:text="${announcement.productionYear}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{mileage}"></td>
-							<td th:text="${announcement.mileage + ' km'}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{engineCapacity}"></td>
+  <div th:replace="fragments/header :: header">
+  </div>
+  <div th:replace="fragments/search :: search">
+  </div>
+
+  <div class="container">
+	  <div class="row">
+		  <div class="col-12 col-md-8 slide carousel overflow-hidden d-flex" data-ride="carousel" id="vehicleGallery">
+			  <div class="carousel-inner">
+				  <div th:class="${row.index == 0} ? 'carousel-item active' : 'carousel-item'"
+					   th:each="picture, row : ${announcement.pictures}">
+					  <a class="w-100" data-gallery="car-images" data-toggle="lightbox"
+						 th:href="@{'/images/' + ${announcement.pictures[__${row.index}__].repositoryName}}">
+						  <img class=" m-auto overflow-hidden d-block" style=" height:350px;"
+							   th:src="@{'/images/' + ${announcement.pictures[__${row.index}__].repositoryName}}"/>
+					  </a>
+				  </div>
+			  </div>
+
+			  <a class="carousel-control-prev" data-slide="prev" href="#vehicleGallery" role="button">
+				  <span aria-hidden="true" class="carousel-control-prev-icon bg-dark"></span>
+				  <span class="sr-only">Previous</span>
+			  </a>
+			  <a class="carousel-control-next" data-slide="next" href="#vehicleGallery" role="button">
+				  <span aria-hidden="true" class="carousel-control-next-icon bg-dark"></span>
+				  <span class="sr-only">Next</span>
+			  </a>
+		  </div>
+		  <div class="col-12 col-md-4 ">
+			  <div class="row">
+				  <h3 th:text="${announcement.vehicleModel.manufacturer.name} + ' ' + ${announcement.vehicleModel.name}"></h3>
+			  </div>
+			  <div class="row">
+				  <td th:text="${announcement.productionYear + ' &bull; ' + announcement.mileage + ' km'}"></td>
+			  </div>
+			  <div class="row mt-3" style="color:#bf2505;">
+				  <h2>[[${#numbers.formatDecimal({announcement.price}, 0, 'COMMA', 2, 'POINT')}]] <span
+						  th:text="#{zl}"></span></h2>
+			  </div>
+			  <div class="row mt-3">
+				  <div class="custom-control custom-switch">
+
+					  <input class="custom-control-input" id="observeAnnouncement"
+							 onchange="toggleAnnouncementIsObserved(this.getAttribute('userLogin'), this.getAttribute('announcementId'), 'observeAnnouncement')"
+							 th:announcementId="${announcement.id}"
+							 th:checked="${observedAnnouncement}" th:userLogin="${#authentication.name}"
+							 type="checkbox">
+					  <label class="custom-control-label" for="observeAnnouncement">Obserwuj ogloszenie</label>
+				  </div>
+			  </div>
+			  <div class="row mt-2">
+				  <button class="btn btn-primary" onclick="location.href='#messageDoSeller'" type="button">
+					  Wiadomosc do sprzedajacego
+				  </button>
+			  </div>
+			  <div class="row mt-2">
+				  <button class="btn btn-primary" id="questioToSeller"
+						  onclick="loadUserPhoneNumber(this.value, this.id);" th:value="${announcement.user.id}"
+						  type="button">
+					  Numer do sprzedajacego
+				  </button>
+
+			  </div>
+		  </div>
+	  </div>
+
+  </div>
+
+  <div class="container">
+	  <div class="row">
+		  <div class="col-sm text-center">
+			  <span class="descriptionHeader" th:text="#{details}"></span>
+		  </div>
+	  </div>
+
+	  <div class="row">
+		  <div class="col-sm">
+			  <table>
+				  <tr>
+					  <td th:text="#{vehicleType}"></td>
+					  <td th:text="${announcement.vehicleSubtype.vehicleType.label}"></td>
+				  <tr>
+				  <tr>
+					  <td th:text="#{type}"></td>
+					  <td th:text="${announcement.vehicleSubtype.label}"></td>
+				  <tr>
+				  <tr>
+					  <td th:text="#{engineCapacity}"></td>
 							<td th:text="${announcement.engineCapacity}"></td>
 						<tr>
 						<tr>
 							<td th:text="#{enginePower}"></td>
 							<td th:text="${announcement.enginePower}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{fuelType}"></td>
-							<td th:text="${announcement.fuelType.label}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{color}"></td>
-							<td th:text="${announcement.carColor.label}"></td>
-						<tr>
-					</table>
-					
-					
-					<table style="text-align:left; vertical-align:bottom">
-						<tr>
-							<td th:text="#{firstOwner}"></td>
-							<td th:text="${announcement.firstOwner} ? #{yes} : #{no}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{damaged}"></td>
-							<td th:text="${announcement.damaged} ? #{yes} : #{no}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{accidents}"></td>
-							<td th:text="${announcement.accidents} ? #{yes} : #{no}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{vin}"></td>
-							<td th:text="${announcement.vin}"></td>
-						<tr>
-					</table>
-				</div>
-			</div>
-			
-			<div class="carDescription" style="margin:auto;   width:600px; margin-bottom:30px;">
-				<div  class="descriptionHeader" th:text="#{description}"></div>
-				<div  style="text-align: left !important; white-space: pre-wrap;  width:600px; overflow:hidden"  th:utext="${announcement.description}" >
-				</div>
-			</div>
-			
-			<div style="margin-top:10px; ">
-			 	<table>
-					<tr>
-						<td th:each="userAnnouncement : ${otherUserAnnouncements}" >
-							<a th:href="@{'/announcement/read/' + ${userAnnouncement.id}}" style="font-size: 12px; padding:3px; border:1px #d7d7da solid; display:block; ">
-								 <img  th:src="@{'/images/' + ${userAnnouncement.pictures[0].miniatureRepositoryName}}" width="110" style="height:80px; overflow: hidden;" />
-								<table style="width: 100%; color:black;">
-									<tr>
-										<td colspan="2" th:text="${userAnnouncement.vehicleModel.manufacturer.name + userAnnouncement.vehicleModel.name}"></td>
-									</tr>
-									<tr style="font-size:10px;  ">
-										<td style="text-align:left; padding:5px " th:text="${userAnnouncement.productionYear}"></td>
-										<td style="text-align:right;"th:text="${userAnnouncement.mileage + ' km'}"></td>
-									</tr>
-									<tr>
-										<td colspan="2" style="text-align:right; border-top: #d7d7da  1px solid; color:#bf2505; font-size: 14px; font-weight: 500; ">
-											<span  th:text="${userAnnouncement.price} + ' ' + #{zl}" style="margin-top:15px"></span>
-										</td>
-									</tr>
-								</table>
-							</a>
-						</td>
-					</tr>				
-				</table> 
-			</div>
-			
-			<div id="creationDate" style="display: grid;   grid-template-columns: 1fr 1fr;">
-			    <span  th:text="#{creationDate} + ' ' + ${#dates.format(announcement.creationDate, 'dd-MM-yyyy HH:mm')}" ></span>  
-			    <span style="text-align:right;">
-			    	<span  onclick="$('#reportAnnouncementPopup').css('visibility','visible'); showPopupBacground();" style="cursor: pointer;"  th:text="#{reportViolation}"></span> 
+				  <tr>
+				  <tr>
+					  <td th:text="#{fuelType}"></td>
+					  <td th:text="${announcement.fuelType.label}"></td>
+				  <tr>
+				  <tr>
+					  <td th:text="#{color}"></td>
+					  <td th:text="${announcement.carColor.label}"></td>
+				  <tr>
+			  </table>
+		  </div>
+		  <div class="col-sm">
+			  <table>
+				  <tr>
+					  <td th:text="#{firstOwner}"></td>
+					  <td th:text="${announcement.firstOwner} ? #{yes} : #{no}"></td>
+				  <tr>
+				  <tr>
+					  <td th:text="#{damaged}"></td>
+					  <td th:text="${announcement.damaged} ? #{yes} : #{no}"></td>
+				  <tr>
+				  <tr>
+					  <td th:text="#{accidents}"></td>
+					  <td th:text="${announcement.accidents} ? #{yes} : #{no}"></td>
+				  <tr>
+				  <tr>
+					  <td th:text="#{vin}"></td>
+					  <td th:text="${announcement.vin}"></td>
+				  <tr>
+			  </table>
+		  </div>
+	  </div>
+
+	  <div class="carDescription1">
+		  <div class="descriptionHeader1" th:text="#{description}"></div>
+		  <div th:utext="${announcement.description}">
+		  </div>
+		  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+		  magna aliqua. Ut enim ad minim veniam,
+		  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+		  reprehenderit in voluptate
+		  velit esse cillum dolore eu fugiat nulla pariatur
+	  </div>
+
+	  <div class="">
+		  <div class="row">
+			  <div class="col-6 col-md-3 col-lg-2" th:each="userAnnouncement : ${otherUserAnnouncements}">
+				  <a class="card d-block " style=" padding:3px; border:1px #d7d7da solid; "
+					 th:href="@{'/announcement/read/' + ${userAnnouncement.id}}">
+					  <img class="card-img-top"
+						   th:src="@{'/images/' + ${userAnnouncement.pictures[0].miniatureRepositoryName}}"/>
+					  <div class="card-body text-center text-black-50">
+						  <h6 class="card-title "
+							  th:text="${userAnnouncement.vehicleModel.manufacturer.name + userAnnouncement.vehicleModel.name}"></h6>
+
+						  <div class="card-subtitle  mb-2">
+							  <span th:text="${userAnnouncement.productionYear}"></span>
+						  </div>
+						  <div class="card-subtitle">
+							  <div class="text-center"
+								   style="text-align:right; border-top: #d7d7da 1px solid; color:#bf2505; font-weight: 500; ">
+												<span style="margin-top:15px">
+													[[${#numbers.formatDecimal({userAnnouncement.price}, 0, 'COMMA', 2, 'POINT')}]]<span
+														th:text="#{zl}"></span>
+												</span>
+							  </div>
+						  </div>
+					  </div>
+				  </a>
+			  </div>
+		  </div>
+	  </div>
+
+	  <div id="creationDate1">
+		  <span th:text="#{creationDate} + ' ' + ${#dates.format(announcement.creationDate, 'dd-MM-yyyy HH:mm')}"></span>
+		  <span>
+			    	<span onclick="$('#reportAnnouncementPopup').css('visibility','visible'); showPopupBacground();"
+						  style="cursor: pointer;" th:text="#{reportViolation}"></span>
 				</span>
-			</div> 
-			
-			
-			<div id="reportAnnouncementPopup" class="popup" style="visibility: hidden;"  >
-				  <div>
-				  		<table>
+	  </div>
+
+
+	  <div id="reportAnnouncementPopup" class="popup" style="visibility: hidden;">
+		  <div>
+			  <table>
 				  			<tr style="line-height:35px;">
 				  				<td colspan="2" th:text="#{reportAnnouncementTitle}"></td>
 				  			</tr>
@@ -206,82 +193,109 @@
 				  				<td><textarea id="reportText" maxlength="1000" rows="4" cols="50" minlength="4" required ></textarea></td>
 				  			</tr>
 				  			<tr>
-				  				<td class="popupButtons" colspan="2">
-				  				 <input type="button" th:value="#{cancel}" onclick="document.getElementById('reportAnnouncementPopup').style.visibility = 'hidden';
+								<td class="popupButtons" colspan="2">
+									<input type="button" th:value="#{cancel}" onclick="document.getElementById('reportAnnouncementPopup').style.visibility = 'hidden';
 				  				   hidePopupBacground();" style="margin-top:10px;"/>
-						      <input type="button" th:value="#{sent}" onclick="validateEmailAndReportTextInAnnouncementReport() ?   reportAnnouncment($('#announcementId').val(),$('#reportText').val(),$('#reporterEmailAddress').val()) : '' " style="margin-top:10px;"/>
-				  				</td>
-				  			</tr>
-				  		
-				  		</table>
-				   </div>
-			</div>
-			
-			
-			<div style="background-color:#ebebec;">
-				<div class="sellerDetails" style="display: inline-block; align-self: flex-start;   margin-top:15px; ">
-					<div class="block">
-						<table id="messageToSenderTable" style="text-align:left;">
-							<tr>
-                                <td colspan="2"
-                                    style="text-align:left; padding-top:0px; width:380px; padding-bottom:10px; font-weight: 500;">
-                                    Wyslij wiadomosc do sprzedajacego
-                                </td>
-                            <tr>
-                            <tr>
-								<td style=""><label for="questionToSellerEmail">E-mail</label></td>
-								<td><input id="questionToSellerEmail" type="email" style="width:100%;"/></td>
-							<tr>
+									<input type="button" th:value="#{sent}"
+										   onclick="validateEmailAndReportTextInAnnouncementReport() ?   reportAnnouncment($('#announcementId').val(),$('#reportText').val(),$('#reporterEmailAddress').val()) : '' "
+										   style="margin-top:10px;"/>
+								</td>
+							</tr>
+
+			  </table>
+		  </div>
+	  </div>
+
+  </div>
+
+
+  <div class="container-fluid" style="background-color:#ebebec;">
+	  <div class="container">
+		  <div class="sellerDetails1 row">
+			  <div class="col-12 col-sm-6">
+				  <table id="messageToSenderTable1">
+					  <tr>
+						  <a id="messageDoSeller"></a>
+						  <td colspan="2"
+							  style="text-align:left; padding-top:0px;   padding-bottom:10px; font-weight: 500;">
+							  Wyslij wiadomosc do sprzedajacego
+						  </td>
+					  <tr>
+					  <tr>
+						  <td style=""><label for="questionToSellerEmail">E-mail</label></td>
+						  <td><input id="questionToSellerEmail" type="email" style="width:100%;"/></td>
+					  <tr>
 							<tr>
 								<td><label for="questionToSellerText">Tresc</label></td>
-								<td><textarea id="questionToSellerText" rows="6" style="width:100%; resize: none;" maxlength="1000" ></textarea></td>
-							<tr>
-							<tr>
-								<td></td>
-								<td style="text-align:right;">
-									<input type="button" style="position:relative; left:10px;" th:value="#{sent}" onclick="validateEmailAddressAndTextBeforeSend($('#questionToSellerEmail'),$('#questionToSellerText')) ?   sentMessageToSeller($('#announcementId').val(),$('#questionToSellerEmail').val(),$('#questionToSellerText').val(), $('#sellerEmail').val()) : '' "/>
-									<input type="hidden" id="sellerEmail" th:value="${announcement.user.email}" />
-								</td>
-							<tr>
-						</table>
-						
-						
-						<div>
-                            <div id="aboutSeller"
-                                 style="background-color:white; width:300px; text-align:left; margin:auto;">
-                                <div style="background-color:#ebebec; font-weight: 500; padding-bottom:10px;">
-                                    O sprzedajacym
-                                </div>
-                                <div style="border-bottom: solid 1px #d7d7da;"
-                                     th:text="${announcement.user.firstName + ' ' + announcement.user.lastName}">
-                                </div>
-                                <div th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}">
-                                </div>
-                                <div th:text="${announcement.user.city}">
-                                </div>
-                                <div th:if="${announcement.user.province != null}"
-                                     th:text="#{__${announcement.user.province}__}">
-                                </div>
-								<div th:if="${announcement.user.phoneNumber != null}" th:text="#{__${announcement.user.phoneNumber}__}">
-								</div>
-							</div> 
-						</div> 
-					</div>
+								<td><textarea id="questionToSellerText" rows="6" style="width:100%; resize: none;"
+											  maxlength="1000"></textarea></td>
+					  <tr>
+					  <tr>
+						  <td></td>
+						  <td style="text-align:right;">
+							  <input type="button" style="position:relative; left:10px;" th:value="#{sent}"
+									 onclick="validateEmailAddressAndTextBeforeSend($('#questionToSellerEmail'),$('#questionToSellerText')) ?   sentMessageToSeller($('#announcementId').val(),$('#questionToSellerEmail').val(),$('#questionToSellerText').val(), $('#sellerEmail').val()) : '' "/>
+							  <input type="hidden" id="sellerEmail" th:value="${announcement.user.email}"/>
+						  </td>
+					  <tr>
+				  </table>
+			  </div>
+
+			  <div class="col-12 col-sm-6">
+				  <div id="aboutSeller1"
+					   style="background-color:white;  text-align:left; ">
+					  <div style="background-color:#ebebec; font-weight: 500; padding-bottom:10px;">
+						  O sprzedajacym
+					  </div>
+					  <div style="border-bottom: solid 1px #d7d7da;"
+						   th:text="${announcement.user.firstName + ' ' + announcement.user.lastName}">
+					  </div>
+					  <div th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}">
+					  </div>
+					  <div th:text="${announcement.user.city}">
+					  </div>
+					  <div th:if="${announcement.user.province != null}"
+						   th:text="#{__${announcement.user.province}__}">
+					  </div>
+					  <div th:if="${announcement.user.phoneNumber != null}"
+						   th:text="#{__${announcement.user.phoneNumber}__}">
+					  </div>
+				  </div>
+			  </div>
+
+
+		  </div>
 				</div>
 			</div>
-			
-			<!--  wyswietlic title gdzies -->
+
+
+  <!--  wyswietlic title gdzies -->
 			
 			
 			<!-- wiecej aukcji tego uzytkownika  to w jedenj linik -->
-			
-			<!-- w przyszlosci dorobienie wyposoazenia -->
-			
-			<!-- wyslij wiasdomosc do zyzytkownika i wyswietlenie danych uzytkownika -->
-			
-			 <input type="hidden" id="announcementId" th:value="${announcement.id}" />
-		
-    </div>
-     <div th:replace="fragments/footer :: footer"></div>
+
+  <!-- w przyszlosci dorobienie wyposoazenia -->
+
+  <!-- wyslij wiasdomosc do zyzytkownika i wyswietlenie danych uzytkownika -->
+
+  <input type="hidden" id="announcementId" th:value="${announcement.id}"/>
+
+  </div>
+
+
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <script type="text/javascript">
+
+	  $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+		  event.preventDefault();
+		  $(this).ekkoLightbox();
+	  });
+
+	  $('.carousel').carousel('pause');
+
+  </script>
+
+
   </body>
 </html>

@@ -84,10 +84,10 @@ public class AnnouncementRepositoryTest {
 	
 	@Test
 	public void findFirst5ByUserIdAndFetchPicturesEagerlyTest() {
-		List<Announcement> announcementList = announcementRepository.findFirst5ByUserIdAndOtherThenIdFetchPictures(-1L, -1L);
-		
-	  	assertThat(announcementList).isNotEmpty();
-	}
+        List<Announcement> announcementList = announcementRepository.findOtherUserAnnouncements(-1L, -1L);
+
+        assertThat(announcementList).isNotEmpty();
+    }
 	
 	
 	@Test

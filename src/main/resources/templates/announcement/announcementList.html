@@ -69,11 +69,11 @@
             <tr class="rowInTableHeight" style="cursor: pointer; overflow: hidden;"
                 th:data-href="@{'/announcement/read/' + ${announcement.id}}"
                 th:each="announcement, iStat : ${pages.content}">
-                <td>
+                <td class="w-25">
                     <a th:href="@{'/announcement/read/' + ${announcement.id}}">
-                        <img class="img-fluid" th:if="${announcement.miniatureRepositoryName != null}"
+                        <img class="img-fluid img-thumbnail" th:if="${announcement.miniatureRepositoryName != null}"
                              th:src="@{'/images/' + ${announcement.miniatureRepositoryName}}"></img>
-                        <img class="img-fluid" th:if="${announcement.miniatureRepositoryName == null}"
+                        <img class="img-fluid img-thumbnail" th:if="${announcement.miniatureRepositoryName == null}"
                              th:src="@{'/images/noPhoto.png'}"></img>
                     </a>
                 </td>

@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head"></head>
-<body>
-	<div class="search-fragment" th:fragment="search">
-		<div style="  position:relative; top:5px; left:-350px; text-align: center; font-size: 12px; font-weight: 600; color:white;">
-			<span th:each="element, iterStat : ${breadCrumb}" th:var="${element}" >
-				<a th:if="${iterStat.index == 0}" onclick="window.history.back();" style="margin-right:15px; cursor: pointer; ">&lt; Wstecz</a> 
-				<a th:if="${iterStat.index == 0}" onclick="window.history.back();" style=" margin-right:15px; cursor: pointer;"> | </a> 
-				<a th:href="@{'/announcement/list?' + ${element.link} }" th:text="${element.label}" style="color:white;" ></a> 
-				<span th:if="${iterStat.index < (#lists.size(breadCrumb) -1)}" style=" margin: 0 6px; "> &gt; </span> 
-			</span>
-		</div>
-	</div>
-</body>
-</html>
+<div class="search-fragment mb-5" th:fragment="search">
+
+    <div class="container">
+        <nav class="breadcrumb ">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a class="breadcrumb-item text-white" href="#" onclick="window.history.back();">&lt; Wstecz</a>
+                </li>
+                <li class="breadcrumb-item " th:each="breadCrumbElement, iterStat : ${breadCrumb}"
+                    th:var="${breadCrumbElement}">
+                    <a class="text-white" th:href="@{'/announcement/list?' + ${breadCrumbElement.link}}"
+                       th:text="${breadCrumbElement.label}"/>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+</div>

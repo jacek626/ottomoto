@@ -29,7 +29,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
-
 @Controller
 @RequestMapping("user/")
 public class UserController {
@@ -412,14 +411,20 @@ public class UserController {
 	
 	@RequestMapping(value = "account")
 	public String userAccount(Model model) {
-		
-		return "user/userHome";
-	}
 
-	@RequestMapping(value = "myAnnouncements")
-	public String myAnnouncements(Model model) {
+        return "user/userHome";
+    }
 
-		return "redirect:/announcement/list";
-	}
+    @RequestMapping(value = "myAnnouncements")
+    public String myAnnouncements(Model model) {
+
+        return "redirect:/announcement/list";
+    }
+
+    @RequestMapping(value = "loadUserPhoneNumber", method = RequestMethod.GET)
+    public @ResponseBody
+    Integer loadUserPhoneNumber(@RequestParam("userId") long userId) {
+        return userRepository.findPhoneNumberById(userId);
+    }
 
 }

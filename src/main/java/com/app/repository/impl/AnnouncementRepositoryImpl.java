@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -105,14 +106,30 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
 
 		List<Tuple> pictures =
 				pictureQuery.select(QPicture.picture.miniatureRepositoryName, QPicture.picture.announcement.id).from(QPicture.picture).
-				where(QPicture.picture.mainPhotoInAnnouncement.eq(true).and(QPicture.picture.announcement.id.in(announcements.stream().map(Announcement::getId).collect(Collectors.toList())))).
-				fetch();
+                        where(QPicture.picture.mainPhotoInAnnouncement.eq(true).and(QPicture.picture.announcement.id.in(announcements.stream().map(Announcement::getId).collect(Collectors.toList())))).
+                        fetch();
 
-		for(Tuple picture : pictures) {
-			announcementsAsMap.get(picture.get(QPicture.picture.announcement.id)).setMiniatureRepositoryName(picture.get(QPicture.picture.miniatureRepositoryName));
-		}
+        for (Tuple picture : pictures) {
+            announcementsAsMap.get(picture.get(QPicture.picture.announcement.id)).setMiniatureRepositoryName(picture.get(QPicture.picture.miniatureRepositoryName));
+        }
 
-		return new PageImpl<>(announcements, pageable,announcementQuery.fetchCount());
-	}
+        return new PageImpl<>(announcements, pageable, announcementQuery.fetchCount());
+    }
+
+
+    public List<Announcement> findOtherUserAnnouncements(@Param("announcementId") Long announcementId, @Param("userId") Long userId) {
+        return entityManager.createQuery("SELECT a FROM Announcement a JOIN FETCH a.vehicleModel v  JOIN FETCH v.manufacturer  JOIN FETCH a.pictures p  " +
+                        "WHERE " +
+                        "p.mainPhotoInAnnouncement = true and " +
+                        "a.user.id = :userId and " +
+                        "a.id != :announcementId and " +
+                        "a.deactivationDate is NULL " +
+                        "order by a.creationDate",
+                Announcement.class).
+                setParameter("announcementId", announcementId).
+                setParameter("userId", userId).
+                setMaxResults(6).
+                getResultList();
+    }
 
 }
