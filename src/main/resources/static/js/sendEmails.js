@@ -1,97 +1,64 @@
-function validateEmailAndReportTextInAnnouncementReport() {
-    if ($("#reporterEmailAddress")[0].checkValidity()) {
-        $("#reporterEmailAddress").removeClass("elementValidationError");
-    } else {
-        $("#reporterEmailAddress").addClass("elementValidationError");
-        return false;
-    }
-    if ($("#reportText")[0].checkValidity()) {
-        $("#reportText").removeClass("elementValidationError");
-    } else {
-        $("#reportText").addClass("elementValidationError");
-        return false;
-    }
-
-    return true;
+function validateEmail(email) {
+    let re = /\S+@\S+\.\S+/;
+    return re.test(email);
 }
 
+function sentMessageToSeller(customerEmail, messageText, button) {
 
-function sentMessageToSeller(announcementId, email, messageText, sellerEmailAddress) {
-    $.ajax({
-        type: "GET",
-        url: "/otomoto/announcement/sentMessageToSeller",
-        timeout: 15000,
-        data: {
-            announcementId,
-            messageText,
-            email,
-            sellerEmailAddress
-        },
-        success(result) {
-            if (result) {
+    if (!validateEmail(customerEmail.value))
+        customerEmail.classList.add('is-invalid');
+    else if (messageText.value.length < 5)
+        messageText.classList.add('is-invalid');
+    else
+        fetch(`/otomoto/announcement/sentMessageToSeller`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                messageText: messageText.value,
+                customerEmail: customerEmail.value,
+                sellerEmail: button.getAttribute('sellerEmail'),
+                announcementId: button.getAttribute('announcementId')
+            })
+        })
+            .then(response => response.json())
+            .then(result => {
+                customerEmail.disabled = true;
+                messageText.disabled = true;
+                button.disabled = true;
                 showInfo("Wiadomosc wyslana, dziekujemy za kontakt");
-            } else {
-                showInfo("Przepraszamy, wystapil blad");
-            }
-        },
-        error(jqXHR, textStatus, errorThrown) {
-            showError(errorThrown);
-        }
-    });
-
-    $("#messageToSenderTable input").attr("disabled", "true");
-    $("#messageToSenderTable textarea").attr("disabled", "true");
-    showInfo("Wiadomosc do sprzedajacego w trakcie wyslki");
+            })
+            .catch(error => {
+                showInfo('Wystapil blad');
+                console.error(error);
+            });
 }
 
-function reportAnnouncment(announcementId, reportText, email) {
-    $.ajax({
-        type: "GET",
-        url: "/otomoto/announcement/reportAnnouncement",
-        timeout: 15000,
-        data: {
-            announcementId,
-            reportText,
-            email
-        },
-        success(result) {
-            $("#reporterEmailAddress").val("");
-            $("#reportText").val("");
-            showInfo("Wiadomosc wyslana, dziekujemy za kontakt");
+function reportAnnouncement(announcementId, reportText, modalWindow) {
 
-        },
-        error(jqXHR, textStatus, errorThrown) {
-            showError(errorThrown);
-        }
-    });
-
-    document.getElementById("reportAnnouncementPopup").style.visibility = "hidden";
-    hidePopupBacground();
-    showInfo("Wiadomosc w trakcie wyslki");
+    if (reportText.value.length < 5)
+        reportText.classList.add('is-invalid');
+    else
+        fetch(`/otomoto/announcement/reportAnnouncement`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                reportText: reportText.value,
+                announcementId: announcementId
+            })
+        })
+            .then(response => response.json())
+            .then(result => {
+                reportText.value = '';
+                $(modalWindow).modal('hide')
+                showInfo('Wiadomosc wyslana, dziekujemy za kontakt');
+            })
+            .catch(error => {
+                showInfo('Wystapil blad');
+                console.error(error);
+            });
 }
 
-function validateEmailAddressAndTextBeforeSend(email, text) {
-    if (email[0].checkValidity()) {
-        email.removeClass("elementValidationError");
-    } else {
-        email.addClass("elementValidationError");
-        return false;
-    }
-    if (text[0].checkValidity()) {
-        text.removeClass("elementValidationError");
-    } else {
-        text.addClass("elementValidationError");
-        return false;
-    }
-
-    return true;
-}
-
-
-function showPopupBacground() {
-    document.getElementById("popupBackground").style.visibility = "visible";
-}
-
-function hidePopupBacground() {
-    document.getElementById("popupBackground").style.visibility = "hidden";
-}

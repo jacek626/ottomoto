@@ -1,3 +1,23 @@
+$(document).ready(function () {
+    //If shown.bs.collapse add the unique id to local storage
+    $(".collapse").on("shown.bs.collapse", function () {
+        localStorage.setItem("coll_" + this.id, true);
+    });
+    //If hidden.bs.collaspe remove the unique id from local storage
+    $(".collapse").on("hidden.bs.collapse", function () {
+        localStorage.removeItem("coll_" + this.id);
+    });
+    //If the key exists and is set to true, show the collapsed, otherwise hide
+    $(".collapse").each(function () {
+        if (localStorage.getItem("coll_" + this.id) == "true") {
+            $(this).collapse("show");
+        } else {
+            $(this).collapse("hide");
+        }
+    });
+});
+
+
 $.expr[":"].contains = $.expr.createPseudo(function (arg) {
     return function (elem) {
         return $(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
@@ -15,18 +35,6 @@ function showInfo(message) {
     setTimeout(function () {
         $("#infoText").hide();
     }, 5000);
-}
-
-function controlElementVisibility(flagShowOrHide, elementToHideOrShow, displayType) {
-    if (flagShowOrHide) {
-        if (displayType) {
-            $(elementToHideOrShow).css("display", displayType);
-        } else {
-            $(elementToHideOrShow).css("display", "block");
-        }
-    } else {
-        $(elementToHideOrShow).css("display", "none");
-    }
 }
 
 Array.prototype.remove = function () {

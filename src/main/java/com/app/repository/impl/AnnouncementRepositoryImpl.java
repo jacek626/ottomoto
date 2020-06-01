@@ -22,6 +22,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -126,8 +127,11 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
                 Long.class).
                 setParameter("announcementId", announcementId).
                 setParameter("userId", userId).
-                        setMaxResults(6).
-                        getResultList();
+                setMaxResults(6).
+                getResultList();
+
+        if (announcementIds.size() == 0)
+            return Collections.emptyList();
 
         return entityManager.createQuery("SELECT a FROM Announcement a JOIN FETCH a.vehicleModel v  JOIN FETCH v.manufacturer  JOIN FETCH a.pictures p  " +
                         "WHERE " +

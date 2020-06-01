@@ -31,14 +31,14 @@
 				  <span class="sr-only">Next</span>
 			  </a>
 		  </div>
-		  <div class="col-12 col-md-4 ">
+		  <div class="col-12 col-md-4 ml-3 ml-md-0">
 			  <div class="row">
 				  <h3 th:text="${announcement.vehicleModel.manufacturer.name} + ' ' + ${announcement.vehicleModel.name}"></h3>
 			  </div>
 			  <div class="row">
 				  <td th:text="${announcement.productionYear + ' &bull; ' + announcement.mileage + ' km'}"></td>
 			  </div>
-			  <div class="row mt-3" style="color:#bf2505;">
+			  <div class="row mt-3 primary-red">
 				  <h2>[[${#numbers.formatDecimal({announcement.price}, 0, 'COMMA', 2, 'POINT')}]] <span
 						  th:text="#{zl}"></span></h2>
 			  </div>
@@ -59,28 +59,31 @@
 				  </button>
 			  </div>
 			  <div class="row mt-2">
-				  <button class="btn btn-primary" id="questioToSeller"
-						  onclick="loadUserPhoneNumber(this.value, this.id);" th:value="${announcement.user.id}"
-						  type="button">
-					  Numer do sprzedajacego
-				  </button>
-
+				  <button class="btn btn-primary" id="questionToSeller"
+						  onclick="loadUserPhoneNumber(this.value, this.id);" th:text="#{phoneNumberToSeller}"
+						  th:value="${announcement.user.id}" type="button"/>
 			  </div>
 		  </div>
 	  </div>
 
   </div>
 
-  <div class="container">
+  <div class="container mt-3">
 	  <div class="row">
 		  <div class="col-sm text-center">
-			  <span class="descriptionHeader" th:text="#{details}"></span>
+			  <h5 class="descriptionHeader" th:text="#{details}"></h5>
 		  </div>
 	  </div>
 
+	  <style>
+		  .table td {
+			  border: none;
+		  }
+	  </style>
+
 	  <div class="row">
 		  <div class="col-sm">
-			  <table>
+			  <table class="table table-sm w-75">
 				  <tr>
 					  <td th:text="#{vehicleType}"></td>
 					  <td th:text="${announcement.vehicleSubtype.vehicleType.label}"></td>
@@ -91,11 +94,11 @@
 				  <tr>
 				  <tr>
 					  <td th:text="#{engineCapacity}"></td>
-							<td th:text="${announcement.engineCapacity}"></td>
-						<tr>
-						<tr>
-							<td th:text="#{enginePower}"></td>
-							<td th:text="${announcement.enginePower}"></td>
+					  <td th:text="${announcement.engineCapacity}"></td>
+				  <tr>
+				  <tr>
+					  <td th:text="#{enginePower}"></td>
+					  <td th:text="${announcement.enginePower}"></td>
 				  <tr>
 				  <tr>
 					  <td th:text="#{fuelType}"></td>
@@ -108,7 +111,7 @@
 			  </table>
 		  </div>
 		  <div class="col-sm">
-			  <table>
+			  <table class="table table-sm w-75">
 				  <tr>
 					  <td th:text="#{firstOwner}"></td>
 					  <td th:text="${announcement.firstOwner} ? #{yes} : #{no}"></td>
@@ -129,18 +132,19 @@
 		  </div>
 	  </div>
 
-	  <div class="carDescription1">
-		  <div class="descriptionHeader1" th:text="#{description}"></div>
-		  <div th:utext="${announcement.description}">
+	  <div class="py-3">
+		  <h5 class="text-center" th:text="#{description}"></h5>
+		  <div th:text="${announcement.description}">
 		  </div>
-		  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-		  magna aliqua. Ut enim ad minim veniam,
-		  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-		  reprehenderit in voluptate
-		  velit esse cillum dolore eu fugiat nulla pariatur
 	  </div>
 
-	  <div class="">
+
+	  <div class="py-3">
+		  <div class="row">
+			  <div class="col-12 text-center">
+				  <h6 th:text="#{otherUserAnnouncements}"></h6>
+			  </div>
+		  </div>
 		  <div class="row">
 			  <div class="col-6 col-md-3 col-lg-2" th:each="userAnnouncement : ${otherUserAnnouncements}">
 				  <a class="card d-block " style=" padding:3px; border:1px #d7d7da solid; "
@@ -169,98 +173,126 @@
 		  </div>
 	  </div>
 
-	  <div id="creationDate1">
-		  <span th:text="#{creationDate} + ' ' + ${#dates.format(announcement.creationDate, 'dd-MM-yyyy HH:mm')}"></span>
-		  <span>
-			    	<span onclick="$('#reportAnnouncementPopup').css('visibility','visible'); showPopupBacground();"
-						  style="cursor: pointer;" th:text="#{reportViolation}"></span>
-				</span>
-	  </div>
 
-
-	  <div id="reportAnnouncementPopup" class="popup" style="visibility: hidden;">
-		  <div>
-			  <table>
-				  			<tr style="line-height:35px;">
-				  				<td colspan="2" th:text="#{reportAnnouncementTitle}"></td>
-				  			</tr>
-				  			<tr>
-				  				<td><label for="reporterEmailAddress">Email</label></td>
-				  				<td><input type="email" id="reporterEmailAddress" /></td>
-				  			</tr>
-				  			<tr>
-				  				<td><label th:text="#{reportText}" for="reportText"></label></td>
-				  				<td><textarea id="reportText" maxlength="1000" rows="4" cols="50" minlength="4" required ></textarea></td>
-				  			</tr>
-				  			<tr>
-								<td class="popupButtons" colspan="2">
-									<input type="button" th:value="#{cancel}" onclick="document.getElementById('reportAnnouncementPopup').style.visibility = 'hidden';
-				  				   hidePopupBacground();" style="margin-top:10px;"/>
-									<input type="button" th:value="#{sent}"
-										   onclick="validateEmailAndReportTextInAnnouncementReport() ?   reportAnnouncment($('#announcementId').val(),$('#reportText').val(),$('#reporterEmailAddress').val()) : '' "
-										   style="margin-top:10px;"/>
-								</td>
-							</tr>
-
-			  </table>
+	  <div class="row">
+		  <div class="col-6"
+			   th:text="#{creationDate} + ' ' + ${#dates.format(announcement.creationDate, 'dd-MM-yyyy HH:mm')}"></div>
+		  <div class="col-6 text-right">
+			  <a data-target="#reportViolationModal" data-toggle="modal" style="cursor: pointer;"
+				 th:text="#{reportViolation}"></a>
 		  </div>
 	  </div>
 
+
+	  <div aria-hidden="true" aria-labelledby="reportViolationLabel" class="modal fade" id="reportViolationModal"
+		   role="dialog" tabindex="-1">
+		  <div class="modal-dialog" role="document">
+			  <div class="modal-content">
+				  <div class="modal-header">
+					  <h5 class="modal-title" id="reportViolationLabel" th:text="#{reportViolation}"></h5>
+					  <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+						  <span aria-hidden="true">&times;</span>
+					  </button>
+				  </div>
+				  <div class="modal-body">
+					  <form class="needs-validation">
+						  <div class="form-group">
+							  <label class="col-form-label" for="report-text" th:text="#{content}"></label>
+							  <textarea class="form-control" id="report-text" rows="5"></textarea>
+						  </div>
+					  </form>
+				  </div>
+				  <div class="modal-footer">
+					  <button class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}" type="button"></button>
+					  <button class="btn btn-primary"
+							  onclick="reportAnnouncement(this.getAttribute('announcementId'), document.getElementById('report-text'), document.getElementById('reportViolationModal'))"
+							  th:announcementId="${announcement.id}" th:text="#{sent}"
+							  type="button">
+					  </button>
+				  </div>
+			  </div>
+		  </div>
+	  </div>
   </div>
 
-
   <div class="container-fluid" style="background-color:#ebebec;">
-	  <div class="container">
-		  <div class="sellerDetails1 row">
+	  <div class="container py-3">
+		  <div class="row ml-sm-1">
 			  <div class="col-12 col-sm-6">
-				  <table id="messageToSenderTable1">
-					  <tr>
-						  <a id="messageDoSeller"></a>
-						  <td colspan="2"
-							  style="text-align:left; padding-top:0px;   padding-bottom:10px; font-weight: 500;">
-							  Wyslij wiadomosc do sprzedajacego
-						  </td>
-					  <tr>
-					  <tr>
-						  <td style=""><label for="questionToSellerEmail">E-mail</label></td>
-						  <td><input id="questionToSellerEmail" type="email" style="width:100%;"/></td>
-					  <tr>
-							<tr>
-								<td><label for="questionToSellerText">Tresc</label></td>
-								<td><textarea id="questionToSellerText" rows="6" style="width:100%; resize: none;"
-											  maxlength="1000"></textarea></td>
-					  <tr>
-					  <tr>
-						  <td></td>
-						  <td style="text-align:right;">
-							  <input type="button" style="position:relative; left:10px;" th:value="#{sent}"
-									 onclick="validateEmailAddressAndTextBeforeSend($('#questionToSellerEmail'),$('#questionToSellerText')) ?   sentMessageToSeller($('#announcementId').val(),$('#questionToSellerEmail').val(),$('#questionToSellerText').val(), $('#sellerEmail').val()) : '' "/>
-							  <input type="hidden" id="sellerEmail" th:value="${announcement.user.email}"/>
-						  </td>
-					  <tr>
-				  </table>
+				  <div class="row">
+					  <h6 th:text="#{messageToSeller}"></h6>
+				  </div>
+				  <div class="row">
+					  <div class="form-group w-100">
+						  <label class="col-form-label" for="recipient-email">E-mail:</label>
+						  <input class="form-control" id="recipient-email"
+								 pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required type="email">
+					  </div>
+				  </div>
+				  <div class="row">
+					  <div class="form-group w-100">
+						  <label class="col-form-label" for="message-text" th:text="#{mesageFromUser}"></label>
+						  <textarea class="form-control" id="message-text" minlength="5" required rows="5"></textarea>
+					  </div>
+				  </div>
+				  <div class="row float-right">
+					  <div class="form-group ">
+						  <button class="btn btn-primary" onclick="sentMessageToSeller(document.getElementById('recipient-email'),
+								  document.getElementById('message-text'), this)" th:announcementId="${announcement.id}"
+								  th:sellerEmail="${announcement.user.email}" th:text="#{sent}"
+								  type="button">
+						  </button>
+					  </div>
+				  </div>
 			  </div>
 
 			  <div class="col-12 col-sm-6">
-				  <div id="aboutSeller1"
-					   style="background-color:white;  text-align:left; ">
-					  <div style="background-color:#ebebec; font-weight: 500; padding-bottom:10px;">
-						  O sprzedajacym
+				  <div class="card">
+					  <div class="card-header">
+						  <h6>O sprzedajacym</h6>
 					  </div>
-					  <div style="border-bottom: solid 1px #d7d7da;"
-						   th:text="${announcement.user.firstName + ' ' + announcement.user.lastName}">
-					  </div>
-					  <div th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}">
-					  </div>
-					  <div th:text="${announcement.user.city}">
-					  </div>
-					  <div th:if="${announcement.user.province != null}"
-						   th:text="#{__${announcement.user.province}__}">
-					  </div>
-					  <div th:if="${announcement.user.phoneNumber != null}"
-						   th:text="#{__${announcement.user.phoneNumber}__}">
+					  <div class="card-body">
+						  <div class="row card-subtitle mb-2">
+							  <span th:text="${announcement.user.firstName}"></span>
+						  </div>
+						  <div class="row card-subtitle mb-2">
+							  <span th:text="${announcement.user.city}"></span>
+						  </div>
+						  <div class="row card-subtitle mb-2" th:if="${announcement.user.province != null}"
+							   th:text="#{__${announcement.user.province}__}">
+						  </div>
+						  <div class="row card-subtitle mb-2">
+							  <span th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}"></span>
+						  </div>
+						  <div class="row mb-2">
+							  <button class="btn btn-primary" id="questionToSellerInBottom"
+									  onclick="loadUserPhoneNumber(this.value, this.id);"
+									  th:text="#{phoneNumberToSeller}"
+									  th:value="${announcement.user.id}" type="button"/>
+						  </div>
 					  </div>
 				  </div>
+
+				  <!--				  <div style="background-color:white;  text-align:left;">
+                                        <div style="background-color:#ebebec; font-weight: 500; padding-bottom:10px;">
+                                            O sprzedajacym
+                                        </div>
+
+
+                                        <div style="border-bottom: solid 1px #d7d7da;"
+                                             th:text="${announcement.user.firstName + ' ' + announcement.user.lastName}">
+                                        </div>
+                                        <div th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}">
+                                        </div>
+                                        <div th:text="${announcement.user.city}">
+                                        </div>
+                                        <div th:if="${announcement.user.province != null}"
+                                             th:text="#{__${announcement.user.province}__}">
+                                        </div>
+                                        <div th:if="${announcement.user.phoneNumber != null}"
+                                             th:text="#{__${announcement.user.phoneNumber}__}">
+                                        </div>
+                                    </div>-->
 			  </div>
 
 

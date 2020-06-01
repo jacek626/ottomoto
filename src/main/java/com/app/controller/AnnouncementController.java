@@ -13,7 +13,10 @@ import com.app.utils.AnnouncementBreadCrumb;
 import com.app.utils.EmailMessage;
 import com.app.utils.PaginationDetails;
 import com.app.utils.Result;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.ObjectNotFoundException;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -23,6 +26,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -173,7 +177,7 @@ public class AnnouncementController {
 		model.addAttribute("requestMapping", "my");
 
 		PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
-	//	model.addAllAttributes(announcementSearchAndPaginationPreparer.loadDataAndPrepareModelForPagination(paginationDetails, announcement));
+		//	model.addAllAttributes(announcementSearchAndPaginationPreparer.loadDataAndPrepareModelForPagination(paginationDetails, announcement));
 
 		model.addAllAttributes(announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails));
 
@@ -181,43 +185,39 @@ public class AnnouncementController {
 	}
 
 
-	@RequestMapping(value="sentMessageToSeller", method = RequestMethod.GET)
-	public @ResponseBody Boolean sentMessageToSeller(@RequestParam("announcementId") Long announcementId,
-			@RequestParam("messageText") String messageText,
-			@RequestParam("email") String email, @RequestParam("sellerEmailAddress") String sellerEmailAddress, Model model, RedirectAttributes redirectAttributes) {
-		
-		String emailSubject = messageSource.getMessage("sendMessageToSellerSubject", new Object[] {announcementId} ,Locale.getDefault());
-		String emailText = messageSource.getMessage("sendMessageToSellerContent", new Object[] {messageText}, Locale.getDefault());
+	@RequestMapping(value = "sentMessageToSeller", method = RequestMethod.POST, consumes = "application/json;")
+	public @ResponseBody
+	Boolean sentMessageToSeller(@RequestBody String jsonStr, HttpServletRequest request) throws JSONException {
+		JSONObject json = new JSONObject(jsonStr);
+
+		String emailSubject = messageSource.getMessage("sendMessageToSellerSubject", new Object[]{}, Locale.getDefault());
+		StringBuilder emailText = new StringBuilder(messageSource.getMessage("sendMessageToSellerContent", new Object[]{}, Locale.getDefault()));
+		emailText.append(request.getRequestURL().toString().replace("sentMessageToSeller", "")).append(json.getInt("announcementId")).append(" ");
+		emailText.append("\n");
+		emailText.append(json.getString("messageText"));
 
 		EmailMessage emailToSend = EmailMessage.builder().
 				subject(emailSubject).
-				content(emailText).
-				senderEmail(email).
-				receiverEmailsAddress(sellerEmailAddress).
+				content(emailText.toString()).
+				senderEmail(json.getString("customerEmail")).
+				receiverEmailsAddress(json.getString("sellerEmail")).
 				build();
 
 		Result sentResult = emailService.sendEmail(emailToSend);
 
 		return sentResult.isSuccess();
+
 	}
-	
-	@RequestMapping(value="reportAnnouncement", method = RequestMethod.GET)
-	public @ResponseBody Boolean reportAnnouncement(@RequestParam("announcementId") Long announcementId,
-			@RequestParam("reportText") String reportText,
-			@RequestParam("email") String email , Model model, RedirectAttributes redirectAttributes) {
-		
-		String emailSubject = messageSource.getMessage("reportAnnouncementEmailSubject", new Object[] {announcementId} ,Locale.getDefault());
-		String emailText = messageSource.getMessage("reportAnnouncementEmailContent", new Object[] {reportText}, Locale.getDefault());
 
-		EmailMessage emailToSend = EmailMessage.builder().
-				subject(emailSubject).
-				content(emailText).
-				senderEmail(email).
-				build();
+	@RequestMapping(value = "reportAnnouncement", method = RequestMethod.POST)
+	public @ResponseBody
+	Boolean reportAnnouncement(@RequestBody String jsonStr) throws JSONException {
+		JSONObject json = new JSONObject(jsonStr);
 
-		Result sentResult = emailService.sendEmail(emailToSend);
-		
-		return sentResult.isSuccess();
+		String reportText = json.getString("reportText");
+		Long announcementId = json.getLong("announcementId");
+
+		return StringUtils.isNotBlank(reportText) && announcementId != null;
 	}
 
 	private void rewriteManufacturerIdFromVehicleModelForSearchForm(Announcement announcement) {

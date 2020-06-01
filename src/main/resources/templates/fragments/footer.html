@@ -1,20 +1,16 @@
 <!DOCTYPE html>
-<footer class="page-footer font-small text-light mt-3" style="background-color: #2e3968" th:fragment="footer">
-    <!--<div class="footer-style" th:fragment="footer">-->
+<footer class="page-footer font-small text-light " style="background-color: #2e3968" th:fragment="footer">
 
-    <div class="text-center py-5">Strona powstała w celach edukacyjnych
-    </div>
-
-    <div class="container ">
+    <div class="container py-5">
         <div class="row text-justify">
-            <div class="col-sm-5">
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+            <div class="col-sm-5 mb-2 mb-sm-0">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
                 dolore magna aliqua.
             </div>
             <div class="col-sm-7 mb-4">
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
                 dolore magna aliqua.
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
                 dolore magna aliqua.
             </div>
         </div>
@@ -71,11 +67,6 @@
             $(this).parent().parent().find('input').trigger('change');
         });
 
-        /* 			$('.valuesDropDown div').on( "click", function() {
-                        $(this).parent().parent().find('input:text').val($(this).text());
-                        $(this).parent().parent().find('input:hidden').val($(this).attr('value'));
-                    }); */
-
         setDropDownListListener(".valuesDropDown  li");
         setDropDownListMultiOptionListener('.valuesMultiDropDown  li');
         setDropDownRangeListener('.rangeDropDown  li');
@@ -97,7 +88,7 @@
             $(this).parent().find('.valuesMultiDropDown').css('display', 'block');
         });
         $(".inputAsSelect").focusout(function () {
-            var currentElement = this;
+            let currentElement = this;
             setTimeout(function () {
                 $(currentElement).parent().find('.valuesMultiDropDown').css('display', 'none');
             }, 300);

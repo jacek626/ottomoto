@@ -53,6 +53,8 @@ INSERT INTO public.user_os(
 	id, active, city, description, email, login, password, creation_date)
 	VALUES ( -15,false, 'Lublin', 'opis osuser' , 'osuser14@sdd.pl', 'osuser14', '$2a$10$yRZmDPRpBNP7u7TFfYyCLuGbQAb0Jd9eDbjCsglUd5Dt3YhERmaf6',NOW());
 
+
+
 INSERT INTO user_role(role_id,user_id) VALUES(1,-1);
 INSERT INTO user_role(role_id,user_id) VALUES(2,-2);
 INSERT INTO user_role(role_id,user_id) VALUES(2,-3);
@@ -210,6 +212,9 @@ insert into picture (id,file_name,repository_name,miniature_repository_name,anno
 insert into observed_announcement(id, announcement_id, user_id) values (-1,-10,-2);
 insert into observed_announcement(id, announcement_id, user_id) values (-2,-13,-2);
 insert into observed_announcement(id, announcement_id, user_id) values (-3,-14,-2);
+
+
+update announcement set description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur';
 
 
 --INSERT INTO admin(id, email, login, password,role) VALUES (-1, 'jacek626@gmail.com', 'jacek', 'haslo',1);

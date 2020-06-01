@@ -10,6 +10,10 @@ html {
     min-height: 400px;
 }
 
+.primary-red {
+    color: #bf2505;
+}
+
 #content-middle {
     text-align: center;
     margin: auto;
@@ -63,25 +67,6 @@ html {
     background-color: red;
 }
 
-#imageScroller li button {
-    /*  position: absolute; */
-    /*  top: 50%; */
-    /*   left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
-  background-color: #555; */
-    /*   color: white; */
-    /*   font-size: 16px;
-  padding: 12px 24px; */
-    /*   border: none;
-  cursor: pointer; */
-    /*   border-radius: 5px; */
-
-}
-
-/* #photoGalleryMiniContainer > * {
-  flex: 1 100%;
-} */
 .photoGalleryMiniArrow {
     z-index: 10;
     position: relative;
@@ -121,10 +106,6 @@ html {
 .dropDown .selected {
     background-color: #E8E8E8;
 }
-
-/* .pricesListElement:hover {
-	background-color: #E8E8E8;
-} */
 datalist {
     background-color: red;
 }
@@ -142,10 +123,8 @@ datalist {
 .popup div {
     position: relative;
     left: -50%;
-    border: solid #2e3968 1px;
     padding: 10px;
     text-align: center;
-    background-color: white;
 }
 
 .popup div table {
@@ -166,10 +145,6 @@ datalist {
     background-color: rgba(0, 0, 0, 0.4);
 }
 
-table {
-    margin: auto;
-    border-collapse: collapse;
-}
 
 .emptyTableRow {
     height: 20px;
