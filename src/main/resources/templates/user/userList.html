@@ -2,58 +2,62 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head"></head>
 <body>
-	<div th:replace="fragments/header :: header"></div>
-	<div th:replace="fragments/search :: search"></div>
-	<div id="content">
-		<div id="content-middle">
-			<p th:text="#{userList}"></p>
-			
-			<form th:object="${user}" method="get">
-				<table id="searchParamsTable" style="width:560px;">
-					<tr>
-						<td><label for="firstName" th:text="#{firstName}"></label></td>
-						<td><input type="text" th:field="*{firstName}"></td>
-						<td><label for="lastName" th:text="#{lastName}"></label></td>
-						<td><input type="text" th:field="*{lastName}"></td>
-					</tr>
-					<tr>
-						<td><label for="login" th:text="#{login}"></label></td>
-						<td><input type="text" th:field="*{login}"></td>
-						<td><label for="email" th:text="#{email}"></label></td>
-						<td><input type="text" th:field="*{email}"></td>
-					</tr>
-					<tr>
-						<td><label for="city" th:text="#{city}"></label></td>
-						<td><input type="text" th:field="*{city}"></td>
-					</tr>
-					<tr style="line-height: 26px;">
-						<td colspan="3" style="text-align:left; ">
-							<a th:href="@{/user/createUserByAdmin}">create new user</a>
-						</td>
-						<td colspan="5" style="text-align: right;">
-							<input type="checkbox" id="isUsersActive" th:field="*{active}" name="active"  />
-							<label for="isUsersActive" th:text="#{onlyActiveUsers}"></label>
-						</td>
-					</tr>
-					<tr style="text-align: right;">
-						<td colspan="8"><input type="submit" th:value="#{search}" /></td>
-					<tr>
-					</tr>
-				</table>
-				<input type="hidden" name="size" th:value="${size}">
-			</form>
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/search :: search"></div>
+<div class="container">
+    <div class="text-center">
+        <h5 th:text="#{userList}"></h5>
+    </div>
 
-			<table id="resultsTable">
-				<thead>
-					<tr>
-						<th><a
-							th:href="@{/user/list/(page=${page}, size=${size},orderBy=login,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
-							th:text="#{login}"></a></th>
-						<th><a
-							th:href="@{/user/list/(page=${page}, size=${size},orderBy=email,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
-							th:text="#{email}"></a></th>
-						<th><a
-							th:href="@{/user/list/(page=${page}, size=${size},orderBy=firstName,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+    <form method="get" th:object="${user}">
+        <table class="m-auto">
+            <tr>
+                <td><label for="firstName" th:text="#{firstName}"></label></td>
+                <td><input id="firstName" th:field="*{firstName}" type="text"></td>
+                <td><label for="lastName" th:text="#{lastName}"></label></td>
+                <td><input id="lastName" th:field="*{lastName}" type="text"></td>
+            </tr>
+            <tr>
+                <td><label for="login" th:text="#{login}"></label></td>
+                <td><input id="login" th:field="*{login}" type="text"></td>
+                <td><label for="email" th:text="#{email}"></label></td>
+                <td><input id="email" th:field="*{email}" type="text"></td>
+            </tr>
+            <tr>
+                <td><label for="city" th:text="#{city}"></label></td>
+                <td><input id="city" th:field="*{city}" type="text"></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align:left; ">
+                    <input id="isUsersActive" name="active" th:field="*{active}" type="checkbox"/>
+                    <label for="isUsersActive" th:text="#{onlyActiveUsers}"></label>
+                </td>
+            </tr>
+            <tr style="text-align: right;">
+                <td colspan="8">
+                    <button class="btn btn-primary" th:text="#{search}" type="submit"/>
+                </td>
+            <tr>
+            </tr>
+        </table>
+        <input name="size" th:value="${size}" type="hidden">
+    </form>
+
+    <div class="mb-2 text-right">
+        <a class="btn btn-primary" th:href="@{/user/createUserByAdmin}">New User</a>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th><a
+                    th:href="@{/user/list/(page=${page}, size=${size},orderBy=login,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+                    th:text="#{login}"></a></th>
+            <th><a
+                    th:href="@{/user/list/(page=${page}, size=${size},orderBy=email,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+                    th:text="#{email}"></a></th>
+            <th><a
+                    th:href="@{/user/list/(page=${page}, size=${size},orderBy=firstName,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
 							th:text="#{firstName}"></a></th>
 						<th><a
 							th:href="@{/user/list/(page=${page}, size=${size},orderBy=lastName,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
@@ -85,7 +89,6 @@
 			</table>
 			
 			<div th:replace="fragments/pagination :: pagination('/user/list')"></div>
-		</div>
 	</div>
 
 	<script type="text/javascript">

@@ -2,52 +2,52 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head"></head>
 <body>
-	<div th:replace="fragments/header :: header"></div>
-	<div th:replace="fragments/search :: search"></div>
-	<div id="content" class="registration-login-form">
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/search :: search"></div>
 
-		<form  th:action="@{'/user/changePass'}" th:object="${user}" method="post" class="userRegistrationForm">
-			<table style="text-align: left; margin: auto; text-align:left;">
-				<tr style="line-height: 45px;">
-					<td><a th:href="@{'/user/edit/' + *{id}}" th:text="#{back}" ></a></td>
-					<td colspan="2"><span th:if="*{id} != null" th:text="#{changePass}" ></span>
-					<span th:if="*{id} == null" th:text="#{createUser}" ></span>
-					</td>
-				</tr>
-				<tr>
-					<td><label for="login">login</label></td>
-					<td><input id="login" type="text" th:field="*{login}" readOnly="readOnly" style="border:none;" /></td>
-				</tr>
-				<tr>
-					<td><label for="password" th:text="#{password}"></label></td>
-					<td><input type="password" name="street" th:field="*{password}"/>
-					<!-- <span class="valiationError" th:each="error: ${#fields.errors('password')}" th:text="#{incorrect.value}"></span> -->
-					<p th:if="${passwordsAreNotSame}" th:text="#{passwordsAreNotSame}" class="valiationError" ></p>
-					<p th:each="error: ${#fields.errors('password')}" th:text="${error}" class="valiationError" ></p>
-					</td>
-				</tr>
-				<tr>
-					<td><label for="passwordConfirm" th:text="#{passwordConfirm}"></label></td>
-					<td><input type="password" name="street" th:field="*{passwordConfirm}"/>
-					<p th:if="${validationFieldIsEmpty}" th:text="#{fieldIsEmpty}" class="valiationError" ></p>
-					</td>
-				</tr>
+<div class="container">
+
+    <div class="text-center">
+        <h5 th:text="#{changePass}"></h5>
+    </div>
+
+    <form method="post" th:action="@{'/user/changePass'}" th:object="${user}">
+        <table class="m-auto">
+            <!--			<tr style="line-height: 45px;">
+                            <td><a th:href="@{'/user/edit/' + *{id}}" th:text="#{back}" ></a></td>
+                            <td colspan="2"><span th:if="*{id} != null" th:text="#{changePass}" ></span>
+                            <span th:if="*{id} == null" th:text="#{createUser}" ></span>
+                            </td>
+                        </tr>-->
+            <tr>
+                <td><label for="login">login</label></td>
+                <td><input id="login" type="text" th:field="*{login}" readOnly="readOnly" style="border:none;"/></td>
+            </tr>
+            <tr>
+                <td><label for="password" th:text="#{password}"></label></td>
+                <td><input id="password" th:field="*{password}" type="password"/>
+                    <p class="validationError" th:if="${passwordsAreNotSame}" th:text="#{passwordsAreNotSame}"></p>
+                    <p class="validationError" th:each="error: ${#fields.errors('password')}" th:text="${error}"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="passwordConfirm" th:text="#{passwordConfirm}"></label></td>
+                <td><input id="passwordConfirm" th:field="*{passwordConfirm}" type="password"/>
+                    <p class="validationError" th:if="${validationFieldIsEmpty}" th:text="#{fieldIsEmpty}"></p>
+                </td>
+            </tr>
 				<tr>
 					<td></td>
 					<td><input type="hidden" th:field="*{id}" id="userId" /></td>
 				</tr>
-				<tr>
-					<td></td>
-					<td style="text-align: right;"><a
-						class="remove-link-decoration" style="color: black;"
-						th:href="@{/user/list/}" th:text="#{cancel}"></a><input style="margin-left: 10px;"
-						type="submit" th:value="#{save}" /></td>
-					<td></td>
-				</tr>
-			<!-- 	<tr>
-					<td><input id="returnPage" name="returnPage" type="text"
-						th:value="${returnPage}" /></td>
-				</tr> -->
+            <tr>
+                <td></td>
+                <td>
+                    <a class="btn btn-primary" th:href="@{/user/list/}" th:text="#{cancel}"></a>
+                    <button class="btn btn-primary" th:text="#{save}" type="submit"/>
+                </td>
+                <td></td>
+            </tr>
 			</table>
 
 		</form>

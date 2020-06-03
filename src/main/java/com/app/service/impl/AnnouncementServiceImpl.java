@@ -26,12 +26,18 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 	@Override
 	public Result saveAnnouncement(Announcement announcement) {
 		Result result = announcementValidator.checkBeforeSave(announcement);
-		
-		if(result.isSuccess()) {
+
+		setAnnouncementToPictures(announcement);
+
+		if (result.isSuccess()) {
 			announcementRepository.save(announcement);
 		}
-		
+
 		return result;
+	}
+
+	private void setAnnouncementToPictures(Announcement announcement) {
+		announcement.getPictures().stream().filter(e -> e.getAnnouncement() == null).forEach(picture -> picture.setAnnouncement(announcement));
 	}
 
 	@Override

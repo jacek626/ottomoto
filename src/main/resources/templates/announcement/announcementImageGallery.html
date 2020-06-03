@@ -1,50 +1,65 @@
 <!DOCTYPE html>
-<div class="announcementImageGallery" th:fragment="announcementImageGallery(announcement, editMode)">
+<div class="announcementImageGallery my-5" th:fragment="announcementImageGallery(announcement, editMode)">
 
-			<div style="position:relative; left:350px;" th:if="${editMode}">
-				  <div id="upload-file-form">
-					  <label for="upload-file-input" style="cursor: pointer;" id="upload-file-label">Dodaj nowe zdjecia</label>
-					  <input id="upload-file-input" type="file" name="uploadfile" accept="*" multiple />
-				  </div>
+	<div th:if="${editMode}">
+		<div class="text-right" id="upload-file-form">
+			<label class="btn btn-primary" for="upload-file-input" id="upload-file-label">Dodaj nowe zdjecia</label>
+			<input id="upload-file-input" type="file" name="uploadfile" accept="*" multiple/>
+		</div>
+	</div>
+
+	<div id="photoGalleryMiniContainer"
+		 style="display:flex; overflow:hidden; flex-flow: row wrap;  justify-content: center;  height: auto; margin-top:15px; "
+		 onmouseleave="$('.photoGalleryMiniArrow').fadeTo('fast' , 0.2 ); "
+		 onmouseenter="$('.photoGalleryMiniArrow').fadeTo('fast' , 1.0 ); ">
+		<div style="width:700px; display: flex;  align-items: center;">
+			<span class="photoGalleryMiniArrow" style="padding-right:3px;"
+				  onclick="showImage(findNextImage('back'),document.getElementById('photoContainerMiniImage'));">❮</span>
+			<div style="width:650px; height:400px; overflow: hidden;">
+				<img th:if="${announcement.pictures.size() > 0}"
+					 th:src="@{'/images/' + ${announcement.pictures[0].repositoryName}}" id="photoContainerMiniImage"
+					 style="max-width:650px; margin: 0 auto;" currentImageIndex="0"/>
+				<img th:if="${announcement.pictures.size() == 0}" id="photoContainerMiniImage"
+					 style="max-width:650px; margin: 0 auto;" currentImageIndex="0"/>
 			</div>
-			
-			<div id="photoGalleryMiniContainer" style="display:flex; overflow:hidden; flex-flow: row wrap;  justify-content: center;  height: auto; margin-top:15px; "
-					onmouseleave="$('.photoGalleryMiniArrow').fadeTo('fast' , 0.2 ); "  
-			 		onmouseenter ="$('.photoGalleryMiniArrow').fadeTo('fast' , 1.0 ); ">
-				<div style="width:700px; display: flex;  align-items: center;">
-					<span class="photoGalleryMiniArrow" style="padding-right:3px;" onclick="showImage(findNextImage('back'),document.getElementById('photoContainerMiniImage'));" >❮</span>
-					<div style="width:650px; height:400px; overflow: hidden;">
-						<img th:if="${announcement.pictures.size() > 0}" th:src="@{'/images/' + ${announcement.pictures[0].repositoryName}}" id="photoContainerMiniImage"
-						 style="max-width:650px; margin: 0 auto;" currentImageIndex="0" />  
-					 	 <img th:if="${announcement.pictures.size() == 0}"  id="photoContainerMiniImage"
-						 style="max-width:650px; margin: 0 auto;" currentImageIndex="0" />  
-					</div>
-					<span class="photoGalleryMiniArrow" style=" padding-left:3px;" onclick="showImage(findNextImage('next'),photoContainerMiniImage);">❯</span>
-				</div>
-				
-				<ul id="imagesScroll" style=" width:200px; height:400px;  overflow-y: scroll; list-style: none;  margin:0px; padding-left:0px;" >
-					<li th:each="picture, row : ${announcement.pictures}"  th:index="${row.index}" pictureToDelete="false" >
-						<img  th:src="@{'/images/' + ${announcement.pictures[__${row.index}__].miniatureRepositoryName}}" onclick="showImage(this,$('#photoContainerMiniImage'));"
-						th:picture="@{'/images/' + ${announcement.pictures[__${row.index}__].repositoryName}}"
-						 class="miniatureImageInImageScroller" th:index="${row.index}" /> 
-						 
-						<button th:if="${editMode}" type="button" style="margin-bottom:10px;"  onclick="deletePictureInAnnouncement(this);">usuń</button>
-						<button th:if="${editMode}" type="button" style="margin-bottom:10px;" th:style="*{pictures[__${row.index}__].mainPhotoInAnnouncement} == true ? 'text-decoration:underline;' :  ''"  class="markPictureAsMain" onclick="markPictureInAnnouncementAsMain(this);">zdjecie glowne</button>
-						
-						<input type="text" class="pictureId displayNone" th:field="${announcement.pictures[__${row.index}__].id}" />
-						<input type="text" class="displayNone" th:field="${announcement.pictures[__${row.index}__].announcement}" />
-						<input type="text" class="displayNone" th:field="${announcement.pictures[__${row.index}__].fileName}" />
-						<input type="text" class="displayNone" th:field="${announcement.pictures[__${row.index}__].repositoryName}" />
-						<input type="text" class="displayNone" th:field="${announcement.pictures[__${row.index}__].miniatureRepositoryName}" />
-						<input type="text" class="mainPhotoInAnnouncement displayNone" th:field="${announcement.pictures[__${row.index}__].mainPhotoInAnnouncement}" />
-						<input type="text" class="pictureToDelete displayNone" th:field="${announcement.pictures[__${row.index}__].pictureToDelete}" /> 
-					</li>
+			<span class="photoGalleryMiniArrow" style=" padding-left:3px;"
+				  onclick="showImage(findNextImage('next'),photoContainerMiniImage);">❯</span>
+		</div>
+
+		<ul id="imagesScroll"
+			style=" width:200px; height:400px;  overflow-y: scroll; list-style: none;    padding-left:0px; margin:auto; ">
+			<li th:each="picture, row : ${announcement.pictures}" th:index="${row.index}" pictureToDelete="false">
+				<img c class="miniatureImageInImageScroller" onclick="showImage(this,$('#photoContainerMiniImage'));"
+					 th:picture="@{'/images/' + ${announcement.pictures[__${row.index}__].repositoryName}}"
+					 th:index="${row.index}"
+					 th:src="@{'/images/' + ${announcement.pictures[__${row.index}__].miniatureRepositoryName}}"/>
+
+				<button class="btn btn-secondary btn-sm" onclick="deletePictureInAnnouncement(this);"
+						th:if="${editMode}" type="button">usuń
+				</button>
+				<button class="markPictureAsMain btn btn-secondary btn-sm"
+						onclick="markPictureInAnnouncementAsMain(this);" th:if="${editMode}"
+						th:style="*{pictures[__${row.index}__].mainPhotoInAnnouncement} == true ? 'text-decoration:underline;' :  ''"
+						th:text="#{mainPhoto}" type="button"></button>
+
+				<input type="text" class="pictureId displayNone"
+					   th:field="${announcement.pictures[__${row.index}__].id}"/>
+				<input type="text" class="displayNone"
+					   th:field="${announcement.pictures[__${row.index}__].announcement}"/>
+				<input type="text" class="displayNone" th:field="${announcement.pictures[__${row.index}__].fileName}"/>
+				<input type="text" class="displayNone"
+					   th:field="${announcement.pictures[__${row.index}__].repositoryName}"/>
+				<input type="text" class="displayNone"
+					   th:field="${announcement.pictures[__${row.index}__].miniatureRepositoryName}"/>
+				<input type="text" class="mainPhotoInAnnouncement displayNone"
+					   th:field="${announcement.pictures[__${row.index}__].mainPhotoInAnnouncement}"/>
+				<input type="text" class="pictureToDelete displayNone"
+					   th:field="${announcement.pictures[__${row.index}__].pictureToDelete}"/>
+			</li>
 				</ul>  
 			</div>
-			
-			
-			
-			<script type="text/javascript">
+
+	<script type="text/javascript">
 				let animationInProgress = false;
 			
 				function moveToRight() {
@@ -60,9 +75,5 @@
 					}
 				}
 			</script>
-			
-			
-			<div style="border-bottom: 1px #d7d7da solid;">
-			</div>
 
 </div>

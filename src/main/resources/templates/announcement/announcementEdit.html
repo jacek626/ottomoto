@@ -3,205 +3,210 @@
 <meta charset="utf-8"/>
 <head th:replace="fragments/head :: head"></head>
   <body>
-    <div th:replace="fragments/header :: header">
-    </div>
-    <div th:replace="fragments/search :: search">
-    </div>
-    <div class="announcement-edit-form">
-		<script>
-			  $(document).ready(function() {
-		      $("#upload-file-input").on("change", uploadFile);
-		    });
-		 </script>
-		
-		<form th:action="@{/announcement/save}" th:object="${announcement}" method="post">
-			<div th:replace="announcement/announcementHeader :: announcementHeader(${announcement})"></div>
-			<table style="text-align:left;">
-				<tr>
-					<td colspan="3" style="text-align: right;">
-						<div style="margin-top: 10px;">
-							<a class="medium-button" th:href="@{/announcement/list}">anuluj</a>
-							<input class="medium-button" type="submit" value="zapisz" />
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3"><label for="vehicleType">Kategoria pojazdu<span th:text="*{vehicleType}" /></label><br/>
+  <div th:replace="fragments/header :: header">
+  </div>
+  <div th:replace="fragments/search :: search">
+  </div>
+  <div class="container">
 
-						<!--  <select id="vehicleType" onchange="loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');">-->
-						  <select id="vehicleType" th:field="*{vehicleType}" onchange="loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');">
-								<option
-									th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
-									th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
-									th:selected="*{vehicleType}">
-								</option>
-						</select>
-							<span th:each="error: ${#fields.errors('vehicleType')}" class="valiationError" th:text="${error}"></span>
-									<input type="hidden" th:field="*{id}" />
-									<input type="hidden" th:field="*{user}"  />
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<label for="manufacturer">Marka pojazdu</label><br/>
-						<select id="manufacturer" th:field="*{manufacturerId}" onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'option');" required>
-					 	 	<option 
-									th:each="manufacturers: ${manufacturerList}"
-									th:value="${manufacturers.id}" th:text="${manufacturers.name}"
-									th:selected="*{manufacturerId}">
-							</option>  
-						</select>
-						<span th:each="error: ${#fields.errors('manufacturerId')}" class="valiationError" th:text="${error}"></span>
-					</td>
-					<td><label for="vehicleModel">Model pojazdu</label><br/>
-						<select id="vehicleModel" th:field="*{vehicleModel}" required>
-					 	  	<option 
-									th:each="vehicleModels: ${vehicleModelList}"
-									th:value="${vehicleModels.id}" th:text="${vehicleModels.name}"
-									th:selected="*{vehicleModel}">
-							</option>   
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td><label for="productionYear">Rok produkcji</label><br/>
-						<select id="productionYear" th:field="*{productionYear}" required>
-					 	 	<option
-									th:each="productionYears : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}"
-									th:value="${productionYears}" th:text="${productionYears}"
-									th:selected="*{productionYear}">
-							</option>
-						</select>
-						<span th:each="error: ${#fields.errors('productionYear')}" class="valiationError" th:text="${error}"></span>
-					</td>
-					<td><label for="mileage">Przebieg</label><br/>
-						<input id="mileage" th:title="#{numberOnly}" pattern="[0-9]*" size="9" maxlength="9" type="text" th:field="*{mileage}" required />
-						<span th:each="error: ${#fields.errors('mileage')}" class="valiationError" th:text="${error}"></span>
-					</td>
-					<td><label for="vin">VIN</label><br/>
-						<input id="vin"  type="text" size="20" maxlength="20" th:field="*{vin}" />
-					</td>
-				</tr>
-				<tr style="   vertical-align: bottom;">
-					<td colspan="3" style=" vertical-align: bottom;">
-						<label>Rodzaj paliwa</label>
-						<span style=" vertical-align: top;" th:each="fuelTypeElement : ${T(com.app.enums.FuelType).values()}">
-						 	<input type="radio" th:field="*{fuelType}" th:id="${fuelTypeElement}" th:value="${fuelTypeElement}" />
-							<label th:for="${fuelTypeElement}" th:text="${fuelTypeElement.label}"></label>
-						</span>
-					</td>
-				</tr>
-				<tr class="emptyTableRow"><td colspan="3"></td></tr>
-				<tr>
-					<td colspan="3"><label for="price">Cena</label><br/>
-						<input id="price" size="12" th:title="#{numberOnly}" pattern="^\d+(\.\d+)*$" maxlength="12" type="text" th:field="*{price}" required />
-						 <span th:each="error: ${#fields.errors('price')}" class="valiationError" th:text="${error}"></span>
-					
-					<select   th:field="*{currency}">
-					    <option th:each="currencyItem : ${T(com.app.enums.Currency).values()}"
-					            th:value="${currencyItem}"
-					            th:text="${currencyItem}"
-					            th:selected="*{currency}">
-					    </option>
-					</select>
-					<input type="checkbox" id="netPrice" th:field="*{netPrice}"/>
-					<label for="netPrice">Cena netto</label>
-					<input type="checkbox" id="priceNegotiate" th:field="*{priceNegotiate}"/>
-					<label for="priceNegotiate">Do negocjacji</label> 
-					
-					</td>
-				</tr>			
-				<tr>
-					<td><label for="vehicleSubtype">typ</label><br/>
-					<select id="vehicleSubtype" th:field="*{vehicleSubtype}">
-						    <option th:each="vehicleSubtypeElement : ${vehicleSubtypeList}"
-						            th:value="${vehicleSubtypeElement}"
-						            th:text="${vehicleSubtypeElement.label}"
-						            th:selected="*{vehicleSubtype}">
-						    </option>
-						</select>
-					</td>
-					<td><label for="carColor">kolor</label><br/>
-						<select id="carColor" th:field="*{carColor}">
-							<option th:each="color : ${T(com.app.enums.CarColor).values()}"
-									th:value="${color}"
-									th:text="${color.label}"
-									th:selected="*{carColor}">
-							</option>
-						</select>
-					</td>
-				</tr>	
-				<tr>
-					<td>
-						<label th:for="enginePower" th:text="#{enginePower}"></label><br/>
-						<input id="enginePower" th:title="#{numberOnly}" pattern="[0-9]*" size="9" maxlength="9" type="text" th:field="*{enginePower}"/>
-						
-						<span th:each="error: ${#fields.errors('enginePower')}" class="valiationError" th:text="${error}"></span>
-					</td>
-					<td>
-						<label th:for="engineCapacity" th:text="#{engineCapacity}"></label><br/>
-						<input id="engineCapacity" th:title="#{numberOnly}" pattern="[0-9]*" size="9" maxlength="6" type="text" th:field="*{engineCapacity}" />
-						<span th:each="error: ${#fields.errors('engineCapacity')}" class="valiationError" th:text="${error}"></span>
-					</td>
-				</tr>	
-				<tr>
-					<td>
-						<input id="accidents" type="checkbox" th:field="*{accidents}" />
-						<label th:for="accidents" th:text="#{accidents}"></label>
-					</td>
-					<td>
-						<input id="firstOwner" type="checkbox" th:field="*{firstOwner}" />
-						<label th:for="firstOwner" th:text="#{firstOwner}"></label>
-					</td>
-					<td>
-						<input id="damaged" type="checkbox" th:field="*{damaged}" />
-						<label th:for="damaged" th:text="#{damaged}"></label>
-					</td>
-				</tr>	
-				<tr class="emptyTableRow">
-					<td colspan="3"></td>
-				</tr>
-				<tr>
-					<td colspan="3"><label for="title">Tytuł</label><br/>
-						<input id="title" size="9" maxlength="200" style="width:400px;" type="text" th:field="*{title}" required />
-						<span th:each="error: ${#fields.errors('title')}" class="valiationError" th:text="${error}"></span>
-					</td>
-				</tr>		
-				<tr>
-					<td colspan="3"><label for="description">Opis</label><br/>
-						<textarea id="description" rows="5" cols="60" maxlength="3000" th:field="*{description}"  >
-						</textarea> 
-					</td>
-				</tr>	
-			</table>
-			<br/>	
-			
-			
-			<div style="margin-bottom:30px;"class="spaceLineInAnnouncementView">
-			</div>
+      <form th:action="@{/announcement/save}" th:object="${announcement}" method="post">
 
-			<div th:replace="announcement/announcementImageGallery :: announcementImageGallery(${announcement}, true)"></div>
+          <table class="m-auto">
+              <tr>
+                  <td class="text-right" colspan="3">
+                      <a class="btn btn-primary" th:href="@{/announcement/list}" th:text="#{cancel}"></a>
+                      <button class="btn btn-primary" th:text="#{save}" type="submit"/>
+                  </td>
+              </tr>
+              <tr>
+                  <td colspan="3">
+                      Kategoria pojazdu
+                      <select id="vehicleType"
+                              onchange="loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');"
+                              th:field="*{vehicleType}">
+                          <option
+                                  th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
+                                  th:selected="*{vehicleType}" th:text="${vehicleTypeElement.label}"
+                                  th:value="${vehicleTypeElement}">
+                          </option>
+                      </select>
+                      <span class="validationError" th:each="error: ${#fields.errors('vehicleType')}"
+                            th:text="${error}">
+								</span>
+                      <input th:field="*{id}" type="hidden"/>
+                      <input th:field="*{user}" type="hidden"/>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <label for="manufacturer">Marka pojazdu</label><br/>
+                      <select id="manufacturer"
+                              onchange="loadVehicleModel(this.value,$('#vehicleType').val(), 'option');" required
+                              th:field="*{manufacturerId}">
+                          <option
+                                  th:each="manufacturers: ${manufacturerList}"
+                                  th:selected="*{manufacturerId}" th:text="${manufacturers.name}"
+                                  th:value="${manufacturers.id}">
+                          </option>
+                      </select>
+                      <span class="validationError" th:each="error: ${#fields.errors('manufacturerId')}"
+                            th:text="${error}"></span>
+                  </td>
+                  <td>
+                      <label for="vehicleModel">Model pojazdu</label><br/>
+                      <select id="vehicleModel" required th:field="*{vehicleModel}">
+                          <option
+                                  th:each="vehicleModels: ${vehicleModelList}"
+                                  th:selected="*{vehicleModel}" th:text="${vehicleModels.name}"
+                                  th:value="${vehicleModels.id}">
+                          </option>
+                      </select>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <label for="productionYear">Rok produkcji</label><br/>
+                      <select id="productionYear" required th:field="*{productionYear}">
+                          <option
+                                  th:each="productionYears : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}"
+                                  th:selected="*{productionYear}" th:text="${productionYears}"
+                                  th:value="${productionYears}">
+                          </option>
+                      </select>
+                      <span class="validationError" th:each="error: ${#fields.errors('productionYear')}"
+                            th:text="${error}"></span>
+                  </td>
+                  <td>
+                      <label for="mileage">Przebieg</label><br/>
+                      <input id="mileage" maxlength="9" pattern="[0-9]*" required size="9" th:field="*{mileage}"
+                             th:title="#{numberOnly}" type="text"/>
+                      <span class="validationError" th:each="error: ${#fields.errors('mileage')}"
+                            th:text="${error}"></span>
+                  </td>
+                  <td><label for="vin">VIN</label><br/>
+                      <input id="vin" maxlength="20" size="20" th:field="*{vin}" type="text"/>
+                  </td>
+              </tr>
+              <tr>
+                  <td colspan="3">
+                      <label>Rodzaj paliwa</label>
+                      <span th:each="fuelTypeElement : ${T(com.app.enums.FuelType).values()}">
+								<input th:field="*{fuelType}" th:id="${fuelTypeElement}" th:value="${fuelTypeElement}"
+                                       type="radio"/>
+								<label th:for="${fuelTypeElement}" th:text="${fuelTypeElement.label}"></label>
+							</span>
+                  </td>
+              </tr>
+              <tr class="emptyTableRow">
+                  <td colspan="3">
+                  </td>
+              </tr>
+              <tr>
+                  <td colspan="3"><label for="price">Cena</label><br/>
+                      <input id="price" maxlength="12" pattern="^\d+(\.\d+)*$" required size="12" th:field="*{price}"
+                             th:title="#{numberOnly}" type="text"/>
+                      <span class="validationError" th:each="error: ${#fields.errors('price')}"
+                            th:text="${error}"></span>
 
-			<table style="margin-top:10px; margin-bottom:20px;font-size: 16px;">
-				<tr>
-					<td></td>
-					<td style="text-align: right;">
-						<a class="medium-button" th:href="@{/announcement/list}">anuluj</a>
-						<input class="medium-button" type="submit" value="zapisz" />
-					</td>
-					<td></td>
-				</tr>
-			</table>
+                      <select th:field="*{currency}">
+                          <option th:each="currencyItem : ${T(com.app.enums.Currency).values()}"
+                                  th:selected="*{currency}"
+                                  th:text="${currencyItem}"
+                                  th:value="${currencyItem}">
+                          </option>
+                      </select>
+                      <input id="netPrice" th:field="*{netPrice}" type="checkbox"/>
+                      <label for="netPrice">Cena netto</label>
+                      <input id="priceNegotiate" th:field="*{priceNegotiate}" type="checkbox"/>
+                      <label for="priceNegotiate">Do negocjacji</label>
+                  </td>
+              </tr>
+              <tr>
+                  <td><label for="vehicleSubtype">typ</label><br/>
+                      <select id="vehicleSubtype" th:field="*{vehicleSubtype}">
+                          <option th:each="vehicleSubtypeElement : ${vehicleSubtypeList}"
+                                  th:selected="*{vehicleSubtype}"
+                                  th:text="${vehicleSubtypeElement.label}"
+                                  th:value="${vehicleSubtypeElement}">
+                          </option>
+                      </select>
+                  </td>
+                  <td><label for="carColor">kolor</label><br/>
+                      <select id="carColor" th:field="*{carColor}">
+                          <option th:each="color : ${T(com.app.enums.CarColor).values()}"
+                                  th:selected="*{carColor}"
+                                  th:text="${color.label}"
+                                  th:value="${color}">
+                          </option>
+                      </select>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <label th:for="enginePower" th:text="#{enginePower}"></label><br/>
+                      <input id="enginePower" maxlength="9" pattern="[0-9]*" size="9" th:field="*{enginePower}"
+                             th:title="#{numberOnly}" type="text"/>
+                      <span class="validationError" th:each="error: ${#fields.errors('enginePower')}"
+                            th:text="${error}"></span>
+                  </td>
+                  <td>
+                      <label th:for="engineCapacity" th:text="#{engineCapacity}"></label><br/>
+                      <input id="engineCapacity" maxlength="6" pattern="[0-9]*" size="9" th:field="*{engineCapacity}"
+                             th:title="#{numberOnly}" type="text"/>
+                      <span class="validationError" th:each="error: ${#fields.errors('engineCapacity')}"
+                            th:text="${error}"></span>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                      <input id="accidents" th:field="*{accidents}" type="checkbox"/>
+                      <label th:for="accidents" th:text="#{accidents}"></label>
+                  </td>
+                  <td>
+                      <input id="firstOwner" th:field="*{firstOwner}" type="checkbox"/>
+                      <label th:for="firstOwner" th:text="#{firstOwner}"></label>
+                  </td>
+                  <td>
+                      <input id="damaged" th:field="*{damaged}" type="checkbox"/>
+                      <label th:for="damaged" th:text="#{damaged}"></label>
+                  </td>
+              </tr>
+              <tr class="emptyTableRow">
+                  <td colspan="3"></td>
+              </tr>
+              <tr>
+                  <td colspan="3">
+                      <label for="title">Tytuł</label><br/>
+                      <input class="w-100" id="title" maxlength="200" required size="9" th:field="*{title}"
+                             type="text"/>
+                      <span class="validationError" th:each="error: ${#fields.errors('title')}"
+                            th:text="${error}"></span>
+                  </td>
+              </tr>
+              <tr>
+                  <td colspan="3">
+                      <label for="description">Opis</label><br/>
+                      <textarea class="w-100" id="description" maxlength="3000" rows="5" th:field="*{description}">
+							</textarea>
+                  </td>
+              </tr>
+          </table>
 
-		</form>
-		
-		<script type="text/javascript">
-		    var editor = new Jodit('#description', {
-		        width: 800
-		    });
-		</script>
+          <div th:replace="announcement/announcementImageGallery :: announcementImageGallery(${announcement}, true)"></div>
 
-    </div>
-     <div th:replace="fragments/footer :: footer"></div>
+      </form>
+
+  </div>
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <script>
+      $(document).ready(function () {
+          $("#upload-file-input").on("change", uploadFile);
+      });
+
+      let editor = new Jodit('#description', {
+          width: 800
+      });
+  </script>
   </body>
 </html>

@@ -12,42 +12,42 @@
 
         <div class="container">
 
-            <table class="table table-hover table-sm">
-                <tbody>
-                <tr
-                        class="table-row" style="cursor: pointer;"
-                        th:data-href="@{'/announcement/read/' + ${announcement.id}}"
-                        th:each="announcement, iStat : ${pages.content}">
-                    <td style="width:30%">
-                        <a th:href="@{'/announcement/read/' + ${announcement.id}}">
-                            <img class="img-thumbnail w-100" th:if="${announcement.miniatureRepositoryName != null}"
+            <div class="table table-hover table-sm">
+                <div class="table-row row my-3 " style="cursor: pointer;"
+                     th:data-href="@{'/announcement/read/' + ${announcement.id}}"
+                     th:each="announcement, iStat : ${pages.content}">
+                    <div class="overflow-hidden col-6 col-md-4 " style="">
+                        <a class="overflow-hidden " style="object-fit:cover;"
+                           th:href="@{'/announcement/read/' + ${announcement.id}}">
+                            <img class="img-thumbnail w-100 overflow-hidden d-block" style="height: 210px;"
+                                 th:if="${announcement.miniatureRepositoryName != null}"
                                  th:src="@{'/images/' + ${announcement.miniatureRepositoryName}}"></img>
-                            <img class="img-thumbnail w-100" th:if="${announcement.miniatureRepositoryName == null}"
+                            <img class="img-thumbnail  w-100 overflow-hidden d-block" style="height: 210px;"
+                                 th:if="${announcement.miniatureRepositoryName == null}"
                                  th:src="@{'/images/noPhoto.png'}"></img>
                         </a>
-                    </td>
-                    <td>
+                    </div>
+                    <div class="col">
                         <a class="row text-dark" style="text-decoration:none;"
                            th:href="@{'/announcement/read/' + ${announcement.id}}">
-                            <div class="col ">
-                                <h5 th:text="${announcement.vehicleModel.manufacturer.name + ' '+ announcement.vehicleModel.name}"></h5>
-                                <div th:text="${announcement.productionYear + ' &bull; ' + announcement.mileage + ' km'}"></div>
-                                <div th:text="${announcement.user.city + ' (' + announcement.user.province + ')' }"></div>
-                            </div>
-                            <div class="col text-right">
+                            <div class="col-12 col-md-6 text-right order-md-2">
                                 <h4 class="primary-red mb-0">[[${#numbers.formatDecimal({announcement.price}, 0,
                                     'COMMA', 2, 'POINT')}]] <span th:text="#{zl}"></span></h4>
                                 <small class="text-secondary ">Do negocjacji</small>
                             </div>
+                            <div class="col-12 col-md-6  order-md-1">
+                                <h5 th:text="${announcement.vehicleModel.manufacturer.name + ' '+ announcement.vehicleModel.name}"></h5>
+                                <div th:text="${announcement.productionYear + ' &bull; ' + announcement.mileage + ' km'}"></div>
+                                <div th:text="${announcement.user.city + ' (' + announcement.user.province + ')' }"></div>
+                            </div>
                         </a>
-                    </td>
-                    <td>
+                    </div>
+                    <div class="col-1">
                         <a th:href="@{'/announcement/edit/' + ${announcement.id}}"
                            th:text="edycja">
                         </a>
-                    </td>
-                </tbody>
-            </table>
+                    </div>
+                </div>
             <div th:replace="fragments/pagination :: pagination('/announcement/' + ${requestMapping})"></div>
         </div>
 

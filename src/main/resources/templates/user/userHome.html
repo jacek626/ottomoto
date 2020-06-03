@@ -6,20 +6,33 @@
 </div>
 <div th:replace="fragments/search :: search">
 </div>
-<div style="height:300px; text-align: center; margin-top:50px; ">
-    <a class="admin-home-big-button" th:href="@{/observedAnnouncements}">
-        <span class="admin-home-big-button-text-inside">obserwowane ogloszenia</span>
-    </a>
-    <a class="admin-home-big-button" th:href="@{/announcement/my}">
-        <span class="admin-home-big-button-text-inside">moje ogloszenia</span>
-    </a>
-    <a class="admin-home-big-button" th:href="@{/user/changePass}">
-        <span class="admin-home-big-button-text-inside">zmiana hasla</span>
-    </a>
-    <a class="admin-home-big-button" th:href="@{/user/edit}">
-        <span class="admin-home-big-button-text-inside">zmiana daych</span>
-    </a>
+
+<div class="container">
+    <div class="row my-5">
+        <div class="col-5 col-md-3 align-middle">
+            <a class="settings-big-button align-middle" style="vertical-align: center"
+               th:href="@{/observedAnnouncements}">
+                <span class="w-100 text-center">obserwowane ogloszenia</span>
+            </a>
+        </div>
+        <div class="col-5 col-md-3">
+            <a class="settings-big-button" th:href="@{/announcement/my}">
+                <span class="w-100 text-center">moje ogloszenia</span>
+            </a>
+        </div>
+        <div class="col-5 col-md-3">
+            <a class="settings-big-button" th:href="@{/user/changePass}">
+                <span class="w-100 text-center">zmiana hasla</span>
+            </a>
+        </div>
+        <div class="col-5 col-md-3">
+            <a class="settings-big-button" th:href="@{/user/edit}">
+                <span class="w-100 text-center">zmiana daych</span>
+            </a>
+        </div>
+    </div>
 </div>
+
 <div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

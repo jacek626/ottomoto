@@ -2,36 +2,36 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head"></head>
   <body>
-    <div th:replace="fragments/header :: header">
-    </div>
-    <div th:replace="fragments/search :: search"></div>
- 	<div id="content">
-		<div id="content-middle">
-			<p th:text="#{editManufacturer} + ' ' + ${manufacturer.name}"></p>
-				
-			
-			<form th:action="@{/manufacturer/save}" th:object="${manufacturer}" method="post">
-				<input type="hidden" th:field="*{name}" />
-			
-			<input type="hidden" id="vehicleToDelete" name="vehicleToDelete" />  
-			<input type="hidden" th:field="*{id}" />
-			<table id="resultsTable">
-		 		<thead>
-					<tr>
-						<th th:text="#{vehicleModelName}" />
-						<th th:text="#{vehicleCategory}" />
-					</tr>
-				</thead>
-				<tfoot>
-					<tr>
-						<td class="tableFooterButtons">
-							<button type="submit" name="action" th:text="#{addNewModel}"  value="addVehicle" ></button> 
-						</td>
-						<td colspan="2" class="tableFooterButtons"  style="text-align:right; ">
-							<a th:href="@{/manufacturer/list}" th:text="#{cancel}"></a> 
-							<input type="submit"  th:value="#{save}" />
-						</td>
-					</tr>
+  <div th:replace="fragments/header :: header">
+  </div>
+  <div th:replace="fragments/search :: search"></div>
+  <div class="container">
+
+	  <div class="text-center">
+		  <h5 th:text="#{editManufacturer} + ' ' + ${manufacturer.name}"></h5>
+	  </div>
+
+	  <form th:action="@{/manufacturer/save}" th:object="${manufacturer}" method="post">
+		  <input type="hidden" th:field="*{name}"/>
+
+		  <input type="hidden" id="vehicleToDelete" name="vehicleToDelete"/>
+		  <input type="hidden" th:field="*{id}"/>
+		  <table class="m-auto" id="resultsTable">
+			  <thead>
+			  <tr>
+				  <th th:text="#{vehicleModelName}"/>
+				  <th th:text="#{vehicleCategory}"/>
+			  </tr>
+			  </thead>
+			  <tfoot>
+			  <tr>
+				  <td class="text-right " colspan="3" style="height: 80px;">
+					  <button class="btn btn-primary" name="action" th:text="#{addNewModel}" type="submit"
+							  value="addVehicle"></button>
+					  <a class="btn btn-primary" th:href="@{/manufacturer/list}" th:text="#{cancel}"></a>
+					  <button class="btn btn-primary" th:text="#{save}" type="submit"/>
+				  </td>
+			  </tr>
 				</tfoot> 
 				<tbody>
 				<tr th:each="vehicle,rowStat : *{vehicleModel}">
@@ -93,9 +93,10 @@
 					<td>
 						<input type="hidden" class="vehicleToDelete" th:field="*{vehicleModel[__${rowStat.index}__].toDelete}" /> 
 						<input type="hidden" class="rowStatIndex" th:value="${rowStat.index}" />
-							<button type="submit" name="action" value="removeVehicle"
-								class="removeVehicle"
-								onclick="$(this).parent('td').find('.vehicleToDelete').val(true);" th:text="#{delete}"></button>
+						<button type="submit" name="action" value="removeVehicle"
+								class="btn btn-primary removeVehicle"
+								onclick="$(this).parent('td').find('.vehicleToDelete').val(true);"
+								th:text="#{delete}"></button>
 					</td> 
 					
 				</tr>
@@ -103,7 +104,6 @@
 			</table>
 		</form>
 
-		</div>
 	</div>
 
 	<div th:replace="fragments/footer :: footer"></div>

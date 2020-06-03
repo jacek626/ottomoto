@@ -62,9 +62,9 @@ public class PictureServiceImpl implements PictureService {
         List<UploadedPicture> savedImages = new ArrayList<>();
 
         for (MultipartFile uploadedFile : uploadedFiles) {
-            File uploadedImage = saveUploadedFileInRepository(uploadedFile);
-            File convertedImageToMiniature = prepareImageMiniature(uploadedImage);
-            savedImages.add(UploadedPicture.of(uploadedImage, convertedImageToMiniature, uploadedFile.getOriginalFilename()));
+            File uploadedImages = saveUploadedFilesInRepository(uploadedFile);
+            File convertedImagesToMiniatures = prepareImagesMiniatures(uploadedImages);
+            savedImages.add(UploadedPicture.of(uploadedImages, convertedImagesToMiniatures, uploadedFile.getOriginalFilename()));
         }
 
         return savedImages;
@@ -81,24 +81,24 @@ public class PictureServiceImpl implements PictureService {
         return imagesHtml;
     }
 
-    private File prepareImageMiniature(File uploadedImage) throws IOException {
+    private File prepareImagesMiniatures(File uploadedImage) throws IOException {
         BufferedImage uploadedImageBuffered = ImageIO.read(uploadedImage);
-        int type = uploadedImageBuffered.getType() == 0? BufferedImage.TYPE_INT_ARGB : uploadedImageBuffered.getType();
+        int type = uploadedImageBuffered.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : uploadedImageBuffered.getType();
 
         String uploadedFileExtension = FilenameUtils.getExtension(uploadedImage.getName());
         BufferedImage resizeImageJpg = resizeImage(uploadedImageBuffered, type);
-        String imageMiniaturePath = FilenameUtils.concat(repositoryLocation,  FilenameUtils.getBaseName(uploadedImage.getName()) + "-small." + uploadedFileExtension);
+        String imageMiniaturePath = FilenameUtils.concat(repositoryLocation, FilenameUtils.getBaseName(uploadedImage.getName()) + "-small." + uploadedFileExtension);
         File imageMiniature = new File(imageMiniaturePath);
         ImageIO.write(resizeImageJpg, uploadedFileExtension, imageMiniature);
 
         return imageMiniature;
     }
 
-    private File saveUploadedFileInRepository(MultipartFile uploadedFile) throws IOException {
+    private File saveUploadedFilesInRepository(MultipartFile uploadedFile) throws IOException {
         String randomFileName = generateRandomFileNameWithSameExtension(uploadedFile);
         String filePath = Paths.get(repositoryLocation, randomFileName).toString();
         File uploadedImage = new File(filePath);
-        BufferedOutputStream uploadedImageStream =  new BufferedOutputStream(new FileOutputStream(uploadedImage));
+        BufferedOutputStream uploadedImageStream = new BufferedOutputStream(new FileOutputStream(uploadedImage));
         uploadedImageStream.write(uploadedFile.getBytes());
         uploadedImageStream.close();
 
@@ -117,14 +117,24 @@ public class PictureServiceImpl implements PictureService {
                 generateInputForFileName(uploadedPicture) +
                 generateInputForMiniatureRepositoryName(uploadedPicture) +
                 generateDeleteButton() +
+                generateMarkAsMainButton() +
                 "</li>";
     }
 
     private String generateDeleteButton() {
         return HtmlElement.builder().tag("button").
                 type("button").
+                classStyle("btn btn-secondary btn-sm").
                 onclick("deletePictureInAnnouncement(this);").
-                html( messageSource.getMessage("delete", null, Locale.getDefault())).build().toHtml();
+                html(messageSource.getMessage("delete", null, Locale.getDefault())).build().toHtml();
+    }
+
+    private String generateMarkAsMainButton() {
+        return HtmlElement.builder().tag("button").
+                type("button").
+                classStyle("btn btn-secondary btn-sm").
+                onclick("markPictureInAnnouncementAsMain(this);").
+                html(messageSource.getMessage("mainPhoto", null, Locale.getDefault())).build().toHtml();
     }
 
     private String generateImageElement(UploadedPicture uploadedPicture) {
@@ -133,7 +143,7 @@ public class PictureServiceImpl implements PictureService {
                 src("/otomoto/images/" + uploadedPicture.getMiniatureFile().getName()).
                 classStyle("miniatureImageInImageScroller").
                 onclick("showImage(this,$('#photoContainerMiniImage'))").
-                picture("/otomoto/images/"+ uploadedPicture.getMiniatureFile().getName()).
+                picture("/otomoto/images/" + uploadedPicture.getMiniatureFile().getName()).
                 index("LIST_ID").
                 build().toHtml();
     }

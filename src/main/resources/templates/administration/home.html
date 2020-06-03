@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head"></head>
-  <body>
-    <div th:replace="fragments/header :: header">
+<body>
+<div th:replace="fragments/header :: header">
+</div>
+<div th:replace="fragments/search :: search">
+</div>
+<div class="container ">
+    <div class="row my-5">
+        <div class="col-5 col-md-3 align-middle">
+            <a class="settings-big-button align-middle" style="vertical-align: center" th:href="@{/announcement/list}">
+                <span class="w-100 text-center">ogłoszenia</span>
+            </a>
+        </div>
+        <div class="col-5 col-md-3">
+            <a class="settings-big-button" th:href="@{/manufacturer/list}">
+                <span class="w-100 text-center">marki i modele aut</span>
+            </a>
+        </div>
+        <div class="col-5 col-md-3">
+            <a class="settings-big-button" th:href="@{/user/list/}">
+                <span class="w-100 text-center">użytkownicy</span>
+            </a>
+        </div>
+        <div class="col-5 col-md-3">
+            <a class="settings-big-button" th:href="@{/administration/user/adminSettings}">
+                <span class="w-100 text-center">ustawienia systemu</span>
+            </a>
+        </div>
     </div>
-    <div th:replace="fragments/search :: search">
-    </div>
-   <div style="height:300px; text-align: center; margin-top:50px; ">
-   		<a class="admin-home-big-button" th:href="@{/announcement/list}">
-			<span class="admin-home-big-button-text-inside">ogłoszenia</span>
-   		</a>
-   		<a class="admin-home-big-button" th:href="@{/manufacturer/list}">
-			<span class="admin-home-big-button-text-inside">marki i modele aut</span>
-   		</a>
-   		<a class="admin-home-big-button" th:href="@{/user/list/}">
-			<span class="admin-home-big-button-text-inside">użytkownicy</span>
-   		</a>
-   		<a class="admin-home-big-button" th:href="@{/administration/user/adminSettings}">
-			<span class="admin-home-big-button-text-inside">ustawienia systemu</span>
-   		</a>
-    </div><sdkskskd></sdkskskd>
-     <div th:replace="fragments/footer :: footer"></div>
-  </body>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
 </html>

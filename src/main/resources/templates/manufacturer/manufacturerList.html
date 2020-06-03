@@ -2,51 +2,62 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head"></head>
   <body>
-    <div th:replace="fragments/header :: header">
-    </div>
-    <div th:replace="fragments/search :: search"></div>
- 	<div id="content">
-		<div id="content-middle">
-			<p th:text="#{manufacturerList}"></p>
-			
-			<form th:object="${manufacturer}" method="get">
-				<table id="searchParamsTable" style="width:560px;">
-					<tr>
-						<td><label for="name" th:text="#{manufacturerName}"></label></td>
-						<td><input type="text" th:field="*{name}"></td>
-						<td><label for="vehicleModelName" th:text="#{vehicleModelName}"></label></td>
-						<td><input type="text" th:field="*{vehicleModelName}"></td> 
-					</tr>
-					<tr style="text-align: right; line-height: 40px; ">
-						<td colspan="8"><input type="submit" th:value="#{search}" /></td>
-					<tr>
-					</tr>
-				</table>
-				<input type="hidden" name="size" th:value="${size}">
-			</form>
+  <div th:replace="fragments/header :: header">
+  </div>
+  <div th:replace="fragments/search :: search"></div>
+  <div class="container">
+	  <div class="text-center">
+		  <h5 th:text="#{manufacturerList}"></h5>
+	  </div>
 
-			<table id="resultsTable">
-				<thead>
-					<tr>
-						<th><a th:href="@{/manufacturer/list/(page=${page}, size=${size},orderBy=name,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
-							th:text="#{manufacturer}"></a></th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr th:each="manufacturer, iStat : ${pages.content}">
-						<td th:text="${manufacturer.name}" />
+	  <div class="text-center">
+		  <form class="my-5" method="get" th:object="${manufacturer}">
+			  <table class="m-auto">
+				  <tr>
+					  <td>
+						  <label for="manufacturerName" style="width: 120px;" th:text="#{manufacturerName}"></label>
+						  <input id="manufacturerName" th:field="*{name}" type="text">
+					  </td>
+				  </tr>
+				  <tr>
+					  <td>
+						  <label for="vehicleModelName" style="width: 120px;" th:text="#{vehicleModelName}"></label>
+						  <input id="vehicleModelName" th:field="*{vehicleModelName}" type="text">
+					  </td>
+				  </tr>
+				  <tr>
+					  <td>
+						  <button class="btn btn-primary" th:text="#{search}" type="submit"/>
+					  </td>
+				  </tr>
+			  </table>
+			  <input type="hidden" name="size" th:value="${size}">
+		  </form>
+
+		  <table class="table m-auto" style="width:250px; ">
+			  <thead>
+			  <tr>
+				  <th>
+					  <a th:href="@{/manufacturer/list/(page=${page}, size=${size},orderBy=name,sort=${sort == 'DESC' ? 'ASC' : 'DESC'})}+${searchArguments}"
+						 th:text="#{manufacturer}"></a></th>
+				  <th></th>
+			  </tr>
+			  </thead>
+			  <tbody>
+			  <tr th:each="manufacturer, iStat : ${pages.content}">
+				  <td th:text="${manufacturer.name}"/>
 						<td>
 							<a th:href="@{'/manufacturer/edit/' + ${manufacturer.id}}"
-							th:text="edycja">
+							   th:text="edycja">
 							</a>
 						</td>
-					</tr>
-				</tbody>
-			</table>
-			
-			<div th:replace="fragments/pagination :: pagination('/manufacturer/list')"></div>
-		</div>
+			  </tr>
+			  </tbody>
+		  </table>
+
+
+		  <div th:replace="fragments/pagination :: pagination('/manufacturer/list')"></div>
+	  </div>
 	</div>
 
 	<div th:replace="fragments/footer :: footer"></div>

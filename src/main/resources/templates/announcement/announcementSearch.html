@@ -1,45 +1,46 @@
 <div class="container bg-white my-2" th:fragment="announcementSearch(action)">
     <form method="get" th:action="@{/__${action}__}" th:object="${announcement}">
-        <div class="row my-1">
-            <div class="col-12 col-sm-6 col input-group">
-                <select class="form-control selectpicker" data-actions-box="true" data-live-search="true"
-                        id="vehicleType" onchange="clearVehicleModel(); loadManufacturer(this.value, 'option');"
-                        th:field="*{vehicleType}">
-                    <option th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
-                            th:selected="*{vehicleType}" th:text="${vehicleTypeElement.label}"
-                            th:value="${vehicleTypeElement}"></option>
-                </select>
-            </div>
-            <div class="col-12 col-sm-6 input-group">
-                <select class="selectpicker" data-actions-box="true" data-live-search="true"
-                        data-show-subtext="true" id="priceFrom"
-                        onchange="validateRange($(this), $('#priceTo'), $(this).val());"
-                        th:field="*{searchFields.priceFrom}" th:title="#{priceFrom}">
-                    <option data-subtext="zł" th:each="element : ${prices}"
-                            th:selected="*{searchFields.priceFrom}" th:text="${element}"
-                            th:value="${element}"></option>
-                </select>
-                <div class="btn btn-light ml-0 d-none d-md-block"
-                     onclick=" $('#priceFrom').val('').selectpicker('refresh');">X
-                </div>
+        <div class="row my-1 text-center align-content-center">
+            <div class="col">
+                <div class=" input-group">
+                    <select class=" selectpicker" data-live-search="true" data-width="200px"
+                            id="vehicleType" onchange="clearVehicleModel(); loadManufacturer(this.value, 'option');"
+                            th:field="*{vehicleType}">
+                        <option th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
+                                th:selected="*{vehicleType}" th:text="${vehicleTypeElement.label}"
+                                th:value="${vehicleTypeElement}"></option>
+                    </select>
 
-                <select class="selectpicker" data-actions-box="true" data-live-search="true"
-                        data-show-subtext="true" id="priceTo"
-                        onchange="validateRange($('#priceFrom'), $(this), $(this).val());"
-                        th:field="*{searchFields.priceTo}" th:title="#{to}">
-                    <option data-subtext="zł" th:each="element : ${prices}"
-                            th:selected="*{searchFields.priceTo}" th:text="${element}"
-                            th:value="${element}"></option>
-                </select>
-                <div class="btn btn-light ml-0 d-none d-md-block"
-                     onclick="$('#priceTo').val('').selectpicker('refresh'); ">X
+                    <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="110px"
+                            data-show-subtext="true" id="priceFrom"
+                            onchange="validateRange($(this), $('#priceTo'), $(this).val());"
+                            th:field="*{searchFields.priceFrom}" th:title="#{priceFrom}">
+                        <option data-subtext="zł" th:each="element : ${prices}"
+                                th:selected="*{searchFields.priceFrom}" th:text="${element}"
+                                th:value="${element}"></option>
+                    </select>
+
+                    <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="110px"
+                            data-show-subtext="true" id="priceTo"
+                            onchange="validateRange($('#priceFrom'), $(this), $(this).val());"
+                            th:field="*{searchFields.priceTo}" th:title="#{to}">
+                        <option data-subtext="zł" th:each="element : ${prices}"
+                                th:selected="*{searchFields.priceTo}" th:text="${element}"
+                                th:value="${element}"></option>
+                    </select>
+                    <div class="btn btn-light ml-0 d-none d-md-block"
+                         onclick="$('#priceFrom').val('').selectpicker('refresh');$('#priceTo').val('').selectpicker('refresh'); ">
+                        X
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="row my-1">
             <div class="col">
                 <div class="input-group">
-                    <select class="selectpicker" data-live-search="true"
+
+                    <select class="selectpicker" data-live-search="true" data-width="200px"
                             id="manufacturer"
                             onchange="loadVehicleModel(this.value, $('#vehicleType').val(), 'option');"
                             th:field="*{manufacturerId}" title="Marka">
@@ -48,11 +49,11 @@
                         </option>
                     </select>
                     <div class="btn btn-light ml-0 d-none d-md-block"
-                         onclick="$('#manufacturer').val('').selectpicker('refresh');">X
+                         onclick="">X
                     </div>
 
 
-                    <select class="selectpicker" data-actions-box="true" data-live-search="true"
+                    <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="200px"
                             id="vehicleModel" th:field="*{vehicleModel}" title="Model">
                         <option th:each="element : ${vehicleModelList}" th:selected="*{vehicleModel.id}"
                                 th:text="${element.name}" th:value="${element.id}"></option>
@@ -60,36 +61,32 @@
                     <div class="btn btn-light ml-0 d-none d-md-block"
                          onclick="$('#vehicleModel').val('').selectpicker('refresh');">X
                     </div>
-                </div>
-            </div>
 
-            <div class="col input-group">
-                <select class="selectpicker" data-actions-box="true" data-live-search="true"
-                        id="vehicleSubtype" th:field="*{vehicleSubtype}" th:title="#{type}">
-                    <option th:each="element : ${vehicleSubtypeList}" th:selected="*{vehicleSubtype}"
-                            th:text="${element.label}" th:value="${element}"></option>
-                </select>
-                <div class="btn btn-light ml-0 d-none d-md-block"
-                     onclick="$('#vehicleSubtype').val('').selectpicker('refresh');">X
+
+                    <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="200px"
+                            id="vehicleSubtype" th:field="*{vehicleSubtype}" th:title="#{type}">
+                        <option th:each="element : ${vehicleSubtypeList}" th:selected="*{vehicleSubtype}"
+                                th:text="${element.label}" th:value="${element}"></option>
+                    </select>
+                    <div class="btn btn-light ml-0 d-none d-md-block"
+                         onclick="$('#vehicleSubtype').val('').selectpicker('refresh');">X
+                    </div>
                 </div>
             </div>
         </div>
 
 
         <div class="row my-1">
-            <div class="col input-group">
+            <div class="col-12 col-md-6 input-group">
                 <select class="selectpicker" data-actions-box="true" data-live-search="true"
                         id="productionYearFrom"
-                        onchange="validateRange($(this), $('#productionYearFrom'), $(this).val());"
+                        data-width="160px" onchange="validateRange($(this), $('#productionYearFrom'), $(this).val());"
                         th:field="*{searchFields.productionYearFrom}" th:title="#{productionYearFrom}">
                     <option th:each="element : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}"
                             th:selected="*{searchFields.productionYearFrom}" th:text="${element}"
                             th:value="${element}"></option>
                 </select>
-                <div class="btn btn-light ml-0 d-none d-md-block"
-                     onclick="$('#productionYearFrom').val('').selectpicker('refresh'); ">X
-                </div>
-                <select class="selectpicker" data-live-search="true" id="productionYearTo"
+                <select class="selectpicker" data-live-search="true" data-width="120px" id="productionYearTo"
                         onchange="validateRange($('#productionYearFrom'), $(this), $(this).val());"
                         th:field="*{searchFields.productionYearTo}" th:title="#{to}">
                     <option th:each="element : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}"
@@ -97,11 +94,12 @@
                             th:value="${element}"></option>
                 </select>
                 <div class="btn btn-light ml-0 d-none d-md-block"
-                     onclick="$('#productionYearTo').val('').selectpicker('refresh');">X
+                     onclick="$('#productionYearFrom').val('').selectpicker('refresh'); $('#productionYearTo').val('').selectpicker('refresh');">
+                    X
                 </div>
             </div>
-            <div class="col input-group">
-                <select class="selectpicker" data-actions-box="true" data-live-search="true"
+            <div class="col-12 col-md-6 input-group">
+                <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="160px"
                         data-show-subtext="true" id="mileageFrom"
                         onchange="validateRange($(this), $('#mileageTo'), $(this).val());"
                         th:field="*{searchFields.enginePowerFrom}" th:title="#{mileageFrom}">
@@ -109,10 +107,8 @@
                             th:selected="*{searchFields.mileageFrom}" th:text="${element}"
                             th:value="${element}"></option>
                 </select>
-                <div class="btn btn-light ml-0 d-none d-md-block"
-                     onclick="$('#mileageFrom').val('').selectpicker('refresh');">X
-                </div>
-                <select class="selectpicker" data-actions-box="true" data-live-search="true"
+
+                <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="120px"
                         data-show-subtext="true" id="mileageTo"
                         onchange="validateRange($('#mileageFrom'), $(this), $(this).val());"
                         th:field="*{searchFields.mileageTo}" th:title="#{to}">
@@ -121,41 +117,42 @@
                             th:value="${element}"></option>
                 </select>
                 <div class="btn btn-light ml-0 d-none d-md-block"
-                     onclick="$('#mileageTo').val('').selectpicker('refresh');">X
+                     onclick="$('#mileageFrom').val('').selectpicker('refresh'); $('#mileageTo').val('').selectpicker('refresh');">
+                    X
                 </div>
             </div>
         </div>
 
         <div class="row my-1">
-            <div class="col input-group">
-                <select class="selectpicker" data-live-search="true" id="carColor" multiple
-                        th:field="*{searchFields.carColors}" th:title="#{color}">
-                    <option th:each="element : ${T(com.app.enums.CarColor).values()}"
-                            th:selected="*{searchFields.carColors}" th:text="${element.label}"
-                            th:value="${element}"></option>
-                </select>
-                <div class="btn btn-light ml-0 d-none d-md-block"
-                     onclick="$('#carColor').val('').selectpicker('refresh'); ">X
-                </div>
-            </div>
-            <div class="col input-group">
-                <select class="selectpicker" data-live-search="true" id="fuelType" multiple
-                        th:field="*{searchFields.fuelTypes}" th:title="#{fuelType}">
-                    <option th:each="element : ${T(com.app.enums.FuelType).values()}"
-                            th:selected="*{searchFields.fuelTypes}" th:text="${element.label}"
-                            th:value="${element}"></option>
-                </select>
-                <div class="btn btn-light ml-0 d-none d-md-block"
-                     onclick="$('#fuelType').val('').selectpicker('refresh');">X
+            <div class="col">
+
+                <div class="input-group">
+                    <select class="selectpicker" data-live-search="true" data-width="200px" id="carColor" multiple
+                            th:field="*{searchFields.carColors}" th:title="#{color}">
+                        <option th:each="element : ${T(com.app.enums.CarColor).values()}"
+                                th:selected="*{searchFields.carColors}" th:text="${element.label}"
+                                th:value="${element}"></option>
+                    </select>
+                    <div class="btn btn-light ml-0 d-none d-md-block"
+                         onclick="$('#carColor').val('').selectpicker('refresh'); ">X
+                    </div>
+                    <select class="selectpicker" data-live-search="true" data-width="200px" id="fuelType" multiple
+                            th:field="*{searchFields.fuelTypes}" th:title="#{fuelType}">
+                        <option th:each="element : ${T(com.app.enums.FuelType).values()}"
+                                th:selected="*{searchFields.fuelTypes}" th:text="${element.label}"
+                                th:value="${element}"></option>
+                    </select>
+                    <div class="btn btn-light ml-0 d-none d-md-block"
+                         onclick="$('#fuelType').val('').selectpicker('refresh');">X
+                    </div>
                 </div>
             </div>
         </div>
 
-
         <div class="collapse" id="searchCollapse">
             <div class="row my-1">
-                <div class="col input-group">
-                    <select class="selectpicker" data-actions-box="true" data-live-search="true"
+                <div class="col-12 col-md-6 input-group">
+                    <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="160px"
                             data-show-subtext="true" id="engineCapacityFrom"
                             onchange="validateRange($(this), $('#engineCapacityTo'), $(this).val());"
                             th:field="*{searchFields.engineCapacityFrom}" th:title="#{engineCapacityFrom}">
@@ -163,10 +160,7 @@
                                 th:selected="*{searchFields.engineCapacityFrom}" th:text="${element}"
                                 th:value="${element}"></option>
                     </select>
-                    <div class="btn btn-light ml-0 d-none d-md-block"
-                         onclick="$('#engineCapacityFrom').val('').selectpicker('refresh');">X
-                    </div>
-                    <select class="selectpicker" data-actions-box="true" data-live-search="true"
+                    <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="120px"
                             data-show-subtext="true" id="engineCapacityTo"
                             onchange="validateRange($('#engineCapacityTo'), $(this), $(this).val());"
                             th:field="*{searchFields.engineCapacityTo}" th:title="#{to}">
@@ -179,8 +173,8 @@
                         X
                     </div>
                 </div>
-                <div class="col input-group">
-                    <select class="selectpicker" data-actions-box="true" data-live-search="true"
+                <div class="col-12 col-md-6 input-group">
+                    <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="160px"
                             data-show-subtext="true" id="enginePowerFrom"
                             onchange="validateRange($(this), $('#enginePowerTo'), $(this).val());"
                             th:field="*{searchFields.enginePowerFrom}" th:title="#{enginePowerFrom}">
@@ -188,7 +182,7 @@
                                 th:selected="*{searchFields.enginePowerFrom}" th:text="${element}"
                                 th:value="${element}"></option>
                     </select>
-                    <select class="selectpicker" data-actions-box="true" data-live-search="true"
+                    <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="120px"
                             data-show-subtext="true" id="enginePowerTo"
                             onchange="validateRange($('#engineCapacityFrom'), $(this), $(this).val());"
                             th:field="*{searchFields.enginePowerTo}" th:title="#{to}">
@@ -197,14 +191,16 @@
                                 th:value="${element}"></option>
                     </select>
                     <div class="btn btn-light ml-0 d-none d-md-block"
-                         onclick="$('#enginePowerTo').val('').selectpicker('refresh'); ">X
+                         onclick="$('#enginePowerFrom').val('').selectpicker('refresh'); $('#enginePowerTo').val('').selectpicker('refresh'); ">
+                        X
                     </div>
                 </div>
             </div>
 
+
             <div class="row my-1">
                 <div class="col">
-                    <label class="text-secondary" for="accidents" th:text="#{accidents}"></label>
+                    <label class="text-secondary" for="accidents" style="width:100px;" th:text="#{accidents}"></label>
                     <select class="selectpicker" id="accidents" th:field="*{searchFields.accidents}"
                             th:title="#{accidents}">
                         <option th:each="element : ${booleanValues}" th:selected="*{searchFields.accidents}"
@@ -212,22 +208,17 @@
                     </select>
                 </div>
                 <div class="col">
-                    <label class="text-secondary" for="damaged" th:text="#{damaged}"></label>
-                    <select class="selectpicker" id="damaged" th:field="*{searchFields.damaged}" th:title="#{damaged}">
-                        <option th:each="element : ${booleanValues}" th:selected="*{searchFields.damaged}"
-                                th:text="${element.label}" th:value="${element}"></option>
-                    </select>
-                </div>
-                <div class="col">
-                    <label class="text-secondary" for="firstOwner" th:text="#{firstOwner}"></label>
+                    <label class="text-secondary" for="firstOwner" style="width:150px;" th:text="#{firstOwner}"></label>
                     <select class="selectpicker" id="firstOwner" th:field="*{searchFields.firstOwner}"
                             th:title="#{firstOwner}">
                         <option th:each="element : ${booleanValues}" th:selected="*{searchFields.firstOwner}"
                                 th:text="${element.label}" th:value="${element}"></option>
                     </select>
                 </div>
+            </div>
+            <div class="row my-1">
                 <div class="col">
-                    <label class="text-secondary" for="netPrice" th:text="#{netPrice}"></label>
+                    <label class="text-secondary" for="netPrice" style="width:100px;" th:text="#{netPrice}"></label>
                     <select class="selectpicker" id="netPrice" th:field="*{searchFields.netPrice}"
                             th:title="#{netPrice}">
                         <option th:each="element : ${booleanValues}" th:selected="*{searchFields.netPrice}"
@@ -235,7 +226,8 @@
                     </select>
                 </div>
                 <div class="col">
-                    <label class="text-secondary" for="priceNegotiate" th:text="#{priceNegotiate}"></label>
+                    <label class="text-secondary" for="priceNegotiate" style="width:150px;"
+                           th:text="#{priceNegotiate}"></label>
                     <select class="selectpicker" id="priceNegotiate" th:field="*{searchFields.priceNegotiate}"
                             th:title="#{priceNegotiate}">
                         <option th:each="element : ${booleanValues}" th:selected="*{searchFields.priceNegotiate}"
@@ -243,7 +235,17 @@
                     </select>
                 </div>
             </div>
+            <div class="row my-1">
+                <div class="col">
+                    <label class="text-secondary" for="damaged" style="width:100px;" th:text="#{damaged}"></label>
+                    <select class="selectpicker" id="damaged" th:field="*{searchFields.damaged}" th:title="#{damaged}">
+                        <option th:each="element : ${booleanValues}" th:selected="*{searchFields.damaged}"
+                                th:text="${element.label}" th:value="${element}"></option>
+                    </select>
+                </div>
+            </div>
         </div>
+
 
         <div class="row my-1">
             <div class="col text-right">
