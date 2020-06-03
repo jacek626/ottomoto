@@ -1,4 +1,4 @@
-package com.app.service.impl;
+package com.app.service;
 
 import com.app.entity.User;
 import com.app.repository.UserRepository;
@@ -8,11 +8,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceCustomLoad implements org.springframework.security.core.userdetails.UserDetailsService {
 	
 	private final UserRepository userRepository;
 
-	public UserDetailsServiceImpl(UserRepository userRepository) {
+	public UserDetailsServiceCustomLoad(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 

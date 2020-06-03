@@ -1,4 +1,4 @@
-package com.app.service.impl;
+package com.app.service;
 
 import com.app.utils.UploadedPicture;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class PictureServiceImplTest {
     private MessageSource messageSource;
 
     @InjectMocks
-    private PictureServiceImpl pictureService;
+    private PictureService pictureService;
 
     @Test
     public void shouldConvertPicturesToHtml() throws IOException {

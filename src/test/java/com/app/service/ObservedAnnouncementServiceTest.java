@@ -1,4 +1,4 @@
-package com.app.service.impl;
+package com.app.service;
 
 import com.app.entity.Announcement;
 import com.app.entity.ObservedAnnouncement;
@@ -33,7 +33,7 @@ public class ObservedAnnouncementServiceTest {
     private final ObservedAnnouncementValidator observedAnnouncementValidator = spy(ObservedAnnouncementValidator.class);
 
     @InjectMocks
-    private ObservedAnnouncementServiceImpl observedAnnouncementService;
+    private ObservedAnnouncementService observedAnnouncementService;
 
     @Test
     public void shouldSaveObservedAnnouncement() {
