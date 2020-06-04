@@ -79,7 +79,7 @@ public class AnnouncementController {
 		return "announcement/announcementEdit";
 	}
 
-	@RequestMapping(value = "read/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "{id}", method = RequestMethod.GET)
 	public String read(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
 
 		announcementRepository.findById(id).ifPresentOrElse(announcement -> {
@@ -87,7 +87,11 @@ public class AnnouncementController {
 			model.addAttribute("announcement", announcement);
 			List<Announcement> otherUserAnnouncements = announcementRepository.findOtherUserAnnouncements(announcement.getId(), announcement.getUser().getId());
 			model.addAttribute("otherUserAnnouncements", otherUserAnnouncements);
-			model.addAttribute("observedAnnouncement", observedAnnouncementRepository.existsByUserLoginAndAnnouncement(authentication.getName(), id));
+
+			if (authentication == null)
+				model.addAttribute("observedAnnouncement", false);
+			else
+				model.addAttribute("observedAnnouncement", observedAnnouncementRepository.existsByUserLoginAndAnnouncement(authentication.getName(), id));
 		}, () -> {
 			throw new ObjectNotFoundException(id, "Announcement");
 		 });

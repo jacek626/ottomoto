@@ -44,13 +44,21 @@
 			  </div>
 			  <div class="row mt-3">
 				  <div class="custom-control custom-switch">
+					  <div class="d-inline-block" data-toggle="tooltip" sec:authorize="!isAuthenticated()" tabindex="0"
+						   th:title="#{functionAvailableAfterLogin}">
+						  <input class="custom-control-input" disabled
+								 id="observeAnnouncementDisabled" type="checkbox">
+						  <label class="custom-control-label" for="observeAnnouncementDisabled">Obserwuj
+							  ogloszenie</label>
+					  </div>
 
-					  <input class="custom-control-input" id="observeAnnouncement"
+					  <input class="custom-control-input" id="observeAnnouncement" sec:authorize="isAuthenticated()"
 							 onchange="toggleAnnouncementIsObserved(this.getAttribute('userLogin'), this.getAttribute('announcementId'), 'observeAnnouncement')"
 							 th:announcementId="${announcement.id}"
 							 th:checked="${observedAnnouncement}" th:userLogin="${#authentication.name}"
 							 type="checkbox">
-					  <label class="custom-control-label" for="observeAnnouncement">Obserwuj ogloszenie</label>
+					  <label class="custom-control-label" for="observeAnnouncement" sec:authorize="isAuthenticated()">Obserwuj
+						  ogloszenie</label>
 				  </div>
 			  </div>
 			  <div class="row mt-2">
@@ -148,7 +156,7 @@
 		  <div class="row">
 			  <div class="col-6 col-md-3 col-lg-2" th:each="userAnnouncement : ${otherUserAnnouncements}">
 				  <a class="card d-block " style=" padding:3px; border:1px #d7d7da solid; "
-					 th:href="@{'/announcement/read/' + ${userAnnouncement.id}}">
+					 th:href="@{'/announcement/' + ${userAnnouncement.id}}">
 					  <img class="card-img-top"
 						   th:src="@{'/images/' + ${userAnnouncement.pictures[0].miniatureRepositoryName}}"/>
 					  <div class="card-body text-center text-black-50">
@@ -218,7 +226,7 @@
   <div class="container-fluid" style="background-color:#ebebec;">
 	  <div class="container py-3">
 		  <div class="row ml-sm-1">
-			  <div class="col-12 col-sm-6">
+			  <div class="col-12 col-sm-6" id="messageDoSeller">
 				  <div class="row">
 					  <h6 th:text="#{messageToSeller}"></h6>
 				  </div>
@@ -272,27 +280,6 @@
 						  </div>
 					  </div>
 				  </div>
-
-				  <!--				  <div style="background-color:white;  text-align:left;">
-                                        <div style="background-color:#ebebec; font-weight: 500; padding-bottom:10px;">
-                                            O sprzedajacym
-                                        </div>
-
-
-                                        <div style="border-bottom: solid 1px #d7d7da;"
-                                             th:text="${announcement.user.firstName + ' ' + announcement.user.lastName}">
-                                        </div>
-                                        <div th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}">
-                                        </div>
-                                        <div th:text="${announcement.user.city}">
-                                        </div>
-                                        <div th:if="${announcement.user.province != null}"
-                                             th:text="#{__${announcement.user.province}__}">
-                                        </div>
-                                        <div th:if="${announcement.user.phoneNumber != null}"
-                                             th:text="#{__${announcement.user.phoneNumber}__}">
-                                        </div>
-                                    </div>-->
 			  </div>
 
 
@@ -319,12 +306,16 @@
 
   <script type="text/javascript">
 
+
+	  $('.carousel').carousel({
+		  interval: 5000
+	  });
+
 	  $(document).on('click', '[data-toggle="lightbox"]', function (event) {
 		  event.preventDefault();
 		  $(this).ekkoLightbox();
 	  });
 
-	  $('.carousel').carousel('pause');
 
   </script>
 

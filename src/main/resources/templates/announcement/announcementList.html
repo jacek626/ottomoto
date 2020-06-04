@@ -14,11 +14,11 @@
 
             <div class="table table-hover table-sm">
                 <div class="table-row row my-3 " style="cursor: pointer;"
-                     th:data-href="@{'/announcement/read/' + ${announcement.id}}"
+                     th:data-href="@{'/announcement/' + ${announcement.id}}"
                      th:each="announcement, iStat : ${pages.content}">
                     <div class="overflow-hidden col-6 col-md-4 " style="">
                         <a class="overflow-hidden " style="object-fit:cover;"
-                           th:href="@{'/announcement/read/' + ${announcement.id}}">
+                           th:href="@{'/announcement/' + ${announcement.id}}">
                             <img class="img-thumbnail w-100 overflow-hidden d-block" style="height: 210px;"
                                  th:if="${announcement.miniatureRepositoryName != null}"
                                  th:src="@{'/images/' + ${announcement.miniatureRepositoryName}}"></img>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="col">
                         <a class="row text-dark" style="text-decoration:none;"
-                           th:href="@{'/announcement/read/' + ${announcement.id}}">
+                           th:href="@{'/announcement/' + ${announcement.id}}">
                             <div class="col-12 col-md-6 text-right order-md-2">
                                 <h4 class="primary-red mb-0">[[${#numbers.formatDecimal({announcement.price}, 0,
                                     'COMMA', 2, 'POINT')}]] <span th:text="#{zl}"></span></h4>

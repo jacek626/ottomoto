@@ -110,12 +110,6 @@ function setDropDownRangeListener(element) {
     });
 }
 
-// chyba usunac
-function showOrHidePositionsInDropDown(element) {
-    $(element).parent().find('li:not(:contains("' + element.value + '"))').hide();
-    $(element).parent().find('li:contains("' + element.value + '")').show()
-}
-
 
 function select(el) {
     let s = [].indexOf.call(nodes, el);
@@ -162,11 +156,6 @@ $(document).keyup(function (e) {
         e.preventDefault();
     }
 });
-
-function clearInputAndFireTrigger(element) {
-    $(element).prev(".hiddenInputToFilterResults").val("");
-    $(element).prev(".hiddenInputToFilterResults").trigger("change");
-}
 
 function loadUserPhoneNumber(userId, elementIdToReturnResult) {
     fetch(`/otomoto/user/loadUserPhoneNumber?userId=${userId}`, {

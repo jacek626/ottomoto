@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<footer class="page-footer font-small text-light " style="background-color: #2e3968" th:fragment="footer">
+<footer class="footer font-small text-light " style="background-color: #2e3968" th:fragment="footer">
 
     <div class="container py-5">
         <div class="row text-justify">
@@ -38,6 +38,10 @@
             alert(1);
             $(this).data("val", $(this).val());
         });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
 
 
         $(document).ready(function () {

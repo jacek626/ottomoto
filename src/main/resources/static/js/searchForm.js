@@ -79,21 +79,6 @@ function validateRange(from, to, currentElementValue) {
     }
 }
 
-function validateRangeOld(from, to, currentElement) {
-    if ($(from).val() !== "" && $(to).val() !== "") {
-        let fromAsNumber = parseInt($(from).val().replace(/\D/g, ""), 10);
-        let toAsNumber = parseInt($(to).val().replace(/\D/g, ""), 10);
-
-        if (fromAsNumber > toAsNumber) {
-            if ($(currentElement).attr("id") === $(from).attr("id")) {
-                $(to).val("");
-            } else {
-                $(from).val("");
-            }
-        }
-    }
-}
-
 $('#pageSizeSelect').on('changed.bs.select', function (event, clickedIndex, isSelected, previousValue) {
     let current = $(this).val();
     let href = window.location.href;
@@ -115,58 +100,11 @@ $('#pageSizeSelect').on('changed.bs.select', function (event, clickedIndex, isSe
 
         window.location.replace(href);
     }
-
-    //   previousValue = current;
-    //  $(this).selectpicker('refresh');
 });
 
-
-/*$(document).on("focusin", "#pageSizeSelect", function () {
-    $(this).data("val", $(this).val());
-}).on("change", "#pageSizeSelect", function () {
-    let prev = $(this).data("val");
-    let current = $(this).val();
-    let href = window.location.href;
-
-    if (href.indexOf("size=") === -1) {
-        let lastCharacter = href.slice(-1);
-
-        if (lastCharacter === "/") {
-            href = href.slice(0, href.length - 1);
-        }
-
-        if (href.indexOf("?") === -1) {
-            window.location.replace(href + "?size=" + current);
-        } else {
-            window.location.replace(href + "&size=" + current);
-        }
-    } else {
-        href = href.replace("size=" + prev, "size=" + current);
-
-        window.location.replace(href);
-    }
-});*/
-
-
-function clearManufacturer() {
-    $("#vehicleModelLabel").val("");
-    $("#vehicleModelValue").val("");
-}
-
-function clearManufacturerDropDown() {
-    $("#manufacturer").empty();
-}
-
-function clearVehicleModelDropDown() {
-    $("#vehicleModel").empty();
-}
 
 function clearVehicleModel() {
     $("#vehicleModel").empty().selectpicker('refresh');
 }
 
-function clearVehicleSubtype() {
-    $("#vehicleSubtypeLabel").val("");
-    $("#vehicleSubtypeValue").val("");
-}
 

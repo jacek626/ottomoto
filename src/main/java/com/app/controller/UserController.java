@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -94,21 +95,31 @@ public class UserController {
 
         return "/user/userList";
     }
-	
-	@RequestMapping(value="edit/{id}", method = RequestMethod.GET)
-    public String edit(@PathVariable("id") Long id, Model model) {
+
+	@RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
+	public String edit(@PathVariable(value = "id") Long id, Model model) {
 		Optional<User> user = userRepository.findById(id);
-		
-		if(user.isPresent()) 
+
+		if (user.isPresent())
 			model.addAttribute("user", user.get());
 		else
-			throw new NoSuchElementException("User with id "+ id +" not exists");
-		
+			throw new NoSuchElementException("User with id " + id + " not exists");
+
 		return "user/userEdit";
-		
+
 	}
-	
-	@RequestMapping(value="createUserByAdmin")
+
+	@RequestMapping(value = "edit", method = RequestMethod.GET)
+	public String edit(Model model, Authentication authentication) {
+		User user = userRepository.findByLogin(authentication.getName());
+
+		model.addAttribute("user", user);
+
+		return "user/userEdit";
+
+	}
+
+	@RequestMapping(value = "createUserByAdmin")
 	public String createUserByAdmin(Model model) {
 		User user = new User();
 		user.setActive(true);
@@ -241,35 +252,43 @@ public class UserController {
 
             if (userFromDB.isPresent()) {
                 //		userFromDB.get().setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-                // do zmiany
+				// do zmiany
 				userRepository.save(userFromDB.get());
-			}
-			else
+			} else
 				throw new NoSuchElementException();
-			
+
 			return "redirect:/user/edit/" + user.getId();
 		}
 	}
-	
-	@RequestMapping(value="changePass/{id}")
-   public String changePass(@PathVariable("id") Long id, Model model) {
-			Optional<User> user = userRepository.findById(id);
-			
-			if(user.isEmpty())
-				throw new NoSuchElementException();
-		
-			model.addAttribute("user", user.get());
-			
-			return "/user/userChangePass";
+
+	@RequestMapping(value = "changePass/{id}", method = RequestMethod.GET)
+	public String changePass(@PathVariable("id") Long id, Model model) {
+		Optional<User> user = userRepository.findById(id);
+
+		if (user.isEmpty())
+			throw new NoSuchElementException();
+
+		model.addAttribute("user", user.get());
+
+		return "/user/userChangePass";
 	}
-	
+
+	@RequestMapping(value = "changePass", method = RequestMethod.GET)
+	public String changePass(Model model, Authentication authentication) {
+		User user = userRepository.findByLogin(authentication.getName());
+
+		model.addAttribute("user", user);
+
+		return "/user/userChangePass";
+	}
+
 	private boolean validateEmailBeforeUpdate(User user, Model model) {
-        if (userRepository.countByEmailAndIdNot(user.getEmail(), user.getId()) > 0) {
-            model.addAttribute("emailAlreadyExists", true);
-            return true;
-        }
-        return false;
-    }
+		if (userRepository.countByEmailAndIdNot(user.getEmail(), user.getId()) > 0) {
+			model.addAttribute("emailAlreadyExists", true);
+			return true;
+		}
+		return false;
+	}
 	
 	
 	// @Validated(User.ValidateAllFieldsWithoutPass.class) 

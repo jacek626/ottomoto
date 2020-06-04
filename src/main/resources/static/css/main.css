@@ -40,11 +40,6 @@ html {
     margin-block-end: 0;
 }
 
-.imageScrollerButton {
-    cursor: pointer;
-    background-color: gray;
-}
-
 .miniatureImageInImageScroller {
     width: 150px;
     cursor: pointer;
@@ -52,10 +47,9 @@ html {
 
 }
 
-
 #imageScroller::-webkit-scrollbar {
     width: 0;
-    background: transparent; /* make scrollbar transparent */
+    background: transparent;
     display: none;
 }
 
@@ -95,9 +89,6 @@ html {
 }
 
 .rangeDropDown div {
-    /* 	border-width: 0px 1px 1px 1px;
-    border-style: solid;
-    border-color: #99A7BB; */
     padding: 5px;
 }
 
@@ -109,6 +100,7 @@ html {
 .dropDown .selected {
     background-color: #E8E8E8;
 }
+
 datalist {
     background-color: red;
 }
@@ -138,33 +130,10 @@ datalist {
     text-align: right;
 }
 
-#popupBackground {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    z-index: 99;
-    overflow: auto;
-    background-color: rgb(0, 0, 0);
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-
 .emptyTableRow {
     height: 20px;
 }
 
-#searchParamsTable {
-    text-align: left;
-    font-size: 12px;
-}
-
-#searchParamsTable input, #searchParamsTable select {
-    font-size: 12px;
-}
-
-#searchParamsTable tr {
-    line-height: 20px;
-}
 
 #resultsTable tbody tr:hover {
     background-color: #f2f2f2;
@@ -218,25 +187,9 @@ datalist {
     background-color: #2e3968;
 }
 
-.disabled {
-    pointer-events: none;
-    cursor: default;
-    color: grey;
-}
-
 .remove-link-decoration {
     text-decoration: none;
 }
-
-/*.main-header-buttons, .main-header-buttons-without-hover {
-    width: 60px;
-    padding: 10px;
-    position: relative;
-    top: 16px;
-    color: white;
-    background-color: #2e3968;
-    margin-left: 10px;
-}*/
 
 .userRegistrationForm table tr td:nth-child(3) {
     width: 180px;
@@ -244,26 +197,12 @@ datalist {
 
 .userRegistrationForm p {
     margin: 0;
-    /* 	font-size: 12px; */
 }
 
 .announcement-edit-form, .registration-login-form {
     min-height: 400px;
     text-align: center;
     width: 100%;
-    margin: auto;
-}
-
-.announcementClearButton {
-    /*background-color: white !important;
-    border: none !important;
-    cursor: pointer !important;*/
-    background-color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.announcement-edit-form table {
     margin: auto;
 }
 
@@ -284,58 +223,8 @@ datalist {
     z-index: -1;
 }
 
-/*
-
-#upload-file-label, .medium-button {
-    padding: 6px;
-    color: white;
-    background-color: #2e3968;
-    font-size: 16px;
-    font-family: Arial, Helvetica, sans-serif;
-    !*border: none !important;*!
-    border: none;
-    cursor: pointer;
-}
-
-#upload-file-label:hover, .main-header-buttons:hover, .medium-button:hover {
-    text-decoration: underline;
-}*/
-
-ul {
-    /*	padding-inline-start: 0px !important;*/
-    padding-inline-start: 0;
-}
-
-/* .inputfile + label {
-    font-size: 1.25em;
-    font-weight: 700;
-    color: white;
-    background-color: black;
-    display: inline-block;
-}
-
-.inputfile:focus + label,
-.inputfile + label:hover {
-    background-color: red;
-}   */
-.noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none;
-    /* Non-prefixed version, currently
-                                     supported by Chrome and Opera */
-}
-
 .input-width-150 {
     width: 150px;
-}
-
-#searchParamsTable input, #searchParamsTable label {
-    /* display:block; */
-
 }
 
 #searchParamsTable td {
@@ -344,7 +233,6 @@ ul {
 
 .rangeInput {
     width: 80px;
-    /*text-align: left !important;*/
     text-align: left;
 }
 
@@ -353,7 +241,6 @@ ul {
 }
 
 .blankTableRow {
-    /*	height: 10px !important;*/
     height: 10px;
 }
 
@@ -376,60 +263,6 @@ input[type="radio"]:checked + label {
     margin: 0 auto;
 }
 
-.button-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: absolute;
-}
-
-/*.carousel {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    width: 100%;
-    display: flex;
-    position: absolute;
-    left: 0;
-    transition: all 1s ease;
-}*/
-
-/*.card {
-    background: black;
-    min-width: 200px;
-    height: 200px;
-    margin-right: 1rem;
-    display: inline-block;
-}*/
-
-.sellerDetails table td {
-    padding: 5px 2px;
-}
-
-#aboutSeller tr {
-    background-color: white;
-}
-
-#aboutSeller td {
-    padding: 10px;
-}
-
-#aboutSeller {
-    /*	vertical-align: top !important;*/
-    vertical-align: top;
-}
-
-#aboutSeller tbody {
-    /*vertical-align: top !important;*/
-    vertical-align: top;
-}
-
-#aboutSeller div {
-    padding: 5px;
-}
-
 .carDetails div, .sellerDetails div.block {
     display: grid;
     width: 800px;
@@ -445,8 +278,6 @@ input[type="radio"]:checked + label {
     font-size: 12px;
     width: 800px;
     text-align: left;
-    margin: auto;
-    margin-top: 7px;
 }
 
 .spaceLineInAnnouncementView {
@@ -475,7 +306,6 @@ input[type="radio"]:checked + label {
 }
 
 .admin-home-big-button-text-inside {
-
     text-align: center;
     display: block;
     vertical-align: middle;
