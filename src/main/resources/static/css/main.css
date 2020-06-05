@@ -92,15 +92,6 @@ html {
     padding: 5px;
 }
 
-.valuesDropDown li:hover,
-.rangeDropDown li:hover,
-.valuesDropDown .selected,
-.rangeDropDown .selected,
-.dropDown li:hover,
-.dropDown .selected {
-    background-color: #E8E8E8;
-}
-
 datalist {
     background-color: red;
 }
@@ -133,7 +124,6 @@ datalist {
 .emptyTableRow {
     height: 20px;
 }
-
 
 #resultsTable tbody tr:hover {
     background-color: #f2f2f2;
@@ -261,13 +251,6 @@ input[type="radio"]:checked + label {
     position: relative;
     overflow: hidden;
     margin: 0 auto;
-}
-
-.carDetails div, .sellerDetails div.block {
-    display: grid;
-    width: 800px;
-    grid-template-columns: 1fr 1fr;
-    align-self: flex-start;
 }
 
 .carDetails table td {

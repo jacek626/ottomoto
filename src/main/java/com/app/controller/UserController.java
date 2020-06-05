@@ -5,15 +5,13 @@ import com.app.entity.User;
 import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
 import com.app.searchform.SearchStrategy;
+import com.app.service.EmailService;
 import com.app.service.UserService;
 import com.app.utils.PaginationDetails;
-import com.app.utils.Result;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +21,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -33,33 +32,35 @@ import java.util.Optional;
 @Controller
 @RequestMapping("user/")
 public class UserController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-	
-	@Autowired
+
+	final
 	UserRepository userRepository;
-	
-	@Autowired
+
+	final
 	RoleRepository roleRepository;
 
-    //@Autowired
-    //ApplicationEventPublisher applicationEventPublisher;
+	//@Autowired
+	//ApplicationEventPublisher applicationEventPublisher;
 
-    //@Autowired
-    //private EmailService emailService;
+	private final EmailService emailService;
 
-    //private BCryptPasswordEncoder bCryptPasswordEncoder;
+	//private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private UserService userService;
+	private final UserService userService;
 
     private final SearchStrategy<User> userSearchStrategy;
 
     private final int[] PAGE_SIZES = {5, 10, 20};
 
-    public UserController(SearchStrategy<User> userSearchStrategy) {
-        this.userSearchStrategy = userSearchStrategy;
-    }
+	public UserController(SearchStrategy<User> userSearchStrategy, UserRepository userRepository, RoleRepository roleRepository, EmailService emailService, UserService userService) {
+		this.userSearchStrategy = userSearchStrategy;
+		this.userRepository = userRepository;
+		this.roleRepository = roleRepository;
+		this.emailService = emailService;
+		this.userService = userService;
+	}
 
     @RequestMapping(value = "registration/{returnPage}", method = RequestMethod.GET)
     public String register(Model model, @PathVariable(name = "returnPage", required = false) String returnPage) {
@@ -138,64 +139,42 @@ public class UserController {
 		
 		return "user/registerUser";
 	}
-	
-	@RequestMapping(value="register", method = RequestMethod.POST)
-	public String register(@ModelAttribute("user") @Validated({ User.ValidateAllFieldsWithoutPass.class,
-			User.ValidatePassOnly.class }) User user, BindingResult bindingResult, Model model) {
+
+	@RequestMapping(value = "register", method = RequestMethod.POST)
+	public ModelAndView register(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class,
+			User.ValidatePassOnly.class}) User user, BindingResult bindingResult) {
+		ModelAndView model = new ModelAndView("redirect:/user/registrationSuccess");
 
 		if (bindingResult.hasErrors()) {
-			model.addAttribute("user", user);
-			model.addAttribute("error", bindingResult);
-			return "user/register";
+			prepareModelToErrorDisplay(user, bindingResult, model);
+			return model;
 		}
 
-		if (user.getActive() == null)
-			user.setActive(true);
-		
-		LocaleContextHolder.getLocale();
-		System.out.println(LocaleContextHolder.getLocale());
+		userService.saveNewUser(user).ifError(result -> {
+			model.setViewName("user/registerUser");
+			prepareModelToErrorDisplay(user, bindingResult, model);
+		});
 
-		Result result = userService.saveUser(user);
+		return model;
 
-		if (result.getValidationResult().isEmpty()) {
-			
+	}
 
-			userService.sentEmailWithAccountActivationLink(user); 
-			
-	//		emailService.sendEmailFromSystem(senderEmailAddress, emailText, subject, receiverEmailAddress);
-			
-			return "redirect:/user/registrationSuccess";
-		}
-//		else {
-        //	result.getValidationResult().entrySet().stream().forEach(e -> bindingResult.reject(e.getKey(), e.getValue()));
-        //	result.getValidationResult().entrySet().stream().peek(e -> System.out.println("error, key " + e.getKey() + " value " + e.getValue()));
+	private void prepareModelToErrorDisplay(@Validated({User.ValidateAllFieldsWithoutPass.class,
+			User.ValidatePassOnly.class}) @ModelAttribute("user") User user, BindingResult bindingResult, ModelAndView model) {
+		model.addObject("user", user);
+		model.addObject("error", bindingResult);
+		model.setViewName("user/registerUser");
+	}
 
-        //	if(errors.getAllErrors() != null)
-        //		errors.getAllErrors().addAll(result.getValidationResult().entrySet().stream().map(e ->  new ObjectError(e.getKey(), e.getValue())).collect(Collectors.toList()));
-
-
-        //	for (Entry<String, ValidationDetails> entry : result.getValidationResult().entrySet()) {
-
-        // o to co trzeba poprawic po zmiane na ResultDetails  przestalo dzialac
-        //bindingResult.addError(new FieldError("user", entry.getKey(), "", false, null, null, entry.getValue().name()));
-        //		}
-
-        model.addAttribute("user", user);
-        model.addAttribute("error", bindingResult);
-
-        return "user/registerUser";
-
-    }
-	
-	@RequestMapping(value="adminSettings/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "adminSettings/{id}", method = RequestMethod.GET)
 	public String adminSettings(@PathVariable("id") Long id, Model model) {
 		//public String edit(@PathVariable("id") Long id, BindingResult bindingResult, Model model, Errors errors) throws Exception { 
 		Optional<User> user = userRepository.findById(id);
-		
-		if(user.isPresent()) 
+
+		if (user.isPresent())
 			model.addAttribute("user", user);
 		else
-			throw new NoSuchElementException ();
+			throw new NoSuchElementException();
 		
 		return "user/userEdit";
 		
@@ -324,32 +303,33 @@ public class UserController {
 	//	if(errors.hasErrors() || !userIsValid) {
 		if(errors.hasErrors()) {
 			model.addAttribute("user", user);
-			model.addAttribute("error",errors);
+			model.addAttribute("error", errors);
 			return "user/userEdit";
-		}
-		else {
+		} else {
 			userRepository.save(user);
-		
+
 			return "redirect:/user/list";
 		}
 	}
-	
-	@RequestMapping(value="checkLoginAlreadyExists",method=RequestMethod.POST)
-	public @ResponseBody boolean checkLoginAlreadyExists(@RequestParam("login") String login) {
+
+	@RequestMapping(value = "checkLoginAlreadyExists", method = RequestMethod.GET)
+	public @ResponseBody
+	boolean checkLoginAlreadyExists(@RequestParam("login") String login) {
 		return userRepository.countByLogin(login) > 0;
 	}
-	
-	@RequestMapping(value="checkEmailAlreadyExists",method=RequestMethod.POST)
-	public @ResponseBody boolean checkEmailAlreadyExists(@RequestParam("email") String login,@RequestParam(name="id", required=false) Long id) {
-		if(id == null)
+
+	@RequestMapping(value = "checkEmailAlreadyExists", method = RequestMethod.GET)
+	public @ResponseBody
+	boolean checkEmailAlreadyExists(@RequestParam("email") String login, @RequestParam(name = "id", required = false) Long id) {
+		if (id == null)
 			return userRepository.countByEmail(login) > 0;
 		else
 			return userRepository.countByEmailAndIdNot(login, id) > 0;
 	}
-	
-	@RequestMapping(value="registration", method = RequestMethod.POST)
+
+	@RequestMapping(value = "registration", method = RequestMethod.POST)
 	public String registerPost(@ModelAttribute("user") @Valid User user, @RequestParam String returnPage,
-			 BindingResult bindingResult, Model model, Errors errors) throws Exception {
+							   BindingResult bindingResult, Model model, Errors errors) throws Exception {
 		
 		
 		if (bindingResult.hasErrors()) {

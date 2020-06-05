@@ -2,6 +2,7 @@ package com.app.utils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class Result {
 	enum OperationResult {
@@ -44,16 +45,53 @@ public class Result {
 	}
 
 	public void appendValidationResult(String key, ValidationDetails validationDetails) {
-		if(validationResult.containsKey(key) && !validationResult.get(key).getRelatedElements().isEmpty()) {
+		if (validationResult.containsKey(key) && !validationResult.get(key).getRelatedElements().isEmpty()) {
 			validationResult.get(key).getRelatedElements().addAll(validationDetails.getRelatedElements());
-		}
-		else {
+		} else {
 			validationResult.put(key, validationDetails);
 		}
 
-		if(this.status == OperationResult.SUCCESS)
+		if (this.status == OperationResult.SUCCESS)
 			changeStatusToError();
 	}
+
+	public void ifSuccess(Runnable action) {
+		if (isSuccess()) {
+			action.run();
+		}
+	}
+
+	public void ifSuccess(Consumer<Result> action) {
+		if (isSuccess()) {
+			action.accept(this);
+		}
+	}
+
+	public void ifError(Consumer<Result> action) {
+		if (isError()) {
+			action.accept(this);
+		}
+	}
+
+	public void ifError(Runnable action) {
+		if (isError()) {
+			action.run();
+		}
+	}
+
+/*	public Result ifError(Supplier action) {
+		if (isError()) {
+			action.get();
+		}
+		return this;
+	}*/
+
+	/*public Result ifSuccess2(Supplier<Result> action) {
+		if (isSuccess()) {
+			return action.get();
+		}
+		result
+	}*/
 
 /*	public void appendValidationResult(String key, ValidatorCode code) {
 		if(validationResult.containsKey(key) && !validationResult.get(key).getDetails().isEmpty()) {

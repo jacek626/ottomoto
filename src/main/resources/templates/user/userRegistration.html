@@ -9,8 +9,8 @@
     <div class="registration-login-form">
     	
     	<p>
-    		Formularz rejestracji nowego konta
-    	</p>
+			Formularz rejestracji nowego konta WYKASOWAC
+		</p>
     	
 		<form class="userRegistrationForm" th:action="@{/user/registration}" th:object="${user}" method="post">
 		<!-- <span th:if="${#fields.hasErrors('all')}" th:errors="*{all}">Incorrect date</span>
@@ -51,16 +51,18 @@
 			<tr>
 				<td><label for="email">email</label></td>
 				<td><input id="email" type="email" th:field="*{email}"
-					size="30" /></td>
+						   size="30"/></td>
 				<td style="width:100px;">
-					  <p th:if="${emailAlreadyExists}" th:text="#{emailAlreadyExists}"></p>
-					  <p th:each="error: ${#fields.errors('email')}"
-         				 th:text="${error}">Validation error</p>
-				
+					<p th:if="${emailAlreadyExists}" th:text="#{emailAlreadyExists}"></p>
+					<p th:each="error: ${#fields.errors('email')}"
+					   th:text="${error}">Validation error</p>
+
 				</td>
 				<tr>
 					<td></td>
-					<td  style="text-align: right;"><a class="remove-link-decoration" style="color:black;" th:href="@{/}">anuluj</a><input style="margin-left:10px;" type="submit" value="zapisz" /></td>
+					<td style="text-align: right;">fdfdf
+						<a class="btn btn-primary" style="color:black;" th:href="@{/}">anuluj</a>
+						<input class="btn btn-primary" type="submit" value="zapisz"/></td>
 					<td></td>
 				</tr>
 				<tr>

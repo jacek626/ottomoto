@@ -210,7 +210,6 @@ public class AnnouncementController {
 		Result sentResult = emailService.sendEmail(emailToSend);
 
 		return sentResult.isSuccess();
-
 	}
 
 	@RequestMapping(value = "reportAnnouncement", method = RequestMethod.POST)

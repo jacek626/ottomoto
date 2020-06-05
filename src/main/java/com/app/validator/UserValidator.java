@@ -7,7 +7,6 @@ import com.app.repository.UserRepository;
 import com.app.utils.ValidationDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -15,22 +14,24 @@ import java.util.Map;
 
 @Component
 public class UserValidator {
-	
-	@Autowired
-	private UserRepository userRepository; 
-	
-	@Autowired
-	private AnnouncementRepository announcementRepository; 
 
-	public Map<String, ValidationDetails> checkBeforeSave(User user) {
-	 	Map<String, ValidationDetails> errors = new HashMap<>();
-	 	
-	 	if(StringUtils.isBlank(user.getPassword())) {
-	 		errors.put("password", ValidationDetails.of(ValidatorCode.IS_EMPTY));
-	 	}
-	 	else if(StringUtils.isBlank(user.getPasswordConfirm())) {
-			 errors.put("passwordConfirm", ValidationDetails.of(ValidatorCode.IS_EMPTY));
-		}
+    private final UserRepository userRepository;
+
+    private final AnnouncementRepository announcementRepository;
+
+    public UserValidator(UserRepository userRepository, AnnouncementRepository announcementRepository) {
+        this.userRepository = userRepository;
+        this.announcementRepository = announcementRepository;
+    }
+
+    public Map<String, ValidationDetails> checkBeforeSave(User user) {
+        Map<String, ValidationDetails> errors = new HashMap<>();
+
+        if (StringUtils.isBlank(user.getPassword())) {
+            errors.put("password", ValidationDetails.of(ValidatorCode.IS_EMPTY));
+        } else if (StringUtils.isBlank(user.getPasswordConfirm())) {
+            errors.put("passwordConfirm", ValidationDetails.of(ValidatorCode.IS_EMPTY));
+        }
 		else if(!user.getPassword().equals(user.getPasswordConfirm())) {
 			 errors.put("password", ValidationDetails.of(ValidatorCode.IS_NOT_SAME));
 		}

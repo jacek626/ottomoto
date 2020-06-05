@@ -67,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/**/favicon.ico", "/css/**", "/js/**", "/images/**").permitAll()
 				.antMatchers("/user/registration", "/user/registrationSuccess", "/announcement/show/*", "/user/register").permitAll()
 				.antMatchers("/", "/home", "/admin/register", "/registerAdmin", "/register", "admin/register", "/logout").permitAll()
-				.antMatchers("/announcement/*").permitAll()
+				.antMatchers("/announcement/*", "/user/checkLoginAlreadyExists*", "/user/checkEmailAlreadyExists*").permitAll()
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()

@@ -41,55 +41,49 @@ public class UserService {
 
 	public Result deleteUser(User user) {
 		Map<String, ValidationDetails> validationResult = userValidator.checkBeforeDelete(user.getId());
-				
-		if(validationResult.isEmpty()) {
+
+		if (validationResult.isEmpty()) {
 			userRepository.delete(user);
 		}
-		
+
 		return Result.create(validationResult);
 	}
-	
-	
+
+	public Result saveNewUser(User user) {
+		setUserRoleIfRoleIsEmpty(user);
+		Result result = saveUser(user);
+
+		result.ifSuccess(() -> result.appendResult(emailService.sendEmailWithAccountActivationLink(user)));
+
+		return result;
+	}
+
 	public Result saveUser(User user) {
 		Map<String, ValidationDetails> validationResult = userValidator.checkBeforeSave(user);
-		
-		if(validationResult.isEmpty()) {
+
+		if (validationResult.isEmpty()) {
 			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-			ifRoleIsNotSetSetDefaultUserRole(user);
-			
+
 			userRepository.save(user);
 		}
-		
+
 		return Result.create(validationResult);
 	}
-	
+
 	private String prepareActivationLink() {
 
 
-        return "";
-    }
-	
-	public Result sentEmailWithAccountActivationLink(User user) {
-/*		try {
-			emailService.sendEmailFromSystemEmail(messageSource.getMessage("activationEmailSubject", null, LocaleContextHolder.getLocale()), messageSource.getMessage("activationEmailText", null, LocaleContextHolder.getLocale()), user.getEmail());
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			return Result.error();
-		}
-
-		return Result.success();*/
-		return Result.success();
+		return "";
 	}
 
 
-	private void ifRoleIsNotSetSetDefaultUserRole(User user) {
-		if(Objects.isNull(user.getRole())) {
+	private void setUserRoleIfRoleIsEmpty(User user) {
+		if (Objects.isNull(user.getRole())) {
 			Role userRole = roleRepository.findByName("ROLE_USER");
 			Objects.requireNonNull(userRole, "No role defined");
 			user.setRole(userRole);
 		}
 	}
-	
+
 
 }

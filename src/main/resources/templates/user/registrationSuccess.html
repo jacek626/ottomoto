@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/head :: head"></head>
-  <body>
-    <div th:replace="fragments/header :: header">
+<body>
+<div th:replace="fragments/header :: header">
+</div>
+<div style="background-color: #2e3968;">
+    <div class="container text-center text-white" style="height: 200px;">
+        <br/><br/>
+        <h6 th:text="#{registrationSuccessMessageTitle}"></h6>
+        <h6 th:text="#{registrationSuccessMessage}"></h6>
+        <a class="btn btn-primary mt-4" th:href="@{/}" th:text="#{goToMainSite}"></a>
     </div>
-    <div th:replace="fragments/search :: search">
-    </div>
-    <div style="height:400px; text-align:center; background-color: #2e3968; color:white;  font-size:18px;">
-    	<br/>
-    	<p th:text="#{registrationSuccessMessageTitle}"  ></p>
-    	<p th:text="#{registrationSuccessMessage}"  ></p>
-    	<a th:text="#{goToMainSite}" th:href="@{/}" style="color:white; text-decoration: underline; font-size:22px; margin-top:20px;"></a>
-    </div>
-     <div th:replace="fragments/footer :: footer"></div>
-  </body>
+</div>
+</body>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
 </html>
