@@ -26,13 +26,15 @@ function checkLoginAlreadyExists(login) {
         url: "/otomoto/user/checkLoginAlreadyExists",
         timeout: 5000,
         data: {
-            login
+            'login' : login.value
         },
         success(result) {
             if (result === true) {
-                $("#loginAlreadyExists").css("display", "block");
+                $(login).addClass("is-invalid");
+              //  $("#loginAlreadyExists").css("display", "block");
             } else {
-                $("#loginAlreadyExists").css("display", "none");
+                $(login).removeClass("is-invalid");
+             //   $("#loginAlreadyExists").css("display", "none");
             }
         },
         error(jqXHR, textStatus, errorThrown) {

@@ -341,7 +341,8 @@ public class UserController {
 			model.addAttribute("passwordsAreNotSame",true);
 		}
 		else if (userRepository.findByLogin(user.getLogin()) != null) {
-			model.addAttribute("loginAlreadyExists", true);
+			//	model.addAttribute("loginAlreadyExists", true);
+			bindingResult.addError(new ObjectError("login", "loginAlreadyExists"));
 		}
 		else if (userRepository.countByEmail(user.getEmail()) > 0) {
 			model.addAttribute("emailAlreadyExists", true);

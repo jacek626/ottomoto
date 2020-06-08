@@ -12,7 +12,8 @@
 		<h5 th:if="*{id} == null" th:text="#{createUser}"></h5>
 	</div>
 
-	<form th:action="@{'/user/register'}" th:object="${user}" method="post" class="userRegistrationForm">
+	<form class="userRegistrationForm needs-validation" method="post" th:action="@{'/user/register'}"
+		  th:object="${user}">
 
 		<table class="m-auto">
 			<tr th:if="*{id} != null">
@@ -21,16 +22,18 @@
 			</tr>
 			<tr th:if="*{id} == null">
 				<td><label for="login">login</label></td>
-				<td><input id="login" type="text" th:field="*{login}"
-						   onchange="checkLoginAlreadyExists(this.value);" required/>
-					<p class="validationError" id="loginAlreadyExists"
-					   th:text="#{loginAlreadyExists}"></p>
-                        <p class="validationError" th:if="${loginAlreadyExists}" th:text="#{loginAlreadyExists}"></p>
-                        <p class="validationError" th:each="error: ${#fields.errors('login')}" th:text="${error}">
-
-                        </p>
-                    </td>
-				</tr>
+				<td><input class="form-control" id="login" onchange="checkLoginAlreadyExists(this);" required
+						   th:field="*{login}" type="text"/>
+					<!--	<div class="invalid-feedback">
+                            Name is a required field
+                        </div>-->
+					<span class="validationError invalid-tooltip" id="loginAlreadyExists"
+						  th:text="#{loginAlreadyExists}"></span>
+					<!--	<span class="validationError invalid-tooltip" th:if="${loginAlreadyExists}" th:text="#{loginAlreadyExists}"></span>-->
+					<span class="validationError invalid-tooltip" th:each="error: ${#fields.errors('login')}"
+						  th:text="${error}"></span>
+				</td>
+			</tr>
 				<tr>
 					<td><label for="email" th:text="#{email}"></label></td>
                     <td><input id="email" type="email" th:field="*{email}"
