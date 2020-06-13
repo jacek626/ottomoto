@@ -2,14 +2,17 @@ package com.app.service;
 
 import com.app.entity.Role;
 import com.app.entity.User;
+import com.app.repository.AnnouncementRepository;
 import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
+import com.app.repository.VerificationTokenRepository;
 import com.app.utils.Result;
 import com.app.utils.ValidationDetails;
 import com.app.validator.UserValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Objects;
@@ -18,24 +21,27 @@ import java.util.Objects;
 public class UserService {
 
 	private final UserRepository userRepository;
-	
+
 	private final UserValidator userValidator;
-	
+
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
-	
+
 	private final RoleRepository roleRepository;
-	
+
 	private final EmailService emailService;
 
 	private final MessageSource messageSource;
 
-	public UserService(UserRepository userRepository, UserValidator userValidator, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, EmailService emailService, MessageSource messageSource) {
+	private final VerificationTokenRepository verificationTokenRepository;
+
+	public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, EmailService emailService, AnnouncementRepository announcementRepository, MessageSource messageSource, VerificationTokenRepository verificationTokenRepository) {
 		this.userRepository = userRepository;
-		this.userValidator = userValidator;
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
 		this.roleRepository = roleRepository;
 		this.emailService = emailService;
 		this.messageSource = messageSource;
+		this.verificationTokenRepository = verificationTokenRepository;
+		this.userValidator = new UserValidator(userRepository, announcementRepository);
 	}
 
 
@@ -53,12 +59,11 @@ public class UserService {
 		setUserRoleIfRoleIsEmpty(user);
 		Result result = saveUser(user);
 
-		result.ifSuccess(() -> result.appendResult(emailService.sendEmailWithAccountActivationLink(user)));
-
 		return result;
 	}
 
 	public Result saveUser(User user) {
+		setPasswordIfIsEmpty(user);
 		Map<String, ValidationDetails> validationResult = userValidator.checkBeforeSave(user);
 
 		if (validationResult.isEmpty()) {
@@ -70,12 +75,30 @@ public class UserService {
 		return Result.create(validationResult);
 	}
 
-	private String prepareActivationLink() {
+	@Transactional
+	public Result activate(String token) {
+		Result result = Result.success();
 
+		verificationTokenRepository.findByToken(token).ifPresentOrElse(
+				e -> {
+					e.getUser().setActive(true);
+					userRepository.save(e.getUser());
+					verificationTokenRepository.delete(e);
+				},
+				() -> {
+					result.changeStatusToError();
+				});
 
-		return "";
+		return result;
 	}
 
+	private void setPasswordIfIsEmpty(User user) {
+		if (user.getId() != null && user.getPassword() == null) {
+			String password = userRepository.findPasswordById(user.getId());
+			user.setPassword(password);
+			user.setPasswordConfirm(password);
+		}
+	}
 
 	private void setUserRoleIfRoleIsEmpty(User user) {
 		if (Objects.isNull(user.getRole())) {

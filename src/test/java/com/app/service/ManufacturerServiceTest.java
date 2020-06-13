@@ -96,32 +96,32 @@ public class ManufacturerServiceTest {
 	
 	@Test
 	public void shouldReturnValidationErrorDuringCreateNewManufacturerBecElementWithSameNameExists() {
-		//given
-		Manufacturer manufacturer = new Manufacturer("Manufacturer");
-		when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer("Manufacturer")));
+        //given
+        Manufacturer manufacturer = new Manufacturer("Manufacturer");
+        when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer("Manufacturer")));
 
-		//when
-		Result result = manufacturerService.saveManufacturer(manufacturer);
+        //when
+        Result result = manufacturerService.saveManufacturer(manufacturer);
 
-		//then
-		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("name").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
-	}
+        //then
+        assertThat(result.isError()).isTrue();
+        assertThat(result.getDetail("name").getValidatorCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+    }
 
 	@Test
 	public void shouldReturnValidationErrorDuringEditManufacturerBecElementWithSameNameExists() {
-		//given
-		Manufacturer manufacturer = new Manufacturer("Manufacturer");
-		manufacturer.setId(-2L);
-		when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer(-1L,"Manufacturer")));
+        //given
+        Manufacturer manufacturer = new Manufacturer("Manufacturer");
+        manufacturer.setId(-2L);
+        when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer(-1L, "Manufacturer")));
 
-		//when
-		Result result = manufacturerService.saveManufacturer(manufacturer);
+        //when
+        Result result = manufacturerService.saveManufacturer(manufacturer);
 
-		//then
-		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("name").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
-	}
+        //then
+        assertThat(result.isError()).isTrue();
+        assertThat(result.getDetail("name").getValidatorCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+    }
 
 	@Test
 	public void shouldEditManufacturerNameIsNotChanged() {

@@ -1,25 +1,39 @@
 package com.app.utils;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class Result {
+public class Result<E> {
 	enum OperationResult {
 		SUCCESS, ERROR
-    }
-	
+	}
+
+	@Setter
 	private OperationResult status;
+	@Getter
+	@Setter
+	private E value;
+
 	private Map<String, ValidationDetails> validationResult = new HashMap<>();
+
+	public Map<String, ValidationDetails> getValidationResult() {
+		return validationResult;
+	}
 
 	private Result(OperationResult operationStatus) {
 		this.setStatus(operationStatus);
 	}
-	
+
 	public static Result success() {
 		return new Result(OperationResult.SUCCESS);
 	}
-	
+
 	public static Result error() {
 		return new Result(OperationResult.ERROR);
 	}
@@ -79,35 +93,6 @@ public class Result {
 		}
 	}
 
-/*	public Result ifError(Supplier action) {
-		if (isError()) {
-			action.get();
-		}
-		return this;
-	}*/
-
-	/*public Result ifSuccess2(Supplier<Result> action) {
-		if (isSuccess()) {
-			return action.get();
-		}
-		result
-	}*/
-
-/*	public void appendValidationResult(String key, ValidatorCode code) {
-		if(validationResult.containsKey(key) && !validationResult.get(key).getDetails().isEmpty()) {
-			validationResult.get(key).getDetails().addAll(code.getDetails());
-		}
-		else
-			validationResult.put(key, code);
-
-		if(this.status == OperationResult.SUCCESS)
-			changeStatusToError();
-	}*/
-
-	public Map<String, ValidationDetails> getValidationResult() {
-		return validationResult;
-	}
-
 	public ValidationDetails getDetail(String key) {
 		return validationResult.get(key);
 	}
@@ -116,16 +101,14 @@ public class Result {
 		this.validationResult = validationResult;
 	}
 
-	public OperationResult getStatus() {
-		return status;
-	}
-
-	public void setStatus(OperationResult status) {
-		this.status = status;
-	}
-
-	private void changeStatusToError() {
+	public void changeStatusToError() {
 		this.status = OperationResult.ERROR;
+	}
+
+	public void convertToMvcError(BindingResult bindingResult) {
+		validationResult.entrySet().stream()
+				.map(e -> new FieldError(bindingResult.getObjectName(), e.getKey(), e.getValue().getRejectedValue(), false, null, null, e.getValue().getValidatorCode().toString()))
+				.forEach(e -> bindingResult.addError(e));
 	}
 
 }

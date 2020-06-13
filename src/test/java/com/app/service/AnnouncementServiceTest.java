@@ -95,7 +95,7 @@ public class AnnouncementServiceTest {
         //then
         assertThat(announcementEntityValidation.size()).isOne();
         assertThat(result.isError()).isTrue();
-        assertThat(result.getDetail("user").getCode()).isEqualTo(ValidatorCode.IS_EMPTY);
+        assertThat(result.getDetail("user").getValidatorCode()).isEqualTo(ValidatorCode.IS_EMPTY);
 	}
 	
 	@Test
@@ -109,7 +109,7 @@ public class AnnouncementServiceTest {
 
         //then
         assertThat(result.isError()).isTrue();
-        assertThat(result.getDetail("price").getCode()).isEqualTo(ValidatorCode.IS_NEGATIVE);
+        assertThat(result.getDetail("price").getValidatorCode()).isEqualTo(ValidatorCode.IS_NEGATIVE);
     }
 	
 	@Test
@@ -123,7 +123,7 @@ public class AnnouncementServiceTest {
 
         //then
         assertThat(result.isError()).isTrue();
-        assertThat(result.getValidationResult().get("user").getCode()).isEqualTo(ValidatorCode.IS_DEACTIVATED);
+        assertThat(result.getValidationResult().get("user").getValidatorCode()).isEqualTo(ValidatorCode.IS_DEACTIVATED);
     }
 	
 	@Test

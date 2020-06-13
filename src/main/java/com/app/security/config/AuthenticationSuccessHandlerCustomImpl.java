@@ -49,8 +49,8 @@ public class AuthenticationSuccessHandlerCustomImpl implements AuthenticationSuc
 	        if (isUser) {
 	            return "/";
 	        } else if (isAdmin) {
-	            return "/administration/home";
-	        } else {
+                return "/system/home";
+            } else {
 	            throw new IllegalStateException();
 	        }
 	    }

@@ -11,12 +11,13 @@ import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.List;
 
-@Entity
+
 @Table(name = "user_os")
 @Builder
 @Setter
 @Getter
 @AllArgsConstructor
+@Entity
 public class User implements EntityForSearchStrategy {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_user_os")
@@ -39,7 +40,7 @@ public class User implements EntityForSearchStrategy {
     private String email;
 
     @NotNull
-    private Boolean active = Boolean.TRUE;
+    private Boolean active = Boolean.FALSE;
     
     @Transient
     private String passwordConfirm;

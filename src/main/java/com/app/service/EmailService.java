@@ -1,10 +1,11 @@
 package com.app.service;
 
 import com.app.entity.User;
+import com.app.entity.VerificationToken;
 import com.app.utils.EmailMessage;
 import com.app.utils.Result;
+import com.app.utils.SystemEmail;
 import com.app.validator.EmailValidator;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +21,17 @@ import java.util.Properties;
 public class EmailService {
 	private final EmailValidator emailValidator;
 
-	@Value("${system.email.address}")
-	private String systemEmail;
-	@Value("${system.email.address.pass}")
-	private String systemEmailPassword;
-
 	private final MessageSource messageSource;
 
-	public EmailService(EmailValidator emailValidator, MessageSource messageSource) {
+	private final SystemEmail systemEmail;
+
+	private final VerificationTokenService verificationTokenService;
+
+	public EmailService(EmailValidator emailValidator, MessageSource messageSource, SystemEmail systemEmail, VerificationTokenService verificationTokenService) {
 		this.emailValidator = emailValidator;
 		this.messageSource = messageSource;
+		this.systemEmail = systemEmail;
+		this.verificationTokenService = verificationTokenService;
 	}
 
 	public Result sendEmail(EmailMessage emailMessage) {
@@ -37,7 +39,7 @@ public class EmailService {
 
 		if (result.isSuccess())
 			try {
-				Session session = setUpMailSession(setUpSystemMailProperties(), systemEmail, systemEmailPassword);
+				Session session = setUpMailSession(setUpSystemMailProperties(), systemEmail.getAddress(), systemEmail.getPassword());
 				Transport.send(createMessage(emailMessage, session));
 			} catch (MessagingException e) {
 				e.printStackTrace();
@@ -47,17 +49,19 @@ public class EmailService {
 		return result;
 	}
 
-	public Result sendEmailWithAccountActivationLink(User user) {
+	public Result sendEmailWithAccountActivationLink(User user, String appUrl) {
+		VerificationToken verificationToken = verificationTokenService.createVerificationToken(user);
+
 		String emailSubject = messageSource.getMessage("activationEmailSubject", new Object[]{}, Locale.getDefault());
 		StringBuilder emailText = new StringBuilder(messageSource.getMessage("activationEmailText", new Object[]{}, Locale.getDefault()));
-		/*	emailText.append(request.getRequestURL().toString().replace("sentMessageToSeller", "")).append(json.getInt("announcementId")).append(" ");
-			emailText.append("\n");
-			emailText.append(json.getString("messageText"));*/
+		emailText.append("\n");
+		emailText.append(appUrl);
+		emailText.append("user/confirmRegistration?token=" + verificationToken.getToken());
 
 		EmailMessage emailMessage = EmailMessage.builder().
 				subject(emailSubject).
 				content(emailText.toString()).
-				senderEmail(systemEmail).
+				senderEmail(systemEmail.getAddress()).
 				receiverEmailsAddress(user.getEmail()).
 				build();
 
@@ -66,7 +70,7 @@ public class EmailService {
 
 	private Message createMessage(EmailMessage emailMessage, Session session) throws MessagingException {
 		Message message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(systemEmail));
+		message.setFrom(new InternetAddress(systemEmail.getAddress()));
 
 		if (emailMessage.getSenderEmail().isPresent())
 			message.setReplyTo(new Address[]{new InternetAddress(emailMessage.getSenderEmail().get())});
@@ -74,11 +78,11 @@ public class EmailService {
 		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(String.join(",", emailMessage.getReceiverEmailsAddresses())));
 		message.setSubject(emailMessage.getSubject());
 		MimeBodyPart mimeBodyPart = new MimeBodyPart();
-		mimeBodyPart.setContent(emailMessage.getContent(), "text/html");
+		mimeBodyPart.setContent(emailMessage.getContent(), "text/plain; charset=UTF-8");
 		Multipart multipart = new MimeMultipart();
 		multipart.addBodyPart(mimeBodyPart);
 		message.setContent(multipart);
-		
+
 		return message;
 	}
 
@@ -93,11 +97,11 @@ public class EmailService {
 
 	private Properties setUpSystemMailProperties() {
 		Properties properties = new Properties();
-		properties.put("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-		properties.put("mail.smtp.port", "587");
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls.enable", "true");
+		properties.put("mail.smtp.host", systemEmail.getMailSmtpHost());
+		properties.put("mail.smtp.ssl.trust", systemEmail.getMailSmtpSslTrust());
+		properties.put("mail.smtp.port", systemEmail.getMailSmtpPort());
+		properties.put("mail.smtp.auth", systemEmail.isMailSmtpAuth());
+		properties.put("mail.smtp.starttls.enable", systemEmail.isMailSmtpStarttlsEnabled());
 
 		return properties;
 	}

@@ -10,19 +10,22 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long>, QuerydslPredicateExecutor<User> {
-	User findByLogin(String login);
+    User findByLogin(String login);
 
-	@Query("SELECT u.phoneNumber FROM User u where u.id = :id")
-	Integer findPhoneNumberById(long id);
+    @Query("SELECT u.phoneNumber FROM User u where u.id = :id")
+    Integer findPhoneNumberById(long id);
 
-	@Query("SELECT u.id FROM User u where u.login = :login")
-	long findIdByLogin(String login);
+    @Query("SELECT u.password FROM User u where u.id = :id")
+    String findPasswordById(Long id);
 
-	int countByLogin(String login);
+    @Query("SELECT u.id FROM User u where u.login = :login")
+    long findIdByLogin(String login);
 
-	User findByEmail(String login);
+    int countByLogin(String login);
 
-	int countByEmail(String email);
+    User findByEmail(String login);
+
+    int countByEmail(String email);
 
 	int countByEmailAndIdNot(String email, long id);
 

@@ -2,12 +2,13 @@ package com.app.service;
 
 import com.app.entity.Role;
 import com.app.entity.User;
+import com.app.entity.VerificationToken;
 import com.app.enums.ValidatorCode;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
+import com.app.repository.VerificationTokenRepository;
 import com.app.utils.Result;
-import com.app.validator.UserValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,11 +32,15 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class UserServiceImplTest {
+public class UserServiceTest {
 
 	@Mock
 	@SuppressWarnings("unused")
 	private RoleRepository roleRepository;
+
+	@Mock
+	@SuppressWarnings("unused")
+	private VerificationTokenRepository verificationTokenRepository;
 
 	@Spy
 	@SuppressWarnings("unused")
@@ -45,10 +51,6 @@ public class UserServiceImplTest {
 
 	@Mock
 	private AnnouncementRepository announcementRepository;
-
-	@InjectMocks
-    @SuppressWarnings("unused")
-    private final UserValidator userValidator = spy(UserValidator.class);
 
 	@InjectMocks
 	private UserService userService;
@@ -74,7 +76,7 @@ public class UserServiceImplTest {
 
 		//when
 		Result result = userService.saveUser(user);
-		Set<ConstraintViolation<User>> userEntityValidation = validator.validate( user );
+		Set<ConstraintViolation<User>> userEntityValidation = validator.validate(user);
 
 		//then
 		assertThat(userEntityValidation.size()).isZero();
@@ -82,10 +84,37 @@ public class UserServiceImplTest {
 		verify(userRepository, times(1)).save(user);
 	}
 
-	private User prepareUser() {
-        return User.builder().login("User").password("password").passwordConfirm("password").email("usert@mail.com").active(true).role(new Role()).build();
-    }
 
+	@Test
+	public void shouldActivateUser() {
+		//given
+		String token = "94d83912-bf69-4ef4-a99d-eddb05bf4327";
+		var verificationToken = VerificationToken.builder().token(token).user(User.builder().build()).build();
+		when(verificationTokenRepository.findByToken(any(String.class))).thenReturn(Optional.of(verificationToken));
+
+		//when
+		Result result = userService.activate(token);
+
+		//then
+		assertThat(result.isSuccess()).isTrue();
+	}
+
+	@Test
+	public void shouldReturnErrorDuringUserActivationBecTokenNotExists() {
+		//given
+		String token = "94d83912-bf69-4ef4-a99d-eddb05bf4327";
+		when(verificationTokenRepository.findByToken(any(String.class))).thenReturn(Optional.ofNullable(null));
+
+		//when
+		Result result = userService.activate(token);
+
+		//then
+		assertThat(result.isError()).isTrue();
+	}
+
+	private User prepareUser() {
+		return User.builder().login("User").password("password").passwordConfirm("password").email("usert@mail.com").active(true).role(new Role()).build();
+	}
 
 
 	@Test
@@ -93,14 +122,14 @@ public class UserServiceImplTest {
 		//given
 		User user = prepareUser();
 		user.setId(-1L);
-		when(userRepository.countByLoginAndIdNot(any(String.class),any(Long.class))).thenReturn(1);
+		when(userRepository.countByLoginAndIdNot(any(String.class), any(Long.class))).thenReturn(1);
 
 		//when
 		Result result = userService.saveUser(user);
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("login").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		assertThat(result.getDetail("login").getValidatorCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -116,7 +145,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		assertThat(result.getDetail("email").getValidatorCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -131,7 +160,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		assertThat(result.getDetail("email").getValidatorCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -147,7 +176,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("login").getCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
+		assertThat(result.getDetail("login").getValidatorCode()).isEqualTo(ValidatorCode.ALREADY_EXISTS);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -162,7 +191,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("password").getCode()).isEqualTo(ValidatorCode.IS_NOT_SAME);
+		assertThat(result.getDetail("password").getValidatorCode()).isEqualTo(ValidatorCode.IS_NOT_SAME);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -177,7 +206,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("passwordConfirm").getCode()).isEqualTo(ValidatorCode.IS_EMPTY);
+		assertThat(result.getDetail("passwordConfirm").getValidatorCode()).isEqualTo(ValidatorCode.IS_EMPTY);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -192,7 +221,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		assertThat(result.getDetail("email").getValidatorCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -207,7 +236,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		assertThat(result.getDetail("email").getValidatorCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -222,7 +251,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		assertThat(result.getDetail("email").getValidatorCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
 		verify(userRepository, never()).save(user);
 	}
 
@@ -237,7 +266,7 @@ public class UserServiceImplTest {
 
 		//then
 		assertThat(result.isError()).isTrue();
-		assertThat(result.getDetail("email").getCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
+		assertThat(result.getDetail("email").getValidatorCode()).isEqualTo(ValidatorCode.IS_NOT_VALID);
 		verify(userRepository, never()).save(user);
 	}
 

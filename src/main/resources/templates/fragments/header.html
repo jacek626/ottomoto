@@ -21,23 +21,23 @@
 					Dodaj nowe ogloszenie
 				</a>
 				<div data-toggle="tooltip" sec:authorize="!isAuthenticated()" th:title="#{functionAvailableAfterLogin}">
-					<a class="nav-link nav-item disabled" th:href="@{/user/account}">
-						Moje konto
-					</a>
-				</div>
-				<a class="nav-link nav-item" sec:authorize="isAuthenticated()" th:href="@{/user/account}">
-					Moje konto
-				</a>
-				<a class="nav-link nav-item" sec:authorize="hasRole('USER')" th:href="@{/announcement/create}">
-					Dodaj ogłoszenie
-				</a>
-				<a class="nav-link nav-item" sec:authorize="hasRole('ADMIN')" th:href="@{/administration/home}">
-					Panel administracyjny
-				</a>
-				<a class="nav-link nav-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">
-					Wyloguj
-				</a>
-			</div>
+                    <a class="nav-link nav-item disabled" th:href="@{/user/account}">
+                        Moje konto
+                    </a>
+                </div>
+                <a class="nav-link nav-item" sec:authorize="isAuthenticated()" th:href="@{/user/account}">
+                    Moje konto
+                </a>
+                <a class="nav-link nav-item" sec:authorize="hasRole('USER')" th:href="@{/announcement/create}">
+                    Dodaj ogłoszenie
+                </a>
+                <a class="nav-link nav-item" sec:authorize="hasRole('ADMIN')" th:href="@{/system/home}">
+                    Panel administracyjny
+                </a>
+                <a class="nav-link nav-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">
+                    Wyloguj
+                </a>
+            </div>
 		</div>
 
 		<div class="popup" id="informationPopup">

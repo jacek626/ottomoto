@@ -1,12 +1,15 @@
 package com.app.utils;
 
 import com.app.enums.ValidatorCode;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class ValidationDetails {
     private final ValidatorCode validatorCode;
+    private String rejectedValue;
     private List<String> relatedElements = new ArrayList<>();
 
 
@@ -18,9 +21,9 @@ public class ValidationDetails {
         return new ValidationDetails(validatorCode);
     }
 
-    public static ValidationDetails of(ValidatorCode validatorCode, String relatedElements) {
+    public static ValidationDetails of(ValidatorCode validatorCode, String rejectedValue) {
         ValidationDetails validationDetails = new ValidationDetails(validatorCode);
-        validationDetails.relatedElements.add(relatedElements);
+        validationDetails.rejectedValue = rejectedValue;
 
         return validationDetails;
     }
@@ -30,21 +33,4 @@ public class ValidationDetails {
         return this;
     }
 
-    public List<String> getRelatedElements() {
-        return relatedElements;
-    }
-
-    public ValidationDetails setRelatedElements(List<String> relatedElements) {
-        this.relatedElements = relatedElements;
-        return this;
-    }
-
-    public ValidationDetails appendRelatedElements(String relatedElements) {
-        this.relatedElements.add(relatedElements);
-        return this;
-    }
-
-    public ValidatorCode getCode() {
-        return validatorCode;
-    }
 }

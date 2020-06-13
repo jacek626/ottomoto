@@ -1,5 +1,6 @@
 package com.app.service;
 
+import com.app.entity.User;
 import com.app.utils.EmailMessage;
 import com.app.utils.Result;
 import org.junit.Rule;
@@ -17,16 +18,29 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class EmailServiceImplTest {
+public class EmailServiceTest {
 
 	@Autowired
 	private EmailService emailService;
 
 	@Rule
 	public final ExpectedException exception = ExpectedException.none();
-	
+
 	@Test
-	public void shouldSendEmail()  {
+	public void sendEmailWithAccountActivationLinkTest() {
+		//given
+		User user = User.builder().email("test@test.com").build();
+
+		//when
+		Result result = emailService.sendEmailWithAccountActivationLink(user, "appAddress");
+
+		//then
+		assertThat(result.isSuccess()).isTrue();
+
+	}
+
+	@Test
+	public void shouldSendEmail() {
 		// given
 		EmailMessage emailToSend = EmailMessage.builder().
 				subject("subject").
@@ -49,7 +63,7 @@ public class EmailServiceImplTest {
 				subject("subject").
 				content("content").
 				senderEmail("test.gmail").
-				receiverEmailsAddresses(Arrays.asList("test@test.","@test.com","testtest.com","test@testcom","test@test.com")).
+				receiverEmailsAddresses(Arrays.asList("test@test.", "@test.com", "testtest.com", "test@testcom", "test@test.com")).
 				build();
 
 		//when
@@ -58,6 +72,7 @@ public class EmailServiceImplTest {
 		//then
 		assertThat(sentResult.isError()).isTrue();
 		assertThat(sentResult.getValidationResult().size()).isEqualTo(2);
+		sentResult.getValidationResult()
 		assertThat(sentResult.getValidationResult().get("receiveAddress").getRelatedElements().size()).isEqualTo(4);
 	}
 

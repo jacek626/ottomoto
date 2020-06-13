@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<body>
+<div th:replace="fragments/header :: header">
+</div>
+<div th:replace="fragments/search :: search">
+</div>
+<div class="container">
+
+    <div class="text-center">
+        <h5 th:text="#{mailSettings}"></h5>
+    </div>
+
+    <div class="col-12 col-md-8 col-lg-6 m-auto">
+        <div class="row">
+            <div class="col">
+                mail.address
+            </div>
+            <div class="col">
+                <span th:text="${systemEmail.getAddress()}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                mail.smtp.host
+            </div>
+            <div class="col">
+                <span th:text="${systemEmail.getMailSmtpHost()}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                mail.smtp.ssl.trust
+            </div>
+            <div class="col">
+                <span th:text="${systemEmail.getMailSmtpSslTrust()}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                mail.smtp.port
+            </div>
+            <div class="col">
+                <span th:text="${systemEmail.getMailSmtpPort()}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                mail.smtp.port
+            </div>
+            <div class="col">
+                <span th:text="${systemEmail.isMailSmtpAuth()}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                mail.smtp.starttls.enabled
+            </div>
+            <div class="col">
+                <span th:text="${systemEmail.isMailSmtpStarttlsEnabled()}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

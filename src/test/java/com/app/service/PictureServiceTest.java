@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class PictureServiceImplTest {
+public class PictureServiceTest {
 
     @Mock
     private MessageSource messageSource;
