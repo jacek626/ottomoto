@@ -5,11 +5,10 @@ import lombok.Setter;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class Result<E> {
+public class Result<E> extends ResultAbstract {
 	enum OperationResult {
 		SUCCESS, ERROR
 	}
@@ -20,15 +19,11 @@ public class Result<E> {
 	@Setter
 	private E value;
 
-	private Map<String, ValidationDetails> validationResult = new HashMap<>();
-
-	public Map<String, ValidationDetails> getValidationResult() {
-		return validationResult;
-	}
 
 	private Result(OperationResult operationStatus) {
 		this.setStatus(operationStatus);
 	}
+
 
 	public static Result success() {
 		return new Result(OperationResult.SUCCESS);

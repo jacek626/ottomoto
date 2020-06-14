@@ -3,28 +3,23 @@ package com.app.service;
 import com.app.entity.User;
 import com.app.utils.EmailMessage;
 import com.app.utils.Result;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class EmailServiceTest {
 
 	@Autowired
 	private EmailService emailService;
-
-	@Rule
-	public final ExpectedException exception = ExpectedException.none();
 
 	@Test
 	public void sendEmailWithAccountActivationLinkTest() {
@@ -72,7 +67,6 @@ public class EmailServiceTest {
 		//then
 		assertThat(sentResult.isError()).isTrue();
 		assertThat(sentResult.getValidationResult().size()).isEqualTo(2);
-		sentResult.getValidationResult()
 		assertThat(sentResult.getValidationResult().get("receiveAddress").getRelatedElements().size()).isEqualTo(4);
 	}
 
