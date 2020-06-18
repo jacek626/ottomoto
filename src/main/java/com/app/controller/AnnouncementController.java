@@ -18,6 +18,7 @@ import org.hibernate.ObjectNotFoundException;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.MessageSource;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,9 +70,8 @@ public class AnnouncementController {
 	@RequestMapping(value="create",method=RequestMethod.GET)
 	public String create(Model model) {
 
-		Announcement announcement = Announcement.builder().build();
-		announcement.setVehicleType(VehicleType.CAR);
-		announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
+		Announcement announcement = Announcement.builder().vehicleType(VehicleType.CAR).build();
+		//announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
 		model.addAttribute("announcement", announcement);
 
 		model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
@@ -98,21 +98,23 @@ public class AnnouncementController {
 
 		return "announcement/announcementRead";
 	}
-	
-	@RequestMapping(value="edit/{id}", method=RequestMethod.GET)
-	public String edit(@NotNull @Valid @PathVariable("id") Long id, Model model) {
 
-		if(model.asMap().containsKey("errorDuringSave")) {
+	@RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
+	public String edit(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
+
+		if (model.asMap().containsKey("errorDuringSave")) {
 			Announcement announcementWithError = (Announcement) model.getAttribute("announcement");
-		//	model.addAllAttributes(announcementSearchAndPaginationPreparer.prepareValuesForSelects(announcementWithError.getVehicleModel().getVehicleType(), Optional.of(announcementWithError.getVehicleModel().getManufacturer().getId())));
 			model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcementWithError));
-		}
-		else
+		} else
 			announcementRepository.findById(id).ifPresentOrElse(
 					announcement -> {
-						model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
-						rewriteManufacturerIdFromVehicleModelForSearchForm(announcement);
-						model.addAttribute("announcement", announcement);
+						if (authentication.getAuthorities().stream().anyMatch(e -> e.equals("ROLE_ADMIN")) ||
+								announcement.getUser().getLogin().equals(authentication.getName())) {
+							model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
+							rewriteManufacturerIdFromVehicleModelForSearchForm(announcement);
+							model.addAttribute("announcement", announcement);
+						} else
+							throw new AccessDeniedException("Access denied");
 					},
 					() -> {
 						throw new ObjectNotFoundException(id, "Announcement");
@@ -124,8 +126,8 @@ public class AnnouncementController {
 
 	@RequestMapping(value="save",method=RequestMethod.POST)
 	public String save(@ModelAttribute("announcement") @Validated Announcement announcement,
-			BindingResult bindingResult, Model model, Authentication authentication,
-			RedirectAttributes redirectAttributes) {
+					   BindingResult bindingResult, Authentication authentication,
+					   RedirectAttributes redirectAttributes) {
 
         announcement.preparePicturesToSaveAndDelete();
 
@@ -133,17 +135,16 @@ public class AnnouncementController {
 
         if (!bindingResult.hasErrors()) {
             saveResult = Optional.of(announcementService.saveAnnouncement(announcement));
-        }
-
-        if (bindingResult.hasErrors() || saveResult.orElse(Result.error()).isError()) {
-            prepareFlashAttributesForErrorHandling(announcement, bindingResult, redirectAttributes);
-            return "redirect:/announcement/edit/" + announcement.getId();
 		}
-		else {
+
+		if (bindingResult.hasErrors() || saveResult.orElse(Result.error()).isError()) {
+			prepareFlashAttributesForErrorHandling(announcement, bindingResult, redirectAttributes);
+		} else {
+			redirectAttributes.addFlashAttribute("message", "changesIsSaved");
 			pictureService.deleteFromFileRepository(announcement.getImagesToDelete());
 		}
 
-		return "redirect:/announcement/list";
+		return "redirect:/announcement/edit/" + announcement.getId();
 	}
 
 	@RequestMapping(value="/list")
@@ -173,7 +174,6 @@ public class AnnouncementController {
 			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
 			@RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
 			@RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
-		//	@RequestParam(name = "searchArguments",required = false, defaultValue = "&") String searchArguments,
 			@ModelAttribute("announcement")  Announcement announcement,
 			Model model) {
 
@@ -181,7 +181,6 @@ public class AnnouncementController {
 		model.addAttribute("requestMapping", "my");
 
 		PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
-		//	model.addAllAttributes(announcementSearchAndPaginationPreparer.loadDataAndPrepareModelForPagination(paginationDetails, announcement));
 
 		model.addAllAttributes(announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails));
 
@@ -232,6 +231,4 @@ public class AnnouncementController {
 		redirectAttributes.addFlashAttribute("announcement", announcement);
 		redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.announcement", bindingResult);
 	}
-
-
 }

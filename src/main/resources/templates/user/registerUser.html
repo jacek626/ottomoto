@@ -141,6 +141,9 @@
                 <div th:each="error: ${#fields.errors('active')}" th:text="#{__${error}__}"></div>
             </div>
         </div>
+        <div class="d-none" sec:authorize="hasRole('USER') || !isAuthenticated()">
+            <input class="form-check-input" id="active" th:field="*{active}" type="checkbox"/>
+        </div>
         <div class="form-group">
             <textarea class="form-control" cols="40" id="description" rows="4" th:field="*{description}"
                       th:placeholder="#{description}">
@@ -154,19 +157,18 @@
         </div>
         <div class="form-group text-right">
             <a class="btn btn-primary" th:href="@{/}" th:text="#{cancel}"></a>
+            <a class="btn btn-primary text-white"
+               onclick="if(confirm('are you sure ?')){ document.getElementById('deleteUser').click(); }"
+               th:text="#{delete}"></a>
+            <a class="d-none" id="deleteUser" th:href="@{'/user/delete/' + ${id}}"></a>
+            <a class="btn btn-primary" sec:authorize="hasRole('ADMIN')" th:href="@{'/user/changePass/' + ${id}}"
+               th:text="#{changePass}"></a>
             <input class="btn btn-primary" th:value="#{save}" type="submit"/></td>
         </div>
         <div>
             <input id="returnPage" name="returnPage" th:value="${returnPage}"
                    type="hidden"/>
         </div>
-        <!-- 	<td>
-             <p th:each="e : ${#fields.detailedErrors()}" >
-            <span th:text="${e.global}? '*' : ${e.fieldName}">The field name</span> |
-                    <span th:text="${e.message}">The error message</span>
-            </p>
-            </td>
-    </tr>  -->
 
     </form>
 

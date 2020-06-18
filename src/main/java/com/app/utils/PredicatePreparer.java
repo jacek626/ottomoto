@@ -5,6 +5,7 @@ import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanPath;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.StringPath;
+import org.apache.commons.lang3.StringUtils;
 
 public interface PredicatePreparer {
     Predicate preparePredicates();
@@ -17,7 +18,7 @@ public interface PredicatePreparer {
     }
 
     default void preparePredicates(StringPath stringPath, String fieldValue) {
-        if (fieldValue != null)
+        if (StringUtils.isNotBlank(fieldValue))
             getPredicate().and(stringPath.containsIgnoreCase(fieldValue));
     }
 

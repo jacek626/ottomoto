@@ -18,10 +18,10 @@ public class VerificationTokenService {
     }
 
     public VerificationToken createVerificationToken(User user) {
-        Optional<VerificationToken> verificationTokenFromDB = verificationTokenRepository.findByUser(user);
+        Optional<VerificationToken> alreadyExistingToken = verificationTokenRepository.findByUser(user);
 
-        if (verificationTokenFromDB.isPresent())
-            return verificationTokenFromDB.get();
+        if (alreadyExistingToken.isPresent())
+            return alreadyExistingToken.get();
         else {
             VerificationToken verificationToken = new VerificationToken();
             verificationToken.setToken(UUID.randomUUID().toString());

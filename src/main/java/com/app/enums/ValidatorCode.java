@@ -8,5 +8,6 @@ public enum ValidatorCode {
     IS_DEACTIVATED,
     IS_NOT_SAME,
     IS_NEGATIVE,
-    HAVE_REF_OBJECTS
+    HAVE_REF_OBJECTS,
+    IS_TOO_SHORT
 }

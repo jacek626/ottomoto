@@ -40,7 +40,7 @@ public class User implements EntityForSearchStrategy {
     private String email;
 
     @NotNull
-    private Boolean active = Boolean.FALSE;
+    private Boolean active = Boolean.TRUE;
     
     @Transient
     private String passwordConfirm;
@@ -80,7 +80,6 @@ public class User implements EntityForSearchStrategy {
 
     @OneToOne
     @JoinTable(name = "userRole", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-//	@JoinTable( joinColumns = @JoinColumn(referencedColumnName="id"), inverseJoinColumns = @JoinColumn(referencedColumnName="id"))
     private Role role;
 
     @Transient
@@ -137,17 +136,5 @@ public class User implements EntityForSearchStrategy {
     public interface ValidatePassOnly {
     }
 
-    public void prepareFiledsForSearch() {
-        if (login == null)
-            login = "";
-		if(email == null)
-			email = "";
-		if(firstName == null)
-			firstName = "";
-		if(lastName == null)
-			lastName = "";
-		if(active == null)
-			active = true;
-	}
 }
 

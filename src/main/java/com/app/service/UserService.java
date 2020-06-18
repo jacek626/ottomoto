@@ -63,14 +63,16 @@ public class UserService {
 	}
 
 	public Result saveUser(User user) {
-		setPasswordIfIsEmpty(user);
 		Map<String, ValidationDetails> validationResult = userValidator.checkBeforeSave(user);
 
 		if (validationResult.isEmpty()) {
-			user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            if (user.getId() != null && user.getPassword() == null && user.getPasswordConfirm() == null)
+                ifEditUsePassFormDb(user);
+            else
+                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-			userRepository.save(user);
-		}
+            userRepository.save(user);
+        }
 
 		return Result.create(validationResult);
 	}
@@ -82,31 +84,40 @@ public class UserService {
 		verificationTokenRepository.findByToken(token).ifPresentOrElse(
 				e -> {
 					e.getUser().setActive(true);
-					userRepository.save(e.getUser());
-					verificationTokenRepository.delete(e);
-				},
-				() -> {
-					result.changeStatusToError();
-				});
+                    userRepository.save(e.getUser());
+                    verificationTokenRepository.delete(e);
+                },
+                () -> {
+                    result.changeStatusToError();
+                });
 
-		return result;
-	}
+        return result;
+    }
 
-	private void setPasswordIfIsEmpty(User user) {
-		if (user.getId() != null && user.getPassword() == null) {
-			String password = userRepository.findPasswordById(user.getId());
-			user.setPassword(password);
-			user.setPasswordConfirm(password);
-		}
-	}
+    private void ifEditUsePassFormDb(User user) {
+        if (user.getId() != null && user.getPassword() == null) {
+            String password = userRepository.findPasswordById(user.getId());
+            user.setPassword(password);
+            user.setPasswordConfirm(password);
+        }
+    }
 
-	private void setUserRoleIfRoleIsEmpty(User user) {
-		if (Objects.isNull(user.getRole())) {
-			Role userRole = roleRepository.findByName("ROLE_USER");
-			Objects.requireNonNull(userRole, "No role defined");
-			user.setRole(userRole);
-		}
-	}
+    private void setUserRoleIfRoleIsEmpty(User user) {
+        if (Objects.isNull(user.getRole())) {
+            Role userRole = roleRepository.findByName("ROLE_USER");
+            Objects.requireNonNull(userRole, "No role defined");
+            user.setRole(userRole);
+        }
+    }
 
 
+    public Result changePass(User user) {
+        Map<String, ValidationDetails> validationResult = userValidator.checkBeforeChangePass(user);
+
+        if (validationResult.isEmpty()) {
+            userRepository.updatePassword(bCryptPasswordEncoder.encode(user.getPassword()), user.getId());
+        }
+
+        return Result.create(validationResult);
+    }
 }

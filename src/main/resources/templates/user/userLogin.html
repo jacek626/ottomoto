@@ -12,7 +12,6 @@
         <h5 th:text="#{loginIntoSystem}"></h5>
     </div>
 
-
     <form method="post" sec:authorize="!isAuthenticated()" th:action="@{/user/login}" th:object="${user}">
         <div class="col-12 col-md-6 col-lg-4 m-auto ">
             <div class="form-group">
@@ -22,18 +21,12 @@
             <div class="form-group">
                 <label for="password" th:text="#{password}"></label>
                 <input class="form-control" id="password" size="30" th:field="*{password}" type="password"/>
+                <span class="validationError" th:if="${error}" th:text="#{wrongData}"></span>
             </div>
             <div class="form-group text-right">
                 <a class="btn btn-secondary" th:href="@{/user/register}" th:text="#{createAccount}"></a>
                 <a class="btn btn-primary" th:href="@{/}" th:text="#{cancel}"></a>
                 <input class="btn btn-primary" th:value="#{logIn}" type="submit"/>
-            </div>
-            <div class="form-group f">
-                <p th:each="e : ${#fields.detailedErrors()}">
-                    <span th:text="${e.global}? '*' : ${e.fieldName}">The field name</span> |
-                    <span th:text="${e.message}">The error message</span>
-                </p>
-
             </div>
         </div>
     </form>

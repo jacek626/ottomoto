@@ -1,30 +1,22 @@
 package com.app.controller;
 
 import com.app.entity.User;
-import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
 import com.app.searchform.SearchStrategy;
 import com.app.service.EmailService;
 import com.app.service.UserService;
 import com.app.utils.PaginationDetails;
 import com.app.utils.Result;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -33,34 +25,24 @@ import java.util.Optional;
 @RequestMapping("user/")
 public class UserController {
 
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
-
-	final
-	UserRepository userRepository;
-
-	final
-	RoleRepository roleRepository;
-
-	//@Autowired
-	//ApplicationEventPublisher applicationEventPublisher;
+	private final UserRepository userRepository;
 
 	private final EmailService emailService;
 
 	private final UserService userService;
 
-    private final SearchStrategy<User> userSearchStrategy;
+	private final SearchStrategy<User> userSearchStrategy;
 
-	public UserController(SearchStrategy<User> userSearchStrategy, UserRepository userRepository, RoleRepository roleRepository, EmailService emailService, UserService userService) {
+	public UserController(SearchStrategy<User> userSearchStrategy, UserRepository userRepository, EmailService emailService, UserService userService) {
 		this.userSearchStrategy = userSearchStrategy;
 		this.userRepository = userRepository;
-		this.roleRepository = roleRepository;
 		this.emailService = emailService;
 		this.userService = userService;
 	}
 
-    @RequestMapping(value = "registration/{returnPage}", method = RequestMethod.GET)
-    public String register(Model model, @PathVariable(name = "returnPage", required = false) String returnPage) {
-        model.addAttribute("user", new User());
+	@RequestMapping(value = "registration/{returnPage}", method = RequestMethod.GET)
+	public String register(Model model, @PathVariable(name = "returnPage", required = false) String returnPage) {
+		model.addAttribute("user", new User());
 
         if (returnPage != null)
             model.addAttribute("returnPage", returnPage);
@@ -69,11 +51,11 @@ public class UserController {
         return "user/userRegistration";
     }
 
-    @InitBinder
+/*    @InitBinder
     public void initBinder(WebDataBinder binder) {
         StringTrimmerEditor stringtrimmer = new StringTrimmerEditor(true);
         binder.registerCustomEditor(String.class, stringtrimmer);
-    }
+    }*/
 
 
     @RequestMapping(value = "/list")
@@ -102,49 +84,43 @@ public class UserController {
 		else
 			throw new NoSuchElementException("User with id " + id + " not exists");
 
-		return "user/userEdit";
-
+		return "user/registerUser";
 	}
 
 	@RequestMapping(value = "edit", method = RequestMethod.GET)
 	public String edit(Model model, Authentication authentication) {
 		User user = userRepository.findByLogin(authentication.getName());
-
 		model.addAttribute("user", user);
 
 		return "user/registerUser";
-
 	}
 
 	@RequestMapping(value = "createUserByAdmin")
 	public String createUserByAdmin(Model model) {
-		User user = new User();
-		user.setActive(true);
-		
-		model.addAttribute("user", user);
-		
-		return "user/userEdit";
+		model.addAttribute("user", new User());
+
+		return "user/registerUser";
 	}
 
 	@RequestMapping(value = "register", method = RequestMethod.GET)
 	public String register(Model model) {
 		User user = new User();
-		user.setActive(true);
-
+		user.setActive(false);
 		model.addAttribute("user", user);
 
 		return "user/registerUser";
 	}
 
 	@RequestMapping(value = "confirmRegistration", method = RequestMethod.GET)
-	public String confirmRegistration(@PathVariable("token") String token, Model model) {
-		userService.activate(token);
+	public String confirmRegistration(@RequestParam("token") String token, Model model) {
+		Result result = userService.activate(token);
+		model.addAttribute("result", result.isSuccess());
 
 		return "user/confirmRegistration";
 	}
 
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public ModelAndView register(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class,
+	public ModelAndView save(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class,
 			User.ValidatePassOnly.class}) User user, BindingResult bindingResult, HttpServletRequest request) {
 		ModelAndView model = new ModelAndView("user/registerUser");
 
@@ -153,21 +129,18 @@ public class UserController {
 		}
 
 		Result result = userService.saveNewUser(user);
-		List<FieldError> fieldErrorS = null;
 
 		if (result.isError()) {
 			result.convertToMvcError(bindingResult);
 		} else {
-			emailService.sendEmailWithAccountActivationLink(user, request.getRequestURL().toString().replace("user/register", ""));
-			model.setViewName("redirect:/user/registrationSuccess");
+			if (!user.getActive()) {
+				emailService.sendEmailWithAccountActivationLink(user, request.getRequestURL().toString().replace("user/register", ""));
+				model.setViewName("redirect:/user/registrationSuccess?withoutActivation=true");
+			} else
+				model.setViewName("redirect:/user/registrationSuccess");
 		}
 
 		return model;
-	}
-
-	private void prepareModelToErrorDisplay(@Validated({User.ValidateAllFieldsWithoutPass.class,
-			User.ValidatePassOnly.class}) @ModelAttribute("user") User user, BindingResult bindingResult, ModelAndView model) {
-		model.setViewName("user/registerUser");
 	}
 
 	@RequestMapping(value = "adminSettings/{id}", method = RequestMethod.GET)
@@ -182,21 +155,22 @@ public class UserController {
 		return "user/userEdit";
 		
 	}
-	
-	@RequestMapping(value="delete/{id}", method = RequestMethod.GET)
-	public String delete(@PathVariable("id") Long id, Model model, RedirectAttributes redirectAttributes) {
-        Optional<User> user = userRepository.findById(id);
 
-        if (user.isPresent() && user.get().getAnnouncementList().size() > 0) {
-            redirectAttributes.addFlashAttribute("message", "user ma przypisane aukcje, zanim usuniesz usuera trzeba je skasowac");
+	@RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
+	public ModelAndView delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+		Optional<User> user = userRepository.findById(id);
 
-            return "redirect:/user/edit/" + user.get().getId();
-        } else {
-            redirectAttributes.addFlashAttribute("message", "konto usuniete");
-            userRepository.delete(user.get());
+		ModelAndView model = new ModelAndView("redirect:/user/list");
+		Result<User> result = userService.deleteUser(user.get());
 
-            return "redirect:/user/list";
-        }
+		result.ifError(e -> {
+			e.getValidationResult().entrySet().stream().findAny().ifPresent(c -> {
+				redirectAttributes.addFlashAttribute("message", c.getValue().getValidatorCode());
+			});
+			model.setViewName("redirect:/user/edit/" + user.get().getId());
+		});
+
+		return model;
 	}
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
@@ -207,40 +181,48 @@ public class UserController {
 			model.setViewName("redirect:/user/list");
 		});
 
-
 		if (bindingResult.hasErrors())
 			model.setViewName("user/registerUser");
 		else {
 			Result<User> result = userService.saveUser(user);
-			result.ifError(r -> {
+			result.ifError(() -> {
 				result.convertToMvcError(bindingResult);
-
 				model.setViewName("user/registerUser");
 			});
 		}
 
 		return model;
 	}
-	
-	@RequestMapping(value="changePass", method = RequestMethod.POST)
-	public String changePass(@ModelAttribute("user") @Validated({User.ValidatePassOnly.class}) User user, BindingResult bindingResult, Model model, Errors errors) {
 
-        if (errors.hasErrors() || validateEmailBeforeUpdate(user, model)) {
-            model.addAttribute("user", user);
-            model.addAttribute("error", errors);
-            return "user/userChangePass";
-        } else {
-            Optional<User> userFromDB = userRepository.findById(user.getId());
+	private ModelAndView redirectDependsOnUsePlace(boolean passChangedFromAdministrationSite, long userId) {
+		ModelAndView model = null;
 
-            if (userFromDB.isPresent()) {
-                //		userFromDB.get().setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-				// do zmiany
-				userRepository.save(userFromDB.get());
-			} else
-				throw new NoSuchElementException();
+		if (passChangedFromAdministrationSite)
+			model = new ModelAndView("redirect:/user/edit/" + userId);
+		else
+			model = new ModelAndView("redirect:/user/account");
 
-			return "redirect:/user/edit/" + user.getId();
+		return model;
+	}
+
+	@RequestMapping(value = "changePass", method = RequestMethod.POST)
+	public ModelAndView changePass(@ModelAttribute("user") @Validated({User.ValidatePassOnly.class}) User user,
+								   @RequestParam(value = "passChangedFromAdministrationSite", defaultValue = "false") boolean passChangedFromAdministrationSite, BindingResult bindingResult, HttpServletRequest request) {
+		ModelAndView model = redirectDependsOnUsePlace(passChangedFromAdministrationSite, user.getId());
+
+		if (bindingResult.hasErrors()) {
+			model.setViewName("user/changePass");
+			return model;
+		} else {
+			Result<User> result = userService.changePass(user);
+
+			result.ifError(() -> {
+				result.convertToMvcError(bindingResult);
+				model.setViewName("user/changePass");
+			});
 		}
+
+		return model;
 	}
 
 	@RequestMapping(value = "changePass/{id}", method = RequestMethod.GET)
@@ -251,8 +233,9 @@ public class UserController {
 			throw new NoSuchElementException();
 
 		model.addAttribute("user", user.get());
+		model.addAttribute("passChangedFromAdministrationSite", true);
 
-		return "/user/userChangePass";
+		return "/user/changePass";
 	}
 
 	@RequestMapping(value = "changePass", method = RequestMethod.GET)
@@ -261,17 +244,9 @@ public class UserController {
 
 		model.addAttribute("user", user);
 
-		return "/user/userChangePass";
+		return "/user/changePass";
 	}
 
-	private boolean validateEmailBeforeUpdate(User user, Model model) {
-		if (userRepository.countByEmailAndIdNot(user.getEmail(), user.getId()) > 0) {
-			model.addAttribute("emailAlreadyExists", true);
-			return true;
-		}
-		return false;
-	}
-	
 	@RequestMapping(value = "checkLoginAlreadyExists", method = RequestMethod.GET)
 	public @ResponseBody
 	boolean checkLoginAlreadyExists(@RequestParam("login") String login) {
@@ -284,49 +259,26 @@ public class UserController {
 		return userRepository.countByEmail(login) > 0;
 	}
 
-	@RequestMapping(value="registrationSuccess")
-	public String registrationSuccess() {
-		
+	@RequestMapping(value = "registrationSuccess")
+	public String registrationSuccess(@RequestParam(value = "withoutActivation", required = false, defaultValue = "false") boolean withoutActivation, Model model) {
+		model.addAttribute("withoutActivation", withoutActivation);
+
 		return "user/registrationSuccess";
 	}
-	
-	@RequestMapping(value="login", method = RequestMethod.GET)
-	public String login(Model model, @RequestParam(value = "error", required = false) String error) {
-		model.addAttribute("user",new User());
-		
-		String errorMessge = null;
-        if(error != null) {
-            errorMessge = "username or password are incorrect";
-        }
-    //    if(logout != null) {
-     //       errorMessge = "You have been successfully logged out !!";
-  //      }
-		
-        model.addAttribute("errorMessge", errorMessge);
-//        model.addAttribute("errorMessge", errorMessge);
-		
+
+	@RequestMapping(value = "login")
+	public String login(Model model, @RequestParam(value = "error", required = false, defaultValue = "false") boolean error) {
+		model.addAttribute("user", new User());
+		model.addAttribute("error", error);
+
 		return "user/userLogin";
 	}
-/*	
-	@RequestMapping(value="login", method = RequestMethod.POST)
-	public String loginPost(@ModelAttribute User user) {
-		System.out.println("DDDDDDDDDDD");
-		
-		
-		return "redirect:/";
-	}*/
-	
+
 	@RequestMapping(value = "account")
-	public String userAccount(Model model) {
+	public ModelAndView userAccount() {
 
-        return "user/userHome";
-    }
-
-    @RequestMapping(value = "myAnnouncements")
-    public String myAnnouncements(Model model) {
-
-        return "redirect:/announcement/list";
-    }
+		return new ModelAndView("user/userHome");
+	}
 
     @RequestMapping(value = "loadUserPhoneNumber", method = RequestMethod.GET)
     public @ResponseBody

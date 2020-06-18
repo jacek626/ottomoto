@@ -40,15 +40,13 @@ function loadVehicleSubtypes(vehicleType, typeOfHtmlElement) {
     $.ajax({
         type: "GET",
         url: "/otomoto/manufacturer/loadVehicleSubtypes",
-        timeout: 5000,
+        timeout: 1000,
         data: {
             vehicleType,
             typeOfHtmlElement
         },
         success(result) {
-            $("#vehicleSubtype").empty().append(result);
-            setDropDownListListener(".valuesDropDown  li");
-
+            $('#vehicleSubtype').empty().append(result).selectpicker('refresh');
         },
         error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);

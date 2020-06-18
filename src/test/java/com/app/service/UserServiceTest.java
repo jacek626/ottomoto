@@ -9,6 +9,7 @@ import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
 import com.app.repository.VerificationTokenRepository;
 import com.app.utils.Result;
+import com.app.utils.SystemEmail;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,47 +43,48 @@ public class UserServiceTest {
 	@SuppressWarnings("unused")
 	private VerificationTokenRepository verificationTokenRepository;
 
-	@Spy
-	@SuppressWarnings("unused")
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Spy
+    @SuppressWarnings("unused")
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	@Mock
-	private UserRepository userRepository;
+    @Mock
+    private UserRepository userRepository;
 
-	@Mock
-	private AnnouncementRepository announcementRepository;
+    @Mock
+    private AnnouncementRepository announcementRepository;
 
-	@InjectMocks
-	private UserService userService;
+    private static Validator entityValidator;
 
-	private static Validator validator;
+    @InjectMocks
+    private UserService userService;
+    @Mock
+    private SystemEmail systemEmail;
 
-	@BeforeAll
-	static void setUp() {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-	}
+    @BeforeAll
+    static void setUp() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        entityValidator = factory.getValidator();
+    }
 
-
-	@BeforeEach
-	public void mockEmailAndLoginValidation() {
-		when(userRepository.countByLogin(any(String.class))).thenReturn(0);
+    @BeforeEach
+    public void mockEmailAndLoginValidation() {
+        when(userRepository.countByLogin(any(String.class))).thenReturn(0);
 	}
 
 	@Test
 	public void shouldSaveUser() {
-		//given
-		User user = prepareUser();
+        //given
+        User user = prepareUser();
 
-		//when
-		Result result = userService.saveUser(user);
-		Set<ConstraintViolation<User>> userEntityValidation = validator.validate(user);
+        //when
+        Result result = userService.saveUser(user);
+        Set<ConstraintViolation<User>> userEntityValidation = entityValidator.validate(user);
 
-		//then
-		assertThat(userEntityValidation.size()).isZero();
-		assertThat(result.isSuccess()).isTrue();
-		verify(userRepository, times(1)).save(user);
-	}
+        //then
+        assertThat(userEntityValidation.size()).isZero();
+        assertThat(result.isSuccess()).isTrue();
+        verify(userRepository, times(1)).save(user);
+    }
 
 
 	@Test
@@ -290,19 +292,40 @@ public class UserServiceTest {
 		//given
 		User user = prepareUser();
 		user.setId(-1L);
-		when(announcementRepository.existsByUserIdAndDeactivationDateIsNull(any(Long.class))).thenReturn(true);
+        when(announcementRepository.existsByUserIdAndDeactivationDateIsNull(any(Long.class))).thenReturn(true);
 
-		//when
-		Result result = userService.deleteUser(user);
+        //when
+        Result result = userService.deleteUser(user);
 
-		//then
-		assertThat(result.isError()).isTrue();
-		verify(userRepository, never()).delete(user);
-	}
+        //then
+        assertThat(result.isError()).isTrue();
+        verify(userRepository, never()).delete(user);
+    }
 
+    @Test
+    public void shouldChangeUserPass() {
+        //given
+        User user = User.builder().id(1L).password("test123").passwordConfirm("test123").build();
 
-	// dorobic edycje, i popatrzec czy educja w innych jest
+        //when
+        Result result = userService.changePass(user);
 
+        //then
+        assertThat(result.isSuccess()).isTrue();
+        verify(userRepository, times(1)).updatePassword(any(String.class), any(Long.class));
+    }
 
+    @Test
+    public void shouldReturnErrorBecPasswordsAreNotSame() {
+        //given
+        User user = User.builder().id(1L).password("test123").passwordConfirm("test12345").build();
+
+        //when
+        Result result = userService.changePass(user);
+
+        //then
+        assertThat(result.isError()).isTrue();
+        verify(userRepository, never()).updatePassword(any(String.class), any(Long.class));
+    }
 
 }

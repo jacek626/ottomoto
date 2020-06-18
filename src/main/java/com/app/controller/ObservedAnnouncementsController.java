@@ -44,10 +44,7 @@ public class ObservedAnnouncementsController {
         if(announcement.getVehicleType() == null)
             announcement.setVehicleType(VehicleType.CAR);
 
-        //     announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
-
         PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
-
         model.addAllAttributes(observedAnnouncementSearchStrategyDecorator.prepareSearchForm(announcement, paginationDetails));
 
         return "/announcement/announcementList";

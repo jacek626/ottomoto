@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/search :: search"></div>
+
+<div class="container">
+
+    <div class="text-center">
+        <h5 th:text="#{changePass}"></h5>
+    </div>
+
+    <form method="post" th:action="@{'/user/changePass'}" th:object="${user}">
+        <table class="m-auto">
+            <tr>
+                <td><label for="login">login</label></td>
+                <td><input id="login" type="text" th:field="*{login}" readOnly="readOnly" style="border:none;"/></td>
+            </tr>
+            <tr>
+                <td><label for="password" th:text="#{password}"></label></td>
+                <td><input id="password" th:field="*{password}" type="password"/>
+                    <p class="validationError" th:if="${passwordsAreNotSame}" th:text="#{passwordsAreNotSame}"></p>
+                    <p class="validationError" th:each="error: ${#fields.errors('password')}"
+                       th:text="#{__${error}__}"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="passwordConfirm" th:text="#{passwordConfirm}"></label></td>
+                <td><input id="passwordConfirm" th:field="*{passwordConfirm}" type="password"/>
+                    <p class="validationError" th:if="${validationFieldIsEmpty}" th:text="#{fieldIsEmpty}"></p>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input id="userId" th:field="*{id}" type="hidden"/>
+                    <input class="d-none" th:name="passChangedFromAdministrationSite"
+                           th:value="${passChangedFromAdministrationSite}" type="text"/>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <a class="btn btn-primary" th:href="@{/user/list/}" th:if="${passChangedFromAdministrationSite}"
+                       th:text="#{cancel}"></a>
+                    <a class="btn btn-primary" th:href="@{/user/account/}" th:if="!${passChangedFromAdministrationSite}"
+                       th:text="#{cancel}"></a>
+                    <button class="btn btn-primary" th:text="#{save}" type="submit"/>
+                </td>
+                <td></td>
+            </tr>
+			</table>
+
+		</form>
+
+	</div>
+	<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

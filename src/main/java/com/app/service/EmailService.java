@@ -42,31 +42,35 @@ public class EmailService {
 				Session session = setUpMailSession(setUpSystemMailProperties(), systemEmail.getAddress(), systemEmail.getPassword());
 				Transport.send(createMessage(emailMessage, session));
 			} catch (MessagingException e) {
-				e.printStackTrace();
-				return Result.error();
-			}
+                e.printStackTrace();
+                return Result.error();
+            }
 
-		return result;
-	}
+        return result;
+    }
 
-	public Result sendEmailWithAccountActivationLink(User user, String appUrl) {
-		VerificationToken verificationToken = verificationTokenService.createVerificationToken(user);
+    public Result sendEmailWithAccountActivationLink(User user, String appUrl) {
+        VerificationToken verificationToken = verificationTokenService.createVerificationToken(user);
 
-		String emailSubject = messageSource.getMessage("activationEmailSubject", new Object[]{}, Locale.getDefault());
-		StringBuilder emailText = new StringBuilder(messageSource.getMessage("activationEmailText", new Object[]{}, Locale.getDefault()));
-		emailText.append("\n");
-		emailText.append(appUrl);
-		emailText.append("user/confirmRegistration?token=" + verificationToken.getToken());
+        EmailMessage emailMessage = createActivationEmail(user, appUrl, verificationToken.getToken());
 
-		EmailMessage emailMessage = EmailMessage.builder().
-				subject(emailSubject).
-				content(emailText.toString()).
-				senderEmail(systemEmail.getAddress()).
-				receiverEmailsAddress(user.getEmail()).
-				build();
+        return sendEmail(emailMessage);
+    }
 
-		return sendEmail(emailMessage);
-	}
+    protected EmailMessage createActivationEmail(User user, String appUrl, String verificationToken) {
+        String emailSubject = messageSource.getMessage("activationEmailSubject", new Object[]{}, Locale.getDefault());
+        StringBuilder emailText = new StringBuilder(messageSource.getMessage("activationEmailText", new Object[]{}, Locale.getDefault()));
+        emailText.append("\n");
+        emailText.append(appUrl);
+        emailText.append("user/confirmRegistration?token=" + verificationToken);
+
+        return EmailMessage.builder().
+                subject(emailSubject).
+                content(emailText.toString()).
+                senderEmail(systemEmail.getAddress()).
+                receiverEmailsAddress(user.getEmail()).
+                build();
+    }
 
 	private Message createMessage(EmailMessage emailMessage, Session session) throws MessagingException {
 		Message message = new MimeMessage(session);
@@ -86,24 +90,24 @@ public class EmailService {
 		return message;
 	}
 
-	private Session setUpMailSession(Properties properties, String email, String password) {
-		return Session.getInstance(properties, new Authenticator() {
-			@Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(email, password);
-			}
-		});
-	}
+    private Session setUpMailSession(Properties properties, String email, String password) {
+        return Session.getInstance(properties, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(email, password);
+            }
+        });
+    }
 
-	private Properties setUpSystemMailProperties() {
-		Properties properties = new Properties();
-		properties.put("mail.smtp.host", systemEmail.getMailSmtpHost());
-		properties.put("mail.smtp.ssl.trust", systemEmail.getMailSmtpSslTrust());
-		properties.put("mail.smtp.port", systemEmail.getMailSmtpPort());
-		properties.put("mail.smtp.auth", systemEmail.isMailSmtpAuth());
-		properties.put("mail.smtp.starttls.enable", systemEmail.isMailSmtpStarttlsEnabled());
+    protected Properties setUpSystemMailProperties() {
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", systemEmail.getMailSmtpHost());
+        properties.put("mail.smtp.ssl.trust", systemEmail.getMailSmtpSslTrust());
+        properties.put("mail.smtp.port", systemEmail.getMailSmtpPort());
+        properties.put("mail.smtp.auth", systemEmail.isMailSmtpAuth());
+        properties.put("mail.smtp.starttls.enable", systemEmail.isMailSmtpStarttlsEnabled());
 
-		return properties;
-	}
+        return properties;
+    }
 
 }

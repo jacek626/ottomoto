@@ -45,6 +45,7 @@ public class VerificationTokenServiceTest {
     public void shouldUseExistingVerificationToken() {
         //given
         User user = User.builder().build();
+        when(verificationTokenRepository.findByUser(any(User.class))).thenReturn(Optional.of(VerificationToken.builder().token("tokenValue").user(new User()).build()));
 
         //when
         VerificationToken verificationToken = verificationTokenService.createVerificationToken(user);

@@ -3,53 +3,59 @@ package com.app.service;
 import com.app.entity.User;
 import com.app.utils.EmailMessage;
 import com.app.utils.Result;
+import com.app.utils.SystemEmail;
+import com.app.validator.EmailValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class EmailServiceTest {
 
-	@Autowired
-	private EmailService emailService;
+    @Mock
+    private VerificationTokenService verificationTokenService;
 
-	@Test
-	public void sendEmailWithAccountActivationLinkTest() {
-		//given
-		User user = User.builder().email("test@test.com").build();
+    @Mock
+    private MessageSource messageSource;
 
-		//when
-		Result result = emailService.sendEmailWithAccountActivationLink(user, "appAddress");
+    @Spy
+    private SystemEmail systemEmail;
 
-		//then
-		assertThat(result.isSuccess()).isTrue();
+    @Spy
+    private EmailValidator emailValidator;
 
-	}
+    @InjectMocks
+    private EmailService emailService;
 
-	@Test
-	public void shouldSendEmail() {
-		// given
-		EmailMessage emailToSend = EmailMessage.builder().
-				subject("subject").
-				content("content").
-				senderEmail("test@test.com").
-				receiverEmailsAddress("test@test.com").
-				build();
+    @Test
+    public void sendEmailWithAccountActivationLinkTest() {
+        //given
+        User user = User.builder().email("test@test.com").build();
+        when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class))).thenReturn("test");
+        when(systemEmail.getAddress()).thenReturn("test@test.pl");
 
-		//when
-		Result sentResult = emailService.sendEmail(emailToSend);
+        //when
+        EmailMessage activationMessage = emailService.createActivationEmail(user, "appAddress", "token123456");
 
-		//then
-		assertThat(sentResult.isSuccess()).isTrue();
-	}
+        //then
+        assertThat(activationMessage.getContent()).isNotBlank();
+        assertThat(activationMessage.getSubject()).isNotBlank();
+
+    }
 
 	@Test
 	public void shouldReturnSendErrorBecSenderEmailIsWrong()  {
@@ -104,28 +110,28 @@ public class EmailServiceTest {
 	public void shouldReturnBuilderErrorBecContentIsRequired()  {
 		// given
 		EmailMessage.EmailMessageBuilder emailMessageBuilder = EmailMessage.builder().
-				subject("subject").
-				receiverEmailsAddress("test@test.gmail").
-				senderEmail("test@test.gmail");
+                subject("subject").
+                receiverEmailsAddress("test@test.gmail").
+                senderEmail("test@test.gmail");
 
-		//then
-		assertThrows(IllegalArgumentException.class,() -> {
-			emailMessageBuilder.build();
-		});
-	}
+        //then
+        assertThrows(IllegalArgumentException.class, () -> {
+            emailMessageBuilder.build();
+        });
+    }
 
-	//@Test
-	public void shouldReturnBuilderErrorBecSenderEmailIsRequired()  {
-		// given
-		EmailMessage.EmailMessageBuilder emailMessageBuilder = EmailMessage.builder().
-				subject("subject").
-				content("content").
-				receiverEmailsAddress("test@test.gmail");
+    @Test
+    public void shouldReturnBuilderErrorBecSenderEmailIsRequired() {
+        // given
+        EmailMessage.EmailMessageBuilder emailMessageBuilder = EmailMessage.builder().
+                subject("subject").
+                content("content").
+                receiverEmailsAddress("test@test.gmail");
 
-		//then
-		assertThrows(IllegalArgumentException.class,() -> {
-			emailMessageBuilder.build();
-		});
-	}
+        //then
+        assertThrows(NullPointerException.class, () -> {
+            emailMessageBuilder.build();
+        });
+    }
 
 }

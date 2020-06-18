@@ -30,11 +30,6 @@ public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrate
         this.announcementRepository = announcementRepository;
     }
 
-/*    @Override
-    public Predicate preparePredicate(Announcement entity) {
-        return announcementSearchFormStrategy.preparePredicate(entity);
-    }*/
-
     @Override
     public Page<Announcement> loadData(PageRequest pageRequest, Predicate predicate) {
         BooleanBuilder booleanBuilder = new BooleanBuilder(predicate);

@@ -61,9 +61,6 @@ public class AnnouncementSearchStrategy implements SearchStrategy<Announcement> 
             announcement.setManufacturerName(manufacturerList.stream().filter(e -> e.getId().equals(announcement.getVehicleModel().getManufacturer().getId())).findAny().get().getName());
             model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(announcement.getVehicleModel().getManufacturer().getId(), announcement.getVehicleModel().getVehicleType()));
         }
-   /*     else if(manufacturerList.size() > 0) {
-           model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(manufacturerList.get(0).getId(), announcement.getVehicleType()));
-        }*/
 
         return model;
     }

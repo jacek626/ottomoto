@@ -11,15 +11,17 @@ import java.util.Optional;
 @Value
 @Builder
 public class EmailMessage {
-    private @NonNull String subject;
-    private @NonNull String content;
+    @NonNull
+    private String subject;
+    @NonNull
+    private String content;
+    @NonNull
     private String senderEmail;
-
     @NonNull
     @Singular
     private List<String> receiverEmailsAddresses;
 
-    EmailMessage(@NonNull final String subject, @NonNull final String content, final String senderEmail, @NonNull final List<String> receiverEmailsAddresses) {
+    EmailMessage(@NonNull final String subject, @NonNull final String content, @NonNull final String senderEmail, @NonNull final List<String> receiverEmailsAddresses) {
         if (subject == null) {
             throw new IllegalArgumentException("subject is marked non-null but is null");
         }

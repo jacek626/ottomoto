@@ -42,7 +42,9 @@
                             </div>
                         </a>
                     </div>
-                    <div class="col-1">
+                    <!-- <div class="col-1" sec:authorize="hasRole('ADMIN')">-->
+
+                    <div th:if="${#authorization.expression('hasRole(''ADMIN'')') || #authentication.name == announcement.user.login}">
                         <a th:href="@{'/announcement/edit/' + ${announcement.id}}"
                            th:text="edycja">
                         </a>
