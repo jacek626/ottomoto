@@ -86,6 +86,7 @@ public class ManufacturerController {
                 vehicle.setManufacturer(manufacturer);
             }
 
+
         if (bindingResult.hasErrors())
             model.setViewName("manufacturer/manufacturerEdit");
         else {

@@ -120,7 +120,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public ModelAndView save(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class,
+	public ModelAndView register(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class,
 			User.ValidatePassOnly.class}) User user, BindingResult bindingResult, HttpServletRequest request) {
 		ModelAndView model = new ModelAndView("user/registerUser");
 
