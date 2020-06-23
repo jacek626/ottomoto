@@ -28,9 +28,8 @@ public class ObservedAnnouncementServiceTest {
     @Mock
     private ObservedAnnouncementRepository observedAnnouncementRepository;
 
-    @InjectMocks
-    @SuppressWarnings("unused")
-    private final ObservedAnnouncementValidator observedAnnouncementValidator = spy(ObservedAnnouncementValidator.class);
+    @Mock
+    private ObservedAnnouncementValidator observedAnnouncementValidator;
 
     @InjectMocks
     private ObservedAnnouncementService observedAnnouncementService;
@@ -41,6 +40,7 @@ public class ObservedAnnouncementServiceTest {
         Announcement announcement = Announcement.builder().user(new User()).vehicleModel(new VehicleModel()).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
         User user = User.builder().login("userLoginTest6").password("testPass").passwordConfirm("testPass").email("mailTest6@test.com").active(true).build();
         ObservedAnnouncement observedAnnouncement = new ObservedAnnouncement(announcement, user);
+        when(observedAnnouncementValidator.checkBeforeSave(any(ObservedAnnouncement.class))).thenReturn(Result.success());
 
         //when
         Result result = observedAnnouncementService.saveObservedAnnouncement(observedAnnouncement);

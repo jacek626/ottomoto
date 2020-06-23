@@ -1,5 +1,6 @@
 package com.app;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,18 +18,16 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 @SpringBootApplication
 @EnableCaching
-public class OtomotoApplication  {
+public class OtomotoApplication {
 
-	/*
-	 * @Override protected SpringApplicationBuilder
-	 * configure(SpringApplicationBuilder application) { return
-	 * application.sources(OtomotoApplication.class); }
-	 */
-	
 	public static void main(String[] args) {
 		SpringApplication.run(OtomotoApplication.class, args);
 	}
-	
+
+	@Bean
+	public ModelMapper modelMapper() {
+		return new ModelMapper();
+	}
 }
 
 @Configuration
@@ -37,7 +36,7 @@ class StaticResourceConfiguration implements WebMvcConfigurer  {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String myExternalFilePath = "file:///C:/Users/Jacek/Documents/otomoto/";
+		String myExternalFilePath = "file:///C:/otomoto/";
         registry.addResourceHandler("/images/**").addResourceLocations(myExternalFilePath);
 	}
 
@@ -45,10 +44,6 @@ class StaticResourceConfiguration implements WebMvcConfigurer  {
 
 @Configuration
 class WebMvcConfig implements WebMvcConfigurer {
-
-//	@Autowired
-//	private ApplicationContext applicationContext;
-
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -69,45 +64,4 @@ class WebMvcConfig implements WebMvcConfigurer {
 	        registry.addInterceptor(localeInterceptor());
 	    }
 
-   //     @Override
-        public void addResourceHandlers2(ResourceHandlerRegistry registry) {
-         //   String myExternalFilePath = "file:///C:/Users/Jacek/Documents/otomoto";
-         //   registry.addResourceHandler("/images/**").addResourceLocations(myExternalFilePath);
-
-
-     /*       registry
-                    .addResourceHandler("/images/**")
-                    .addResourceLocations("file:///C:/Users/Jacek/Documents/otomoto")
-                    .setCachePeriod(3600)
-                    .resourceChain(true)
-                    .addResolver(new PathResourceResolver());*/
-        }
-
-
-/*	@Bean
-	public SpringResourceTemplateResolver templateResolver() {
-		SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-		templateResolver.setApplicationContext(applicationContext);
-		templateResolver.setPrefix("classpath:/templates/");
-		templateResolver.setSuffix(".html");
-		templateResolver.setCharacterEncoding("UTF-8");
-		return templateResolver;
-	}
-
-	@Bean
-	public SpringTemplateEngine templateEngine() {
-		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-		templateEngine.setTemplateResolver(templateResolver());
-		templateEngine.setEnableSpringELCompiler(true);
-		return templateEngine;
-	}
-
-	@Override
-	public void configureViewResolvers(ViewResolverRegistry registry) {
-		ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-		resolver.setTemplateEngine(templateEngine());
-		resolver.setCharacterEncoding("UTF-8");
-		resolver.setContentType("text/html; charset=UTF-8");
-		registry.viewResolver(resolver);
-	}*/
 }

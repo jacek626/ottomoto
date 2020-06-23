@@ -1,5 +1,6 @@
 package com.app.controller;
 
+import com.app.dto.AnnouncementDto;
 import com.app.entity.Announcement;
 import com.app.enums.VehicleType;
 import com.app.repository.AnnouncementRepository;
@@ -15,6 +16,7 @@ import com.app.utils.PaginationDetails;
 import com.app.utils.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.ObjectNotFoundException;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.MessageSource;
@@ -56,7 +58,9 @@ public class AnnouncementController {
 
 	private final ObservedAnnouncementRepository observedAnnouncementRepository;
 
-	public AnnouncementController(AnnouncementService announcementService, PictureService pictureService, AnnouncementRepository announcementRepository, UserRepository userRepository, EmailService emailService, MessageSource messageSource, SearchStrategy<Announcement> announcementSearchStrategy, ObservedAnnouncementRepository observedAnnouncementRepository) {
+	private final ModelMapper modelMapper;
+
+	public AnnouncementController(AnnouncementService announcementService, PictureService pictureService, AnnouncementRepository announcementRepository, UserRepository userRepository, EmailService emailService, MessageSource messageSource, SearchStrategy<Announcement> announcementSearchStrategy, ObservedAnnouncementRepository observedAnnouncementRepository, ModelMapper modelMapper) {
 		this.announcementService = announcementService;
 		this.pictureService = pictureService;
 		this.announcementRepository = announcementRepository;
@@ -65,12 +69,13 @@ public class AnnouncementController {
 		this.messageSource = messageSource;
 		this.announcementSearchStrategy = announcementSearchStrategy;
 		this.observedAnnouncementRepository = observedAnnouncementRepository;
+		this.modelMapper = modelMapper;
 	}
 
 	@RequestMapping(value = "create", method = RequestMethod.GET)
 	public String create(Model model, Authentication authentication) {
 		Announcement announcement = Announcement.builder().vehicleType(VehicleType.CAR).build();
-		model.addAttribute("announcement", announcement);
+		model.addAttribute("announcement", modelMapper.map(announcement, AnnouncementDto.class));
 		announcement.setUser(userRepository.findByLogin(authentication.getName()));
 		model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
 
@@ -78,7 +83,26 @@ public class AnnouncementController {
 	}
 
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
-	public String read(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
+	public String get(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
+		announcementRepository.findById(id).ifPresentOrElse(announcement -> {
+			model.addAttribute("breadCrumb", AnnouncementBreadCrumb.create(announcement));
+			model.addAttribute("announcement", modelMapper.map(announcement, AnnouncementDto.class));
+			List<Announcement> otherUserAnnouncements = announcementRepository.findOtherUserAnnouncements(announcement.getId(), announcement.getUser().getId());
+			model.addAttribute("otherUserAnnouncements", otherUserAnnouncements);
+
+			if (authentication == null)
+				model.addAttribute("observedAnnouncement", false);
+			else
+				model.addAttribute("observedAnnouncement", observedAnnouncementRepository.existsByUserLoginAndAnnouncement(authentication.getName(), id));
+		}, () -> {
+			throw new ObjectNotFoundException(id, "Announcement");
+		});
+
+		return "announcement/announcementRead";
+	}
+
+	//@RequestMapping(value = "{id}", method = RequestMethod.GET)
+	public String getOld(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
 		announcementRepository.findById(id).ifPresentOrElse(announcement -> {
 			model.addAttribute("breadCrumb", AnnouncementBreadCrumb.create(announcement));
 			model.addAttribute("announcement", announcement);
@@ -91,7 +115,7 @@ public class AnnouncementController {
 				model.addAttribute("observedAnnouncement", observedAnnouncementRepository.existsByUserLoginAndAnnouncement(authentication.getName(), id));
 		}, () -> {
 			throw new ObjectNotFoundException(id, "Announcement");
-		 });
+		});
 
 		return "announcement/announcementRead";
 	}
@@ -100,10 +124,8 @@ public class AnnouncementController {
 	public String edit(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
 		announcementRepository.findById(id).ifPresentOrElse(
 				announcement -> {
-					if (authentication.getAuthorities().stream().anyMatch(e -> e.getAuthority().equals("ROLE_ADMIN")) ||
-							announcement.getUser().getLogin().equals(authentication.getName())) {
+					if (authentication.getAuthorities().stream().anyMatch(e -> e.getAuthority().equals("ROLE_ADMIN")) || announcement.getUser().getLogin().equals(authentication.getName())) {
 						model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
-						rewriteManufacturerIdFromVehicleModelForSearchForm(announcement);
 						model.addAttribute("announcement", announcement);
 						model.addAttribute("breadCrumb", AnnouncementBreadCrumb.create(announcement));
 					} else
@@ -195,9 +217,8 @@ public class AnnouncementController {
 			@RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
 			@ModelAttribute("announcement")  Announcement announcement,
 			Model model) {
-
 		announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
-		model.addAttribute("requestMapping", "my");
+		//	model.addAttribute("requestMapping", "my");
 
 		PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
 
@@ -241,7 +262,4 @@ public class AnnouncementController {
 		return StringUtils.isNotBlank(reportText) && announcementId != null;
 	}
 
-	private void rewriteManufacturerIdFromVehicleModelForSearchForm(Announcement announcement) {
-		announcement.setManufacturerId(announcement.getVehicleModel().getManufacturer().getId());
-	}
 }

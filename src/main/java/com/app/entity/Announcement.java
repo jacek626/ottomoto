@@ -213,8 +213,6 @@ public class Announcement implements EntityForSearchStrategy {
 
         setPictures(imagesToSave);
         setImagesToDelete(imagesToDelete);
-
-
     }
 
 	private List<Picture> setAnnouncementForNewPictures(List<Picture> pictures) {
