@@ -7,14 +7,12 @@ import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
 import com.app.repository.VerificationTokenRepository;
 import com.app.utils.Result;
-import com.app.utils.ValidationDetails;
 import com.app.validator.UserValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
 import java.util.Objects;
 
 @Service("userService")
@@ -46,14 +44,14 @@ public class UserService {
 
 
 	public Result deleteUser(User user) {
-		Map<String, ValidationDetails> validationResult = userValidator.checkBeforeDelete(user.getId());
+        Result<User> result = userValidator.checkBeforeDelete(user);
 
-		if (validationResult.isEmpty()) {
-			userRepository.delete(user);
-		}
+        if (result.isSuccess()) {
+            userRepository.delete(user);
+        }
 
-		return Result.create(validationResult);
-	}
+        return result;
+    }
 
 	public Result saveNewUser(User user) {
 		setUserRoleIfRoleIsEmpty(user);
@@ -63,9 +61,9 @@ public class UserService {
 	}
 
 	public Result saveUser(User user) {
-		Map<String, ValidationDetails> validationResult = userValidator.checkBeforeSave(user);
+        Result<User> result = userValidator.checkBeforeSave(user);
 
-		if (validationResult.isEmpty()) {
+        if (result.isSuccess()) {
             if (user.getId() != null && user.getPassword() == null && user.getPasswordConfirm() == null)
                 ifEditUsePassFormDb(user);
             else
@@ -74,8 +72,8 @@ public class UserService {
             userRepository.save(user);
         }
 
-		return Result.create(validationResult);
-	}
+        return result;
+    }
 
 	@Transactional
 	public Result activate(String token) {
@@ -112,12 +110,12 @@ public class UserService {
 
 
     public Result changePass(User user) {
-        Map<String, ValidationDetails> validationResult = userValidator.checkBeforeChangePass(user);
+        Result result = userValidator.checkBeforeChangePass(user);
 
-        if (validationResult.isEmpty()) {
+        if (result.isSuccess()) {
             userRepository.updatePassword(bCryptPasswordEncoder.encode(user.getPassword()), user.getId());
         }
 
-        return Result.create(validationResult);
+        return result;
     }
 }

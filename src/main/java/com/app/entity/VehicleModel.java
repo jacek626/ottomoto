@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -15,22 +16,23 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Builder
 public class VehicleModel {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "seq_VehicleModel")
-	@SequenceGenerator(name = "seq_VehicleModel", sequenceName = "seq_VehicleModel")
-	private Long id;
-	
-	@NotNull
-	private String name;
-	
-	@NotNull
-	@ManyToOne
-	private Manufacturer manufacturer;
-	
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	private VehicleType vehicleType;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_VehicleModel")
+    @SequenceGenerator(name = "seq_VehicleModel", sequenceName = "seq_VehicleModel")
+    private Long id;
+
+    @NotEmpty
+    private String name;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@OnDelete(action = OnDeleteAction.CASCADE)
+    private Manufacturer manufacturer;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private VehicleType vehicleType;
 	
 /*	@Enumerated(EnumType.STRING)
 	private VehicleSubtype vehicleSubtype;*/

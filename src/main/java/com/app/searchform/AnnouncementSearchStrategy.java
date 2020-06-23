@@ -1,6 +1,7 @@
 package com.app.searchform;
 
 import com.app.entity.Announcement;
+import com.app.entity.VehicleModel;
 import com.app.enums.BooleanValuesForDropDown;
 import com.app.enums.PaginationPageSize;
 import com.app.enums.SearchEngineDropDownValues;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class AnnouncementSearchStrategy implements SearchStrategy<Announcement> {
@@ -55,11 +57,18 @@ public class AnnouncementSearchStrategy implements SearchStrategy<Announcement> 
     }
 
     private Map<String,Object> prepareVehicleModelsIfManufacturerIsSet(Announcement announcement, List<ManufacturerProjection> manufacturerList) {
-        Map<String,Object> model = new HashMap<>();
+        Map<String, Object> model = new HashMap<>();
+        //  Optional<Long> manufacturerId = Optional.ofNullable(announcement.getManufacturerId()).or(() -> manufacturerList.stream().findFirst().map(ManufacturerProjection::getId));
+        Optional<Long> manufacturerId = Optional.ofNullable(announcement.getManufacturerId());
 
-        if(announcement.getVehicleModel() != null) {
-            announcement.setManufacturerName(manufacturerList.stream().filter(e -> e.getId().equals(announcement.getVehicleModel().getManufacturer().getId())).findAny().get().getName());
-            model.put("vehicleModelList", vehicleModelRepository.findByManufacturerIdAndVehicleType(announcement.getVehicleModel().getManufacturer().getId(), announcement.getVehicleModel().getVehicleType()));
+        if (manufacturerId.isPresent()) {
+            List<VehicleModel> vehicleModels = vehicleModelRepository.findByManufacturerIdAndVehicleType(manufacturerId.get(), announcement.getVehicleType());
+            model.put("vehicleModelList", vehicleModels);
+
+            if (announcement.getVehicleModel() == null)
+                vehicleModels.stream().findAny().ifPresent(e -> {
+                    //             announcement.setVehicleModel(e);
+                });
         }
 
         return model;

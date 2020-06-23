@@ -1,70 +1,75 @@
 package com.app.validator;
 
-import com.app.entity.QAnnouncement;
 import com.app.entity.VehicleModel;
 import com.app.enums.ValidatorCode;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.VehicleModelRepository;
 import com.app.utils.Result;
 import com.app.utils.ValidationDetails;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class VehicleModelValidator implements ValidatorCommonMethods<VehicleModel>  {
-	
-	@Autowired
-	private VehicleModelRepository vehicleModelRepository;
+public class VehicleModelValidator implements ValidatorCommonMethods<VehicleModel> {
 
-	@Autowired
-	private AnnouncementRepository announcementRepository;
+    private final VehicleModelRepository vehicleModelRepository;
 
+    private final AnnouncementRepository announcementRepository;
 
+    public VehicleModelValidator(VehicleModelRepository vehicleModelRepository, AnnouncementRepository announcementRepository) {
+        this.vehicleModelRepository = vehicleModelRepository;
+        this.announcementRepository = announcementRepository;
+    }
 
-/*	public Map<String, ValidatorCode> checkBeforeSave(List<VehicleModel> vehicleModels) {
-		List<String> namesThatAlreadyExists = new ArrayList<>();
-		
-		for (VehicleModel vehicleModel : vehicleModels) {
-			if(vehicleModel.getId() == null && vehicleModelRepository.countByName(vehicleModel.getName()) > 0) {
-				namesThatAlreadyExists.add(vehicleModel.getName());
-			}
-			else if(vehicleModel.getId() != null && vehicleModelRepository.countByNameAndIdNot(vehicleModel.getName(), vehicleModel.getId()) > 0) {
-				namesThatAlreadyExists.add(vehicleModel.getName());
-			}
-		}
-		
-		Map<String,ValidatorCode> errors = new HashMap<>();
-		
-	//	if(!namesThatAlreadyExists.isEmpty())
-	//		errors.put("vehicleModelNameAlreadyExists", String.join(",", namesThatAlreadyExists));
-		
-		return errors;
-	}*/
+    @Override
+    public Result checkBeforeSave(VehicleModel vehicleModel) {
+        var errors = createErrorMap();
 
-	@Override
-	public Result checkBeforeSave(VehicleModel vehicleModel) {
-		Map<String, ValidationDetails> errors = new HashMap<>();
+        errors.putAll(checkNameIsNotEmpty(vehicleModel.getName()));
+        errors.putAll(checkNameIsUnique(vehicleModel));
 
-		if(vehicleModel.getId() == null && vehicleModelRepository.countByName(vehicleModel.getName()) > 0) {
-			errors.put("name",	ValidationDetails.of(ValidatorCode.ALREADY_EXISTS).appendDetail(vehicleModel.getName()));
-		}
-		else if(vehicleModel.getId() != null && vehicleModelRepository.countByNameAndIdNot(vehicleModel.getName(), vehicleModel.getId()) > 0) {
-			errors.put("name", ValidationDetails.of(ValidatorCode.ALREADY_EXISTS).appendDetail(vehicleModel.getName()));
-		}
+        return Result.create(errors);
+    }
 
-		return Result.create(errors);
-	}
+    private Map<String, ValidationDetails> checkNameIsUnique(VehicleModel vehicleModel) {
+        var errors = createErrorMap();
 
-	@Override
-	public Result checkBeforeDelete(VehicleModel vehicleModel) {
-		Map<String, ValidationDetails> errors = new HashMap<>();
+        if (vehicleModel.getId() == null && vehicleModelRepository.countByName(vehicleModel.getName()) > 0) {
+            errors.put("VehicleModelName", ValidationDetails.of(ValidatorCode.ALREADY_EXISTS, vehicleModel.getName()).appendDetail(vehicleModel.getName()).objectName("VehicleModel"));
+        } else if (vehicleModel.getId() != null && vehicleModelRepository.countByNameAndIdNot(vehicleModel.getName(), vehicleModel.getId()) > 0) {
+            errors.put("VehicleModelName", ValidationDetails.of(ValidatorCode.ALREADY_EXISTS, vehicleModel.getName()).appendDetail(vehicleModel.getName()).objectName("VehicleModel"));
+        }
 
-		if(announcementRepository.countByPredicates(QAnnouncement.announcement.vehicleModel.id.eq(vehicleModel.getId())) > 0)
-			errors.put("announcements", ValidationDetails.of(ValidatorCode.HAVE_REF_OBJECTS).appendDetail(vehicleModel.getId().toString()));
+        return errors;
+    }
 
-		return Result.create(errors);
-	}
+    private Map<String, ValidationDetails> checkNameIsNotEmpty(String vehicleName) {
+        var errors = createErrorMap();
+
+        if (StringUtils.isBlank(vehicleName)) {
+            errors.put("VehicleModelName", ValidationDetails.of(ValidatorCode.IS_EMPTY, "Nazwa modelu").objectName("VehicleModel"));
+        }
+
+        return errors;
+    }
+
+    @Override
+    public Result checkBeforeDelete(VehicleModel vehicleModel) {
+        var errors = createErrorMap();
+
+        errors.putAll(checkIsAnnouncementsWithThisVehicleModelExists(vehicleModel));
+
+        return Result.create(errors);
+    }
+
+    private Map<String, ValidationDetails> checkIsAnnouncementsWithThisVehicleModelExists(VehicleModel vehicleModel) {
+        var errors = createErrorMap();
+
+        if (announcementRepository.existsByVehicleModel(vehicleModel))
+            errors.put("announcements", ValidationDetails.of(ValidatorCode.HAVE_REF_OBJECTS).appendDetail(vehicleModel.getId().toString()));
+
+        return errors;
+    }
 }

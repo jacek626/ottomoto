@@ -5,7 +5,7 @@
   <body>
   <div th:replace="fragments/header :: header">
   </div>
-  <div th:replace="fragments/search :: search">
+  <div th:replace="fragments/breadcrumb :: breadcrumb">
   </div>
 
   <div class="container">
@@ -22,58 +22,62 @@
 				  </div>
 			  </div>
 
-			  <a class="carousel-control-prev" data-slide="prev" href="#vehicleGallery" role="button">
-				  <span aria-hidden="true" class="carousel-control-prev-icon bg-dark"></span>
-				  <span class="sr-only">Previous</span>
-			  </a>
-			  <a class="carousel-control-next" data-slide="next" href="#vehicleGallery" role="button">
-				  <span aria-hidden="true" class="carousel-control-next-icon bg-dark"></span>
-				  <span class="sr-only">Next</span>
-			  </a>
-		  </div>
-		  <div class="col-12 col-md-4 ml-3 ml-md-0">
-			  <div class="row">
-				  <h3 th:text="${announcement.vehicleModel.manufacturer.name} + ' ' + ${announcement.vehicleModel.name}"></h3>
-			  </div>
-			  <div class="row">
-				  <td th:text="${announcement.productionYear + ' &bull; ' + announcement.mileage + ' km'}"></td>
-			  </div>
-			  <div class="row mt-3 primary-red">
-				  <h2>[[${#numbers.formatDecimal({announcement.price}, 0, 'COMMA', 2, 'POINT')}]] <span
-						  th:text="#{zl}"></span></h2>
-			  </div>
-			  <div class="row mt-3">
-				  <div class="custom-control custom-switch">
-					  <div class="d-inline-block" data-toggle="tooltip" sec:authorize="!isAuthenticated()" tabindex="0"
-						   th:title="#{functionAvailableAfterLogin}">
-						  <input class="custom-control-input" disabled
-								 id="observeAnnouncementDisabled" type="checkbox">
-						  <label class="custom-control-label" for="observeAnnouncementDisabled">Obserwuj
-							  ogloszenie</label>
-					  </div>
+              <a class="carousel-control-prev" data-slide="prev" href="#vehicleGallery" role="button">
+                  <span aria-hidden="true" class="carousel-control-prev-icon bg-dark"></span>
+                  <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" data-slide="next" href="#vehicleGallery" role="button">
+                  <span aria-hidden="true" class="carousel-control-next-icon bg-dark"></span>
+                  <span class="sr-only">Next</span>
+              </a>
+          </div>
+          <div class="col-12 col-md-4">
+              <div class="ml-3 ml-md-0">
+                  <div class="row">
+                      <h3 th:text="${announcement.vehicleModel.manufacturer.name} + ' ' + ${announcement.vehicleModel.name}"></h3>
+                  </div>
+                  <div class="row">
+                      <td th:text="${announcement.productionYear + ' &bull; ' + announcement.mileage + ' km'}"></td>
+                  </div>
+                  <div class="row mt-3 primary-red">
+                      <h2>[[${#numbers.formatDecimal({announcement.price}, 0, 'COMMA', 2, 'POINT')}]] <span
+                              th:text="#{zl}"></span></h2>
+                  </div>
+                  <div class="row mt-3">
+                      <div class="custom-control custom-switch">
+                          <div class="d-inline-block" data-toggle="tooltip" sec:authorize="!isAuthenticated()"
+                               tabindex="0"
+                               th:title="#{functionAvailableAfterLogin}">
+                              <input class="custom-control-input" disabled
+                                     id="observeAnnouncementDisabled" type="checkbox">
+                              <label class="custom-control-label" for="observeAnnouncementDisabled">Obserwuj
+                                  ogloszenie</label>
+                          </div>
 
-					  <input class="custom-control-input" id="observeAnnouncement" sec:authorize="isAuthenticated()"
-							 onchange="toggleAnnouncementIsObserved(this.getAttribute('userLogin'), this.getAttribute('announcementId'), 'observeAnnouncement')"
-							 th:announcementId="${announcement.id}"
-							 th:checked="${observedAnnouncement}" th:userLogin="${#authentication.name}"
-							 type="checkbox">
-					  <label class="custom-control-label" for="observeAnnouncement" sec:authorize="isAuthenticated()">Obserwuj
-						  ogloszenie</label>
-				  </div>
-			  </div>
-			  <div class="row mt-2">
-				  <button class="btn btn-primary" onclick="location.href='#messageDoSeller'" type="button">
-					  Wiadomosc do sprzedajacego
-				  </button>
-			  </div>
-			  <div class="row mt-2">
-				  <button class="btn btn-primary" id="questionToSeller"
-						  onclick="loadUserPhoneNumber(this.value, this.id);" th:text="#{phoneNumberToSeller}"
-						  th:value="${announcement.user.id}" type="button"/>
-			  </div>
-		  </div>
-	  </div>
-
+                          <input class="custom-control-input" id="observeAnnouncement"
+                                 onchange="toggleAnnouncementIsObserved(this.getAttribute('userLogin'), this.getAttribute('announcementId'), 'observeAnnouncement')"
+                                 sec:authorize="isAuthenticated()"
+                                 th:announcementId="${announcement.id}"
+                                 th:checked="${observedAnnouncement}" th:userLogin="${#authentication.name}"
+                                 type="checkbox">
+                          <label class="custom-control-label" for="observeAnnouncement"
+                                 sec:authorize="isAuthenticated()">Obserwuj
+                              ogloszenie</label>
+                      </div>
+                  </div>
+                  <div class="row mt-2">
+                      <button class="btn btn-primary" onclick="location.href='#messageDoSeller'" type="button">
+                          Wiadomosc do sprzedajacego
+                      </button>
+                  </div>
+                  <div class="row mt-2">
+                      <button class="btn btn-primary" id="questionToSeller"
+                              onclick="loadUserPhoneNumber(this.value, this.id);" th:text="#{phoneNumberToSeller}"
+                              th:value="${announcement.user.id}" type="button"/>
+                  </div>
+              </div>
+          </div>
+      </div>
   </div>
 
   <div class="container mt-3">

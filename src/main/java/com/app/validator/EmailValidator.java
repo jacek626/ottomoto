@@ -23,8 +23,8 @@ public class EmailValidator {
         }
 
         emailMessage.getSenderEmail().filter(this::checkEmailAddressIsNotValid).ifPresent(e -> {
-				result.appendValidationResult("senderAddress",  ValidationDetails.of(ValidatorCode.IS_NOT_VALID));
-		});
+            result.appendValidationResult("senderAddress", ValidationDetails.of(ValidatorCode.IS_NOT_VALID).appendDetail(e));
+        });
 
 		return result;
 	}

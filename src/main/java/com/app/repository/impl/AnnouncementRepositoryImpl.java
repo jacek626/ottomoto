@@ -123,7 +123,7 @@ public class AnnouncementRepositoryImpl implements AnnouncementRepositoryCustom 
                         "WHERE " +
                         "a.user.id = :userId and " +
                         "a.id != :announcementId and " +
-                        "a.deactivationDate is NULL ",
+                        "a.active is true ",
                 Long.class).
                 setParameter("announcementId", announcementId).
                 setParameter("userId", userId).

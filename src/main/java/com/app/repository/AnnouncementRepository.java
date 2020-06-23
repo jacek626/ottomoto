@@ -1,6 +1,7 @@
 package com.app.repository;
 
 import com.app.entity.Announcement;
+import com.app.entity.VehicleModel;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -10,37 +11,38 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface AnnouncementRepository extends CrudRepository<Announcement, Long>, QuerydslPredicateExecutor<Announcement>, AnnouncementRepositoryCustom {
 
-	@Override
-	@NonNull
-	@Query(value = "SELECT a FROM Announcement a LEFT JOIN FETCH a.vehicleModel vm LEFT JOIN FETCH vm.manufacturer LEFT JOIN FETCH a.user LEFT JOIN FETCH a.pictures  where a.id = :id")
-	Optional<Announcement> findById(@NonNull Long  id);
-	
-	boolean existsByIdAndDeactivationDateIsNull(Long id);
-	boolean existsByUserIdAndDeactivationDateIsNull(Long userId);
+    @Override
+    @NonNull
+    @Query(value = "SELECT a FROM Announcement a LEFT JOIN FETCH a.vehicleModel vm LEFT JOIN FETCH vm.manufacturer LEFT JOIN FETCH a.user LEFT JOIN FETCH a.pictures  where a.id = :id")
+    Optional<Announcement> findById(@NonNull Long id);
 
-	@Transactional
-	@Modifying(clearAutomatically = true)
-	@Query("update Announcement a set a.deactivationDate = :deactivationDate where a.user.id = :userId")
-	int updateDeactivationDateByUserId(@Param("deactivationDate") Date deactivationDate, @Param("userId") Long userId);
+    //boolean existsByIdAndDeactivationDateIsNull(Long id);
+    boolean existsByUserIdAndActiveIsTrue(Long userId);
 
-	@Transactional
-	@Modifying(clearAutomatically = true)
-	@Query("update Announcement a set a.deactivationDate = :deactivationDate where a.id = :announcementId")
-	void updateDeactivationDateByAnnouncementId(@Param("deactivationDate") Date deactivationDate, @Param("announcementId") Long announcementId);
+    boolean existsByVehicleModel(VehicleModel vehicleModel);
 
-	List<Announcement> findOtherUserAnnouncements(@Param("announcementId") Long announcementId, @Param("userId") Long userId);
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("update Announcement a set a.active = false where a.user.id = :userId")
+    int deactivateByUserId(@Param("userId") Long userId);
 
-	List<Announcement> findFirst10ByDeactivationDateIsNullOrderByCreationDateDesc();
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("update Announcement a set a.active = false where a.id = :announcementId")
+    void deactivateByAnnouncementId(@Param("announcementId") Long announcementId);
 
-	List<Announcement> findFirst20ByDeactivationDateIsNullOrderByCreationDateDesc();
+    List<Announcement> findOtherUserAnnouncements(@Param("announcementId") Long announcementId, @Param("userId") Long userId);
 
-	List<Announcement> findFirst5ByUserIdAndDeactivationDateIsNullOrderByCreationDateDesc(Long userId);
+    List<Announcement> findFirst10ByActiveIsTrueOrderByCreationDateDesc();
+
+    List<Announcement> findFirst20ByActiveIsTrueOrderByCreationDateDesc();
+
+    List<Announcement> findFirst5ByUserIdAndActiveIsTrueOrderByCreationDateDesc(Long userId);
 
 }

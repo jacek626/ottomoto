@@ -49,7 +49,8 @@ public class Result<E> extends ResultBase {
 
     public void convertToMvcError(BindingResult bindingResult) {
         validationResult.entrySet().stream()
-                .map(e -> new FieldError(bindingResult.getObjectName(), e.getKey(), e.getValue().getRejectedValue(), false, null, null, e.getValue().getValidatorCode().toString()))
+                // .map(e -> new FieldError(e.getValuhe().getObjectName().orElse(bindingResult.getObjectName()), e.getKey(), e.getValue().getRejectedValue(), false, null, new Object[] {e.getValue().getRejectedValue()}, e.getValue().getValidatorCode().toString()))
+                .map(e -> new FieldError(e.getValue().getObjectName().orElse(bindingResult.getObjectName()), e.getKey(), e.getValue().getRejectedValue(), false, null, new Object[]{e.getValue().getRejectedValue()}, e.getValue().getValidatorCode().toString()))
                 .forEach(e -> bindingResult.addError(e));
     }
 

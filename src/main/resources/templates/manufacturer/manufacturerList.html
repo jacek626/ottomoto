@@ -4,11 +4,12 @@
   <body>
   <div th:replace="fragments/header :: header">
   </div>
-  <div th:replace="fragments/search :: search"></div>
+  <div th:replace="fragments/breadcrumb :: breadcrumb"></div>
   <div class="container">
 	  <div class="text-center">
 		  <h5 th:text="#{manufacturerList}"></h5>
 	  </div>
+
 
 	  <div class="text-center">
 		  <form class="my-5" method="get" th:object="${manufacturer}">
@@ -25,11 +26,13 @@
 						  <input id="vehicleModelName" th:field="*{vehicleModelName}" type="text">
 					  </td>
 				  </tr>
-				  <tr>
-					  <td>
-						  <button class="btn btn-primary" th:text="#{search}" type="submit"/>
-					  </td>
-				  </tr>
+                  <tr>
+                      <td class="text-right">
+                          <a class="btn btn-primary" th:href="@{'/manufacturer/create'}"
+                             th:text="#{addNewManfucaturer}">dodaj</a>
+                          <button class="btn btn-primary" th:text="#{search}" type="submit"/>
+                      </td>
+                  </tr>
 			  </table>
 			  <input type="hidden" name="size" th:value="${size}">
 		  </form>

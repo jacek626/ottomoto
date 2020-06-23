@@ -89,24 +89,27 @@ public class Announcement implements EntityForSearchStrategy {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, mappedBy = "announcement", fetch = FetchType.LAZY)
 	@OrderBy("mainPhotoInAnnouncement DESC,id DESC")
 	@Singular
-	private List<Picture> pictures = new ArrayList<>();
+    private List<Picture> pictures = new ArrayList<>();
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn
-	private User user;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private User user;
 
-	@Column(updatable = false)
-	private Date creationDate;
+    @Column(updatable = false)
+    private Date creationDate;
 
-	private Date deactivationDate;
+    private Boolean active = true;
 
-	@Min(0)
-	@Max(value = 50_000, message="{validation.rangeError}")
-	private Integer engineCapacity;
+    @Min(0)
+    @Max(value = 50_000, message = "{validation.rangeError}")
+    @NotNull
+    private Integer engineCapacity;
 
-	@Max(value=50000, message="{validation.rangeError}")
-	private Integer enginePower;
+    @Max(value = 50000, message = "{validation.rangeError}")
+    @NotNull
+    private Integer enginePower;
+
 	private Boolean accidents;
 	private Boolean firstOwner;
 	private Boolean damaged;
@@ -192,27 +195,27 @@ public class Announcement implements EntityForSearchStrategy {
 		if(searchFields == null)
 			searchFields = new AnnouncementSearchFields();
 
-		return searchFields;
-	}
+        return searchFields;
+    }
 
-	public VehicleType getVehicleType() {
-		if (vehicleType == null)
-			vehicleType = (vehicleModel == null ? VehicleType.CAR : vehicleModel.getVehicleType());
+    public VehicleType getVehicleType() {
+        if (vehicleType == null)
+            vehicleType = (vehicleModel == null ? VehicleType.CAR : vehicleModel.getVehicleType());
 
-		return vehicleType;
-	}
+        return vehicleType;
+    }
 
-	public void preparePicturesToSaveAndDelete() {
-		Map<Boolean, List<Picture>> picturesToSaveAndDeleteInSeparateLists = getPictures().stream().collect(Collectors.partitioningBy(Picture::isPictureToDelete));
-		List<Picture> imagesToDelete = picturesToSaveAndDeleteInSeparateLists.get(Boolean.TRUE);
-		List<Picture> imagesToSave = picturesToSaveAndDeleteInSeparateLists.get(Boolean.FALSE);
-		imagesToSave = setAnnouncementForNewPictures(imagesToSave);
+    public void preparePictures() {
+        Map<Boolean, List<Picture>> picturesToSaveAndDeleteInSeparateLists = getPictures().stream().collect(Collectors.partitioningBy(Picture::isPictureToDelete));
+        List<Picture> imagesToDelete = picturesToSaveAndDeleteInSeparateLists.get(Boolean.TRUE);
+        List<Picture> imagesToSave = picturesToSaveAndDeleteInSeparateLists.get(Boolean.FALSE);
+        imagesToSave = setAnnouncementForNewPictures(imagesToSave);
 
-		setPictures(imagesToSave);
-		setImagesToDelete(imagesToDelete);
+        setPictures(imagesToSave);
+        setImagesToDelete(imagesToDelete);
 
 
-	}
+    }
 
 	private List<Picture> setAnnouncementForNewPictures(List<Picture> pictures) {
 		for (Picture picture : pictures) {

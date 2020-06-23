@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +33,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
@@ -67,13 +67,11 @@ public class AnnouncementController {
 		this.observedAnnouncementRepository = observedAnnouncementRepository;
 	}
 
-	@RequestMapping(value="create",method=RequestMethod.GET)
-	public String create(Model model) {
-
+	@RequestMapping(value = "create", method = RequestMethod.GET)
+	public String create(Model model, Authentication authentication) {
 		Announcement announcement = Announcement.builder().vehicleType(VehicleType.CAR).build();
-		//announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
 		model.addAttribute("announcement", announcement);
-
+		announcement.setUser(userRepository.findByLogin(authentication.getName()));
 		model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
 
 		return "announcement/announcementEdit";
@@ -81,7 +79,6 @@ public class AnnouncementController {
 
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
 	public String read(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
-
 		announcementRepository.findById(id).ifPresentOrElse(announcement -> {
 			model.addAttribute("breadCrumb", AnnouncementBreadCrumb.create(announcement));
 			model.addAttribute("announcement", announcement);
@@ -101,59 +98,83 @@ public class AnnouncementController {
 
 	@RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
 	public String edit(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
-
-		if (model.asMap().containsKey("errorDuringSave")) {
-			Announcement announcementWithError = (Announcement) model.getAttribute("announcement");
-			model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcementWithError));
-		} else
-			announcementRepository.findById(id).ifPresentOrElse(
-					announcement -> {
-						if (authentication.getAuthorities().stream().anyMatch(e -> e.equals("ROLE_ADMIN")) ||
-								announcement.getUser().getLogin().equals(authentication.getName())) {
-							model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
-							rewriteManufacturerIdFromVehicleModelForSearchForm(announcement);
-							model.addAttribute("announcement", announcement);
-						} else
-							throw new AccessDeniedException("Access denied");
-					},
-					() -> {
-						throw new ObjectNotFoundException(id, "Announcement");
-					}
-			);
-
+		announcementRepository.findById(id).ifPresentOrElse(
+				announcement -> {
+					if (authentication.getAuthorities().stream().anyMatch(e -> e.getAuthority().equals("ROLE_ADMIN")) ||
+							announcement.getUser().getLogin().equals(authentication.getName())) {
+						model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
+						rewriteManufacturerIdFromVehicleModelForSearchForm(announcement);
+						model.addAttribute("announcement", announcement);
+						model.addAttribute("breadCrumb", AnnouncementBreadCrumb.create(announcement));
+					} else
+						throw new AccessDeniedException("Access denied");
+				},
+				() -> {
+					throw new ObjectNotFoundException(id, "Announcement");
+				}
+		);
 		return "announcement/announcementEdit";
 	}
 
-	@RequestMapping(value="save",method=RequestMethod.POST)
-	public String save(@ModelAttribute("announcement") @Validated Announcement announcement,
-					   BindingResult bindingResult, Authentication authentication,
-					   RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "create", method = RequestMethod.POST)
+	public ModelAndView create(@ModelAttribute("announcement") @Validated Announcement announcement,
+							   BindingResult bindingResult) {
+		ModelAndView model = new ModelAndView("announcement/announcementEdit");
+		announcement.preparePictures();
 
-        announcement.preparePicturesToSaveAndDelete();
-
-        Optional<Result> saveResult = Optional.empty();
-
-        if (!bindingResult.hasErrors()) {
-            saveResult = Optional.of(announcementService.saveAnnouncement(announcement));
-		}
-
-		if (bindingResult.hasErrors() || saveResult.orElse(Result.error()).isError()) {
-			prepareFlashAttributesForErrorHandling(announcement, bindingResult, redirectAttributes);
+		if (bindingResult.hasErrors()) {
+			model.getModelMap().addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
+			return model;
 		} else {
-			redirectAttributes.addFlashAttribute("message", "changesIsSaved");
-			pictureService.deleteFromFileRepository(announcement.getImagesToDelete());
+			Result<Announcement> result = announcementService.saveAnnouncement(announcement);
+			result.ifError(e -> {
+				e.convertToMvcError(bindingResult);
+				model.getModelMap().addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
+			});
+			result.ifSuccess(() -> {
+				model.setViewName("redirect:/announcement/edit/" + announcement.getId());
+			});
 		}
 
-		return "redirect:/announcement/edit/" + announcement.getId();
+		return model;
 	}
 
-	@RequestMapping(value="/list")
-	public String list(@RequestParam(name = "page", defaultValue = "1",  required = false) int page,
-			@RequestParam(name = "size", required = false, defaultValue = "10") int size,
-			@RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
-			@RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
-			@ModelAttribute("announcement")  Announcement announcement,
-			Model model) {
+	@RequestMapping(value = "update", method = RequestMethod.POST)
+	public ModelAndView update(@ModelAttribute("announcement") @Validated Announcement announcement,
+							   BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		ModelAndView model = new ModelAndView("redirect:/announcement/edit/" + announcement.getId());
+		announcement.preparePictures();
+
+		if (bindingResult.hasErrors()) {
+			prepareFormWithError(announcement, model);
+			return model;
+		} else {
+			Result<Announcement> result = announcementService.saveAnnouncement(announcement);
+			if (result.isError()) {
+				prepareFormWithError(announcement, model);
+				result.convertToMvcError(bindingResult);
+				return model;
+			}
+		}
+		redirectAttributes.addFlashAttribute("message", "changesSaved");
+
+		return model;
+	}
+
+	private void prepareFormWithError(@Validated @ModelAttribute("announcement") Announcement announcement, ModelAndView model) {
+		model.setViewName("announcement/announcementEdit");
+		model.getModelMap().addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
+		model.getModelMap().addAttribute("message", "incorrectData");
+		model.getModelMap().addAttribute("breadCrumb", AnnouncementBreadCrumb.create(announcement));
+	}
+
+	@RequestMapping(value = "/list")
+	public String list(@RequestParam(name = "page", defaultValue = "1", required = false) int page,
+					   @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+					   @RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
+					   @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
+					   @ModelAttribute("announcement") Announcement announcement,
+					   Model model) {
 
 		model.addAttribute("requestMapping", "list");
 
@@ -166,8 +187,6 @@ public class AnnouncementController {
 
 		return "/announcement/announcementList";
 	}
-
-
 
 	@RequestMapping(value="/my")
 	public String userAnnouncements(@RequestParam(name = "page", defaultValue = "1", required = false) int page,
@@ -224,11 +243,5 @@ public class AnnouncementController {
 
 	private void rewriteManufacturerIdFromVehicleModelForSearchForm(Announcement announcement) {
 		announcement.setManufacturerId(announcement.getVehicleModel().getManufacturer().getId());
-	}
-
-	private void prepareFlashAttributesForErrorHandling(@Validated @ModelAttribute("announcement") Announcement announcement, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-		redirectAttributes.addFlashAttribute("errorDuringSave");
-		redirectAttributes.addFlashAttribute("announcement", announcement);
-		redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.announcement", bindingResult);
 	}
 }

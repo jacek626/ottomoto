@@ -5,12 +5,14 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 public class ValidationDetails {
     private final ValidatorCode validatorCode;
     private String rejectedValue;
     private List<String> relatedElements = new ArrayList<>();
+    private Optional<String> objectName = Optional.empty();
 
 
     public ValidationDetails(ValidatorCode validatorCode) {
@@ -30,6 +32,11 @@ public class ValidationDetails {
 
     public ValidationDetails appendDetail(String detail) {
         relatedElements.add(detail);
+        return this;
+    }
+
+    public ValidationDetails objectName(String objectName) {
+        this.objectName = Optional.of(objectName);
         return this;
     }
 

@@ -4,92 +4,70 @@
   <body>
   <div th:replace="fragments/header :: header">
   </div>
-  <div th:replace="fragments/search :: search"></div>
+  <div th:replace="fragments/breadcrumb :: breadcrumb"></div>
   <div class="container">
 
-	  <div class="text-center">
-		  <h5 th:text="#{editManufacturer} + ' ' + ${manufacturer.name}"></h5>
-	  </div>
+      <div class="text-center">
+          <h5 th:if="${manufacturer.id != null}" th:text="#{editManufacturer} + ' ' + ${manufacturer.name}"></h5>
+          <h5 th:if="${manufacturer.id == null}" th:text="#{addManufacturer}"></h5>
+      </div>
 
-	  <form th:action="@{/manufacturer/save}" th:object="${manufacturer}" method="post">
-		  <input type="hidden" th:field="*{name}"/>
+      <form th:action="@{/manufacturer/save}" th:object="${manufacturer}" method="post">
 
-		  <input type="hidden" id="vehicleToDelete" name="vehicleToDelete"/>
-		  <input type="hidden" th:field="*{id}"/>
-		  <table class="m-auto" id="resultsTable">
-			  <thead>
-			  <tr>
-				  <th th:text="#{vehicleModelName}"/>
-				  <th th:text="#{vehicleCategory}"/>
-			  </tr>
-			  </thead>
-			  <tfoot>
-			  <tr>
-				  <td class="text-right " colspan="3" style="height: 80px;">
-					  <button class="btn btn-primary" name="action" th:text="#{addNewModel}" type="submit"
-							  value="addVehicle"></button>
-					  <a class="btn btn-primary" th:href="@{/manufacturer/list}" th:text="#{cancel}"></a>
-					  <button class="btn btn-primary" th:text="#{save}" type="submit"/>
-				  </td>
-			  </tr>
-				</tfoot> 
+
+          <input type="hidden" th:field="*{id}"/>
+          <table class="m-auto" id="resultsTable">
+              <thead>
+              <tr>
+                  <td>
+                      <label for="manufacturerName" th:text="#{manufacturerName}"></label>
+                  </td>
+                  <td>
+                      <input id="manufacturerName" th:field="*{name}" type="text"/>
+                  </td>
+              </tr>
+              <tr>
+                  <th th:text="#{vehicleModelName}"/>
+                  <th th:text="#{vehicleCategory}"/>
+              </tr>
+              </thead>
+              <tfoot>
+              <tr>
+                  <td>
+                      <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                          <div th:each="err : ${#fields.detailedErrors('*')}">
+                              <span th:text="#{__${err.message}__}"></span>
+                              <span th:if="${err.arguments.length > 0}" th:text="${err.arguments[0]}"></span>
+                          </div>
+                      </div>
+                  </td>
+              </tr>
+              <tr>
+                  <td class="text-right " colspan="3" style="height: 80px;">
+                      <button class="btn btn-primary" name="action" th:text="#{addNewModel}" type="submit"
+                              value="addVehicle"></button>
+                      <a class="btn btn-primary" th:href="@{/manufacturer/list}" th:text="#{cancel}"></a>
+                      <button class="btn btn-primary" th:text="#{save}" type="submit"/>
+                  </td>
+              </tr>
+              </tfoot>
 				<tbody>
 				<tr th:each="vehicle,rowStat : *{vehicleModel}">
-					<td>
-						<input id="vehicleName" size="15" type="text" th:field="*{vehicleModel[__${rowStat.index}__].name}" /> 
-					</td>
-					<td>	
-						<select onchange="vehicleTypeChanged(this);" class="vehicleType" 
-							th:field="*{vehicleModel[__${rowStat.index}__].vehicleType}">
-								<option 
-									th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
-									th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
-									th:selected="*{vehicleModel[__${rowStat.index}__].vehicleType}"></option>
-						</select> 
-					</td> 
-		<!-- 			<td th:switch="*{#strings.toString(vehicleModel[__${rowStat.index}__].vehicleType)}">
-
-						<select th:case="'CAR'"
-						th:field="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}" 
-						class="vehicleSubtype">
-							<option  th:with="someVariable=${someValue}" 
-								th:each="vehicleSubtype : ${vehicleSubtypesCar.entrySet()}"
-								th:value="${vehicleSubtype.key}"
-								th:text="${vehicleSubtype.value}"
-								th:selected="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}">
-							</option>
-					</select>
-					<select th:case="'TRUCK'"
-						th:field="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}"
-						class="vehicleSubtype">
-						<option 
-								th:each="vehicleSubtype : ${vehicleSubtypesTruck.entrySet()}"
-								th:value="${vehicleSubtype.key}"
-								th:text="${vehicleSubtype.value}"
-								th:selected="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}">
-							</option>
-							</select>
-							<select th:case="'MOTORCYCLE'"
-						th:field="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}"
-						class="vehicleSubtype">
-							<option 
-								th:each="vehicleSubtype : ${vehicleSubtypesMotorcycle.entrySet()}"
-								th:value="${vehicleSubtype.key}"
-								th:text="${vehicleSubtype.value}"
-								th:selected="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}">
-							</option>
-							</select>
-							<select th:case="*"
-						th:field="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}"
-						class="vehicleSubtype">
-							<option 
-								th:each="vehicleSubtype : ${vehicleSubtypesCar.entrySet()}"
-								th:value="${vehicleSubtype.key}"
-								th:text="${vehicleSubtype.value}"
-								th:selected="*{vehicleModel[__${rowStat.index}__].vehicleSubtype}">
-							</option>
-					</select>
-					</td>  -->
+                    <td>
+                        <input id="vehicleName" size="15" type="text"
+                               th:field="*{vehicleModel[__${rowStat.index}__].name}"/>
+                        <input th:field="*{vehicleModel[__${rowStat.index}__].id}" type="hidden"/>
+                        <input th:field="*{vehicleModel[__${rowStat.index}__].manufacturer.id}" type="hidden"/>
+                    </td>
+                    <td>
+                        <select class="vehicleType"
+                                th:field="*{vehicleModel[__${rowStat.index}__].vehicleType}">
+                            <option
+                                    th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
+                                    th:value="${vehicleTypeElement}" th:text="${vehicleTypeElement.label}"
+                                    th:selected="*{vehicleModel[__${rowStat.index}__].vehicleType}"></option>
+                        </select>
+                    </td>
 					<td>
 						<input type="hidden" class="vehicleToDelete" th:field="*{vehicleModel[__${rowStat.index}__].toDelete}" /> 
 						<input type="hidden" class="rowStatIndex" th:value="${rowStat.index}" />
@@ -98,7 +76,6 @@
 								onclick="$(this).parent('td').find('.vehicleToDelete').val(true);"
 								th:text="#{delete}"></button>
 					</td> 
-					
 				</tr>
 				</tbody>
 			</table>

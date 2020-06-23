@@ -5,11 +5,13 @@
   <body>
   <div th:replace="fragments/header :: header">
   </div>
-  <div th:replace="fragments/search :: search">
+  <div th:replace="fragments/breadcrumb :: breadcrumb">
   </div>
   <div class="container">
 
-      <form class="needs-validation" method="post" th:action="@{/announcement/save}" th:object="${announcement}">
+      <form class="needs-validation" method="post"
+            th:action="@{ __${announcement.id}__ == null ? '/announcement/create' : '/announcement/update'}"
+            th:object="${announcement}">
 
           <div class="m-auto">
               <div class="row">
@@ -20,7 +22,6 @@
               </div>
               <div class="row">
                   <div class="form-group col-6">
-
                       <label for="vehicleType">Kategoria pojazdu</label><br/>
                       <select class="selectpicker w-100" id="vehicleType"
                               onchange="clearVehicleModel(); loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option')"
@@ -38,13 +39,18 @@
                       <input th:field="*{id}" type="hidden"/>
                       <input th:field="*{user}" type="hidden"/>
                   </div>
+                  <div class="form-group col-6 text-right">
+                      <br/>
+                      <input id="active" th:field="*{active}" type="checkbox"/>
+                      <label for="active">Ogloszenie aktywne</label>
+                  </div>
               </div>
               <div class="row">
                   <div class="form-group col-6">
                       <label for="manufacturer">Marka</label><br/>
                       <select class="selectpicker w-100" id="manufacturer"
                               onchange="loadVehicleModel(this.value, $('#vehicleType').val(), 'option');"
-                              required
+                              data-max-options="1" multiple required
                               th:field="*{manufacturerId}">
                           <option th:each="manufacturer : ${manufacturerList}" th:selected="*{manufacturerId}"
                                   th:text="${manufacturer.name}" th:value="${manufacturer.id}">
@@ -53,7 +59,8 @@
                   </div>
                   <div class="form-group col-6">
                       <label for="vehicleModel">Model pojazdu</label><br/>
-                      <select class="selectpicker  w-100" id="vehicleModel" required th:field="*{vehicleModel}">
+                      <select class="selectpicker  w-100" data-max-options="1" id="vehicleModel" multiple required
+                              th:field="*{vehicleModel}">
                           <option th:each="element : ${vehicleModelList}" th:selected="*{vehicleModel.id}"
                                   th:text="${element.name}" th:value="${element.id}"></option>
                       </select>
@@ -74,11 +81,17 @@
                   </div>
                   <div class="form-group col-4">
                       <label for="mileage">Przebieg</label><br/>
-                      <input class="form-control" id="mileage" maxlength="9" pattern="[0-9]*" required size="9"
-                             th:field="*{mileage}"
-                             th:title="#{numberOnly}" type="text"/>
+                      <div class="input-group">
+                          <input class="form-control" id="mileage" maxlength="9" pattern="[0-9]*" required size="9"
+                                 th:field="*{mileage}"
+                                 th:title="#{numberOnly}" type="text"/>
+                          <div class="input-group-append">
+                              <span class="input-group-text">km</span>
+                          </div>
+                      </div>
                       <span class="validationError" th:each="error: ${#fields.errors('mileage')}"
-                            th:text="${error}"></span>
+                            th:text="${error}">
+                          </span>
                   </div>
                   <div class="form-group col-4">
                       <label for="vin">VIN</label><br/>
@@ -147,19 +160,35 @@
               <div class="row">
                   <div class="form-group col-6">
                       <label th:for="enginePower" th:text="#{enginePower}"></label><br/>
-                      <input class="form-control" id="enginePower" maxlength="9" pattern="[0-9]*" size="9"
-                             th:field="*{enginePower}"
-                             th:title="#{numberOnly}" type="text"/>
+                      <div class="input-group">
+                          <input id="enginePower" maxlength="9" pattern="[0-9]*" required
+                                 size="9"
+                                 th:class="${#fields.hasErrors('enginePower')} ? 'form-control is-invalid' : 'form-control'"
+                                 th:field="*{enginePower}"
+                                 th:title="#{numberOnly}" type="text"/>
+                          <div class="input-group-append">
+                              <span class="input-group-text">KM</span>
+                          </div>
+                      </div>
                       <span class="validationError" th:each="error: ${#fields.errors('enginePower')}"
-                            th:text="${error}"></span>
+                            th:text="${error}">
+                      </span>
                   </div>
                   <div class="form-group col-6">
                       <label th:for="engineCapacity" th:text="#{engineCapacity}"></label><br/>
-                      <input class="form-control" id="engineCapacity" maxlength="6" pattern="[0-9]*" size="9"
-                             th:field="*{engineCapacity}"
-                             th:title="#{numberOnly}" type="text"/>
+                      <div class="input-group">
+                          <input id="engineCapacity" maxlength="6" pattern="[0-9]*" required
+                                 size="9"
+                                 th:class="${#fields.hasErrors('engineCapacity')} ? 'form-control is-invalid' : 'form-control'"
+                                 th:field="*{engineCapacity}"
+                                 th:title="#{numberOnly}" type="text"/>
+                          <div class="input-group-append">
+                              <span class="input-group-text">cm&#179;</span>
+                          </div>
+                      </div>
                       <span class="validationError" th:each="error: ${#fields.errors('engineCapacity')}"
-                            th:text="${error}"></span>
+                            th:text="${error}">
+                      </span>
                   </div>
               </div>
               <div class="row">
@@ -203,6 +232,9 @@
 
   <script>
       $(document).ready(function () {
+          $('#manufacturer').selectpicker('refresh');
+
+
           $("#upload-file-input").on("change", uploadFile);
       });
 

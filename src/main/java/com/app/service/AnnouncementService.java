@@ -6,8 +6,6 @@ import com.app.utils.Result;
 import com.app.validator.AnnouncementValidator;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 
 @Service("announcementService")
 public class AnnouncementService {
@@ -39,21 +37,21 @@ public class AnnouncementService {
 	}
 
 	public long activateAnnouncement(Long announcementId) {
-		return announcementRepository.updateDeactivationDateByUserId(null, announcementId);
-	}
+        return announcementRepository.deactivateByUserId(announcementId);
+    }
 
 	public Result deactivateAnnouncement(Long announcementId) {
 		Result result = announcementValidator.checkBeforeDeactivate(announcementId);
 		
 		if(result.isSuccess()) {
-			announcementRepository.updateDeactivationDateByAnnouncementId(new Date(), announcementId);
-		}
+            announcementRepository.deactivateByAnnouncementId(announcementId);
+        }
 		
 		return result;
 	}
 
 	public long deactivateAllUserAnnouncements(Long userId) {
-		return announcementRepository.updateDeactivationDateByUserId(null, userId);
-	}
+        return announcementRepository.deactivateByUserId(userId);
+    }
 
 }

@@ -4,14 +4,14 @@ import com.app.entity.User;
 import com.app.enums.ValidatorCode;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.UserRepository;
+import com.app.utils.Result;
 import com.app.utils.ValidationDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class UserValidator {
+public class UserValidator implements ValidatorCommonMethods<User> {
 
     private final UserRepository userRepository;
 
@@ -22,19 +22,30 @@ public class UserValidator {
         this.announcementRepository = announcementRepository;
     }
 
-    public Map<String, ValidationDetails> checkBeforeSave(User user) {
-        Map<String, ValidationDetails> errors = new HashMap<>();
+    @Override
+    public Result checkBeforeDelete(User user) {
+        var errors = createErrorMap();
+
+        if (announcementRepository.existsByUserIdAndActiveIsTrue(user.getId()))
+            errors.put("announcements", ValidationDetails.of(ValidatorCode.HAVE_REF_OBJECTS));
+
+        return Result.create(errors);
+    }
+
+    @Override
+    public Result checkBeforeSave(User user) {
+        var errors = createErrorMap();
 
         errors.putAll(validatePassword(user.getPassword(), user.getPasswordConfirm()));
         errors.putAll(validateEmail(user.getEmail()));
         errors.putAll(checkLoginAlreadyExists(user));
         errors.putAll(checkEmailAlreadyExists(user));
 
-        return errors;
+        return Result.create(errors);
     }
 
     private Map<String, ValidationDetails> checkLoginAlreadyExists(User user) {
-        Map<String, ValidationDetails> errors = new HashMap<>();
+        var errors = createErrorMap();
 
         if (StringUtils.isNotBlank(user.getLogin()) &&
                 ((user.getId() == null && userRepository.countByLogin(user.getLogin()) > 0) ||
@@ -46,7 +57,7 @@ public class UserValidator {
     }
 
     private Map<String, ValidationDetails> checkEmailAlreadyExists(User user) {
-        Map<String, ValidationDetails> errors = new HashMap<>();
+        var errors = createErrorMap();
 
         if (StringUtils.isNotBlank(user.getEmail()) &&
                 (user.getId() == null && userRepository.countByEmail(user.getEmail()) > 0) ||
@@ -57,17 +68,9 @@ public class UserValidator {
         return errors;
     }
 
-    public Map<String, ValidationDetails> checkBeforeDelete(Long userId) {
-        Map<String, ValidationDetails> errors = new HashMap<>();
-
-        if (announcementRepository.existsByUserIdAndDeactivationDateIsNull(userId))
-            errors.put("announcements", ValidationDetails.of(ValidatorCode.HAVE_REF_OBJECTS));
-
-        return errors;
-    }
 
     private Map<String, ValidationDetails> validateEmail(String email) {
-        Map<String, ValidationDetails> errors = new HashMap<>();
+        var errors = createErrorMap();
 
         if (StringUtils.isBlank(email)) {
             errors.put("email", ValidationDetails.of(ValidatorCode.IS_EMPTY, email));
@@ -79,7 +82,7 @@ public class UserValidator {
     }
 
     private Map<String, ValidationDetails> validatePassword(String password, String passwordConfirm) {
-        Map<String, ValidationDetails> errors = new HashMap<>();
+        var errors = createErrorMap();
 
         if (StringUtils.isBlank(password)) {
             errors.put("password", ValidationDetails.of(ValidatorCode.IS_EMPTY, password));
@@ -94,9 +97,11 @@ public class UserValidator {
         return errors;
     }
 
-    public Map<String, ValidationDetails> checkBeforeChangePass(User user) {
-        Map<String, ValidationDetails> errors = validatePassword(user.getPassword(), user.getPasswordConfirm());
+    public Result checkBeforeChangePass(User user) {
+        var errors = createErrorMap();
 
-        return errors;
+        errors.putAll(validatePassword(user.getPassword(), user.getPasswordConfirm()));
+
+        return Result.create(errors);
     }
 }

@@ -25,7 +25,7 @@ public class HomeSearchStrategyDecorator implements SearchStrategy<Announcement>
 
     @Override
     public Page<Announcement> loadData(PageRequest pageRequest, Predicate predicate) {
-        List<Announcement> announcements = announcementRepository.findFirst20ByDeactivationDateIsNullOrderByCreationDateDesc();
+        List<Announcement> announcements = announcementRepository.findFirst20ByActiveIsTrueOrderByCreationDateDesc();
 
         return new PageImpl<>(announcements);
     }

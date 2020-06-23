@@ -1,6 +1,7 @@
 package com.app.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Setter
 @Getter
 @AllArgsConstructor
+@Builder
 public class ObservedAnnouncement {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_ObservedAnnouncement")

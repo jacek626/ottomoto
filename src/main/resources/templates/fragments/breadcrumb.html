@@ -1,0 +1,18 @@
+<div class="search-fragment mb-2" th:fragment="breadcrumb">
+
+    <div class="container">
+        <nav class="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a class="breadcrumb-item text-white" href="#" onclick="window.history.back();">&lt; Wstecz</a>
+                </li>
+                <li class="breadcrumb-item " th:each="breadCrumbElement, iterStat : ${breadCrumb}"
+                    th:var="${breadCrumbElement}">
+                    <a class="text-white" th:href="@{'/announcement/list?' + ${breadCrumbElement.link}}"
+                       th:text="${breadCrumbElement.label}"/>
+                </li>
+            </ol>
+        </nav>
+    </div>
+
+</div>

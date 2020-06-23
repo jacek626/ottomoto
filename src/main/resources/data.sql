@@ -103,7 +103,7 @@ INSERT INTO public.vehicle_model (id, name, vehicle_type, manufacturer_id) VALUE
 INSERT INTO public.vehicle_model (id, name, vehicle_type, manufacturer_id) VALUES (-22, 'dostawczy3',  'TRUCK', -2);
 INSERT INTO public.vehicle_model (id, name, vehicle_type, manufacturer_id) VALUES (-23, 'dostawczy4',  'TRUCK', -2);
 
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -1);
+/*INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -1);
 INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -2);
 INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -3);
 INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-3, -4);
@@ -127,70 +127,70 @@ INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id
 INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -20);
 INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -21);
 INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -22);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -23);
+INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -23);*/
 
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-10,'RED','PLN',22222222222222222,'PETROL',22222,false,20000.00,false,2019,21212,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false);
+						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-10,'RED','PLN',22222222222222222,'PETROL',22222,false,20000.00,false,2019,21212,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-11,'RED','PLN',345545,'PETROL',545,false,20000.00,false,2019,21212,'CABRIO',111111111,-1,-1, NOW(),false,false,3,false);
+						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-11,'RED','PLN',345545,'PETROL',545,false,20000.00,false,2019,21212,'CABRIO',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-12,'RED','PLN',345545,'PETROL',22222,false,20000.00,false,2019,21212,'COMBI',111111111,-1,-1, NOW(),false,false,3,false);
+						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-12,'RED','PLN',345545,'PETROL',22222,false,20000.00,false,2019,21212,'COMBI',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-13,'RED','PLN',345545,'PETROL',2323,false,20000.00,false,2019,21212,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false);
+						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-13,'RED','PLN',345545,'PETROL',2323,false,20000.00,false,2019,21212,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-14,'RED','PLN',345545,'PETROL',54545,false,20000.00,false,2019,21212,'COMPACT',111111111,-1,-1, NOW(),false,false,3,false);
+						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-14,'RED','PLN',345545,'PETROL',54545,false,20000.00,false,2019,21212,'COMPACT',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-15,'RED','PLN',345545,'PETROL',3434,false,20000.00,false,2019,21212,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false);
+						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-15,'RED','PLN',345545,'PETROL',3434,false,20000.00,false,2019,21212,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
 
 
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-2,'BLUE','PLN','To jest opis','DIESEL',250000,false,49000,true, 2008, 'pieknie auto','SUV',34634343,-2,-1, NOW(), false,false,3,false);
+						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-2,'BLUE','PLN','To jest opis','DIESEL',250000,false,49000,true, 2008, 'pieknie auto','SUV',34634343,-2,-1, NOW(), false,false,3,false,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-3,'GREY','PLN','To jest opis2','DIESEL',190000,false,33000,true, 2006, 'pieknie auto','COMPACT',7984343,-3,-1, NOW(), false,false,4,false);
+						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-3,'GREY','PLN','To jest opis2','DIESEL',190000,false,33000,true, 2006, 'pieknie auto','COMPACT',7984343,-3,-1, NOW(), false,false,4,false,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-4,'SILVER','PLN','To jest opis3','PETROL',130000,false,12000,true, 2009, 'pieknie auto','COMBI',166554343,-4,-1, NOW(), false,false,5,false);
+						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-4,'SILVER','PLN','To jest opis3','PETROL',130000,false,12000,true, 2009, 'pieknie auto','COMBI',166554343,-4,-1, NOW(), false,false,5,false,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-5,'BLUE','PLN','To jest opis4','PETROL_WITH_LPG',21900,false,15000,true, 2017, 'pieknie auto','COUPE',675834343,-5,-1, NOW(), false,true,2,false);
+						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-5,'BLUE','PLN','To jest opis4','PETROL_WITH_LPG',21900,false,15000,true, 2017, 'pieknie auto','COUPE',675834343,-5,-1, NOW(), false,true,2,false,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-6,'GREEN','PLN','To jest opis5','DIESEL',260000,false,27000,true, 2011, 'pieknie auto','COMBI',75656834343,-6,-1, NOW(), true,true,5,true);
+						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-6,'GREEN','PLN','To jest opis5','DIESEL',260000,false,27000,true, 2011, 'pieknie auto','COMBI',75656834343,-6,-1, NOW(), true,true,5,true,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-7,'BLUE','PLN','To jest opis6','PETROL',50000,false,40000,true, 2018, 'pieknie auto','SMALL',4346834343,-7,-1, NOW(), true,false,2,true);
+						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-7,'BLUE','PLN','To jest opis6','PETROL',50000,false,40000,true, 2018, 'pieknie auto','SMALL',4346834343,-7,-1, NOW(), true,false,2,true,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-8,'GOLD','PLN','To jest opis7','ELECTRIC',67000,false,17800,true, 2014, 'pieknie auto','COMPACT',54545434343,-8,-1, NOW(), true,false,3,false);
+						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-8,'GOLD','PLN','To jest opis7','ELECTRIC',67000,false,17800,true, 2014, 'pieknie auto','COMPACT',54545434343,-8,-1, NOW(), true,false,3,false,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-9,'BLACK','PLN','To jest opis8','PETROL',55000,false,199000,true, 2019, 'pieknie auto','CABRIO',2156834543,-1,-9, NOW(), false,true,2,true);
+						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-9,'BLACK','PLN','To jest opis8','PETROL',55000,false,199000,true, 2019, 'pieknie auto','CABRIO',2156834543,-1,-9, NOW(), false,true,2,true,true,1200, 100);
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner)
-values (-1,'RED','PLN',22222222222222222,'PETROL',22222,false,20000.00,false,2019,222222222222,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false);
+						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
+values (-1,'RED','PLN',22222222222222222,'PETROL',22222,false,20000.00,false,2019,222222222222,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
 
 insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-1,'picture1.jpg','NdnEnexdjVXwGC52kIwJ6nDaYUHU7j.jpg','NdnEnexdjVXwGC52kIwJ6nDaYUHU7j-small.jpg',-1,true);
 insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-2,'picture2.jpg','fGFTJEKhScemVfcqSdb5eWgYxi3kHz.jpg','fGFTJEKhScemVfcqSdb5eWgYxi3kHz-small.jpg',-1,false);
@@ -217,5 +217,3 @@ insert into observed_announcement(id, announcement_id, user_id) values (-3,-14,-
 update announcement set description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur';
 
 
---INSERT INTO admin(id, email, login, password,role) VALUES (-1, 'jacek626@gmail.com', 'jacek', 'haslo',1);
---INSERT INTO admin(id, email, login, password,role) VALUES (-2, 'mieczyslaw@gmail.com', 'mietek', 'haslomietka',1);

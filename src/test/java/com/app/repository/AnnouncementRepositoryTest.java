@@ -1,40 +1,36 @@
 package com.app.repository;
 
-import com.app.entity.*;
-import com.app.enums.VehicleSubtype;
-import com.app.enums.VehicleType;
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.BeforeEach;
+import com.app.entity.Announcement;
+import com.app.entity.QAnnouncement;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
+@DataJpaTest
 public class AnnouncementRepositoryTest {
-	
-	@Autowired
-	private AnnouncementRepository announcementRepository;
-	
-	@Autowired
-	private ManufacturerRepository manufacturerRepository;
-	
-	@Autowired
-	private UserRepository userRepository;
-	
-	private static boolean initialized = false;
 
-	@BeforeEach
+    @Autowired
+    private AnnouncementRepository announcementRepository;
+
+    @Autowired
+    private ManufacturerRepository manufacturerRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    private static final boolean initialized = false;
+
+/*	@BeforeEach
 	public void init() {
 		if(!initialized) {
             User user = User.builder().login("announcementRepositoryTestLogin").password("testPass").passwordConfirm("testPass").email("announcementRepositoryMail@test.com").active(true).build();
@@ -62,25 +58,25 @@ public class AnnouncementRepositoryTest {
 			announcementRepository.save(announcement);
 			initialized = true;
 		}
-	}
+	}*/
 	
 	@Test
 	public void findFirst10ByDeactivationDateIsNullOrderByCreationDateDescTest() {
-		
-		List<Announcement> announcementList = announcementRepository.findFirst10ByDeactivationDateIsNullOrderByCreationDateDesc();
-		
-		assertThat(announcementList).isNotEmpty();
-		assertThat(announcementList.size() == 10);
-	}
+
+        List<Announcement> announcementList = announcementRepository.findFirst10ByActiveIsTrueOrderByCreationDateDesc();
+
+        assertThat(announcementList).isNotEmpty();
+        assertThat(announcementList.size() == 10);
+    }
 	
 	
 	@Test
 	public void findFirst5ByUserIdAndDeactivationDateIsNullOrderByCreationDateDescTest() {
-		
-		List<Announcement> announcementList = announcementRepository.findFirst5ByUserIdAndDeactivationDateIsNullOrderByCreationDateDesc(-1L);
-		
-		assertThat(announcementList).isNotEmpty();
-	}
+
+        List<Announcement> announcementList = announcementRepository.findFirst5ByUserIdAndActiveIsTrueOrderByCreationDateDesc(-1L);
+
+        assertThat(announcementList).isNotEmpty();
+    }
 	
 	@Test
 	public void findFirst5ByUserIdAndFetchPicturesEagerlyTest() {
@@ -97,17 +93,17 @@ public class AnnouncementRepositoryTest {
 		assertThat(announcementList).isEmpty();
 	}
 	
-	@Test
+/*	@Test
 	public void shouldFindAnnouncementByPredictates() {
 		List<Announcement> announcementList = announcementRepository.findByPredicates(QAnnouncement.announcement.title.eq("announcement title"));
 		
 		assertThat(announcementList).isNotEmpty();
-	}
+	}*/
 	
 	@Test
 	public void shouldFindAnnouncementByPredicatesAndLoadPicture() {
-        PageRequest pageable = PageRequest.of(1, 10, Direction.fromString("ASC"), "id");
-        Page<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadMainPicture(pageable, QAnnouncement.announcement.deactivationDate.isNull());
+        PageRequest pageable = PageRequest.of(1, 10, Sort.Direction.fromString("ASC"), "id");
+        Page<Announcement> announcementList = announcementRepository.findByPredicatesAndLoadMainPicture(pageable, QAnnouncement.announcement.active.eq(true));
 
         assertThat(announcementList).isNotEmpty();
     }

@@ -10,11 +10,14 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-@Entity
+@Entity(name = "Manufacturer")
+@Table(name = "manufacturer")
 @Setter
 @Getter
 @Builder
@@ -26,10 +29,10 @@ public class Manufacturer implements EntityForSearchStrategy {
     @SequenceGenerator(name = "seq_Manufacturer", sequenceName = "seq_Manufacturer")
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "manufacturer", fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
     @OrderBy(value = "name ASC")
     @Builder.Default
     private List<VehicleModel> vehicleModel = new ArrayList<>();
@@ -82,6 +85,10 @@ public class Manufacturer implements EntityForSearchStrategy {
         }
 
         return predicate;
+    }
+
+    public Optional<List<VehicleModel>> getVehicleModelAsOptional() {
+        return Optional.ofNullable(vehicleModel);
     }
 
     @Override

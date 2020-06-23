@@ -17,7 +17,7 @@ public class ObservedAnnouncementService {
     private ObservedAnnouncementValidator observedAnnouncementValidator;
 
     public Result saveObservedAnnouncement(ObservedAnnouncement observedAnnouncement) {
-        Result result = observedAnnouncementValidator.checkBeforeSaveObservedAnnouncement(observedAnnouncement);
+        Result result = observedAnnouncementValidator.checkBeforeSave(observedAnnouncement);
 
         if(result.isSuccess()) {
             observedAnnouncementRepository.save(observedAnnouncement);

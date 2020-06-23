@@ -22,6 +22,9 @@ public class TestUtils {
         announcement.getVehicleModel().setId(-5L);
         announcement.setVehicleType(VehicleType.CAR);
         announcement.setManufacturerId(-3L);
+        announcement.setMileage(100);
+        announcement.setEngineCapacity(2000);
+        announcement.setEnginePower(100);
 
         return announcement;
 

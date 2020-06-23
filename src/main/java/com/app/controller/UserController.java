@@ -51,13 +51,6 @@ public class UserController {
         return "user/userRegistration";
     }
 
-/*    @InitBinder
-    public void initBinder(WebDataBinder binder) {
-        StringTrimmerEditor stringtrimmer = new StringTrimmerEditor(true);
-        binder.registerCustomEditor(String.class, stringtrimmer);
-    }*/
-
-
     @RequestMapping(value = "/list")
     public String list(@RequestParam(name = "page", defaultValue = "1", required = false) int page,
                        @RequestParam(name = "size", required = false, defaultValue = "10") int size,
@@ -175,19 +168,19 @@ public class UserController {
 
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public ModelAndView update(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class}) User user, BindingResult bindingResult, Authentication authentication) {
-		ModelAndView model = new ModelAndView("redirect:/");
+        ModelAndView model = new ModelAndView("redirect:/");
 
-		authentication.getAuthorities().stream().filter(e -> e.equals("ROLE_ADMIN")).findAny().ifPresent(e -> {
-			model.setViewName("redirect:/user/list");
-		});
+        authentication.getAuthorities().stream().filter(e -> e.getAuthority().equals("ROLE_ADMIN")).findAny().ifPresent(e -> {
+            model.setViewName("redirect:/user/list");
+        });
 
-		if (bindingResult.hasErrors())
-			model.setViewName("user/registerUser");
-		else {
-			Result<User> result = userService.saveUser(user);
-			result.ifError(() -> {
-				result.convertToMvcError(bindingResult);
-				model.setViewName("user/registerUser");
+        if (bindingResult.hasErrors())
+            model.setViewName("user/registerUser");
+        else {
+            Result<User> result = userService.saveUser(user);
+            result.ifError(() -> {
+                result.convertToMvcError(bindingResult);
+                model.setViewName("user/registerUser");
 			});
 		}
 
@@ -205,18 +198,18 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "changePass", method = RequestMethod.POST)
-	public ModelAndView changePass(@ModelAttribute("user") @Validated({User.ValidatePassOnly.class}) User user,
-								   @RequestParam(value = "passChangedFromAdministrationSite", defaultValue = "false") boolean passChangedFromAdministrationSite, BindingResult bindingResult, HttpServletRequest request) {
-		ModelAndView model = redirectDependsOnUsePlace(passChangedFromAdministrationSite, user.getId());
+    @RequestMapping(value = "changePass", method = RequestMethod.POST)
+    public ModelAndView changePass(@ModelAttribute("user") User user,
+                                   @RequestParam(value = "passChangedFromAdministrationSite", defaultValue = "false") boolean passChangedFromAdministrationSite, BindingResult bindingResult, HttpServletRequest request) {
+        ModelAndView model = redirectDependsOnUsePlace(passChangedFromAdministrationSite, user.getId());
 
-		if (bindingResult.hasErrors()) {
-			model.setViewName("user/changePass");
-			return model;
-		} else {
-			Result<User> result = userService.changePass(user);
+        if (bindingResult.hasErrors()) {
+            model.setViewName("user/changePass");
+            return model;
+        } else {
+            Result<User> result = userService.changePass(user);
 
-			result.ifError(() -> {
+            result.ifError(() -> {
 				result.convertToMvcError(bindingResult);
 				model.setViewName("user/changePass");
 			});
