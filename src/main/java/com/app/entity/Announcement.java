@@ -13,8 +13,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Entity
 @Builder
@@ -118,11 +116,7 @@ public class Announcement implements EntityForSearchStrategy {
 	@Transient
 	private Long manufacturerId;
 	@Transient
-	private String manufacturerName;
-	@Transient
 	private String miniatureRepositoryName;
-	@Transient
-	private List<Picture> imagesToDelete;
 	@Transient
 	private VehicleType vehicleType;
 	@Transient
@@ -143,9 +137,11 @@ public class Announcement implements EntityForSearchStrategy {
 
 		addUrlParam("user", user);
 		addUrlParam("manufacturerId", manufacturerId);
-		addUrlParam("vehicleModel", vehicleModel);
-		addUrlParam("vehicleType", vehicleModel);
-		addUrlParam("vehicleSubtype", vehicleModel);
+
+		addUrlParam("vehicleModel.id", vehicleModel);
+		addUrlParam("vehicleType", vehicleType);
+		addUrlParam("vehicleSubtype", vehicleSubtype);
+
 
 		urlParams.append(getSearchFields().prepareUrlParams());
 
@@ -183,13 +179,13 @@ public class Announcement implements EntityForSearchStrategy {
 			predicates.and(QAnnouncement.announcement.vehicleModel.vehicleType.eq(vehicleType));
 	}
 
-	public void prepareFieldsForSearch() {
+/*	public void prepareFieldsForSearch() {
 		if (title == null)
 			title = "";
 
 		if (vehicleType == null)
 			setVehicleType(VehicleType.CAR);
-	}
+	}*/
 
 	public AnnouncementSearchFields getSearchFields() {
 		if(searchFields == null)
@@ -204,25 +200,6 @@ public class Announcement implements EntityForSearchStrategy {
 
         return vehicleType;
     }
-
-    public void preparePictures() {
-        Map<Boolean, List<Picture>> picturesToSaveAndDeleteInSeparateLists = getPictures().stream().collect(Collectors.partitioningBy(Picture::isPictureToDelete));
-        List<Picture> imagesToDelete = picturesToSaveAndDeleteInSeparateLists.get(Boolean.TRUE);
-        List<Picture> imagesToSave = picturesToSaveAndDeleteInSeparateLists.get(Boolean.FALSE);
-        imagesToSave = setAnnouncementForNewPictures(imagesToSave);
-
-        setPictures(imagesToSave);
-        setImagesToDelete(imagesToDelete);
-    }
-
-	private List<Picture> setAnnouncementForNewPictures(List<Picture> pictures) {
-		for (Picture picture : pictures) {
-			if (picture == null)
-				picture.setAnnouncement(this);
-		}
-
-		return pictures;
-	}
 
 	public Long getManufacturerId() {
         if (vehicleModel != null && vehicleModel.getManufacturer() != null)

@@ -1,7 +1,5 @@
 package com.app.dto;
 
-import com.app.entity.Picture;
-import com.app.entity.User;
 import com.app.entity.VehicleModel;
 import com.app.enums.*;
 import com.app.utils.AnnouncementSearchFields;
@@ -15,13 +13,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Builder
 @Setter
 @Getter
 @AllArgsConstructor
 public class AnnouncementDto {
-
     private Long id;
     @Builder.Default
     private String title = "Default title";
@@ -59,16 +58,17 @@ public class AnnouncementDto {
     @Builder.Default
     private Boolean priceNegotiate = true;
     @NotNull
-    @Enumerated(EnumType.STRING)
     private VehicleSubtype vehicleSubtype;
     @NotNull
     @Builder.Default
     private CarColor carColor = CarColor.WHITE;
     @Singular
-    private List<Picture> pictures = new ArrayList<>();
+    private List<PictureDto> pictures = new ArrayList<>();
     @NotNull
-    private User user;
+    private UserDto userDto;
+    private List<PictureDto> imagesToDelete;
     private Date creationDate;
+    @Builder.Default
     private Boolean active = true;
     @Min(0)
     @Max(value = 50_000, message = "{validation.rangeError}")
@@ -84,7 +84,6 @@ public class AnnouncementDto {
     private Long manufacturerId;
     private String manufacturerName;
     private String miniatureRepositoryName;
-    private List<Picture> imagesToDelete;
     private VehicleType vehicleType;
     private StringBuilder urlParams;
     @Builder.Default
@@ -94,4 +93,13 @@ public class AnnouncementDto {
 
     public AnnouncementDto() {
     }
+
+    public void preparePictures() {
+        Map<Boolean, List<PictureDto>> picturesToSaveAndDeleteInSeparateLists = getPictures().stream().collect(Collectors.partitioningBy(PictureDto::isPictureToDelete));
+        List<PictureDto> imagesToDelete = picturesToSaveAndDeleteInSeparateLists.get(Boolean.TRUE);
+        List<PictureDto> imagesToSave = picturesToSaveAndDeleteInSeparateLists.get(Boolean.FALSE);
+        setPictures(imagesToSave);
+        setImagesToDelete(imagesToDelete);
+    }
+
 }

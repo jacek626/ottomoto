@@ -40,6 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/register", "/user/registrationSuccess", "/announcement/show/*", "/user/confirmRegistration*").permitAll()
                 .antMatchers("/", "/home", "/logout", "/user/login*", "/manufacturer/loadManufacturer*", "/manufacturer/loadVehicleSubtypes*").permitAll()
                 .antMatchers("/announcement/*", "/user/checkLoginAlreadyExists*", "/user/checkEmailAlreadyExists*").permitAll()
+                .antMatchers("/image/uploadImage*").permitAll()
                 .antMatchers("/manufacturer/*", "/user/edit/*", "/system/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().authenticated()
                 .and()
@@ -53,7 +54,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/user/login")
-                .permitAll();
+                .permitAll()
+                .and()
+                .csrf().disable();
 
     }
 }

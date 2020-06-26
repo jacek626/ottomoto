@@ -67,7 +67,8 @@ public class AnnouncementSearchStrategy implements SearchStrategy<Announcement> 
 
             if (announcement.getVehicleModel() == null)
                 vehicleModels.stream().findAny().ifPresent(e -> {
-                    //             announcement.setVehicleModel(e);
+                    // o ten link http://localhost:8081/otomoto/announcement/list?manufacturerId=-2 zwraca zle jak jest otomentowae
+                    //      announcement.setVehicleModel(e);
                 });
         }
 

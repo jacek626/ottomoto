@@ -1,6 +1,7 @@
 package com.app.entity;
 
 import com.app.enums.VehicleType;
+import com.app.utils.ObjectWithId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @AllArgsConstructor
 @Builder
-public class VehicleModel {
+public class VehicleModel implements ObjectWithId {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_VehicleModel")

@@ -1,5 +1,6 @@
 package com.app.controller;
 
+import com.app.dto.UserDto;
 import com.app.entity.User;
 import com.app.repository.UserRepository;
 import com.app.searchform.SearchStrategy;
@@ -7,6 +8,7 @@ import com.app.service.EmailService;
 import com.app.service.UserService;
 import com.app.utils.PaginationDetails;
 import com.app.utils.Result;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,30 +27,34 @@ import java.util.Optional;
 @RequestMapping("user/")
 public class UserController {
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	private final EmailService emailService;
+    private final EmailService emailService;
 
-	private final UserService userService;
+    private final UserService userService;
 
-	private final SearchStrategy<User> userSearchStrategy;
+    private final SearchStrategy<User> userSearchStrategy;
 
-	public UserController(SearchStrategy<User> userSearchStrategy, UserRepository userRepository, EmailService emailService, UserService userService) {
-		this.userSearchStrategy = userSearchStrategy;
-		this.userRepository = userRepository;
-		this.emailService = emailService;
-		this.userService = userService;
-	}
+    private final ModelMapper modelMapper;
 
-	@RequestMapping(value = "registration/{returnPage}", method = RequestMethod.GET)
-	public String register(Model model, @PathVariable(name = "returnPage", required = false) String returnPage) {
-		model.addAttribute("user", new User());
+    public UserController(SearchStrategy<User> userSearchStrategy, UserRepository userRepository, EmailService emailService, UserService userService, ModelMapper modelMapper) {
+        this.userSearchStrategy = userSearchStrategy;
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+        this.userService = userService;
+        this.modelMapper = modelMapper;
+    }
 
-        if (returnPage != null)
-            model.addAttribute("returnPage", returnPage);
+    private UserDto convertToDto(User user) {
+        UserDto userDto = modelMapper.map(user, UserDto.class);
 
+        return userDto;
+    }
 
-        return "user/userRegistration";
+    private User convertToEntity(UserDto userDto) {
+        User user = modelMapper.map(userDto, User.class);
+
+        return user;
     }
 
     @RequestMapping(value = "/list")
@@ -72,37 +78,37 @@ public class UserController {
 	public String edit(@PathVariable(value = "id") Long id, Model model) {
 		Optional<User> user = userRepository.findById(id);
 
-		if (user.isPresent())
-			model.addAttribute("user", user.get());
-		else
-			throw new NoSuchElementException("User with id " + id + " not exists");
+        if (user.isPresent())
+            model.addAttribute("user", convertToDto(user.get()));
+        else
+            throw new NoSuchElementException("User with id " + id + " not exists");
 
 		return "user/registerUser";
 	}
 
 	@RequestMapping(value = "edit", method = RequestMethod.GET)
 	public String edit(Model model, Authentication authentication) {
-		User user = userRepository.findByLogin(authentication.getName());
-		model.addAttribute("user", user);
+        User user = userRepository.findByLogin(authentication.getName());
+        model.addAttribute("user", convertToDto(user));
 
-		return "user/registerUser";
-	}
+        return "user/registerUser";
+    }
 
 	@RequestMapping(value = "createUserByAdmin")
 	public String createUserByAdmin(Model model) {
-		model.addAttribute("user", new User());
+        model.addAttribute("user", convertToDto(new User()));
 
-		return "user/registerUser";
-	}
+        return "user/registerUser";
+    }
 
 	@RequestMapping(value = "register", method = RequestMethod.GET)
 	public String register(Model model) {
-		User user = new User();
-		user.setActive(false);
-		model.addAttribute("user", user);
+        User user = new User();
+        user.setActive(false);
+        model.addAttribute("user", convertToDto(user));
 
-		return "user/registerUser";
-	}
+        return "user/registerUser";
+    }
 
 	@RequestMapping(value = "confirmRegistration", method = RequestMethod.GET)
 	public String confirmRegistration(@RequestParam("token") String token, Model model) {
@@ -136,19 +142,6 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "adminSettings/{id}", method = RequestMethod.GET)
-	public String adminSettings(@PathVariable("id") Long id, Model model) {
-		Optional<User> user = userRepository.findById(id);
-
-		if (user.isPresent())
-			model.addAttribute("user", user);
-		else
-			throw new NoSuchElementException();
-		
-		return "user/userEdit";
-		
-	}
-
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
 	public ModelAndView delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
 		Optional<User> user = userRepository.findById(id);
@@ -166,8 +159,8 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "update", method = RequestMethod.POST)
-	public ModelAndView update(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class}) User user, BindingResult bindingResult, Authentication authentication) {
+    @RequestMapping(value = "update", method = RequestMethod.POST)
+    public ModelAndView update(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class}) UserDto userDto, BindingResult bindingResult, Authentication authentication) {
         ModelAndView model = new ModelAndView("redirect:/");
 
         authentication.getAuthorities().stream().filter(e -> e.getAuthority().equals("ROLE_ADMIN")).findAny().ifPresent(e -> {
@@ -177,7 +170,7 @@ public class UserController {
         if (bindingResult.hasErrors())
             model.setViewName("user/registerUser");
         else {
-            Result<User> result = userService.saveUser(user);
+            Result<User> result = userService.saveUser(convertToEntity(userDto));
             result.ifError(() -> {
                 result.convertToMvcError(bindingResult);
                 model.setViewName("user/registerUser");
@@ -199,8 +192,9 @@ public class UserController {
 	}
 
     @RequestMapping(value = "changePass", method = RequestMethod.POST)
-    public ModelAndView changePass(@ModelAttribute("user") User user,
+    public ModelAndView changePass(@ModelAttribute("user") UserDto userDto,
                                    @RequestParam(value = "passChangedFromAdministrationSite", defaultValue = "false") boolean passChangedFromAdministrationSite, BindingResult bindingResult, HttpServletRequest request) {
+        User user = convertToEntity(userDto);
         ModelAndView model = redirectDependsOnUsePlace(passChangedFromAdministrationSite, user.getId());
 
         if (bindingResult.hasErrors()) {
@@ -210,8 +204,8 @@ public class UserController {
             Result<User> result = userService.changePass(user);
 
             result.ifError(() -> {
-				result.convertToMvcError(bindingResult);
-				model.setViewName("user/changePass");
+                result.convertToMvcError(bindingResult);
+                model.setViewName("user/changePass");
 			});
 		}
 
@@ -220,25 +214,25 @@ public class UserController {
 
 	@RequestMapping(value = "changePass/{id}", method = RequestMethod.GET)
 	public String changePass(@PathVariable("id") Long id, Model model) {
-		Optional<User> user = userRepository.findById(id);
+        Optional<User> user = userRepository.findById(id);
 
-		if (user.isEmpty())
-			throw new NoSuchElementException();
+        if (user.isEmpty())
+            throw new NoSuchElementException();
 
-		model.addAttribute("user", user.get());
-		model.addAttribute("passChangedFromAdministrationSite", true);
+        model.addAttribute("user", convertToDto(user.get()));
+        model.addAttribute("passChangedFromAdministrationSite", true);
 
-		return "/user/changePass";
-	}
+        return "/user/changePass";
+    }
 
 	@RequestMapping(value = "changePass", method = RequestMethod.GET)
 	public String changePass(Model model, Authentication authentication) {
-		User user = userRepository.findByLogin(authentication.getName());
+        User user = userRepository.findByLogin(authentication.getName());
 
-		model.addAttribute("user", user);
+        model.addAttribute("user", convertToDto(user));
 
-		return "/user/changePass";
-	}
+        return "/user/changePass";
+    }
 
 	@RequestMapping(value = "checkLoginAlreadyExists", method = RequestMethod.GET)
 	public @ResponseBody
@@ -261,11 +255,11 @@ public class UserController {
 
 	@RequestMapping(value = "login")
 	public String login(Model model, @RequestParam(value = "error", required = false, defaultValue = "false") boolean error) {
-		model.addAttribute("user", new User());
-		model.addAttribute("error", error);
+        model.addAttribute("user", convertToDto(new User()));
+        model.addAttribute("error", error);
 
-		return "user/userLogin";
-	}
+        return "user/userLogin";
+    }
 
 	@RequestMapping(value = "account")
 	public ModelAndView userAccount() {

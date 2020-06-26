@@ -9,16 +9,19 @@
   </div>
 
   <div class="container">
-	  <div class="row">
-		  <div class="col-12 col-md-8 slide carousel overflow-hidden d-flex" data-ride="carousel" id="vehicleGallery">
-			  <div class="carousel-inner">
-				  <div th:class="${row.index == 0} ? 'carousel-item active' : 'carousel-item'"
-					   th:each="picture, row : ${announcement.pictures}">
-					  <a class="w-100" data-gallery="car-images" data-toggle="lightbox"
-						 th:href="@{'/images/' + ${announcement.pictures[__${row.index}__].repositoryName}}">
-						  <img class=" m-auto overflow-hidden d-block" style=" height:350px;"
-							   th:src="@{'/images/' + ${announcement.pictures[__${row.index}__].repositoryName}}"/>
-					  </a>
+      <div class="alert alert-danger" role="alert" th:if="${!announcement.active}" th:text="#{announcementIsNotActive}">
+
+      </div>
+      <div class="row">
+          <div class="col-12 col-md-8 slide carousel overflow-hidden d-flex" data-ride="carousel" id="vehicleGallery">
+              <div class="carousel-inner">
+                  <div th:class="${row.index == 0} ? 'carousel-item active' : 'carousel-item'"
+                       th:each="picture, row : ${announcement.pictures}">
+                      <a class="w-100" data-gallery="car-images" data-toggle="lightbox"
+                         th:href="@{'/images/' + ${announcement.pictures[__${row.index}__].repositoryName}}">
+                          <img class=" m-auto overflow-hidden d-block" style=" height:350px;"
+                               th:src="@{'/images/' + ${announcement.pictures[__${row.index}__].repositoryName}}"/>
+                      </a>
 				  </div>
 			  </div>
 
@@ -73,7 +76,7 @@
                   <div class="row mt-2">
                       <button class="btn btn-primary" id="questionToSeller"
                               onclick="loadUserPhoneNumber(this.value, this.id);" th:text="#{phoneNumberToSeller}"
-                              th:value="${announcement.user.id}" type="button"/>
+                              th:value="${announcement.userDto.id}" type="button"/>
                   </div>
               </div>
           </div>
@@ -249,11 +252,11 @@
 				  </div>
 				  <div class="row float-right">
 					  <div class="form-group ">
-						  <button class="btn btn-primary" onclick="sentMessageToSeller(document.getElementById('recipient-email'),
+                          <button class="btn btn-primary" onclick="sentMessageToSeller(document.getElementById('recipient-email'),
 								  document.getElementById('message-text'), this)" th:announcementId="${announcement.id}"
-								  th:sellerEmail="${announcement.user.email}" th:text="#{sent}"
-								  type="button">
-						  </button>
+                                  th:sellerEmail="${announcement.userDto.email}" th:text="#{sent}"
+                                  type="button">
+                          </button>
 					  </div>
 				  </div>
 			  </div>
@@ -263,25 +266,25 @@
 					  <div class="card-header">
 						  <h6>O sprzedajacym</h6>
 					  </div>
-					  <div class="card-body">
-						  <div class="row card-subtitle mb-2">
-							  <span th:text="${announcement.user.firstName}"></span>
-						  </div>
-						  <div class="row card-subtitle mb-2">
-							  <span th:text="${announcement.user.city}"></span>
-						  </div>
-						  <div class="row card-subtitle mb-2" th:if="${announcement.user.province != null}"
-							   th:text="#{__${announcement.user.province}__}">
-						  </div>
-						  <div class="row card-subtitle mb-2">
-							  <span th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}"></span>
-						  </div>
-						  <div class="row mb-2">
-							  <button class="btn btn-primary" id="questionToSellerInBottom"
-									  onclick="loadUserPhoneNumber(this.value, this.id);"
-									  th:text="#{phoneNumberToSeller}"
-									  th:value="${announcement.user.id}" type="button"/>
-						  </div>
+                      <div class="card-body">
+                          <div class="row card-subtitle mb-2">
+                              <span th:text="${announcement.userDto.firstName}"></span>
+                          </div>
+                          <div class="row card-subtitle mb-2">
+                              <span th:text="${announcement.userDto.city}"></span>
+                          </div>
+                          <div class="row card-subtitle mb-2" th:if="${announcement.userDto.province != null}"
+                               th:text="#{__${announcement.userDto.province}__}">
+                          </div>
+                          <div class="row card-subtitle mb-2">
+                              <span th:text="'posiada konto od ' + ${#dates.format(announcement.userDto.creationDate, 'dd-MM-yyyy')}"></span>
+                          </div>
+                          <div class="row mb-2">
+                              <button class="btn btn-primary" id="questionToSellerInBottom"
+                                      onclick="loadUserPhoneNumber(this.value, this.id);"
+                                      th:text="#{phoneNumberToSeller}"
+                                      th:value="${announcement.userDto.id}" type="button"/>
+                          </div>
 					  </div>
 				  </div>
 			  </div>

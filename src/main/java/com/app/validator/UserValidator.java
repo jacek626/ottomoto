@@ -84,6 +84,9 @@ public class UserValidator implements ValidatorCommonMethods<User> {
     private Map<String, ValidationDetails> validatePassword(String password, String passwordConfirm) {
         var errors = createErrorMap();
 
+        if (password == null && passwordConfirm == null)
+            return errors;
+
         if (StringUtils.isBlank(password)) {
             errors.put("password", ValidationDetails.of(ValidatorCode.IS_EMPTY, password));
         } else if (StringUtils.isBlank(passwordConfirm)) {

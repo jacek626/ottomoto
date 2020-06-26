@@ -55,6 +55,7 @@ public class UserService {
 
 	public Result saveNewUser(User user) {
 		setUserRoleIfRoleIsEmpty(user);
+
 		Result result = saveUser(user);
 
 		return result;
@@ -65,7 +66,7 @@ public class UserService {
 
         if (result.isSuccess()) {
             if (user.getId() != null && user.getPassword() == null && user.getPasswordConfirm() == null)
-                ifEditUsePassFormDb(user);
+                usePassFromDatabase(user);
             else
                 user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
@@ -92,12 +93,10 @@ public class UserService {
         return result;
     }
 
-    private void ifEditUsePassFormDb(User user) {
-        if (user.getId() != null && user.getPassword() == null) {
-            String password = userRepository.findPasswordById(user.getId());
-            user.setPassword(password);
-            user.setPasswordConfirm(password);
-        }
+    private void usePassFromDatabase(User user) {
+        String password = userRepository.findPasswordById(user.getId());
+        user.setPassword(password);
+        user.setPasswordConfirm(password);
     }
 
     private void setUserRoleIfRoleIsEmpty(User user) {

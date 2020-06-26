@@ -2,6 +2,7 @@ package com.app.repository;
 
 import com.app.entity.VehicleModel;
 import com.app.enums.VehicleType;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,4 +21,6 @@ public interface VehicleModelRepository extends CrudRepository<VehicleModel, Lon
 
     int countByNameAndIdNot(String name, Long id);
 
+    @Query(value = "SELECT name FROM VehicleModel where id = :id")
+    String findNameById(Long id);
 }

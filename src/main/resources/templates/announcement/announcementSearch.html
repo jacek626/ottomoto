@@ -47,11 +47,11 @@
                         </option>
                     </select>
                     <div class="btn btn-light ml-0 d-none d-md-block"
-                         onclick="">X
+                         onclick="$('#manufacturer').val('').selectpicker('refresh');">X
                     </div>
 
                     <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="200px"
-                            id="vehicleModel" th:field="*{vehicleModel}" title="Model">
+                            id="vehicleModel" th:field="*{vehicleModel.id}" title="Model">
                         <option th:each="element : ${vehicleModelList}" th:if="*{vehicleModel == null}"
                                 th:text="${element.name}" th:value="${element.id}"></option>
                         <option th:each="element : ${vehicleModelList}" th:if="*{vehicleModel != null}"

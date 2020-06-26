@@ -23,9 +23,6 @@ public class Picture {
 	@JoinColumn(name = "announcement_id")
 	private Announcement announcement;
 
-	@Transient
-	private Long announcementId;
-	
 	@NotBlank
 	private String repositoryName;
 

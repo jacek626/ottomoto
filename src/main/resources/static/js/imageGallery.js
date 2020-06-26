@@ -1,12 +1,19 @@
 function markPictureInAnnouncementAsMain(element) {
-    let mainPhotoInAnnouncement = $(".mainPhotoInAnnouncement");
-    mainPhotoInAnnouncement.val("false");
-    mainPhotoInAnnouncement.css("text-decoration", "none");
+    let mainPhotoInAnnouncement = $(element).parent().find("input.mainPhotoInAnnouncement");
+    let currentValue = mainPhotoInAnnouncement.val();
 
-    $(element).parent().find("input.mainPhotoInAnnouncement").val("true");
-    $(element).css("text-decoration", "underline");
+    $("input.mainPhotoInAnnouncement").val('false');
+    $(".markPictureAsMain ").css("text-decoration", "none");
 
+    if (currentValue == 'true') {
+        currentValue = true;
+        $(element).css("text-decoration", "none");
 
+    } else {
+        currentValue = false;
+        $(element).css("text-decoration", "underline");
+    }
+    $(mainPhotoInAnnouncement).val(!currentValue);
 }
 
 
@@ -60,6 +67,7 @@ function uploadFile() {
         url: "/otomoto/image/uploadImage",
         type: "POST",
         data: formData,
+        timeout: 100000,
         enctype: "multipart/form-data",
         processData: false,
         contentType: false,

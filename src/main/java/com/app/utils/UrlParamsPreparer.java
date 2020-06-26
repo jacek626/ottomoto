@@ -9,4 +9,9 @@ public interface UrlParamsPreparer {
         if (paramValue != null)
             getUrlParams().append(paramName).append("=").append(paramValue).append("&");
     }
+
+    default void addUrlParam(String paramName, ObjectWithId objectWithId) {
+        if (objectWithId != null)
+            getUrlParams().append(paramName).append("=").append(objectWithId.getId()).append("&");
+    }
 }

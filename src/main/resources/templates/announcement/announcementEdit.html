@@ -37,7 +37,7 @@
                             th:text="${error}">
 								</span>
                       <input th:field="*{id}" type="hidden"/>
-                      <input th:field="*{user}" type="hidden"/>
+                      <input th:field="*{userDto.id}" type="hidden"/>
                   </div>
                   <div class="form-group col-6 text-right">
                       <br/>
@@ -59,10 +59,10 @@
                   </div>
                   <div class="form-group col-6">
                       <label for="vehicleModel">Model pojazdu</label><br/>
-                      <select class="selectpicker  w-100" data-max-options="1" id="vehicleModel" multiple required
-                              th:field="*{vehicleModel}">
-                          <option th:each="element : ${vehicleModelList}" th:selected="*{vehicleModel.id}"
-                                  th:text="${element.name}" th:value="${element.id}"></option>
+                      <select class="selectpicker  w-100" data-max-options="1"
+                              id="vehicleModel" multiple required th:field="*{vehicleModel.id}">
+                          <option th:each="model : ${vehicleModelList}" th:selected="*{vehicleModel.id}"
+                                  th:text="${model.name}" th:value="${model.id}"></option>
                       </select>
                   </div>
               </div>
