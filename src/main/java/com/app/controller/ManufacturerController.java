@@ -168,7 +168,7 @@ public class ManufacturerController {
         PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
         model.addAllAttributes(manufacturerSearchStrategy.prepareSearchForm(manufacturer, paginationDetails));
 
-        return "/manufacturer/manufacturerList";
+        return "manufacturer/manufacturerList";
     }
 
     @RequestMapping(value = "loadVehicleSubtypes", method = RequestMethod.GET)

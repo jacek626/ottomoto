@@ -211,14 +211,14 @@ public class AnnouncementController {
 
 		model.addAttribute("requestMapping", "list");
 
-		if(announcement.getVehicleType() == null)
+		if (announcement.getVehicleType() == null)
 			announcement.setVehicleType(VehicleType.CAR);
 
 		PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
 
 		model.addAllAttributes(announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails));
 
-		return "/announcement/announcementList";
+		return "announcement/announcementList";
 	}
 
 	@RequestMapping(value="/my")
@@ -235,7 +235,7 @@ public class AnnouncementController {
 
 		model.addAllAttributes(announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails));
 
-		return "/announcement/announcementList";
+		return "announcement/announcementList";
 	}
 
 

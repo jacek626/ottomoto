@@ -71,7 +71,7 @@ public class UserController {
         PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
         model.addAllAttributes(userSearchStrategy.prepareSearchForm(user, paginationDetails));
 
-        return "/user/userList";
+        return "user/userList";
     }
 
 	@RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
@@ -222,7 +222,7 @@ public class UserController {
         model.addAttribute("user", convertToDto(user.get()));
         model.addAttribute("passChangedFromAdministrationSite", true);
 
-        return "/user/changePass";
+		return "user/changePass";
     }
 
 	@RequestMapping(value = "changePass", method = RequestMethod.GET)
@@ -231,7 +231,7 @@ public class UserController {
 
         model.addAttribute("user", convertToDto(user));
 
-        return "/user/changePass";
+		return "user/changePass";
     }
 
 	@RequestMapping(value = "checkLoginAlreadyExists", method = RequestMethod.GET)

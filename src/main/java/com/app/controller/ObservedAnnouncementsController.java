@@ -47,7 +47,7 @@ public class ObservedAnnouncementsController {
         PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
         model.addAllAttributes(observedAnnouncementSearchStrategyDecorator.prepareSearchForm(announcement, paginationDetails));
 
-        return "/announcement/announcementList";
+        return "announcement/announcementList";
     }
 
     @RequestMapping(value = "toggleAnnouncementIsObserved", method = RequestMethod.GET)
