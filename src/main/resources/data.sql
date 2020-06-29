@@ -8,11 +8,11 @@ INSERT INTO public.user_os(
 
 
 
-	
+
 INSERT INTO public.user_os(
 	id, active, city, description, email, login, password, first_name, last_name, phone_number, zip_code, street, province, creation_date)
 	VALUES ( -2,true, 'Lublin', 'opis osuser' , 'osuser1@sdd.pl', 'osuser', '$2a$10$yRZmDPRpBNP7u7TFfYyCLuGbQAb0Jd9eDbjCsglUd5Dt3YhERmaf6',
-	'Jan','Kowalski',434545756,'34-234','ul Lubelska','PODKARPACKIE',NOW());	
+	'Jan','Kowalski',434545756,'34-234','ul Lubelska','PODKARPACKIE',NOW());
 INSERT INTO public.user_os(
 	id, active, city, description, email, login, password, first_name, last_name, creation_date)
 	VALUES ( -3,true, 'Lublin', 'opis osuser' , 'osuser2@sdd.pl', 'osuser2', '$2a$10$yRZmDPRpBNP7u7TFfYyCLuGbQAb0Jd9eDbjCsglUd5Dt3YhERmaf6','Wacław','Rutkowski',NOW());
@@ -71,8 +71,8 @@ INSERT INTO user_role(role_id,user_id) VALUES(2,-13);
 INSERT INTO user_role(role_id,user_id) VALUES(2,-14);
 INSERT INTO user_role(role_id,user_id) VALUES(2,-15);
 
-	
-	
+
+
 INSERT INTO public.manufacturer (id, name) VALUES (-1, 'Opel');
 INSERT INTO public.manufacturer (id, name) VALUES (-2, 'Fiat');
 INSERT INTO public.manufacturer (id, name) VALUES (-3, 'Peugeot');
@@ -102,32 +102,6 @@ INSERT INTO public.vehicle_model (id, name, vehicle_type, manufacturer_id) VALUE
 INSERT INTO public.vehicle_model (id, name, vehicle_type, manufacturer_id) VALUES (-21, 'ciezarowy4',  'TRUCK', -2);
 INSERT INTO public.vehicle_model (id, name, vehicle_type, manufacturer_id) VALUES (-22, 'dostawczy3',  'TRUCK', -2);
 INSERT INTO public.vehicle_model (id, name, vehicle_type, manufacturer_id) VALUES (-23, 'dostawczy4',  'TRUCK', -2);
-
-/*INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -1);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -2);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -3);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-3, -4);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-3, -5);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-3, -6);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -7);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -8);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -9);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -10);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -11);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -12);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -13);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-3, -14);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-3, -15);
-
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -16);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -17);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -18);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-1, -19);
-
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -20);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -21);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -22);
-INSERT INTO public.manufacturer_vehicle_model (manufacturer_id, vehicle_model_id) VALUES (-2, -23);*/
 
 
 insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,

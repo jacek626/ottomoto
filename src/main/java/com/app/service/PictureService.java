@@ -1,5 +1,10 @@
 package com.app.service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.app.entity.Picture;
 import com.app.repository.PictureRepository;
 import com.app.utils.HtmlElement;
@@ -36,10 +41,15 @@ public class PictureService {
 
     private String repositoryLocation;
 
-    public PictureService(Environment environment, PictureRepository pictureRepository, MessageSource messageSource) {
+    private final AmazonS3 amazonS3Client;
+
+    private String bucketName = "ottomoto";
+
+    public PictureService(Environment environment, PictureRepository pictureRepository, MessageSource messageSource, AmazonS3 amazonS3Client) {
         this.environment = environment;
         this.pictureRepository = pictureRepository;
         this.messageSource = messageSource;
+        this.amazonS3Client = amazonS3Client;
     }
 
     @PostConstruct
@@ -50,6 +60,8 @@ public class PictureService {
     public void deleteFromFileRepository(List<Picture> pictures) {
         for (Picture picture : pictures) {
             Paths.get(repositoryLocation, picture.getRepositoryName()).toFile().delete();
+
+            S3Object object = amazonS3Client.getObject(bucketName, picture.getFileName());
         }
 
         pictureRepository.deleteAll(pictures);
@@ -59,9 +71,28 @@ public class PictureService {
         List<UploadedPicture> savedImages = new ArrayList<>();
 
         for (MultipartFile uploadedFile : uploadedFiles) {
-            File uploadedImages = saveUploadedFilesInRepository(uploadedFile);
-            File convertedImagesToMiniatures = prepareImagesMiniatures(uploadedImages);
-            savedImages.add(UploadedPicture.of(uploadedImages, convertedImagesToMiniatures, uploadedFile.getOriginalFilename()));
+            File uploadedImage = saveUploadedFilesInRepository(uploadedFile);
+
+            //       amazonS3Client.putObject(new PutObjectRequest(bucketName, uploadedImage.getName(),uploadedImage));
+
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            //     objectMetadata.setContentType(Files.probeContentType(uploadedImage));
+            objectMetadata.setContentType("image");
+            objectMetadata.setContentLength(uploadedImage.length());
+// String bucketName, String key, InputStream input, ObjectMetadata metadata
+
+            amazonS3Client.putObject(new PutObjectRequest(bucketName, uploadedImage.getName(), uploadedFile.getInputStream(), objectMetadata).
+                    withCannedAcl(CannedAccessControlList.PublicRead));
+
+
+    /*        amazonS3Client.putObject(new PutObjectRequest(bucketName, uploadedImage.getName(), uploadedImage.getInputStream(), objectMetadata).
+                    withCannedAcl(CannedAccessControlList.PublicRead));*/
+
+
+            //      amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName,file.getInputStream(), objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
+
+            File convertedImagesToMiniatures = prepareImagesMiniatures(uploadedImage);
+            savedImages.add(UploadedPicture.of(uploadedImage, convertedImagesToMiniatures, uploadedFile.getOriginalFilename()));
         }
 
         return savedImages;
