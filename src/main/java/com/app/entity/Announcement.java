@@ -21,46 +21,46 @@ import java.util.List;
 @AllArgsConstructor
 public class Announcement implements EntityForSearchStrategy {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_Announcement")
-	@SequenceGenerator(name = "seq_Announcement", sequenceName = "seq_Announcement")
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_Announcement")
+    @SequenceGenerator(name = "seq_Announcement", sequenceName = "seq_Announcement")
+    private Long id;
 
-	@NotBlank
-	@Size(max = 200)
-	@Builder.Default
-	private String title = "Default title";
-	
-	@Size(max=3000)
-	private String description;
+    @NotBlank
+    @Size(max = 200)
+    @Builder.Default
+    private String title = "Default title";
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	private VehicleModel vehicleModel;
+    @Size(max = 3000)
+    private String description;
 
-	@NotNull
-	@Min(1900)
-	@Max(2100)
-	private Integer productionYear;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    private VehicleModel vehicleModel;
 
-	@NotNull
-	@Min(0)
-	@Max(999_999_999)
-	@Builder.Default
-	private Integer mileage = 0;
+    @NotNull
+    @Min(1900)
+    @Max(2100)
+    private Integer productionYear;
 
-	@Size(max=20)
-	private String vin;
+    @NotNull
+    @Min(0)
+    @Max(999_999_999)
+    @Builder.Default
+    private Integer mileage = 0;
 
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	@Builder.Default
-	private FuelType fuelType = FuelType.PETROL;
+    @Size(max = 20)
+    private String vin;
 
-	@NotNull
-	@Min(0)
-	@Digits(integer=9, fraction=2)
-	private BigDecimal price;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private FuelType fuelType = FuelType.PETROL;
+
+    @NotNull
+    @Min(0)
+    @Digits(integer = 9, fraction = 2)
+    private BigDecimal price;
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
@@ -75,18 +75,18 @@ public class Announcement implements EntityForSearchStrategy {
 	@Builder.Default
 	private Boolean priceNegotiate = true;
 
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	private VehicleSubtype vehicleSubtype;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private VehicleSubtype vehicleSubtype;
 
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	@Builder.Default
-	private CarColor carColor = CarColor.WHITE;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private CarColor carColor = CarColor.WHITE;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, mappedBy = "announcement", fetch = FetchType.LAZY)
-	@OrderBy("mainPhotoInAnnouncement DESC,id DESC")
-	@Singular
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "announcement", fetch = FetchType.LAZY)
+    @OrderBy("mainPhotoInAnnouncement DESC,id DESC")
+    @Singular
     private List<Picture> pictures = new ArrayList<>();
 
     @NotNull
@@ -108,15 +108,15 @@ public class Announcement implements EntityForSearchStrategy {
     @NotNull
     private Integer enginePower;
 
-	private Boolean accidents;
-	private Boolean firstOwner;
-	private Boolean damaged;
-	private Byte doors;
+    private Boolean accidents;
+    private Boolean firstOwner;
+    private Boolean damaged;
+    private Byte doors;
 
-	@Transient
-	private Long manufacturerId;
-	@Transient
-	private String miniatureRepositoryName;
+    @Transient
+    private Long manufacturerId;
+    @Transient
+    private String miniatureRepositoryName;
 	@Transient
 	private VehicleType vehicleType;
 	@Transient
@@ -137,11 +137,9 @@ public class Announcement implements EntityForSearchStrategy {
 
 		addUrlParam("user", user);
 		addUrlParam("manufacturerId", manufacturerId);
-
 		addUrlParam("vehicleModel.id", vehicleModel);
 		addUrlParam("vehicleType", vehicleType);
 		addUrlParam("vehicleSubtype", vehicleSubtype);
-
 
 		urlParams.append(getSearchFields().prepareUrlParams());
 
@@ -176,20 +174,12 @@ public class Announcement implements EntityForSearchStrategy {
 
 	private void preparePredicateForVehicleType() {
 		if (vehicleType != null)
-			predicates.and(QAnnouncement.announcement.vehicleModel.vehicleType.eq(vehicleType));
-	}
+            predicates.and(QAnnouncement.announcement.vehicleModel.vehicleType.eq(vehicleType));
+    }
 
-/*	public void prepareFieldsForSearch() {
-		if (title == null)
-			title = "";
-
-		if (vehicleType == null)
-			setVehicleType(VehicleType.CAR);
-	}*/
-
-	public AnnouncementSearchFields getSearchFields() {
-		if(searchFields == null)
-			searchFields = new AnnouncementSearchFields();
+    public AnnouncementSearchFields getSearchFields() {
+        if (searchFields == null)
+            searchFields = new AnnouncementSearchFields();
 
         return searchFields;
     }
@@ -201,10 +191,11 @@ public class Announcement implements EntityForSearchStrategy {
         return vehicleType;
     }
 
-	public Long getManufacturerId() {
+    public Long getManufacturerId() {
         if (vehicleModel != null && vehicleModel.getManufacturer() != null)
             return vehicleModel.getManufacturer().getId();
 
         return manufacturerId;
     }
+
 }

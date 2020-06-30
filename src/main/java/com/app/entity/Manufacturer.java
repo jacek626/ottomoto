@@ -95,4 +95,5 @@ public class Manufacturer implements EntityForSearchStrategy {
     public BooleanBuilder getPredicate() {
         return predicates;
     }
+
 }

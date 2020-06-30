@@ -1,17 +1,16 @@
 package com.app.controller;
 
+import com.app.dto.ManufacturerDto;
 import com.app.entity.Manufacturer;
-import com.app.entity.VehicleModel;
 import com.app.enums.VehicleSubtype;
 import com.app.enums.VehicleType;
 import com.app.projection.ManufacturerProjection;
 import com.app.repository.ManufacturerRepository;
 import com.app.searchform.SearchStrategy;
 import com.app.service.ManufacturerService;
-import com.app.service.VehicleModelService;
+import com.app.utils.ManufacturerMapper;
 import com.app.utils.PaginationDetails;
 import com.app.utils.Result;
-import com.google.common.collect.Lists;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,14 +31,14 @@ public class ManufacturerController {
 
     private final ManufacturerService manufacturerService;
 
-    private final VehicleModelService vehicleModelService;
+    private final ManufacturerMapper manufacturerMapper;
 
 
-    public ManufacturerController(ManufacturerRepository manufacturerRepository, SearchStrategy manufacturerSearchStrategy, ManufacturerService manufacturerService, VehicleModelService vehicleModelService) {
+    public ManufacturerController(ManufacturerRepository manufacturerRepository, SearchStrategy manufacturerSearchStrategy, ManufacturerService manufacturerService, ManufacturerMapper manufacturerMapper) {
         this.manufacturerRepository = manufacturerRepository;
         this.manufacturerSearchStrategy = manufacturerSearchStrategy;
         this.manufacturerService = manufacturerService;
-        this.vehicleModelService = vehicleModelService;
+        this.manufacturerMapper = manufacturerMapper;
     }
 
     @ModelAttribute
@@ -49,76 +48,45 @@ public class ManufacturerController {
         model.addAttribute("vehicleSubtypesMotorcycle", VehicleSubtype.getVehicleSubtypesByVehicleType(VehicleType.MOTORCYCLE));
     }
 	
-/*
-	@RequestMapping(value="new",method=RequestMethod.GET)
-	public String register(Model model) {
-		model.addAttribute("manufacturer", new Manufacturer());
-
-		return "manufacturer/manufacturerEdit";
-	}
-*/
-
-
     @RequestMapping(value = "create", method = RequestMethod.GET)
     public String create(Model model) {
-        Manufacturer manufacturer = Manufacturer.builder().build();
-        model.addAttribute("manufacturer", manufacturer);
+        var manufacturer = Manufacturer.builder().build();
+        model.addAttribute("manufacturer", manufacturerMapper.convertToDto(manufacturer));
         model.addAllAttributes(manufacturerSearchStrategy.prepareDataForHtmlElements(manufacturer));
 
         return "manufacturer/manufacturerEdit";
     }
 
-
     @RequestMapping(value = "save", method = RequestMethod.POST, params = "action=addVehicle")
-    public String addVehicle(@ModelAttribute("manufacturer") Manufacturer manufacturer, Model model, RedirectAttributes redirectAttributes) {
-        VehicleModel vehicleModel = new VehicleModel();
-        vehicleModel.setManufacturer(manufacturer);
-        manufacturer.getVehicleModelAsOptional().ifPresentOrElse(e -> {
-            e.add(vehicleModel);
-        }, () -> {
-            manufacturer.setVehicleModel(Lists.newArrayList());
-            manufacturer.getVehicleModel().add(vehicleModel);
-        });
-        model.addAttribute("manufacturer", manufacturer);
+    public String addVehicle(@ModelAttribute("manufacturer") ManufacturerDto manufacturerDto, Model model, RedirectAttributes redirectAttributes) {
+        var manufacturer = manufacturerService.addVehicle(manufacturerMapper.convertToEntity(manufacturerDto));
 
-        //    redirectAttributes.addAttribute("manufacturer", manufacturer);
-        redirectAttributes.addFlashAttribute("manufacturerWithAddedModel", manufacturer);
-        //     redirectAttributes.addFlashAttribute("manufacturer", manufacturer);
-
-        if (manufacturer.getId() == null)
+        if (manufacturer.getId() == null) {
+            model.addAttribute("manufacturer", manufacturerMapper.convertToDto(manufacturer));
             return "manufacturer/manufacturerEdit";
+        }
 
+        redirectAttributes.addFlashAttribute("manufacturerWithAddedModel", manufacturerMapper.convertToDto(manufacturer));
         return "redirect:/manufacturer/edit/" + manufacturer.getId();
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST, params = "action=removeVehicle")
-    public String removeVehicle(@ModelAttribute("manufacturer") Manufacturer manufacturer, Model model, BindingResult bindingResult) {
+    public String removeVehicle(@ModelAttribute("manufacturer") Manufacturer manufacturer) {
         manufacturer.getVehicleModel().stream().filter(v -> v.getToDelete()).findFirst().ifPresent(vehicleModel -> {
             manufacturer.getVehicleModel().remove(vehicleModel);
- /*           Result<VehicleModel> result = vehicleModelService.delete(vehicleModel);
-            result.ifSuccess(() -> {
-                manufacturer.getVehicleModel().remove(vehicleModel);
-            });
-            result.ifError(() -> {
-                result.convertToMvcError(bindingResult);
-            });*/
         });
 
         return "manufacturer/manufacturerEdit";
     }
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
-    public ModelAndView save(@ModelAttribute("manufacturer") Manufacturer manufacturer, BindingResult bindingResult) {
-        ModelAndView model = new ModelAndView("redirect:/manufacturer/list");
-
-/*        for (VehicleModel vehicle : manufacturer.getVehicleModelAsOptional().orElse(Collections.emptyList()).stream().filter(v -> v.getManufacturer() == null).collect(Collectors.toList())) {
-            vehicle.setManufacturer(manufacturer);
-        }   */
+    public ModelAndView save(@ModelAttribute("manufacturer") ManufacturerDto manufacturerDto, BindingResult bindingResult) {
+        var model = new ModelAndView("redirect:/manufacturer/list");
 
         if (bindingResult.hasErrors())
             model.setViewName("manufacturer/manufacturerEdit");
         else {
-            Result<Manufacturer> result = manufacturerService.saveManufacturer(manufacturer);
+            Result<Manufacturer> result = manufacturerService.saveManufacturer(manufacturerMapper.convertToEntity(manufacturerDto));
             result.ifError(() -> {
                 result.convertToMvcError(bindingResult);
                 model.setViewName("manufacturer/manufacturerEdit");
@@ -128,18 +96,16 @@ public class ManufacturerController {
         return model;
     }
 
-    @RequestMapping(value = "addVehicle")
+/*    @RequestMapping(value = "addVehicle")
     public String addVehicle() {
-
-
         return "manufacturer/edit/";
-    }
+    }*/
 
     @RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Long id, Model model) {
 
         manufacturerRepository.findById(id).ifPresentOrElse(manufacturer -> {
-            model.addAttribute("manufacturer", model.asMap().getOrDefault("manufacturerWithAddedModel", manufacturer));
+            model.addAttribute("manufacturer", model.asMap().getOrDefault("manufacturerWithAddedModel", manufacturerMapper.convertToDto(manufacturer)));
         }, () -> {
             throw new IllegalArgumentException("Manufacturer not found");
         });
@@ -148,25 +114,26 @@ public class ManufacturerController {
         return "manufacturer/manufacturerEdit";
     }
 
-    @RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
+/*    @RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
     public String delete(@PathVariable("id") Long id) {
+
+        // brak serwisu ?????????????????????????
 
         manufacturerRepository.deleteById(id);
 
         return "redirect:/mark/list";
-    }
+    }*/
 
     @RequestMapping(value = "/list")
     public String list(@RequestParam(name = "page", defaultValue = "1", required = false) int page,
                        @RequestParam(name = "size", required = false, defaultValue = "10") int size,
                        @RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
                        @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
-                       @ModelAttribute("manufacturer") Manufacturer manufacturer,
+                       @ModelAttribute("manufacturer") ManufacturerDto manufacturerDto,
                        Model model) {
-
+        var paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
+        model.addAllAttributes(manufacturerSearchStrategy.prepareSearchForm(manufacturerMapper.convertToEntity(manufacturerDto), paginationDetails));
         model.addAttribute("requestMapping", "list");
-        PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
-        model.addAllAttributes(manufacturerSearchStrategy.prepareSearchForm(manufacturer, paginationDetails));
 
         return "manufacturer/manufacturerList";
     }

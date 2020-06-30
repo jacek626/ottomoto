@@ -1,5 +1,6 @@
 package com.app.searchform;
 
+import com.app.dto.AnnouncementDto;
 import com.app.entity.Announcement;
 import com.app.entity.QAnnouncement;
 import com.app.entity.QObservedAnnouncement;
@@ -7,6 +8,7 @@ import com.app.repository.AnnouncementRepository;
 import com.app.repository.UserRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -16,7 +18,7 @@ import java.util.Map;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @Component
-public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrategy<Announcement> {
+public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrategy<Announcement, AnnouncementDto> {
 
     private final AnnouncementSearchStrategy announcementSearchFormStrategy;
 
@@ -24,10 +26,13 @@ public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrate
 
     private final AnnouncementRepository announcementRepository;
 
-    public ObservedAnnouncementSearchStrategyDecorator(AnnouncementSearchStrategy announcementSearchFormStrategy, UserRepository userRepository, AnnouncementRepository announcementRepository) {
+    private final ModelMapper modelMapper;
+
+    public ObservedAnnouncementSearchStrategyDecorator(AnnouncementSearchStrategy announcementSearchFormStrategy, UserRepository userRepository, AnnouncementRepository announcementRepository, ModelMapper modelMapper) {
         this.announcementSearchFormStrategy = announcementSearchFormStrategy;
         this.userRepository = userRepository;
         this.announcementRepository = announcementRepository;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -46,4 +51,10 @@ public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrate
     public Map<String, Object> prepareDataForHtmlElements(Announcement entity) {
         return announcementSearchFormStrategy.prepareDataForHtmlElements(entity);
     }
+
+    @Override
+    public AnnouncementDto convertToDto(Announcement entity) {
+        return modelMapper.map(entity, AnnouncementDto.class);
+    }
+
 }

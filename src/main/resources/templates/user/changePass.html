@@ -19,16 +19,19 @@
             </tr>
             <tr>
                 <td><label for="password" th:text="#{password}"></label></td>
-                <td><input id="password" th:field="*{password}" type="password"/>
-                    <p class="validationError" th:if="${passwordsAreNotSame}" th:text="#{passwordsAreNotSame}"></p>
-                    <p class="validationError" th:each="error: ${#fields.errors('password')}"
-                       th:text="#{__${error}__}"></p>
+                <td><input id="password" required th:field="*{password}" type="password"/>
+                </td>
+                <td>
+                    <span class="validationError" th:each="error: ${#fields.errors('password')}"
+                          th:text="#{__${error}__}"></span>
                 </td>
             </tr>
             <tr>
                 <td><label for="passwordConfirm" th:text="#{passwordConfirm}"></label></td>
-                <td><input id="passwordConfirm" th:field="*{passwordConfirm}" type="password"/>
-                    <p class="validationError" th:if="${validationFieldIsEmpty}" th:text="#{fieldIsEmpty}"></p>
+                <td><input id="passwordConfirm" required th:field="*{passwordConfirm}" type="password"/></td>
+                <td>
+                    <span class="validationError" th:each="error: ${#fields.errors('passwordConfirm')}"
+                          th:text="#{__${error}__}"></span>
                 </td>
             </tr>
             <tr>

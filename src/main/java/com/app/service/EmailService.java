@@ -3,6 +3,7 @@ package com.app.service;
 import com.app.entity.User;
 import com.app.entity.VerificationToken;
 import com.app.utils.EmailMessage;
+import com.app.utils.MessageToSellerData;
 import com.app.utils.Result;
 import com.app.utils.SystemEmail;
 import com.app.validator.EmailValidator;
@@ -39,9 +40,9 @@ public class EmailService {
 
 		if (result.isSuccess())
 			try {
-				Session session = setUpMailSession(setUpSystemMailProperties(), systemEmail.getAddress(), systemEmail.getPassword());
-				Transport.send(createMessage(emailMessage, session));
-			} catch (MessagingException e) {
+                Session session = setUpMailSession(setUpSystemMailProperties(), systemEmail.getAddress(), systemEmail.getPassword());
+                Transport.send(createMessage(emailMessage, session));
+            } catch (MessagingException e) {
                 e.printStackTrace();
                 return Result.error();
             }
@@ -49,9 +50,25 @@ public class EmailService {
         return result;
     }
 
+    public Result sentMessageToSeller(MessageToSellerData messageToSellerData) {
+        String emailSubject = messageSource.getMessage("sendMessageToSellerSubject", new Object[]{}, Locale.getDefault());
+        StringBuilder emailText = new StringBuilder(messageSource.getMessage("sendMessageToSellerContent", new Object[]{}, Locale.getDefault()));
+        emailText.append(messageToSellerData.getRequestUrl()).append(messageToSellerData.getAnnouncementId());
+        emailText.append("\n");
+        emailText.append(messageToSellerData.getMessageText());
+
+        EmailMessage emailToSend = EmailMessage.builder().
+                subject(emailSubject).
+                content(emailText.toString()).
+                senderEmail(messageToSellerData.getCustomerEmail()).
+                receiverEmailsAddress(messageToSellerData.getSellerEmail()).
+                build();
+
+        return sendEmail(emailToSend);
+    }
+
     public Result sendEmailWithAccountActivationLink(User user, String appUrl) {
         VerificationToken verificationToken = verificationTokenService.createVerificationToken(user);
-
         EmailMessage emailMessage = createActivationEmail(user, appUrl, verificationToken.getToken());
 
         return sendEmail(emailMessage);

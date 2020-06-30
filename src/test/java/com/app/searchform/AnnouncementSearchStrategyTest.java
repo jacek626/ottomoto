@@ -7,6 +7,7 @@ import com.app.enums.VehicleType;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.ManufacturerRepository;
 import com.app.repository.VehicleModelRepository;
+import com.app.utils.AnnouncementMapper;
 import com.app.utils.PaginationDetails;
 import com.google.common.collect.Lists;
 import com.querydsl.core.types.ExpressionUtils;
@@ -35,6 +36,9 @@ public class AnnouncementSearchStrategyTest {
     private final static PaginationDetails paginationDetails = PaginationDetails.builder().page(1).size(10).orderBy("id").sort("ASC").build();
 
     @Mock
+    private AnnouncementMapper announcementMapper;
+
+    @Mock
     private AnnouncementRepository announcementRepository;
 
     @Mock
@@ -53,7 +57,6 @@ public class AnnouncementSearchStrategyTest {
         var announcement = Announcement.builder().build();
 
         when(announcementSearchStrategy.loadData(any(PageRequest.class), any(Predicate.class))).thenReturn(new PageImpl<>(Lists.newArrayList(announcement), paginationDetails.convertToPageRequest(), 10));
-        //    when(announcementSearchStrategy.loadData(any(PageRequest.class), any(Predicate.class))).thenReturn(new PageImpl<>(Lists.newArrayList(TestUtils.prepareAnnouncement()), paginationDetails.convertToPageRequest(),10));
 
         //when
         Map<String, Object> announcements = announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails);

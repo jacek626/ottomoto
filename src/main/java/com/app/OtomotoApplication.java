@@ -49,12 +49,18 @@ public class OtomotoApplication {
 @Configuration
 @AutoConfigureAfter(DispatcherServletAutoConfiguration.class)
 class StaticResourceConfiguration implements WebMvcConfigurer {
+    private String s3Location;
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		String myExternalFilePath = "file:///C:/otomoto/";
-		registry.addResourceHandler("/images/**").addResourceLocations(myExternalFilePath);
-	}
+    @Value("${amazon.aws.endpointUrl}")
+    private String endpointUrl;
+    @Value("${amazon.aws.bucketName}")
+    private String bucketName;
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        s3Location = endpointUrl + "/" + bucketName + "/";
+        registry.addResourceHandler("/images/**").addResourceLocations(s3Location);
+    }
 
 }
 

@@ -14,8 +14,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public interface SearchStrategy<E extends EntityForSearchStrategy> {
+public interface SearchStrategy<E extends EntityForSearchStrategy, D> {
     Page<E> loadData(PageRequest pageRequest, Predicate predicate);
+
+    D convertToDto(E entity);
 
     default Map<String, Object> prepareDataForHtmlElements(E entity) {
         return Collections.emptyMap();
@@ -25,9 +27,8 @@ public interface SearchStrategy<E extends EntityForSearchStrategy> {
         PageRequest pageRequest = PageRequest.of(paginationDetails.getPage() - 1, paginationDetails.getSize(), Sort.Direction.fromString(paginationDetails.getSort()), paginationDetails.getOrderBy());
         Map<String, Object> model = new HashMap<>();
 
-        Page<E> pages = loadData(pageRequest, entity.preparePredicates());
+        Page<D> pages = loadData(pageRequest, entity.preparePredicates()).map(this::convertToDto);
         model.put("pages", pages);
-
         model.put("searchArguments", "&" + entity.prepareUrlParams());
         model.putAll(prepareDataForHtmlElements(entity));
         model.putAll(prepareDataForPaginationElements(paginationDetails, pages.getTotalPages()));
@@ -52,7 +53,6 @@ public interface SearchStrategy<E extends EntityForSearchStrategy> {
 
         return model;
     }
-
 }
 
 

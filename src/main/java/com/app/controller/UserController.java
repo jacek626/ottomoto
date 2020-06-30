@@ -8,6 +8,8 @@ import com.app.service.EmailService;
 import com.app.service.UserService;
 import com.app.utils.PaginationDetails;
 import com.app.utils.Result;
+import com.app.validator.groups.ValidateAllFieldsWithoutPass;
+import com.app.validator.groups.ValidatePassOnly;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -33,17 +35,17 @@ public class UserController {
 
     private final UserService userService;
 
-    private final SearchStrategy<User> userSearchStrategy;
+	private final SearchStrategy<User, UserDto> userSearchStrategy;
 
     private final ModelMapper modelMapper;
 
-    public UserController(SearchStrategy<User> userSearchStrategy, UserRepository userRepository, EmailService emailService, UserService userService, ModelMapper modelMapper) {
-        this.userSearchStrategy = userSearchStrategy;
-        this.userRepository = userRepository;
-        this.emailService = emailService;
-        this.userService = userService;
-        this.modelMapper = modelMapper;
-    }
+	public UserController(SearchStrategy<User, UserDto> userSearchStrategy, UserRepository userRepository, EmailService emailService, UserService userService, ModelMapper modelMapper) {
+		this.userSearchStrategy = userSearchStrategy;
+		this.userRepository = userRepository;
+		this.emailService = emailService;
+		this.userService = userService;
+		this.modelMapper = modelMapper;
+	}
 
     private UserDto convertToDto(User user) {
         UserDto userDto = modelMapper.map(user, UserDto.class);
@@ -59,17 +61,17 @@ public class UserController {
 
     @RequestMapping(value = "/list")
     public String list(@RequestParam(name = "page", defaultValue = "1", required = false) int page,
-                       @RequestParam(name = "size", required = false, defaultValue = "10") int size,
-                       @RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
-                       @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
-                       @RequestParam(name = "searchArguments", required = false, defaultValue = "&") String usedSearchArguments,
-                       @ModelAttribute("user") User user,
-                       Model model) {
+					   @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+					   @RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy,
+					   @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
+					   @RequestParam(name = "searchArguments", required = false, defaultValue = "&") String usedSearchArguments,
+					   @ModelAttribute("user") UserDto userDto,
+					   Model model) {
 
         model.addAttribute("requestMapping", "list");
 
         PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
-        model.addAllAttributes(userSearchStrategy.prepareSearchForm(user, paginationDetails));
+		model.addAllAttributes(userSearchStrategy.prepareSearchForm(convertToEntity(userDto), paginationDetails));
 
         return "user/userList";
     }
@@ -119,14 +121,15 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "register", method = RequestMethod.POST)
-	public ModelAndView register(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class,
-			User.ValidatePassOnly.class}) User user, BindingResult bindingResult, HttpServletRequest request) {
+	public ModelAndView register(@ModelAttribute("user") @Validated({ValidateAllFieldsWithoutPass.class,
+			ValidatePassOnly.class}) UserDto userDto, BindingResult bindingResult, HttpServletRequest request) {
 		ModelAndView model = new ModelAndView("user/registerUser");
 
 		if (bindingResult.hasErrors()) {
 			return model;
 		}
 
+		User user = convertToEntity(userDto);
 		Result result = userService.saveNewUser(user);
 
 		if (result.isError()) {
@@ -159,18 +162,18 @@ public class UserController {
 		return model;
 	}
 
-    @RequestMapping(value = "update", method = RequestMethod.POST)
-    public ModelAndView update(@ModelAttribute("user") @Validated({User.ValidateAllFieldsWithoutPass.class}) UserDto userDto, BindingResult bindingResult, Authentication authentication) {
-        ModelAndView model = new ModelAndView("redirect:/");
+	@RequestMapping(value = "update", method = RequestMethod.POST)
+	public ModelAndView update(@ModelAttribute("user") @Validated({ValidateAllFieldsWithoutPass.class}) UserDto userDto, BindingResult bindingResult, Authentication authentication) {
+		ModelAndView model = new ModelAndView("redirect:/");
 
-        authentication.getAuthorities().stream().filter(e -> e.getAuthority().equals("ROLE_ADMIN")).findAny().ifPresent(e -> {
-            model.setViewName("redirect:/user/list");
-        });
+		authentication.getAuthorities().stream().filter(e -> e.getAuthority().equals("ROLE_ADMIN")).findAny().ifPresent(e -> {
+			model.setViewName("redirect:/user/list");
+		});
 
-        if (bindingResult.hasErrors())
-            model.setViewName("user/registerUser");
-        else {
-            Result<User> result = userService.saveUser(convertToEntity(userDto));
+		if (bindingResult.hasErrors())
+			model.setViewName("user/registerUser");
+		else {
+			Result<User> result = userService.saveUser(convertToEntity(userDto));
             result.ifError(() -> {
                 result.convertToMvcError(bindingResult);
                 model.setViewName("user/registerUser");

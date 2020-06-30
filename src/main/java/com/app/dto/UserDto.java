@@ -2,12 +2,11 @@ package com.app.dto;
 
 import com.app.entity.Announcement;
 import com.app.entity.ObservedAnnouncement;
-import com.app.entity.QUser;
 import com.app.enums.Province;
-import com.app.searchform.EntityForSearchStrategy;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
-import lombok.*;
+import com.app.validator.groups.ValidateAllFieldsWithoutPass;
+import com.app.validator.groups.ValidatePassOnly;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Transient;
 import javax.validation.constraints.*;
@@ -15,11 +14,9 @@ import java.util.Date;
 import java.util.List;
 
 
-@Builder
 @Setter
 @Getter
-@AllArgsConstructor
-public class UserDto implements EntityForSearchStrategy {
+public class UserDto {
     private Long id;
 
     @NotNull
@@ -71,58 +68,6 @@ public class UserDto implements EntityForSearchStrategy {
     private List<Announcement> announcementList;
 
     private List<ObservedAnnouncement> observedAnnouncementList;
-
-    @Setter(AccessLevel.NONE)
-    private BooleanBuilder predicates;
-    @Setter(AccessLevel.NONE)
-    private StringBuilder urlParams;
-
-    public UserDto() {
-    }
-
-    @Override
-    public Predicate preparePredicates() {
-        predicates = new BooleanBuilder();
-
-        preparePredicates(QUser.user.login, getLogin());
-        preparePredicates(QUser.user.email, getEmail());
-        preparePredicates(QUser.user.firstName, getFirstName());
-        preparePredicates(QUser.user.lastName, getLastName());
-        preparePredicates(QUser.user.active, getActive());
-        preparePredicates(QUser.user.city, getCity());
-
-        return predicates;
-    }
-
-    @Override
-    public BooleanBuilder getPredicate() {
-        return predicates;
-    }
-
-    @Override
-    public String prepareUrlParams() {
-        urlParams = new StringBuilder();
-
-        addUrlParam("login", login);
-        addUrlParam("email", email);
-        addUrlParam("firstName", firstName);
-        addUrlParam("lastName", lastName);
-        addUrlParam("active", active);
-        addUrlParam("city", city);
-
-        return urlParams.toString();
-    }
-
-    @Override
-    public StringBuilder getUrlParams() {
-        return urlParams;
-    }
-
-    public interface ValidateAllFieldsWithoutPass {
-    }
-
-    public interface ValidatePassOnly {
-    }
 
 }
 

@@ -5,6 +5,7 @@ import com.app.entity.VehicleModel;
 import com.app.repository.ManufacturerRepository;
 import com.app.utils.Result;
 import com.app.validator.ManufacturerValidator;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -35,15 +36,29 @@ public class ManufacturerService {
 
         return result;
     }
-	
-	public Result deleteManufacturer(Manufacturer manufacturer) {
-		Result result = manufacturerValidator.checkBeforeDelete(manufacturer);
 
-		if (result.isSuccess())
-			manufacturerRepository.delete(manufacturer);
+    public Manufacturer addVehicle(Manufacturer manufacturer) {
+        VehicleModel vehicleModel = new VehicleModel();
+        vehicleModel.setManufacturer(manufacturer);
 
-		return result;
-	}
+        manufacturer.getVehicleModelAsOptional().ifPresentOrElse(e -> {
+            e.add(vehicleModel);
+        }, () -> {
+            manufacturer.setVehicleModel(Lists.newArrayList());
+            manufacturer.getVehicleModel().add(vehicleModel);
+        });
+
+        return manufacturer;
+    }
+
+    public Result deleteManufacturer(Manufacturer manufacturer) {
+        Result result = manufacturerValidator.checkBeforeDelete(manufacturer);
+
+        if (result.isSuccess())
+            manufacturerRepository.delete(manufacturer);
+
+        return result;
+    }
 	
 
 }

@@ -19,11 +19,10 @@ public class HomeController {
 
     @RequestMapping("/")
     public String home(Model model, @ModelAttribute("announcement")  Announcement announcement) {
-    //	announcement.prepareFieldsForSearch();
-
-        PaginationDetails paginationDetails = PaginationDetails.builder().page(1).size(1).orderBy("ID").sort("ASC").build();
+        PaginationDetails paginationDetails = PaginationDetails.builder().page(1).size(16).orderBy("id").sort("DESC").build();
         model.addAllAttributes(homeSearchStrategyDecorator.prepareSearchForm(announcement, paginationDetails));
 
         return "home";
     }
+
 }

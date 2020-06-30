@@ -15,6 +15,10 @@
           object-fit: cover;
       }
 
+      .newestAnnouncements .card-img-top {
+          height: 65%;
+      }
+
       .card-body {
           padding: 0.25rem;
       }
@@ -22,9 +26,31 @@
 
   <div class="container">
       <div class="row bg-white">
-          <div class="col-6 col-md-3 col-lg-2  d-flex align-items-stretch my-1"
-               th:each="announcement, row : ${pages}">
-              <div class="card">
+          <div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch my-1 newestAnnouncements"
+               th:each="newestAnnouncement, iter : ${pages}" th:if="${iter.index < 3}">
+              <div class="card w-100">
+                  <img class="card-img-top  img-fluid" th:if="${#lists.size(announcement.pictures)} > 0"
+                       th:src="${'images/' + announcement.pictures[0].miniatureRepositoryName}"></img>
+                  <img class="card-img-top img-fluid" th:if="${#lists.size(announcement.pictures)} == 0"
+                       th:src="@{'images/noPhoto.png'}"></img>
+                  <div class="card-body text-left" style="line-height:1;">
+                      <h5 class="card-title"
+                          th:text="${newestAnnouncement.vehicleModel.manufacturer.name +  ' ' + newestAnnouncement.vehicleModel.name}"></h5>
+                      <div class="card-text text-left line-height:1; " style="font-size: 14px;">
+                          <div th:text="${newestAnnouncement.productionYear + ' - ' + newestAnnouncement.mileage + ' km '}"></div>
+                          <div th:text="#{__${newestAnnouncement.fuelType}__} "></div>
+                      </div>
+                      <a class="card-subtitle mt-1 stretched-link btn-link h5 text-decoration-none pb-2 d-block"
+                         style="color:#bf2505; font-weight: 500;"
+                         th:href="@{'/announcement/' + ${newestAnnouncement.id}}">[[${#numbers.formatDecimal({newestAnnouncement.price},
+                          0, 'COMMA', 2, 'POINT')}]] zł</a>
+                  </div>
+              </div>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2  d-flex align-items-stretch my-1" th:each="announcement, iter : ${pages}"
+               th:if="${iter.index > 3}">
+
+              <div class="card w-100">
                   <img class="card-img-top  img-fluid" th:if="${#lists.size(announcement.pictures)} > 0"
                        th:src="${'images/' + announcement.pictures[0].miniatureRepositoryName}"></img>
                   <img class="card-img-top img-fluid" th:if="${#lists.size(announcement.pictures)} == 0"

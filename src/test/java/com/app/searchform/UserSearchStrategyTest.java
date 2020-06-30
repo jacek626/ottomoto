@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +29,10 @@ import static org.mockito.Mockito.when;
 public class UserSearchStrategyTest {
 
     private final static PaginationDetails paginationDetails = PaginationDetails.builder().page(1).size(10).orderBy("id").sort("ASC").build();
+
+    @Autowired
+    @Spy
+    private ModelMapper modelMapper;
 
     @Mock
     private UserRepository userRepository;

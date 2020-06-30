@@ -43,7 +43,7 @@ public class PictureService {
 
     private final AmazonS3 amazonS3Client;
 
-    private String bucketName = "ottomoto";
+    private final String bucketName = "ottomoto";
 
     public PictureService(Environment environment, PictureRepository pictureRepository, MessageSource messageSource, AmazonS3 amazonS3Client) {
         this.environment = environment;
@@ -54,7 +54,7 @@ public class PictureService {
 
     @PostConstruct
     private void init() {
-        repositoryLocation = environment.getProperty("spring.repository.location");
+        //   repositoryLocation = environment.getProperty("spring.repository.location");
     }
 
     public void deleteFromFileRepository(List<Picture> pictures) {

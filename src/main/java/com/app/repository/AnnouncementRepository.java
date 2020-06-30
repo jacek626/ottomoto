@@ -37,11 +37,15 @@ public interface AnnouncementRepository extends CrudRepository<Announcement, Lon
     @Query("update Announcement a set a.active = false where a.id = :announcementId")
     void deactivateByAnnouncementId(@Param("announcementId") Long announcementId);
 
+    Optional<Announcement> findFirstByOrderByIdDesc();
+
     List<Announcement> findOtherUserAnnouncements(@Param("announcementId") Long announcementId, @Param("userId") Long userId);
 
     List<Announcement> findFirst10ByActiveIsTrueOrderByCreationDateDesc();
 
-    List<Announcement> findFirst20ByActiveIsTrueOrderByCreationDateDesc();
+    List<Announcement> findFirst19ByActiveIsTrueOrderByCreationDateDesc();
+
+    List<Announcement> findFirst3ByActiveIsTrueOrderByCreationDateDesc();
 
     List<Announcement> findFirst5ByUserIdAndActiveIsTrueOrderByCreationDateDesc(Long userId);
 

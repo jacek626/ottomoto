@@ -76,7 +76,7 @@
                   <div class="row mt-2">
                       <button class="btn btn-primary" id="questionToSeller"
                               onclick="loadUserPhoneNumber(this.value, this.id);" th:text="#{phoneNumberToSeller}"
-                              th:value="${announcement.userDto.id}" type="button"/>
+                              th:value="${announcement.user.id}" type="button"/>
                   </div>
               </div>
           </div>
@@ -254,7 +254,7 @@
 					  <div class="form-group ">
                           <button class="btn btn-primary" onclick="sentMessageToSeller(document.getElementById('recipient-email'),
 								  document.getElementById('message-text'), this)" th:announcementId="${announcement.id}"
-                                  th:sellerEmail="${announcement.userDto.email}" th:text="#{sent}"
+                                  th:sellerEmail="${announcement.user.email}" th:text="#{sent}"
                                   type="button">
                           </button>
 					  </div>
@@ -268,22 +268,22 @@
 					  </div>
                       <div class="card-body">
                           <div class="row card-subtitle mb-2">
-                              <span th:text="${announcement.userDto.firstName}"></span>
+                              <span th:text="${announcement.user.firstName}"></span>
                           </div>
                           <div class="row card-subtitle mb-2">
-                              <span th:text="${announcement.userDto.city}"></span>
+                              <span th:text="${announcement.user.city}"></span>
                           </div>
-                          <div class="row card-subtitle mb-2" th:if="${announcement.userDto.province != null}"
-                               th:text="#{__${announcement.userDto.province}__}">
+                          <div class="row card-subtitle mb-2" th:if="${announcement.user.province != null}"
+                               th:text="#{__${announcement.user.province}__}">
                           </div>
                           <div class="row card-subtitle mb-2">
-                              <span th:text="'posiada konto od ' + ${#dates.format(announcement.userDto.creationDate, 'dd-MM-yyyy')}"></span>
+                              <span th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}"></span>
                           </div>
                           <div class="row mb-2">
                               <button class="btn btn-primary" id="questionToSellerInBottom"
                                       onclick="loadUserPhoneNumber(this.value, this.id);"
                                       th:text="#{phoneNumberToSeller}"
-                                      th:value="${announcement.userDto.id}" type="button"/>
+                                      th:value="${announcement.user.id}" type="button"/>
                           </div>
 					  </div>
 				  </div>

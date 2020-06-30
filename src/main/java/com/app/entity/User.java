@@ -2,6 +2,8 @@ package com.app.entity;
 
 import com.app.enums.Province;
 import com.app.searchform.EntityForSearchStrategy;
+import com.app.validator.groups.ValidateAllFieldsWithoutPass;
+import com.app.validator.groups.ValidatePassOnly;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import lombok.*;
@@ -28,10 +30,10 @@ public class User implements EntityForSearchStrategy {
     @NotBlank(message = "{validation.login.notBlank}", groups = {ValidateAllFieldsWithoutPass.class})
     @Size(min = 2, max = 20, groups = {ValidateAllFieldsWithoutPass.class})
     private String login;
-    
-	@NotNull
-    @NotBlank(message = "{validation.password.notEmpty}", groups = {ValidatePassOnly.class})  
-    @Size(min=6, max=20, message = "{validation.password.size}", groups = {ValidatePassOnly.class})
+
+    @NotNull
+    @NotBlank(message = "{validation.password.notEmpty}", groups = {ValidatePassOnly.class})
+    @Size(min = 6, max = 20, message = "{validation.password.size}", groups = {ValidatePassOnly.class})
     private String password;
     
 	@NotNull
@@ -128,12 +130,6 @@ public class User implements EntityForSearchStrategy {
     @Override
     public StringBuilder getUrlParams() {
         return urlParams;
-    }
-
-    public interface ValidateAllFieldsWithoutPass {
-    }
-
-    public interface ValidatePassOnly {
     }
 
 }
