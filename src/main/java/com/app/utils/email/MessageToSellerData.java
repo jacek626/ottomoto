@@ -1,4 +1,4 @@
-package com.app.utils;
+package com.app.utils.email;
 
 import lombok.Builder;
 import lombok.Value;

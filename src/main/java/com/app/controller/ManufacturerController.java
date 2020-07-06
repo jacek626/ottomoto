@@ -8,9 +8,9 @@ import com.app.projection.ManufacturerProjection;
 import com.app.repository.ManufacturerRepository;
 import com.app.searchform.SearchStrategy;
 import com.app.service.ManufacturerService;
-import com.app.utils.ManufacturerMapper;
-import com.app.utils.PaginationDetails;
-import com.app.utils.Result;
+import com.app.utils.mapper.ManufacturerMapper;
+import com.app.utils.search.PaginationDetails;
+import com.app.utils.validation.Result;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -96,11 +96,6 @@ public class ManufacturerController {
         return model;
     }
 
-/*    @RequestMapping(value = "addVehicle")
-    public String addVehicle() {
-        return "manufacturer/edit/";
-    }*/
-
     @RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Long id, Model model) {
 
@@ -113,16 +108,6 @@ public class ManufacturerController {
 
         return "manufacturer/manufacturerEdit";
     }
-
-/*    @RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
-    public String delete(@PathVariable("id") Long id) {
-
-        // brak serwisu ?????????????????????????
-
-        manufacturerRepository.deleteById(id);
-
-        return "redirect:/mark/list";
-    }*/
 
     @RequestMapping(value = "/list")
     public String list(@RequestParam(name = "page", defaultValue = "1", required = false) int page,

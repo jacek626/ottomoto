@@ -1,7 +1,7 @@
 package com.app.validator;
 
-import com.app.utils.EmailMessage;
-import com.app.utils.Result;
+import com.app.utils.email.EmailMessage;
+import com.app.utils.validation.Result;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

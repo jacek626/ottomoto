@@ -6,7 +6,7 @@ import com.app.repository.AnnouncementRepository;
 import com.app.repository.RoleRepository;
 import com.app.repository.UserRepository;
 import com.app.repository.VerificationTokenRepository;
-import com.app.utils.Result;
+import com.app.utils.validation.Result;
 import com.app.validator.UserValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

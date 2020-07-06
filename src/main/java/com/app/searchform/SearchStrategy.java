@@ -1,7 +1,7 @@
 package com.app.searchform;
 
 import com.app.enums.PaginationPageSize;
-import com.app.utils.PaginationDetails;
+import com.app.utils.search.PaginationDetails;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +16,6 @@ import java.util.stream.IntStream;
 
 public interface SearchStrategy<E extends EntityForSearchStrategy, D> {
     Page<E> loadData(PageRequest pageRequest, Predicate predicate);
-
     D convertToDto(E entity);
 
     default Map<String, Object> prepareDataForHtmlElements(E entity) {

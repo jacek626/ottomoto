@@ -18,13 +18,12 @@ function markPictureInAnnouncementAsMain(element) {
 
 
 function showImage(element, target) {
-    if (element === null) {
+    if (element === null)
         return;
-    }
 
-    if (!target) {
+    if (!target)
         target = $("#photoContainer img");
-    }
+
 
     if ($(target).attr("src") !== element.getAttribute("picture")) {
         $(target).fadeOut(100, function () {
@@ -49,25 +48,23 @@ function deletePictureInAnnouncement(element) {
 
     if ($(element).parent().find("img").attr("picture") === $("#photoContainerMiniImage").attr("src")) {
         if ($("#imagesScroll li[pictureToDelete='false'] img").length > 0) {
-            // show first picture from all
             showImage($("#imagesScroll li[pictureToDelete='false'] img")[0], "#photoContainerMiniImage");
             markPictureInAnnouncementAsMain($("#imagesScroll li[pictureToDelete='false'] .markPictureAsMain")[0]);
-        } else { // no other pictures to display
+        } else {
             $("#photoContainerMiniImage").attr("src", "");
         }
     }
 }
-
 
 function uploadFile() {
     let formData = new FormData();
     formData.append("file", document.getElementById("upload-file-input").files[0]);
 
     $.ajax({
-        url: "/otomoto/image/uploadImage",
+        url: "/ottomoto/image/uploadImage",
         type: "POST",
         data: formData,
-        timeout: 100000,
+        timeout: 50000,
         enctype: "multipart/form-data",
         processData: false,
         contentType: false,
@@ -89,7 +86,6 @@ function uploadFile() {
 
             showInfo("liczba dodanych zdjęć, " + result.length)
 
-
         },
         error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
@@ -109,7 +105,6 @@ function findNextImage(direction) {
     }
 
     currentImageIndex = direction === "next" ? $("#imagesScroll li").first().attr("index") : $("#imagesScroll li").last().attr("index");
-
     elementToReturn = $("#imagesScroll li[index='" + currentImageIndex + "']").find("img")[0];
 
     if (elementToReturn) {

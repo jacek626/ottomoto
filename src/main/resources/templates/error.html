@@ -1,49 +1,23 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-  <style>
-    table td{
-      vertical-align:top;
-      border:solid 1px #888;
-      padding:10px;
-    }
-
-  </style>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
 <body>
-<h1>My Thymeleaf Error Page</h1>
-<table>
-  <tr>
-    <td>Date</td>
-    <td th:text="${timestamp}"/>
-  </tr>
-  <tr>
-    <td>Path</td>
-    <td th:text="${path}"/>
-  </tr>
-  <tr>
-    <td>Error</td>
-    <td th:text="${error}"/>
-  </tr>
-  <tr>
-    <td>Status</td>
-    <td th:text="${status}"/>
-  </tr>
-  <tr>
-    <td>Message</td>
-    <td th:text="${message}"/>
-  </tr>
-  <tr>
-    <td>Exception</td>
-    <td th:text="${exception}"/>
-  </tr>
-  <tr>
-    <td>Trace</td>
-    <td>
-      <pre th:text="${trace}"/>
-    </td>
-  </tr>
-</table>
+<div th:replace="fragments/header :: header">
+</div>
+<style>
+  #informationPopup {
+    display: none;
+  }
+</style>
+<div style="background-color: #2e3968;">
+  <div class="container text-center text-white" style="height: 200px;">
+    <br/><br/>
+    <h5 th:text="#{sorryForError}"></h5>
+    <h6 class="text-secondary" th:text="${message}"></h6>
+    <a class="btn btn-primary mt-4" th:href="@{/}" th:text="#{goToMainSite}"></a>
+  </div>
+</div>
+</body>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

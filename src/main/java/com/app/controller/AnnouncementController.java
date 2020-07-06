@@ -7,14 +7,17 @@ import com.app.repository.AnnouncementRepository;
 import com.app.repository.ObservedAnnouncementRepository;
 import com.app.repository.UserRepository;
 import com.app.searchform.SearchStrategy;
+import com.app.service.AnnouncementBreadCrumbService;
 import com.app.service.AnnouncementService;
 import com.app.service.EmailService;
-import com.app.utils.*;
+import com.app.utils.email.MessageToSellerData;
+import com.app.utils.mapper.AnnouncementMapper;
+import com.app.utils.search.PaginationDetails;
+import com.app.utils.validation.Result;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
-import org.springframework.context.MessageSource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -28,7 +31,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
@@ -39,14 +41,11 @@ public class AnnouncementController {
 	
 	private final AnnouncementService announcementService;
 
-
 	private final AnnouncementRepository announcementRepository;
 
 	private final UserRepository userRepository;
 
 	private final EmailService emailService;
-
-	private final MessageSource messageSource;
 
 	private final SearchStrategy<Announcement, AnnouncementDto> announcementSearchStrategy;
 
@@ -56,12 +55,11 @@ public class AnnouncementController {
 
 	private final AnnouncementBreadCrumbService breadCrumb;
 
-	public AnnouncementController(AnnouncementService announcementService, AnnouncementRepository announcementRepository, UserRepository userRepository, EmailService emailService, MessageSource messageSource, SearchStrategy<Announcement, AnnouncementDto> announcementSearchStrategy, ObservedAnnouncementRepository observedAnnouncementRepository, AnnouncementMapper announcementMapper, AnnouncementBreadCrumbService breadCrumb) {
+	public AnnouncementController(AnnouncementService announcementService, AnnouncementRepository announcementRepository, UserRepository userRepository, EmailService emailService, SearchStrategy<Announcement, AnnouncementDto> announcementSearchStrategy, ObservedAnnouncementRepository observedAnnouncementRepository, AnnouncementMapper announcementMapper, AnnouncementBreadCrumbService breadCrumb) {
 		this.announcementService = announcementService;
 		this.announcementRepository = announcementRepository;
 		this.userRepository = userRepository;
 		this.emailService = emailService;
-		this.messageSource = messageSource;
 		this.announcementSearchStrategy = announcementSearchStrategy;
 		this.observedAnnouncementRepository = observedAnnouncementRepository;
 		this.announcementMapper = announcementMapper;
@@ -81,10 +79,10 @@ public class AnnouncementController {
 	@RequestMapping(value = "{id}", method = RequestMethod.GET)
 	public String get(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
 		announcementRepository.findById(id).ifPresentOrElse(announcement -> {
-			model.addAttribute("breadCrumb", breadCrumb.create(announcement));
-			model.addAttribute("announcement", announcementMapper.convertToDto(announcement));
-			List<AnnouncementDto> otherUserAnnouncements =
-					announcementRepository.findOtherUserAnnouncements(announcement.getId(), announcement.getUser().getId()).stream().map(announcementMapper::convertToDto).collect(Collectors.toList());
+			var announcementDto = announcementMapper.convertToDto(announcement);
+			model.addAttribute("breadCrumb", breadCrumb.create(announcementDto));
+			model.addAttribute("announcement", announcementDto);
+			var otherUserAnnouncements = announcementRepository.findOtherUserAnnouncements(announcementDto.getId(), announcementDto.getUser().getId()).stream().map(announcementMapper::convertToDto).collect(Collectors.toList());
 			model.addAttribute("otherUserAnnouncements", otherUserAnnouncements);
 
 			if (authentication == null)
@@ -100,12 +98,12 @@ public class AnnouncementController {
 
 	@RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
 	public String edit(@NotNull @Valid @PathVariable("id") Long id, Model model, Authentication authentication) {
-		announcementRepository.findById(id).ifPresentOrElse(
-				announcement -> {
+		announcementRepository.findById(id).ifPresentOrElse(announcement -> {
 					if (authentication.getAuthorities().stream().anyMatch(e -> e.getAuthority().equals("ROLE_ADMIN")) || announcement.getUser().getLogin().equals(authentication.getName())) {
+						var announcementDto = announcementMapper.convertToDto(announcement);
 						model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
 						model.addAttribute("announcement", announcementMapper.convertToDto(announcement));
-						model.addAttribute("breadCrumb", breadCrumb.create(announcement));
+						model.addAttribute("breadCrumb", breadCrumb.create(announcementDto));
 					} else
 						throw new AccessDeniedException("Access denied");
 				},
@@ -119,8 +117,8 @@ public class AnnouncementController {
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public ModelAndView create(@ModelAttribute("announcement") @Validated AnnouncementDto announcementDto,
 							   BindingResult bindingResult) {
-		ModelAndView model = new ModelAndView("announcement/announcementEdit");
-		Announcement announcement = announcementMapper.convertToEntity(announcementDto);
+		var model = new ModelAndView("announcement/announcementEdit");
+		var announcement = announcementMapper.convertToEntity(announcementDto);
 
 		if (bindingResult.hasErrors()) {
 			model.getModelMap().addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
@@ -142,8 +140,8 @@ public class AnnouncementController {
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public ModelAndView update(@ModelAttribute("announcement") @Validated AnnouncementDto announcementDto,
 							   BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-		Announcement announcement = announcementMapper.convertToEntity(announcementDto);
-		ModelAndView model = new ModelAndView("redirect:/announcement/edit/" + announcement.getId());
+		var announcement = announcementMapper.convertToEntity(announcementDto);
+		var model = new ModelAndView("redirect:/announcement/edit/" + announcement.getId());
 
 
 		if (bindingResult.hasErrors()) {
@@ -179,7 +177,7 @@ public class AnnouncementController {
 					   Model model) {
 		model.addAttribute("requestMapping", "list");
 
-		PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
+		var paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
 		model.addAllAttributes(announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails));
 
 		return "announcement/announcementList";

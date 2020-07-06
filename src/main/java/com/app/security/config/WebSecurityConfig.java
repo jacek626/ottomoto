@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**/favicon.ico", "/css/**", "/js/**", "/images/**").permitAll()
                 .antMatchers("/user/register", "/user/registrationSuccess", "/announcement/show/*", "/user/confirmRegistration*").permitAll()
                 .antMatchers("/", "/home", "/logout", "/user/login*", "/manufacturer/loadManufacturer*", "/manufacturer/loadVehicleSubtypes*").permitAll()
-                .antMatchers("/announcement/*", "/user/checkLoginAlreadyExists*", "/user/checkEmailAlreadyExists*").permitAll()
+                .antMatchers("/announcement/*", "/user/checkLoginAlreadyExists*", "/user/checkEmailAlreadyExists*", "/user/loadUserPhoneNumber*").permitAll()
                 .antMatchers("/image/uploadImage*").permitAll()
                 .antMatchers("/manufacturer/*", "/user/edit/*", "/system/**").access("hasRole('ROLE_ADMIN')")
                 .anyRequest().authenticated()

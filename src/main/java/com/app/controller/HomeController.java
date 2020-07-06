@@ -2,7 +2,7 @@ package com.app.controller;
 
 import com.app.entity.Announcement;
 import com.app.searchform.SearchStrategy;
-import com.app.utils.PaginationDetails;
+import com.app.utils.search.PaginationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;

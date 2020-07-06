@@ -1,4 +1,4 @@
-package com.app.utils;
+package com.app.utils.search;
 
 import lombok.Builder;
 import lombok.Data;

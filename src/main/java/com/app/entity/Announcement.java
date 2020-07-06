@@ -2,10 +2,11 @@ package com.app.entity;
 
 import com.app.enums.*;
 import com.app.searchform.EntityForSearchStrategy;
-import com.app.utils.AnnouncementSearchFields;
+import com.app.utils.search.AnnouncementSearchFields;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -94,7 +95,7 @@ public class Announcement implements EntityForSearchStrategy {
     @JoinColumn
     private User user;
 
-    @Column(updatable = false)
+    @CreatedDate
     private Date creationDate;
 
     private Boolean active = true;

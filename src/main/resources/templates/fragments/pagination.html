@@ -22,22 +22,21 @@
 						</a>
 					</li>
 
-					<li class="page-item">
-						<a th:class="${page<totalPages} ? ' page-link' : 'disabled page-link'"
-						   th:href="@{ ${link} (page=${page+1}, size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
-						>&raquo;
-						</a>
-					</li>
-				</ul>
+                    <li class="page-item">
+                        <a th:class="${page<totalPages} ? ' page-link' : 'disabled page-link'"
+                           th:href="@{ ${link} (page=${page+1}, size=${size},orderBy=${orderBy},sort=${sort})}+${searchArguments}"
+                        >&raquo;
+                        </a>
+                    </li>
+                </ul>
 
-			</nav>
+            </nav>
 
-			<!--			<select id="pageSizeSelect" th:value="${size}">
-                            <option th:each="pageSize : ${pageSizes}" th:value="${pageSize}" th:text="${pageSize}" th:selected="${pageSize} == ${size}"></option>
-                        </select>-->
-			<select class="selectpicker" id="pageSizeSelect" th:value="${size}">
-				<option th:each="pageSize : ${pageSizes}" th:selected="${pageSize} == ${size}" th:text="${pageSize}"
-						th:value="${pageSize}"></option>
-			</select>
+    <div class="text-center mb-2">
+        <select class="selectpicker" id="pageSizeSelect" th:value="${size}">
+            <option th:each="pageSize : ${pageSizes}" th:selected="${pageSize} == ${size}" th:text="${pageSize}"
+                    th:value="${pageSize}"></option>
+        </select>
+    </div>
 
-		</div>
+</div>

@@ -1,5 +1,6 @@
 package com.app.utils;
 
+import com.app.utils.site.element.HtmlElement;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;

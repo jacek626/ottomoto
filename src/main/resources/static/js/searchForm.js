@@ -1,7 +1,7 @@
 function loadVehicleModel(manufacturer, vehicleType, typeOfHtmlElement) {
     $.ajax({
         type: "GET",
-        url: "/otomoto/vehicleModel/loadVehicleModel",
+        url: "/ottomoto/vehicleModel/loadVehicleModel",
         timeout: 1000,
         data: {
             manufacturer,
@@ -17,12 +17,11 @@ function loadVehicleModel(manufacturer, vehicleType, typeOfHtmlElement) {
     });
 }
 
-
 function loadManufacturer(vehicleType, typeOfHtmlElement) {
     $.ajax({
         type: "GET",
-        url: "/otomoto/manufacturer/loadManufacturer",
-        timeout: 1000,
+        url: "/ottomoto/manufacturer/loadManufacturer",
+        timeout: 2000,
         data: {
             vehicleType,
             typeOfHtmlElement
@@ -39,8 +38,8 @@ function loadManufacturer(vehicleType, typeOfHtmlElement) {
 function loadVehicleSubtypes(vehicleType, typeOfHtmlElement) {
     $.ajax({
         type: "GET",
-        url: "/otomoto/manufacturer/loadVehicleSubtypes",
-        timeout: 1000,
+        url: "/ottomoto/manufacturer/loadVehicleSubtypes",
+        timeout: 2000,
         data: {
             vehicleType,
             typeOfHtmlElement

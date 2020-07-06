@@ -1,4 +1,4 @@
-package com.app.utils;
+package com.app.utils.search;
 
 import com.querydsl.core.types.Predicate;
 import lombok.Getter;

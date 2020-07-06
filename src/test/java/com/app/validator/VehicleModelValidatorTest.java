@@ -4,7 +4,7 @@ import com.app.entity.VehicleModel;
 import com.app.enums.ValidatorCode;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.VehicleModelRepository;
-import com.app.utils.Result;
+import com.app.utils.validation.Result;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

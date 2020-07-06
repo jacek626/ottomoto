@@ -4,7 +4,7 @@ import com.app.entity.Manufacturer;
 import com.app.entity.VehicleModel;
 import com.app.enums.VehicleType;
 import com.app.repository.ManufacturerRepository;
-import com.app.utils.Result;
+import com.app.utils.validation.Result;
 import com.app.validator.ManufacturerValidator;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeAll;

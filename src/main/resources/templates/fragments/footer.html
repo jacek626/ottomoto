@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<footer class="footer font-small text-light " style="background-color: #2e3968" th:fragment="footer">
+<footer class="footer font-small text-light" style="background-color: #2e3968" th:fragment="footer">
 
     <div class="container py-5">
         <div class="row text-justify">
@@ -16,33 +16,24 @@
         </div>
     </div>
 
-
-    <script th:src="@{/js/jquery-3.3.1.min.js}" type="text/javascript"></script>
-    <script th:src="@{/js/jodit.min.js}" type="text/javascript"></script>
-
-    <script th:src="@{/js/searchForm.js}" type="text/javascript"></script>
-    <script th:src="@{/js/sendEmails.js}" type="text/javascript"></script>
-    <script th:src="@{/js/imageGallery.js}" type="text/javascript"></script>
-    <script th:src="@{/js/userValidation.js}" type="text/javascript"></script>
-    <script th:src="@{/js/jquery.inputmask.min.js}" type="text/javascript"></script>
-    <script th:src="@{/js/popper.min.js}" type="text/javascript"></script>
-    <script th:src="@{/js/bootstrap.min.js}" type="text/javascript"></script>
-    <script th:src="@{/js/ekko-lightbox.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/libs/jquery-3.3.1.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/libs/jodit.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/libs/jquery.inputmask.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/libs/popper.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/libs/bootstrap.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/libs/ekko-lightbox.min.js}" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-    <script th:src="@{/js/scripts.js}" type="text/javascript"></script>
+    <script th:src="@{/js/searchForm.js}" type="text/javascript"></script>
+    <script th:src="@{/js/emailSend.js}" type="text/javascript"></script>
+    <script th:src="@{/js/imagesUtils.js}" type="text/javascript"></script>
+    <script th:src="@{/js/userValidation.js}" type="text/javascript"></script>
+    <script th:src="@{/js/announcementActions.js}" type="text/javascript"></script>
+    <script th:src="@{/js/infoMessage.js}" type="text/javascript"></script>
 
     <script type="text/javascript">
-
-
-        $(document).on("focusin", "#pageSizeSelect", function () {
-            alert(1);
-            $(this).data("val", $(this).val());
-        });
-
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
-
 
         $(document).ready(function () {
             $('.rangeInput').each(function () {
@@ -55,64 +46,7 @@
             })
         });
 
-        $(".rangeInput").focusin(function () {
-            $('.rangeDropDown').css('display', 'none');
-            $(this).parent().find('.rangeDropDown').css('display', 'block');
-        });
-        $(".rangeInput").focusout(function () {
-            var currentElement = this;
-            setTimeout(function () {
-                $(currentElement).parent().find('.rangeDropDown').css('display', 'none');
-            }, 300);
-        });
-
-        $('.rangeDropDown li').on("click", function () {
-            $(this).parent().parent().find('input').val($(this).text());
-            $(this).parent().parent().find('input').trigger('change');
-        });
-
-        setDropDownListListener(".valuesDropDown  li");
-        setDropDownListMultiOptionListener('.valuesMultiDropDown  li');
-        setDropDownRangeListener('.rangeDropDown  li');
-
-
-        $(".inputAsSelect").focusin(function () {
-            $('.valuesDropDown').css('display', 'none');
-            $(this).parent().find('.valuesDropDown').css('display', 'block');
-        });
-        $(".inputAsSelect").focusout(function () {
-            var currentElement = this;
-            setTimeout(function () {
-                $(currentElement).parent().find('.valuesDropDown').css('display', 'none');
-            }, 300);
-        });
-
-        $(".inputAsSelect").focusin(function () {
-            $('.valuesMultiDropDown').css('display', 'none');
-            $(this).parent().find('.valuesMultiDropDown').css('display', 'block');
-        });
-        $(".inputAsSelect").focusout(function () {
-            let currentElement = this;
-            setTimeout(function () {
-                $(currentElement).parent().find('.valuesMultiDropDown').css('display', 'none');
-            }, 300);
-        });
-
-
-        $('input.rewriteTextToHiddenInputOnKeyDown').keydown(function (event) {
-            let element = $(event.target).parent().find('.hiddenInputToFilterResults');
-
-            if (event.key.length == 1)
-                $(element).val($(element).val() + event.key);
-            else if (event.key == 'Backspace')
-                $(element).val($(element).val().slice(0, -1));
-
-            $(element).trigger('change');
-        });
-
         $('#infoTextFromMvc').delay(5000).fadeOut();
-
-
     </script>
 
 </footer>

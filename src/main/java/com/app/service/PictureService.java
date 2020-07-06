@@ -4,27 +4,22 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.app.entity.Picture;
 import com.app.repository.PictureRepository;
-import com.app.utils.HtmlElement;
-import com.app.utils.UploadedPicture;
+import com.app.utils.site.element.HtmlElement;
+import com.app.utils.site.element.UploadedPicture;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.context.MessageSource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,69 +28,61 @@ import java.util.Locale;
 @Service
 public class PictureService {
 
-    private final Environment environment;
-
     private final PictureRepository pictureRepository;
 
     private final MessageSource messageSource;
-
-    private String repositoryLocation;
 
     private final AmazonS3 amazonS3Client;
 
     private final String bucketName = "ottomoto";
 
-    public PictureService(Environment environment, PictureRepository pictureRepository, MessageSource messageSource, AmazonS3 amazonS3Client) {
-        this.environment = environment;
+    public PictureService(PictureRepository pictureRepository, MessageSource messageSource, AmazonS3 amazonS3Client) {
         this.pictureRepository = pictureRepository;
         this.messageSource = messageSource;
         this.amazonS3Client = amazonS3Client;
     }
 
-    @PostConstruct
-    private void init() {
-        //   repositoryLocation = environment.getProperty("spring.repository.location");
-    }
+    private static BufferedImage resizeImage(BufferedImage originalImage, int type) {
+        Float height = 200f;
+        Float percent = (height / (float) originalImage.getHeight()) * 100f;
+        Float width = originalImage.getWidth() * (percent / 100.0f);
 
-    public void deleteFromFileRepository(List<Picture> pictures) {
-        for (Picture picture : pictures) {
-            Paths.get(repositoryLocation, picture.getRepositoryName()).toFile().delete();
+        BufferedImage resizedImage = new BufferedImage(width.intValue(), height.intValue(), type);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, width.intValue(), height.intValue(), null);
+        g.dispose();
 
-            S3Object object = amazonS3Client.getObject(bucketName, picture.getFileName());
-        }
-
-        pictureRepository.deleteAll(pictures);
+        return resizedImage;
     }
 
     public List<UploadedPicture> uploadPictures(MultipartFile[] uploadedFiles) throws IOException {
-        List<UploadedPicture> savedImages = new ArrayList<>();
+        List<UploadedPicture> uploadedPictures = new ArrayList<>();
 
         for (MultipartFile uploadedFile : uploadedFiles) {
-            File uploadedImage = saveUploadedFilesInRepository(uploadedFile);
+            String baseFileName = new Date().getTime() + RandomStringUtils.randomNumeric(10);
 
-            //       amazonS3Client.putObject(new PutObjectRequest(bucketName, uploadedImage.getName(),uploadedImage));
+            String fileName = baseFileName + "." + FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
+            uploadFileToS3(fileName, uploadedFile.getInputStream());
 
-            ObjectMetadata objectMetadata = new ObjectMetadata();
-            //     objectMetadata.setContentType(Files.probeContentType(uploadedImage));
-            objectMetadata.setContentType("image");
-            objectMetadata.setContentLength(uploadedImage.length());
-// String bucketName, String key, InputStream input, ObjectMetadata metadata
+            String miniatureFileName = baseFileName + "-small." + FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
+            InputStream miniatureStream = createImageMiniature(uploadedFile);
+            uploadFileToS3(miniatureFileName, miniatureStream);
 
-            amazonS3Client.putObject(new PutObjectRequest(bucketName, uploadedImage.getName(), uploadedFile.getInputStream(), objectMetadata).
-                    withCannedAcl(CannedAccessControlList.PublicRead));
-
-
-    /*        amazonS3Client.putObject(new PutObjectRequest(bucketName, uploadedImage.getName(), uploadedImage.getInputStream(), objectMetadata).
-                    withCannedAcl(CannedAccessControlList.PublicRead));*/
-
-
-            //      amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName,file.getInputStream(), objectMetadata).withCannedAcl(CannedAccessControlList.PublicRead));
-
-            File convertedImagesToMiniatures = prepareImagesMiniatures(uploadedImage);
-            savedImages.add(UploadedPicture.of(uploadedImage, convertedImagesToMiniatures, uploadedFile.getOriginalFilename()));
+            uploadedPictures.add(UploadedPicture.of(fileName, miniatureFileName));
         }
 
-        return savedImages;
+        return uploadedPictures;
+    }
+
+    private InputStream createImageMiniature(MultipartFile uploadedFile) throws IOException {
+        BufferedImage uploadedImageBuffered = ImageIO.read(uploadedFile.getInputStream());
+        int type = uploadedImageBuffered.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : uploadedImageBuffered.getType();
+        String uploadedFileExtension = FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
+        BufferedImage resizedImage = resizeImage(uploadedImageBuffered, type);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(resizedImage, uploadedFileExtension, os);
+
+        return new ByteArrayInputStream(os.toByteArray());
     }
 
     public List<String> convertPicturesToHtml(List<UploadedPicture> uploadedPictures) throws IOException {
@@ -106,34 +93,6 @@ public class PictureService {
         }
 
         return imagesHtml;
-    }
-
-    private File prepareImagesMiniatures(File uploadedImage) throws IOException {
-        BufferedImage uploadedImageBuffered = ImageIO.read(uploadedImage);
-        int type = uploadedImageBuffered.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : uploadedImageBuffered.getType();
-
-        String uploadedFileExtension = FilenameUtils.getExtension(uploadedImage.getName());
-        BufferedImage resizeImageJpg = resizeImage(uploadedImageBuffered, type);
-        String imageMiniaturePath = FilenameUtils.concat(repositoryLocation, FilenameUtils.getBaseName(uploadedImage.getName()) + "-small." + uploadedFileExtension);
-        File imageMiniature = new File(imageMiniaturePath);
-        ImageIO.write(resizeImageJpg, uploadedFileExtension, imageMiniature);
-
-        return imageMiniature;
-    }
-
-    private File saveUploadedFilesInRepository(MultipartFile uploadedFile) throws IOException {
-        String randomFileName = generateRandomFileNameWithSameExtension(uploadedFile);
-        String filePath = Paths.get(repositoryLocation, randomFileName).toString();
-        File uploadedImage = new File(filePath);
-        BufferedOutputStream uploadedImageStream = new BufferedOutputStream(new FileOutputStream(uploadedImage));
-        uploadedImageStream.write(uploadedFile.getBytes());
-        uploadedImageStream.close();
-
-        return uploadedImage;
-    }
-
-    private String generateRandomFileNameWithSameExtension(MultipartFile uploadedFile) {
-        return new Date().getTime() + RandomStringUtils.randomNumeric(10) + "." + FilenameUtils.getExtension(uploadedFile.getOriginalFilename());
     }
 
     private String prepareHtmlAfterFileUpload(UploadedPicture uploadedPicture) {
@@ -164,13 +123,22 @@ public class PictureService {
                 html(messageSource.getMessage("mainPhoto", null, Locale.getDefault())).build().toHtml();
     }
 
+    private void uploadFileToS3(String fileName, InputStream fileData) throws IOException {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType("image");
+        objectMetadata.setContentLength(fileData.available());
+
+        amazonS3Client.putObject(new PutObjectRequest(bucketName, fileName, fileData, objectMetadata).
+                withCannedAcl(CannedAccessControlList.PublicRead));
+    }
+
     private String generateImageElement(UploadedPicture uploadedPicture) {
         return HtmlElement.builder().tag("img").
                 id("pictures[LIST_ID].repositoryName").
-                src("/otomoto/images/" + uploadedPicture.getMiniatureFile().getName()).
+                src("/ottomoto/images/" + uploadedPicture.getMiniatureFileName()).
                 classStyle("miniatureImageInImageScroller").
                 onclick("showImage(this,$('#photoContainerMiniImage'))").
-                picture("/otomoto/images/" + uploadedPicture.getMiniatureFile().getName()).
+                picture("/ottomoto/images/" + uploadedPicture.getMiniatureFileName()).
                 index("LIST_ID").
                 build().toHtml();
     }
@@ -181,7 +149,7 @@ public class PictureService {
                 id("pictures[LIST_ID].fileName").
                 name("pictures[LIST_ID].fileName").
                 classStyle("displayNone").
-                value(uploadedPicture.getOriginalFilename()).build().toHtml();
+                value(uploadedPicture.getUploadedFileName()).build().toHtml();
     }
 
     private String generateInputForMiniatureRepositoryName(UploadedPicture uploadedPicture) {
@@ -190,7 +158,7 @@ public class PictureService {
                 id("pictures[LIST_ID].miniatureRepositoryName").
                 name("pictures[LIST_ID].miniatureRepositoryName").
                 classStyle("displayNone").
-                value(uploadedPicture.getMiniatureFile().getName()).build().toHtml();
+                value(uploadedPicture.getMiniatureFileName()).build().toHtml();
     }
 
     private String generateInputForRepositoryName(UploadedPicture uploadedPicture) {
@@ -199,20 +167,7 @@ public class PictureService {
                 id("pictures[LIST_ID].repositoryName").
                 name("pictures[LIST_ID].repositoryName").
                 classStyle("displayNone").
-                value(uploadedPicture.getUploadedFile().getName()).build().toHtml();
-    }
-
-    private static BufferedImage resizeImage(BufferedImage originalImage, int type) {
-        Float height = 200f;
-        Float percent =  (height / (float) originalImage.getHeight()) * 100f;
-        Float width = originalImage.getWidth()  * (percent/100.0f);
-
-        BufferedImage resizedImage = new BufferedImage(width.intValue(), height.intValue(), type);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, width.intValue(), height.intValue(), null);
-        g.dispose();
-
-        return resizedImage;
+                value(uploadedPicture.getUploadedFileName()).build().toHtml();
     }
 
 }

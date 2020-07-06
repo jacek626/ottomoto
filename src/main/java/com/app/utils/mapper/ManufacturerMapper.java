@@ -1,4 +1,4 @@
-package com.app.utils;
+package com.app.utils.mapper;
 
 import com.app.dto.ManufacturerDto;
 import com.app.entity.Manufacturer;
@@ -23,17 +23,6 @@ public class ManufacturerMapper {
     public Manufacturer convertToEntity(ManufacturerDto manufacturerDto) {
         Manufacturer manufacturer = modelMapper.map(manufacturerDto, Manufacturer.class);
 
-/*        announcement.setUser(userRepository.findById(announcementDto.getUser().getId()).get());
-        List<Picture> pictures = announcementDto.getPictures().stream().map(e -> modelMapper.map(e, Picture.class)).collect(Collectors.toList());
-        pictures.forEach(e -> e.setAnnouncement(announcement));
-
-        if (pictures.stream().noneMatch(e -> e.isMainPhotoInAnnouncement()))
-            pictures.stream().findAny().ifPresent(e -> e.setMainPhotoInAnnouncement(true));
-
-        announcement.setPictures(pictures);
-        announcement.setUser(userRepository.findById(announcementDto.getUser().getId()).get());*/
-
         return manufacturer;
     }
-
 }

@@ -1,7 +1,7 @@
 package com.app.entity;
 
 import com.app.enums.VehicleType;
-import com.app.utils.ObjectWithId;
+import com.app.utils.search.ObjectWithId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

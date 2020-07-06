@@ -2,7 +2,7 @@ package com.app.service;
 
 import com.app.entity.VehicleModel;
 import com.app.repository.VehicleModelRepository;
-import com.app.utils.Result;
+import com.app.utils.validation.Result;
 import com.app.validator.VehicleModelValidator;
 import org.springframework.stereotype.Service;
 

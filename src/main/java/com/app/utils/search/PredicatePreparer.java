@@ -1,4 +1,4 @@
-package com.app.utils;
+package com.app.utils.search;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public interface PredicatePreparer {
     Predicate preparePredicates();
-
     BooleanBuilder getPredicate();
 
     default void preparePredicates(BooleanPath booleanPath, Boolean fieldValue) {

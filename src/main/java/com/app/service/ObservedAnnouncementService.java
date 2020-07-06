@@ -3,8 +3,8 @@ package com.app.service;
 import com.app.entity.ObservedAnnouncement;
 import com.app.enums.ValidatorCode;
 import com.app.repository.ObservedAnnouncementRepository;
-import com.app.utils.Result;
-import com.app.utils.ValidationDetails;
+import com.app.utils.validation.Result;
+import com.app.utils.validation.ValidationDetails;
 import com.app.validator.ObservedAnnouncementValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 

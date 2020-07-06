@@ -2,7 +2,7 @@ package com.app.service;
 
 import com.app.entity.Announcement;
 import com.app.repository.AnnouncementRepository;
-import com.app.utils.Result;
+import com.app.utils.validation.Result;
 import com.app.validator.AnnouncementValidator;
 import org.springframework.stereotype.Service;
 

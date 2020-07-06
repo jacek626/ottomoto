@@ -3,7 +3,7 @@ package com.app.service;
 import com.app.entity.Manufacturer;
 import com.app.entity.VehicleModel;
 import com.app.repository.ManufacturerRepository;
-import com.app.utils.Result;
+import com.app.utils.validation.Result;
 import com.app.validator.ManufacturerValidator;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;

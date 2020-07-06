@@ -1,4 +1,4 @@
-package com.app.utils;
+package com.app.utils.mapper;
 
 import com.app.dto.AnnouncementDto;
 import com.app.entity.Announcement;
@@ -13,20 +13,16 @@ import java.util.stream.Collectors;
 @Service
 public class AnnouncementMapper {
 
-    private ModelMapper modelMapper;
-    private UserRepository userRepository;
+    private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
 
     public AnnouncementMapper(ModelMapper modelMapper, UserRepository userRepository) {
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
     }
 
-    public AnnouncementMapper() {
-    }
-
     public AnnouncementDto convertToDto(Announcement announcement) {
         AnnouncementDto announcementDto = modelMapper.map(announcement, AnnouncementDto.class);
-        //   announcementDto.setUser(modelMapper.map(announcement.getUser(), UserDto.class));
 
         return announcementDto;
     }

@@ -3,7 +3,7 @@ package com.app.searchform;
 import com.app.entity.QUser;
 import com.app.entity.User;
 import com.app.repository.UserRepository;
-import com.app.utils.PaginationDetails;
+import com.app.utils.search.PaginationDetails;
 import com.querydsl.core.types.Predicate;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;

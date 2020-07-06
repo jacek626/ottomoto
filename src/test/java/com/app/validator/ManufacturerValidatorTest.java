@@ -6,7 +6,7 @@ import com.app.enums.ValidatorCode;
 import com.app.enums.VehicleType;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.ManufacturerRepository;
-import com.app.utils.Result;
+import com.app.utils.validation.Result;
 import com.querydsl.core.types.Predicate;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeAll;

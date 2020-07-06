@@ -1,7 +1,7 @@
 function checkEmailAlreadyExists(email) {
     $.ajax({
         type: "GET",
-        url: "/otomoto/user/checkEmailAlreadyExists",
+        url: "/ottomoto/user/checkEmailAlreadyExists",
         timeout: 5000,
         data: {
             email: email.value
@@ -22,7 +22,7 @@ function checkEmailAlreadyExists(email) {
 function checkLoginAlreadyExists(login) {
     $.ajax({
         type: "GET",
-        url: "/otomoto/user/checkLoginAlreadyExists",
+        url: "/ottomoto/user/checkLoginAlreadyExists",
         timeout: 5000,
         data: {
             login: login.value

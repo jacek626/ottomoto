@@ -1,6 +1,6 @@
 package com.app.service;
 
-import com.app.utils.UploadedPicture;
+import com.app.utils.site.element.UploadedPicture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.MessageSource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +34,8 @@ public class PictureServiceTest {
         when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class))).thenReturn("test");
 
         List<UploadedPicture> uploadedPictures = new ArrayList<>();
-        uploadedPictures.add(UploadedPicture.of(new File("uploadedFile"),new File("miniatureFile"), "originalFileName"));
-        uploadedPictures.add(UploadedPicture.of(new File("uploadedFile2"),new File("miniatureFile2"), "originalFileName2"));
+        uploadedPictures.add(UploadedPicture.of("uploadedFile", "miniatureFile"));
+        uploadedPictures.add(UploadedPicture.of("uploadedFile2", "miniatureFile2"));
 
         //when
         List<String> picturesConvertedToHtml = pictureService.convertPicturesToHtml(uploadedPictures);

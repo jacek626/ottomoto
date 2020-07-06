@@ -11,7 +11,7 @@ import com.app.projection.ManufacturerProjection;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.ManufacturerRepository;
 import com.app.repository.VehicleModelRepository;
-import com.app.utils.AnnouncementMapper;
+import com.app.utils.mapper.AnnouncementMapper;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -10,7 +10,7 @@ function sentMessageToSeller(customerEmail, messageText, button) {
     else if (messageText.value.length < 5)
         messageText.classList.add('is-invalid');
     else
-        fetch(`/otomoto/announcement/sentMessageToSeller`, {
+        fetch(`/ottomoto/announcement/sentMessageToSeller`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -27,10 +27,10 @@ function sentMessageToSeller(customerEmail, messageText, button) {
                 customerEmail.disabled = true;
                 messageText.disabled = true;
                 button.disabled = true;
-                showInfo("Wiadomosc wyslana, dziekujemy za kontakt");
+                showInfo("Wiadomosc wysłana, dziękujemy za kontakt");
             })
             .catch(error => {
-                showInfo('Wystapil blad');
+                showInfo('Wystąpił blad');
                 console.error(error);
             });
 }
@@ -40,7 +40,7 @@ function reportAnnouncement(announcementId, reportText, modalWindow) {
     if (reportText.value.length < 5)
         reportText.classList.add('is-invalid');
     else
-        fetch(`/otomoto/announcement/reportAnnouncement`, {
+        fetch(`/ottomoto/announcement/reportAnnouncement`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -54,10 +54,10 @@ function reportAnnouncement(announcementId, reportText, modalWindow) {
             .then(result => {
                 reportText.value = '';
                 $(modalWindow).modal('hide')
-                showInfo('Wiadomosc wyslana, dziekujemy za kontakt');
+                showInfo('Wiadomosc wysłana, dziękujemy za kontakt');
             })
             .catch(error => {
-                showInfo('Wystapil blad');
+                showInfo('Wystąpił blad');
                 console.error(error);
             });
 }

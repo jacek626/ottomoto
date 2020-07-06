@@ -1,6 +1,6 @@
 package com.app.controller;
 
-import com.app.utils.SystemEmail;
+import com.app.utils.email.SystemEmail;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;

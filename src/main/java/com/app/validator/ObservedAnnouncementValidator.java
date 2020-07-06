@@ -4,8 +4,8 @@ import com.app.entity.Announcement;
 import com.app.entity.ObservedAnnouncement;
 import com.app.entity.User;
 import com.app.enums.ValidatorCode;
-import com.app.utils.Result;
-import com.app.utils.ValidationDetails;
+import com.app.utils.validation.Result;
+import com.app.utils.validation.ValidationDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

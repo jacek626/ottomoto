@@ -8,6 +8,7 @@ import lombok.Singular;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class AnnouncementDto {
     @NotNull
     private CarColor carColor;
     @Singular
-    private List<PictureDto> pictures;
+    private List<PictureDto> pictures = new ArrayList<>();
     @NotNull
     private UserDto user;
     private List<PictureDto> imagesToDelete;
@@ -78,5 +79,4 @@ public class AnnouncementDto {
         setPictures(imagesToSave);
         setImagesToDelete(imagesToDelete);
     }
-
 }

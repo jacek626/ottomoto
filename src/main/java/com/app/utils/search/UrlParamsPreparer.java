@@ -1,4 +1,4 @@
-package com.app.utils;
+package com.app.utils.search;
 
 public interface UrlParamsPreparer {
     String prepareUrlParams();
@@ -11,7 +11,7 @@ public interface UrlParamsPreparer {
     }
 
     default void addUrlParam(String paramName, ObjectWithId objectWithId) {
-        if (objectWithId != null)
+        if (objectWithId != null && objectWithId.getId() != null)
             getUrlParams().append(paramName).append("=").append(objectWithId.getId()).append("&");
     }
 }

@@ -24,25 +24,16 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 @SpringBootApplication
 @EnableCaching
-public class OtomotoApplication {
+public class OttomotoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(OtomotoApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(OttomotoApplication.class, args);
+    }
 
-/*	@Bean
-	public AmazonS3 amazonS3Client(AWSCredentialsProvider credentialsProvider, @Value("cloud.aws.region.static") String region) {
-		return AmazonS3ClientBuilder
-				.standard()
-				.withCredentials(credentialsProvider)
-				.withRegion(region)
-				.build();
-	}*/
-
-	@Bean
-	public ModelMapper modelMapper() {
-		return new ModelMapper();
-	}
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
 }
 
 
@@ -61,9 +52,7 @@ class StaticResourceConfiguration implements WebMvcConfigurer {
         s3Location = endpointUrl + "/" + bucketName + "/";
         registry.addResourceHandler("/images/**").addResourceLocations(s3Location);
     }
-
 }
-
 
 @Configuration
 class AWSConfiguration {
@@ -113,5 +102,4 @@ class WebMvcConfig implements WebMvcConfigurer {
 	    public void addInterceptors(InterceptorRegistry registry) {
 	        registry.addInterceptor(localeInterceptor());
 	    }
-
 }

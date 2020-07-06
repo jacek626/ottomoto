@@ -5,7 +5,7 @@ import com.app.entity.User;
 import com.app.enums.ValidatorCode;
 import com.app.repository.AnnouncementRepository;
 import com.app.repository.UserRepository;
-import com.app.utils.Result;
+import com.app.utils.validation.Result;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

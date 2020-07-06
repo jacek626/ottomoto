@@ -6,7 +6,7 @@ import com.app.entity.User;
 import com.app.entity.VehicleModel;
 import com.app.enums.VehicleSubtype;
 import com.app.repository.ObservedAnnouncementRepository;
-import com.app.utils.Result;
+import com.app.utils.validation.Result;
 import com.app.validator.ObservedAnnouncementValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

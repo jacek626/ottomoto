@@ -2,10 +2,10 @@ package com.app.service;
 
 import com.app.entity.User;
 import com.app.entity.VerificationToken;
-import com.app.utils.EmailMessage;
-import com.app.utils.MessageToSellerData;
-import com.app.utils.Result;
-import com.app.utils.SystemEmail;
+import com.app.utils.email.EmailMessage;
+import com.app.utils.email.MessageToSellerData;
+import com.app.utils.email.SystemEmail;
+import com.app.utils.validation.Result;
 import com.app.validator.EmailValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;

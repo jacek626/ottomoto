@@ -1,9 +1,9 @@
 package com.app.validator;
 
 import com.app.enums.ValidatorCode;
-import com.app.utils.EmailMessage;
-import com.app.utils.Result;
-import com.app.utils.ValidationDetails;
+import com.app.utils.email.EmailMessage;
+import com.app.utils.validation.Result;
+import com.app.utils.validation.ValidationDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;

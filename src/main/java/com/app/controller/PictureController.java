@@ -1,7 +1,7 @@
 package com.app.controller;
 
 import com.app.service.PictureService;
-import com.app.utils.UploadedPicture;
+import com.app.utils.site.element.UploadedPicture;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
