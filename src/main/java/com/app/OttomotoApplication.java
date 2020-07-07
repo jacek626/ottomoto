@@ -56,19 +56,12 @@ class StaticResourceConfiguration implements WebMvcConfigurer {
 
 @Configuration
 class AWSConfiguration {
-
-	@Value("${cloud.aws.credentials.accessKey}")
-	private String accessKey;
-
-	@Value("${cloud.aws.credentials.secretKey}")
-	private String secretKey;
-
 	@Value("${cloud.aws.region.static}")
 	private String region;
 
 	@Bean
 	public BasicAWSCredentials basicAWSCredentials() {
-		return new BasicAWSCredentials(accessKey, secretKey);
+		return new BasicAWSCredentials(System.getenv("S3_KEY"), System.getenv("S3_SECRET"));
 	}
 
 	@Bean
