@@ -36,10 +36,6 @@ public class AnnouncementService {
 		announcement.getPictures().stream().filter(e -> e.getAnnouncement() == null).forEach(picture -> picture.setAnnouncement(announcement));
 	}
 
-	public long activateAnnouncement(Long announcementId) {
-        return announcementRepository.deactivateByUserId(announcementId);
-    }
-
 	public Result deactivateAnnouncement(Long announcementId) {
 		Result result = announcementValidator.checkBeforeDeactivate(announcementId);
 		
@@ -49,9 +45,5 @@ public class AnnouncementService {
 		
 		return result;
 	}
-
-	public long deactivateAllUserAnnouncements(Long userId) {
-        return announcementRepository.deactivateByUserId(userId);
-    }
 
 }

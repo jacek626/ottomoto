@@ -69,9 +69,9 @@
                       </div>
                   </div>
                   <div class="row mt-2">
-                      <button class="btn btn-primary" onclick="location.href='#messageDoSeller'" type="button">
-                          Wiadomosc do sprzedajacego
-                      </button>
+                      <button class="btn btn-primary" onclick="location.href='#messageDoSeller'"
+							  th:text="#{messageToSeller}" type="button">
+					  </button>
                   </div>
                   <div class="row mt-2">
                       <button class="btn btn-primary" id="questionToSeller"
@@ -109,11 +109,11 @@
 				  <tr>
 				  <tr>
 					  <td th:text="#{engineCapacity}"></td>
-					  <td th:text="${announcement.engineCapacity}"></td>
+					  <td th:text="${announcement.engineCapacity} + ' cm&#179;'"></td>
 				  <tr>
 				  <tr>
 					  <td th:text="#{enginePower}"></td>
-					  <td th:text="${announcement.enginePower}"></td>
+					  <td th:text="${announcement.enginePower} + ' KM'"></td>
 				  <tr>
 				  <tr>
 					  <td th:text="#{fuelType}"></td>
@@ -294,25 +294,13 @@
 				</div>
 			</div>
 
-
-  <!--  wyswietlic title gdzies -->
-			
-			
-			<!-- wiecej aukcji tego uzytkownika  to w jedenj linik -->
-
-  <!-- w przyszlosci dorobienie wyposoazenia -->
-
-  <!-- wyslij wiasdomosc do zyzytkownika i wyswietlenie danych uzytkownika -->
-
   <input type="hidden" id="announcementId" th:value="${announcement.id}"/>
 
   </div>
 
-
   <div th:replace="fragments/footer :: footer"></div>
 
   <script type="text/javascript">
-
 
 	  $('.carousel').carousel({
 		  interval: 5000
@@ -322,10 +310,7 @@
 		  event.preventDefault();
 		  $(this).ekkoLightbox();
 	  });
-
-
   </script>
-
 
   </body>
 </html>

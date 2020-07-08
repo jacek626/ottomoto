@@ -29,9 +29,9 @@
           <div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch my-1 newestAnnouncements"
                th:each="newestAnnouncement, iter : ${pages}" th:if="${iter.index < 3}">
               <div class="card w-100">
-                  <img class="card-img-top  img-fluid" th:if="${#lists.size(announcement.pictures)} > 0"
-                       th:src="${'images/' + announcement.pictures[0].miniatureRepositoryName}"></img>
-                  <img class="card-img-top img-fluid" th:if="${#lists.size(announcement.pictures)} == 0"
+                  <img class="card-img-top  img-fluid" th:if="${#lists.size(newestAnnouncement.pictures)} > 0"
+                       th:src="${'images/' + newestAnnouncement.pictures[0].miniatureRepositoryName}"></img>
+                  <img class="card-img-top img-fluid" th:if="${#lists.size(newestAnnouncement.pictures)} == 0"
                        th:src="@{'images/noPhoto.png'}"></img>
                   <div class="card-body text-left" style="line-height:1;">
                       <h5 class="card-title"

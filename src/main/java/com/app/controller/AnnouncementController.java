@@ -31,6 +31,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
@@ -119,6 +120,7 @@ public class AnnouncementController {
 							   BindingResult bindingResult) {
 		var model = new ModelAndView("announcement/announcementEdit");
 		var announcement = announcementMapper.convertToEntity(announcementDto);
+		announcement.setCreationDate(new Date());
 
 		if (bindingResult.hasErrors()) {
 			model.getModelMap().addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
@@ -190,6 +192,7 @@ public class AnnouncementController {
 			@RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
 			@ModelAttribute("announcement")  Announcement announcement,
 			Model model) {
+		model.addAttribute("requestMapping", "my");
 		announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
 		PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
 		model.addAllAttributes(announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails));

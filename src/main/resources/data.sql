@@ -103,91 +103,209 @@ INSERT INTO public.vehicle_model (id, name, vehicle_type, manufacturer_id) VALUE
 INSERT INTO public.vehicle_model (id, name, vehicle_type, manufacturer_id) VALUES (-22, 'dostawczy3',  'TRUCK', -2);
 INSERT INTO public.vehicle_model (id, name, vehicle_type, manufacturer_id) VALUES (-23, 'dostawczy4',  'TRUCK', -2);
 
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-10,'RED','PLN',22222222222222222,'PETROL',22222,false,20000.00,false,2019,21212,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-11,'RED','PLN',345545,'PETROL',545,false,20000.00,false,2019,21212,'CABRIO',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-12,'RED','PLN',345545,'PETROL',22222,false,20000.00,false,2019,21212,'COMBI',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-13,'RED','PLN',345545,'PETROL',2323,false,20000.00,false,2019,21212,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-14,'RED','PLN',345545,'PETROL',54545,false,20000.00,false,2019,21212,'COMPACT',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-15,'RED','PLN',345545,'PETROL',3434,false,20000.00,false,2019,21212,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
-
-
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-2,'BLUE','PLN','To jest opis','DIESEL',250000,false,49000,true, 2008, 'pieknie auto','SUV',34634343,-2,-1, NOW(), false,false,3,false,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-3,'GREY','PLN','To jest opis2','DIESEL',190000,false,33000,true, 2006, 'pieknie auto','COMPACT',7984343,-3,-1, NOW(), false,false,4,false,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-4,'SILVER','PLN','To jest opis3','PETROL',130000,false,12000,true, 2009, 'pieknie auto','COMBI',166554343,-4,-1, NOW(), false,false,5,false,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-5,'BLUE','PLN','To jest opis4','PETROL_WITH_LPG',21900,false,15000,true, 2017, 'pieknie auto','COUPE',675834343,-5,-1, NOW(), false,true,2,false,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-6,'GREEN','PLN','To jest opis5','DIESEL',260000,false,27000,true, 2011, 'pieknie auto','COMBI',75656834343,-6,-1, NOW(), true,true,5,true,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-7,'BLUE','PLN','To jest opis6','PETROL',50000,false,40000,true, 2018, 'pieknie auto','SMALL',4346834343,-7,-1, NOW(), true,false,2,true,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-8,'GOLD','PLN','To jest opis7','ELECTRIC',67000,false,17800,true, 2014, 'pieknie auto','COMPACT',54545434343,-8,-1, NOW(), true,false,3,false,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype, vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-9,'BLACK','PLN','To jest opis8','PETROL',55000,false,199000,true, 2019, 'pieknie auto','CABRIO',2156834543,-1,-9, NOW(), false,true,2,true,true,1200, 100);
-
-insert into announcement (id, car_color, currency, description, fuel_type, mileage, net_price, price, price_negotiate, production_year,
-						  title, vehicle_subtype,  vin, user_id, vehicle_model_id, creation_date,damaged,accidents,doors,first_owner,active,engine_capacity,engine_power)
-values (-1,'RED','PLN',22222222222222222,'PETROL',22222,false,20000.00,false,2019,222222222222,'CITY_CAR',111111111,-1,-1, NOW(),false,false,3,false,true,1200, 100);
-
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-1,'picture1.jpg','NdnEnexdjVXwGC52kIwJ6nDaYUHU7j.jpg','NdnEnexdjVXwGC52kIwJ6nDaYUHU7j-small.jpg',-1,true);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-2,'picture2.jpg','fGFTJEKhScemVfcqSdb5eWgYxi3kHz.jpg','fGFTJEKhScemVfcqSdb5eWgYxi3kHz-small.jpg',-1,false);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-3,'picture3.jpg','15599911776532472509249.jpg','15599911776532472509249-small.jpg',-1,false);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-4,'picture4.jpg','15599910474527047691461.jpg','15599910474527047691461-small.jpg',-1,false);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-5,'picture5.jpg','15600057494514904227829.png','15600057494514904227829-small.png',-1,false);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-6,'picture6.jpg','15599910474527047691461.jpg','15599910474527047691461-small.jpg',-1,false);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-7,'picture7.jpg','15599911776532472509249.jpg','15599911776532472509249-small.jpg',-1,false);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-8,'picture8.jpg','15599910474527047691461.jpg','15599910474527047691461-small.jpg',-1,false);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-9,'picture9.jpg','15599911776532472509249.jpg','15599911776532472509249-small.jpg',-1,false);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-10,'picture10.jpg','15599910474527047691461.jpg','15599910474527047691461-small.jpg',-1,false);
-
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-11,'picture6.jpg','15599910474527047691461.jpg','15599910474527047691461-small.jpg',-10,true);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-12,'picture7.jpg','15599911776532472509249.jpg','15599911776532472509249-small.jpg',-11,true);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-13,'picture8.jpg','15599910474527047691461.jpg','15599910474527047691461-small.jpg',-12,true);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-14,'picture9.jpg','15599911776532472509249.jpg','15599911776532472509249-small.jpg',-13,true);
-insert into picture (id,file_name,repository_name,miniature_repository_name,announcement_id,main_Photo_In_Announcement) values (-15,'picture10.jpg','15599910474527047691461.jpg','15599910474527047691461-small.jpg',-14,true);
-
-insert into observed_announcement(id, announcement_id, user_id) values (-1,-10,-2);
+/*insert into observed_announcement(id, announcement_id, user_id) values (-1,-10,-2);
 insert into observed_announcement(id, announcement_id, user_id) values (-2,-13,-2);
-insert into observed_announcement(id, announcement_id, user_id) values (-3,-14,-2);
+insert into observed_announcement(id, announcement_id, user_id) values (-3,-14,-2);*/
+
+/*Opel Corsa*/
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-20,	false,	true,	'SILVER',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1200,	90,	false	,'PETROL'	,35000,	false	,40000.00,	true,	2018,	'Sprzedam Opel Corsa',	'CITY_CAR', 'ABC3435454545'	,	-1	,-2);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-20,'15942346947208979861516.jpg','false','15942346947208979861516.jpg','15942346947208979861516-small.jpg',-20);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-21,'15942347017588083274234.jpg','false','15942347017588083274234.jpg','15942347017588083274234-small.jpg',-20);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-22,'15942347056434844033709.jpg','true','15942347056434844033709.jpg','15942347056434844033709-small.jpg',-20);
 
 
-update announcement set description = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur';
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-21,	false,	true,	'SILVER',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1200,	90,	false	,'PETROL'	,80000,	false	,25000.00,	true,	2016,	'Sprzedam Opel Corsa',	'CITY_CAR', 'ABC3435454545'	,	-1	,-2);
 
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-23,'15942346947208979861516.jpg','false','15942346947208979861516.jpg','15942346947208979861516-small.jpg',-21);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-24,'15942347017588083274234.jpg','false','15942347017588083274234.jpg','15942347017588083274234-small.jpg',-21);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-25,'15942347056434844033709.jpg','true','15942347056434844033709.jpg','15942347056434844033709-small.jpg',-21);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-22,	false,	true,	'SILVER',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1000,	65,	false	,'DIESEL'	,170000,	false	,20000.00,	true,	2015,	'Sprzedam Opel Corsa',	'CITY_CAR', 'ABC3435454545'	,	-1	,-2);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-26,'15942346947208979861516.jpg','false','15942346947208979861516.jpg','15942346947208979861516-small.jpg',-22);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-27,'15942347017588083274234.jpg','false','15942347017588083274234.jpg','15942347017588083274234-small.jpg',-22);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-28,'15942347056434844033709.jpg','true','15942347056434844033709.jpg','15942347056434844033709-small.jpg',-22);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-23,	false,	true,	'SILVER',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 900,	60,	false	,'PETROL'	,200,	false	,66000.00,	true,	2020,	'Sprzedam Opel Corsa',	'CITY_CAR', 'ABC3435454545'	,	-1	,-2);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-29,'15942346947208979861516.jpg','false','15942346947208979861516.jpg','15942346947208979861516-small.jpg',-23);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-30,'15942347017588083274234.jpg','false','15942347017588083274234.jpg','15942347017588083274234-small.jpg',-23);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-31,'15942347056434844033709.jpg','true','15942347056434844033709.jpg','15942347056434844033709-small.jpg',-23);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-24,	false,	true,	'SILVER',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1600,	120,	false	,'PETROL_WITH_LPG'	,10200,	false	,37000.00,	true,	2017,	'Sprzedam Opel Corsa',	'CITY_CAR', 'ABC3435454545'	,	-1	,-2);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-32,'15942346947208979861516.jpg','false','15942346947208979861516.jpg','15942346947208979861516-small.jpg',-24);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-33,'15942347017588083274234.jpg','false','15942347017588083274234.jpg','15942347017588083274234-small.jpg',-24);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-34,'15942347056434844033709.jpg','true','15942347056434844033709.jpg','15942347056434844033709-small.jpg',-24);
+
+
+/*Opel Astra*/
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-25,	false,	true,	'WHITE',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1200,	90,	false	,'PETROL'	,35000,	false	,40000.00,	true,	2018,	'Sprzedam Opel Corsa',	'COMPACT', 'ABC3435454545'	,	-1	,-1);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-49,'15942383060533060749011.jpg','false','15942383060533060749011.jpg','15942383060533060749011-small.jpg',-25);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-35,'15942383113570275009967.jpg','false','15942383113570275009967.jpg','15942383113570275009967-small.jpg',-25);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-36,'15942383146517048367644.jpg','true','15942383146517048367644.jpg','15942383146517048367644-small.jpg',-25);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-26,	false,	true,	'WHITE',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1200,	90,	false	,'PETROL'	,80000,	false	,25000.00,	true,	2016,	'Sprzedam Opel Corsa',	'COMPACT', 'ABC3435454545'	,	-1	,-1);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-37,'15942383060533060749011.jpg','false','15942383060533060749011.jpg','15942383060533060749011-small.jpg',-26);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-38,'15942383113570275009967.jpg','false','15942383113570275009967.jpg','15942383113570275009967-small.jpg',-26);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-39,'15942383146517048367644.jpg','true','15942383146517048367644.jpg','15942383146517048367644-small.jpg',-26);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-27,	false,	true,	'WHITE',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1000,	65,	false	,'DIESEL'	,170000,	false	,20000.00,	true,	2015,	'Sprzedam Opel Corsa',	'COMPACT', 'ABC3435454545'	,	-1	,-1);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-40,'15942383060533060749011.jpg','false','15942383060533060749011.jpg','15942383060533060749011-small.jpg',-27);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-41,'15942383113570275009967.jpg','false','15942383113570275009967.jpg','15942383113570275009967-small.jpg',-27);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-42,'15942383146517048367644.jpg','true','15942383146517048367644.jpg','15942383146517048367644-small.jpg',-27);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-28,	false,	true,	'WHITE',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 900,	60,	false	,'PETROL'	,200,	false	,66000.00,	true,	2020,	'Sprzedam Opel Corsa',	'COMPACT', 'ABC3435454545'	,	-1	,-1);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-43,'15942383060533060749011.jpg','false','15942383060533060749011.jpg','15942383060533060749011-small.jpg',-28);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-44,'15942383113570275009967.jpg','false','15942383113570275009967.jpg','15942383113570275009967-small.jpg',-28);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-45,'15942383146517048367644.jpg','true','15942383146517048367644.jpg','15942383146517048367644-small.jpg',-28);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-29,	false,	true,	'WHITE',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1600,	120,	false	,'PETROL_WITH_LPG'	,10200,	false	,37000.00,	true,	2017,	'Sprzedam Opel Corsa',	'COMPACT', 'ABC3435454545'	,	-1	,-1);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-46,'15942383060533060749011.jpg','false','15942383060533060749011.jpg','15942383060533060749011-small.jpg',-29);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-47,'15942383113570275009967.jpg','false','15942383113570275009967.jpg','15942383113570275009967-small.jpg',-29);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-48,'15942383146517048367644.jpg','true','15942383146517048367644.jpg','15942383146517048367644-small.jpg',-29);
+
+/*Opel Zafira*/
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-30,	false,	true,	'RED',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1700,	190,	false	,'PETROL'	,35000,	false	,40000.00,	true,	2018,	'Sprzedam Opel Zafira',	'MINIVAN', 'ABC3435454545'	,	-1	,-3);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-50,'15942394085949748677959.jpg','false','15942394085949748677959.jpg','15942394085949748677959-small.jpg',-30);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-51,'15942394048202445943120.jpg','false','15942394048202445943120.jpg','15942394048202445943120-small.jpg',-30);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-52,'15942394118974115717260.jpg','true','15942394118974115717260.jpg','15942394118974115717260-small.jpg',-30);
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-31,	false,	true,	'RED',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1700,	160,	false	,'PETROL'	,80000,	false	,25000.00,	true,	2016,	'Sprzedam Opel Zafira',	'MINIVAN', 'ABC3435454545'	,	-1	,-3);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-53,'15942394085949748677959.jpg','false','15942394085949748677959.jpg','15942394085949748677959-small.jpg',-31);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-54,'15942394048202445943120.jpg','false','15942394048202445943120.jpg','15942394048202445943120-small.jpg',-31);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-55,'15942394118974115717260.jpg','true','15942394118974115717260.jpg','15942394118974115717260-small.jpg',-31);
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-32,	false,	true,	'RED',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 2000,	115,	false	,'DIESEL'	,170000,	false	,20000.00,	true,	2015,	'Sprzedam Opel Zafira',	'MINIVAN', 'ABC3435454545'	,	-1	,-3);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-56,'15942394085949748677959.jpg','false','15942394085949748677959.jpg','15942394085949748677959-small.jpg',-32);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-57,'15942394048202445943120.jpg','false','15942394048202445943120.jpg','15942394048202445943120-small.jpg',-32);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-58,'15942394118974115717260.jpg','true','15942394118974115717260.jpg','15942394118974115717260-small.jpg',-32);
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-33,	false,	true,	'RED',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1900,	160,	false	,'PETROL'	,200,	false	,66000.00,	true,	2020,	'Sprzedam Opel Zafira',	'MINIVAN', 'ABC3435454545'	,	-1	,-3);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-59,'15942394085949748677959.jpg','false','15942394085949748677959.jpg','15942394085949748677959-small.jpg',-33);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-60,'15942394048202445943120.jpg','false','15942394048202445943120.jpg','15942394048202445943120-small.jpg',-33);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-61,'15942394118974115717260.jpg','true','15942394118974115717260.jpg','15942394118974115717260-small.jpg',-33);
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-17,	false,	true,	'RED',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 2600,	220,	false	,'PETROL_WITH_LPG'	,10200,	false	,37000.00,	true,	2019,	'Sprzedam Opel Zafira',	'MINIVAN', 'ABC3435454545'	,	-1	,-3);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-62,'15942394085949748677959.jpg','false','15942394085949748677959.jpg','15942394085949748677959-small.jpg',-17);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-63,'15942394048202445943120.jpg','false','15942394048202445943120.jpg','15942394048202445943120-small.jpg',-17);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-64,'15942394118974115717260.jpg','true','15942394118974115717260.jpg','15942394118974115717260-small.jpg',-17);
+
+/*308*/
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-35,	false,	true,	'BLACK',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1700,	190,	false	,'PETROL'	,35000,	false	,40000.00,	true,	2018,	'Sprzedam 308',	'COMPACT', 'ABC3435454545'	,	-1	,-5);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-65,'15942407765432112418038.jpg','false','15942407765432112418038.jpg','15942407765432112418038-small.jpg',-35);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-66,'15942407807310301031734.jpg','false','15942407807310301031734.jpg','15942407807310301031734-small.jpg',-35);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-67,'15942407838147654470195.jpg','true','15942407838147654470195.jpg','15942407838147654470195-small.jpg',-35);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-36,	false,	true,	'BLACK',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1700,	160,	false	,'PETROL'	,80000,	false	,25000.00,	true,	2016,	'Sprzedam 308',	'COMPACT', 'ABC3435454545'	,	-1	,-5);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-68,'15942407765432112418038.jpg','false','15942407765432112418038.jpg','15942407765432112418038-small.jpg',-36);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-69,'15942407807310301031734.jpg','false','15942407807310301031734.jpg','15942407807310301031734-small.jpg',-36);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-70,'15942407838147654470195.jpg','true','15942407838147654470195.jpg','15942407838147654470195-small.jpg',-36);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-37,	false,	true,	'BLACK',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 2000,	115,	false	,'DIESEL'	,170000,	false	,20000.00,	true,	2015,	'Sprzedam 308',	'COMPACT', 'ABC3435454545'	,	-1	,-5);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-71,'15942407765432112418038.jpg','false','15942407765432112418038.jpg','15942407765432112418038-small.jpg',-37);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-72,'15942407807310301031734.jpg','false','15942407807310301031734.jpg','15942407807310301031734-small.jpg',-37);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-73,'15942407838147654470195.jpg','true','15942407838147654470195.jpg','15942407838147654470195-small.jpg',-37);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-38,	false,	true,	'BLACK',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1900,	160,	false	,'PETROL'	,200,	false	,66000.00,	true,	2020,	'Sprzedam 308',	'COMPACT', 'ABC3435454545'	,	-1	,-5);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-74,'15942407765432112418038.jpg','false','15942407765432112418038.jpg','15942407765432112418038-small.jpg',-38);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-75,'15942407807310301031734.jpg','false','15942407807310301031734.jpg','15942407807310301031734-small.jpg',-38);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-76,'15942407838147654470195.jpg','true','15942407838147654470195.jpg','15942407838147654470195-small.jpg',-38);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-18,	false,	true,	'BLACK',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 2000,	220,	false	,'HYBRID'	,25000,	false	,29000.00,	true,	2017,	'Sprzedam 308',	'COMPACT', 'ABC3435454545'	,	-1	,-5);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-77,'15942407765432112418038.jpg','false','15942407765432112418038.jpg','15942407765432112418038-small.jpg',-18);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-78,'15942407807310301031734.jpg','false','15942407807310301031734.jpg','15942407807310301031734-small.jpg',-18);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-79,'15942407838147654470195.jpg','true','15942407838147654470195.jpg','15942407838147654470195-small.jpg',-18);
+
+
+/*Tipo*/
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-40,	false,	true,	'RED',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1700,	190,	false	,'PETROL'	,35000,	false	,40000.00,	true,	2018,	'Sprzedam Tipo',	'SEDAN', 'ABC3435454545'	,	-1	,-7);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-80,'15942413361909608247741.jpg','false','15942413361909608247741.jpg','15942413361909608247741-small.jpg',-40);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-81,'15942413405646693791991.jpg','false','15942413405646693791991.jpg','15942413405646693791991-small.jpg',-40);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-82,'15942413438117814578915.jpg','true','15942413438117814578915.jpg','15942413438117814578915-small.jpg',-40);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-41,	false,	true,	'RED',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1700,	160,	false	,'PETROL'	,80000,	false	,25000.00,	true,	2016,	'Sprzedam Tipo',	'SEDAN', 'ABC3435454545'	,	-1	,-7);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-83,'15942413361909608247741.jpg','false','15942413361909608247741.jpg','15942413361909608247741-small.jpg',-41);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-84,'15942413405646693791991.jpg','false','15942413405646693791991.jpg','15942413405646693791991-small.jpg',-41);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-85,'15942413438117814578915.jpg','true','15942413438117814578915.jpg','15942413438117814578915-small.jpg',-41);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-42,	false,	true,	'RED',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 2000,	115,	false	,'DIESEL'	,170000,	false	,20000.00,	true,	2015,	'Sprzedam Tipo',	'SEDAN', 'ABC3435454545'	,	-1	,-7);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-86,'15942413361909608247741.jpg','true','15942413361909608247741.jpg','15942413361909608247741-small.jpg',-42);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-87,'15942413405646693791991.jpg','false','15942413405646693791991.jpg','15942413405646693791991-small.jpg',-42);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-88,'15942413438117814578915.jpg','false','15942413438117814578915.jpg','15942413438117814578915-small.jpg',-42);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-43,	false,	true,	'RED',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 1900,	160,	false	,'PETROL'	,200,	false	,66000.00,	true,	2020,	'Sprzedam Tipo',	'SEDAN', 'ABC3435454545'	,	-1	,-7);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-89,'15942413361909608247741.jpg','false','15942413361909608247741.jpg','15942413361909608247741-small.jpg',-43);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-90,'15942413405646693791991.jpg','true','15942413405646693791991.jpg','15942413405646693791991-small.jpg',-43);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-91,'15942413438117814578915.jpg','false','15942413438117814578915.jpg','15942413438117814578915-small.jpg',-43);
+
+
+insert into announcement (id, accidents, active, car_color, creation_date, currency, damaged, description, doors, engine_capacity, engine_power, first_owner, fuel_type, mileage, net_price, price, price_negotiate, production_year, title, vehicle_subtype, vin, user_id, vehicle_model_id)
+values (-19,	false,	true,	'RED',	NOW()	,'PLN'	,false	,'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt', 5, 2600,	220,	false	,'DIESEL'	,63000,	false	,26500.00,	true,	2016,	'Sprzedam Tipo',	'SEDAN', 'ABC3435454545'	,	-1	,-7);
+
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-92,'15942413361909608247741.jpg','false','15942413361909608247741.jpg','15942413361909608247741-small.jpg',-19);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-93,'15942413405646693791991.jpg','false','15942413405646693791991.jpg','15942413405646693791991-small.jpg',-19);
+insert into picture (id,file_name,main_Photo_In_Announcement,repository_name,miniature_repository_name,announcement_id) values (-94,'15942413438117814578915.jpg','true','15942413438117814578915.jpg','15942413438117814578915-small.jpg',-19);
 
