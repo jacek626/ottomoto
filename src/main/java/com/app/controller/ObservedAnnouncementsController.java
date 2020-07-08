@@ -40,7 +40,7 @@ public class ObservedAnnouncementsController {
                        @RequestParam(name = "sort", required = false, defaultValue = "ASC") String sort,
                        @ModelAttribute("announcement") Announcement announcement,
                        Model model) {
-        model.addAttribute("requestMapping", "observed");
+   //     model.addAttribute("requestMapping", "observed");
 
         PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
         announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));

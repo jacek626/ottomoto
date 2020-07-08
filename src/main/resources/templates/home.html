@@ -30,7 +30,7 @@
                th:each="newestAnnouncement, iter : ${pages}" th:if="${iter.index < 3}">
               <div class="card w-100">
                   <img class="card-img-top  img-fluid" th:if="${#lists.size(newestAnnouncement.pictures)} > 0"
-                       th:src="${'images/' + newestAnnouncement.pictures[0].miniatureRepositoryName}"></img>
+                       th:src="${'images/' + newestAnnouncement.pictures[0].repositoryName}"></img>
                   <img class="card-img-top img-fluid" th:if="${#lists.size(newestAnnouncement.pictures)} == 0"
                        th:src="@{'images/noPhoto.png'}"></img>
                   <div class="card-body text-left" style="line-height:1;">
