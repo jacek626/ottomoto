@@ -3,20 +3,23 @@
 
 <b>Portal z ogłoszeniami motoryzacyjnymi inspirowany OTOMOTO.pl stworzony w celach edukacyjnych</b>
 
-Dostępne funkcje:
-Tworzenie nowego konta oraz jego aktywacja konta
-Logowanie dla zarejestrowanych użytkowników z podziałem na strefę użytkowników i administratorów
-Oznaczanie ogłoszenia jako obserwowanego
-Wyszukiwanie ogłoszeń po wielu parametrach
-Tworzenie nowego ogłoszenia oraz jego edycja i dezaktywacja
-Dodawanie zdjęć do ogłoszeń wraz z automatycznym generowaniem miniatur
-Zgłaszanie naruszeń do ogłoszeń
-Formularz kontaktowy do sprzedającego
-Administratorzy mogą dodawać nowe modele pojazdów i producentów 
-Administratorzy mogą zarządzać ogłoszeniami i użytkownikami
+Dostępne funkcje:<br/>
+<ul>
+<li>Tworzenie nowego konta oraz jego aktywacja konta</li>
+<li>Logowanie dla zarejestrowanych użytkowników z podziałem na strefę użytkowników i administratorów</li>
+<li>Oznaczanie ogłoszenia jako obserwowanego</li>
+<li>Wyszukiwanie ogłoszeń po wielu parametrach</li>
+<li>Tworzenie nowego ogłoszenia oraz jego edycja i dezaktywacja</li>
+<li>Dodawanie zdjęć do ogłoszeń wraz z automatycznym generowaniem miniatur</li>
+<li>Zgłaszanie naruszeń do ogłoszeń</li>
+<li>Formularz kontaktowy do sprzedającego</li>
+<li>Administratorzy mogą dodawać nowe modele pojazdów i producentów</li>
+<li>Administratorzy mogą zarządzać ogłoszeniami i użytkownikami</li>
+</ul>
 
-Login i hasło do konta administratora
+Login i hasło do konta administratora</br>
 osadmin:osadmin
 
 link do aplikacji
-http://ottomoto.herokuapp.com/ottomoto/
+<a href="http://ottomoto.herokuapp.com/ottomoto/">herokuapp.com/ottomoto/</a>
+
