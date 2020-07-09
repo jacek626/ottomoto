@@ -5,7 +5,7 @@
 
 Dostępne funkcje:<br/>
 <ul>
-<li>Tworzenie nowego konta oraz jego aktywacja konta</li>
+<li>Tworzenie nowego konta oraz jego aktywacja</li>
 <li>Logowanie dla zarejestrowanych użytkowników z podziałem na strefę użytkowników i administratorów</li>
 <li>Oznaczanie ogłoszenia jako obserwowanego</li>
 <li>Wyszukiwanie ogłoszeń po wielu parametrach</li>
@@ -22,4 +22,10 @@ osadmin:osadmin
 
 link do aplikacji
 <a href="http://ottomoto.herokuapp.com/ottomoto/">herokuapp.com/ottomoto/</a>
+<br/>
+Wykorzystane technologie:
+<br/>
+Spring Boot, Spring Data, Spring Security, Thymeleaf, Bootstrap, JUnit, Assertj, Querydsl, Postgresql, Mockito, Heroku, Amazon S3
+<br/>
+Projekt jest jeszcze w fazie rozwoju
 
