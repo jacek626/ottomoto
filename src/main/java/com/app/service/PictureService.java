@@ -4,7 +4,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.app.repository.PictureRepository;
 import com.app.utils.site.element.HtmlElement;
 import com.app.utils.site.element.UploadedPicture;
 import org.apache.commons.io.FilenameUtils;
@@ -28,16 +27,13 @@ import java.util.Locale;
 @Service
 public class PictureService {
 
-    private final PictureRepository pictureRepository;
-
     private final MessageSource messageSource;
 
     private final AmazonS3 amazonS3Client;
 
     private final String bucketName = "ottomoto";
 
-    public PictureService(PictureRepository pictureRepository, MessageSource messageSource, AmazonS3 amazonS3Client) {
-        this.pictureRepository = pictureRepository;
+    public PictureService(MessageSource messageSource, AmazonS3 amazonS3Client) {
         this.messageSource = messageSource;
         this.amazonS3Client = amazonS3Client;
     }

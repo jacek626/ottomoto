@@ -84,7 +84,7 @@ function uploadFile() {
                 $("#imagesScroll").append(result[i]);
             }
 
-            showInfo("liczba dodanych zdjęć, " + result.length)
+            showInfo("liczba dodanych zdjęć, " + result.length);
 
         },
         error(jqXHR, textStatus, errorThrown) {

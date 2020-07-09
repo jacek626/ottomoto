@@ -23,8 +23,8 @@ public class SystemSettingsController {
     }
 
 	@RequestMapping(value = "home")
-	public String Home() {
+    public String home() {
 
-		return "system/home";
-	}
+        return "system/home";
+    }
 }

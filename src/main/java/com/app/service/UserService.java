@@ -8,7 +8,6 @@ import com.app.repository.UserRepository;
 import com.app.repository.VerificationTokenRepository;
 import com.app.utils.validation.Result;
 import com.app.validator.UserValidator;
-import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,32 +17,26 @@ import java.util.Objects;
 @Service("userService")
 public class UserService {
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-	private final UserValidator userValidator;
+    private final UserValidator userValidator;
 
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	private final RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-	private final EmailService emailService;
+    private final VerificationTokenRepository verificationTokenRepository;
 
-	private final MessageSource messageSource;
-
-	private final VerificationTokenRepository verificationTokenRepository;
-
-	public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, EmailService emailService, AnnouncementRepository announcementRepository, MessageSource messageSource, VerificationTokenRepository verificationTokenRepository) {
-		this.userRepository = userRepository;
-		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-		this.roleRepository = roleRepository;
-		this.emailService = emailService;
-		this.messageSource = messageSource;
-		this.verificationTokenRepository = verificationTokenRepository;
-		this.userValidator = new UserValidator(userRepository, announcementRepository);
-	}
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, RoleRepository roleRepository, AnnouncementRepository announcementRepository, VerificationTokenRepository verificationTokenRepository) {
+        this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.roleRepository = roleRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
+        this.userValidator = new UserValidator(userRepository, announcementRepository);
+    }
 
 
-	public Result deleteUser(User user) {
+    public Result deleteUser(User user) {
         Result<User> result = userValidator.checkBeforeDelete(user);
 
         if (result.isSuccess()) {

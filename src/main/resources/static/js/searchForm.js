@@ -63,14 +63,14 @@ function validateRange(from, to, currentElementValue) {
     if (fromAsNumber > toAsNumber) {
         if (currentElementValue === undefined) {
             from.val("");
-            from.selectpicker('refresh')
+            from.selectpicker('refresh');
         } else {
             if (currentElementValue === from.val()) {
                 to.val("");
-                to.selectpicker('refresh')
+                to.selectpicker('refresh');
             } else {
                 from.val("");
-                from.selectpicker('refresh')
+                from.selectpicker('refresh');
             }
         }
     }

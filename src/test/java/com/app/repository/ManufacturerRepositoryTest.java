@@ -22,13 +22,6 @@ public class ManufacturerRepositoryTest {
     @Autowired
     private VehicleModelRepository vehicleModelRepository;
 
-/*	@Test
-	public void findAll() {
-		List<Manufacturer> manufacturerList = manufacturerRepository.findAll();
-
-		assertThat(manufacturerList).isNotEmpty();
-	}*/
-
     @Test
     public void saveManufacturer() {
         Manufacturer manufacturer = new Manufacturer();

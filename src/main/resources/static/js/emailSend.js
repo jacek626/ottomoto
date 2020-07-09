@@ -53,7 +53,7 @@ function reportAnnouncement(announcementId, reportText, modalWindow) {
             .then(response => response.json())
             .then(result => {
                 reportText.value = '';
-                $(modalWindow).modal('hide')
+                $(modalWindow).modal('hide');
                 showInfo('Wiadomosc wysłana, dziękujemy za kontakt');
             })
             .catch(error => {

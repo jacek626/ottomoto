@@ -28,34 +28,15 @@ public class VehicleModel implements ObjectWithId {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    //@OnDelete(action = OnDeleteAction.CASCADE)
     private Manufacturer manufacturer;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private VehicleType vehicleType;
 	
-/*	@Enumerated(EnumType.STRING)
-	private VehicleSubtype vehicleSubtype;*/
-	
 	@Transient
 	private Boolean toDelete = false;
 
-/*	public VehicleModel(@NotNull Long id,@NotNull String name, @NotNull Manufacturer manufacturer, @NotNull VehicleType vehicleType) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.manufacturer = manufacturer;
-		this.vehicleType = vehicleType;
-	}
-
-	public VehicleModel(@NotNull String name, @NotNull Manufacturer manufacturer, @NotNull VehicleType vehicleType) {
-		super();
-		this.name = name;
-		this.manufacturer = manufacturer;
-		this.vehicleType = vehicleType;
-	}*/
-	
 	public VehicleModel() {
 	}
 

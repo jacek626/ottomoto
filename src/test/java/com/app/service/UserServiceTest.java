@@ -56,6 +56,7 @@ public class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
+
     @Mock
     private SystemEmail systemEmail;
 

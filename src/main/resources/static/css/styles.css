@@ -19,11 +19,6 @@ html {
     margin: 5px;
 }
 
-#imageScroller::-webkit-scrollbar {
-    width: 0;
-    background: transparent;
-    display: none;
-}
 
 #imageScroller {
     scrollbar-width: none; /* Firefox */
@@ -34,6 +29,12 @@ html {
     display: inline-block;
     margin-right: 10px;
     background-color: red;
+}
+
+#imageScroller::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+    display: none;
 }
 
 .photoGalleryMiniArrow {
@@ -99,7 +100,8 @@ html {
     font-size: 12px;
 }
 
-#resultsTable td, #resultsTable th {
+#resultsTable td,
+#resultsTable th {
     text-align: left;
     padding: 4px 10px;
     border-bottom: 1px solid #ddd;
@@ -107,7 +109,8 @@ html {
     border-collapse: inherit;
 }
 
-#resultsTable th a, #resultsTabl th a:visited {
+#resultsTable th a,
+#resultsTabla th a:visited {
     color: #2e3968;
 }
 
@@ -183,9 +186,6 @@ input[type="radio"]:checked + label {
 
 .settings-big-button:hover {
     background-color: #bf2505;
-}
-
-.settings-big-button:hover {
     text-decoration: none;
     color: white;
 }
