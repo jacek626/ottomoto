@@ -22,10 +22,22 @@ osadmin:osadmin
 
 link do aplikacji
 <a href="http://ottomoto.herokuapp.com/ottomoto/">herokuapp.com/ottomoto/</a>
-<br/>
+<br/><br/>
 Wykorzystane technologie:
-<br/>
-Spring Boot, Spring Data, Spring Security, Thymeleaf, Bootstrap, JUnit, Assertj, Querydsl, Postgresql, Mockito, Heroku, Amazon S3
+<ul>
+<li>Spring Boot</li>
+<li>Spring Data</li>
+<li>Spring Security</li>
+<li>Thymeleaf</li>
+<li>Bootstrap</li>
+<li>JUnit</li>
+<li>Assertj</li>
+ <li>Mockito</li>
+<li>Querydsl</li>
+<li>Postgresql</li>
+<li>Heroku</li>
+<li>Amazon S3</li>
+</ul>
 <br/>
 Projekt jest jeszcze w fazie rozwoju
 
