@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Component
 public class AnnouncementSearchStrategy implements SearchStrategy<Announcement, AnnouncementDto> {
@@ -67,17 +66,10 @@ public class AnnouncementSearchStrategy implements SearchStrategy<Announcement, 
 
     private Map<String, Object> prepareVehicleModelsIfManufacturerIsSet(Announcement announcement, List<ManufacturerProjection> manufacturerList) {
         Map<String, Object> model = new HashMap<>();
-        Optional<Long> manufacturerId = Optional.ofNullable(announcement.getManufacturerId());
 
-        if (manufacturerId.isPresent()) {
-            List<VehicleModel> vehicleModels = vehicleModelRepository.findByManufacturerIdAndVehicleType(manufacturerId.get(), announcement.getVehicleType());
+        if (announcement.getManufacturerId() != null) {
+            List<VehicleModel> vehicleModels = vehicleModelRepository.findByManufacturerIdAndVehicleType(announcement.getManufacturerId(), announcement.getVehicleType());
             model.put("vehicleModelList", vehicleModels);
-
-            if (announcement.getVehicleModel() == null)
-                vehicleModels.stream().findAny().ifPresent(e -> {
-                    // o ten link http://localhost:8081/otomoto/announcement/list?manufacturerId=-2 zwraca zle jak jest otomentowae
-                    //      announcement.setVehicleModel(e);
-                });
         }
 
         return model;
