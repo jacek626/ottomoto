@@ -8,7 +8,6 @@ import com.app.repository.AnnouncementRepository;
 import com.app.repository.UserRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -26,13 +25,10 @@ public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrate
 
     private final AnnouncementRepository announcementRepository;
 
-    private final ModelMapper modelMapper;
-
-    public ObservedAnnouncementSearchStrategyDecorator(AnnouncementSearchStrategy announcementSearchFormStrategy, UserRepository userRepository, AnnouncementRepository announcementRepository, ModelMapper modelMapper) {
+    public ObservedAnnouncementSearchStrategyDecorator(AnnouncementSearchStrategy announcementSearchFormStrategy, UserRepository userRepository, AnnouncementRepository announcementRepository) {
         this.announcementSearchFormStrategy = announcementSearchFormStrategy;
         this.userRepository = userRepository;
         this.announcementRepository = announcementRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -54,7 +50,7 @@ public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrate
 
     @Override
     public AnnouncementDto convertToDto(Announcement entity) {
-        return modelMapper.map(entity, AnnouncementDto.class);
+        return announcementSearchFormStrategy.convertToDto(entity);
     }
 
 }

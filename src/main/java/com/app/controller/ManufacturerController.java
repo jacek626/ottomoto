@@ -2,6 +2,7 @@ package com.app.controller;
 
 import com.app.dto.ManufacturerDto;
 import com.app.entity.Manufacturer;
+import com.app.entity.VehicleModel;
 import com.app.enums.VehicleSubtype;
 import com.app.enums.VehicleType;
 import com.app.projection.ManufacturerProjection;
@@ -27,14 +28,14 @@ public class ManufacturerController {
 
     private final ManufacturerRepository manufacturerRepository;
 
-    private final SearchStrategy manufacturerSearchStrategy;
+    private final SearchStrategy<Manufacturer, ManufacturerDto> manufacturerSearchStrategy;
 
     private final ManufacturerService manufacturerService;
 
     private final ManufacturerMapper manufacturerMapper;
 
 
-    public ManufacturerController(ManufacturerRepository manufacturerRepository, SearchStrategy manufacturerSearchStrategy, ManufacturerService manufacturerService, ManufacturerMapper manufacturerMapper) {
+    public ManufacturerController(ManufacturerRepository manufacturerRepository, SearchStrategy<Manufacturer, ManufacturerDto> manufacturerSearchStrategy, ManufacturerService manufacturerService, ManufacturerMapper manufacturerMapper) {
         this.manufacturerRepository = manufacturerRepository;
         this.manufacturerSearchStrategy = manufacturerSearchStrategy;
         this.manufacturerService = manufacturerService;
@@ -72,9 +73,8 @@ public class ManufacturerController {
 
     @RequestMapping(value = "save", method = RequestMethod.POST, params = "action=removeVehicle")
     public String removeVehicle(@ModelAttribute("manufacturer") Manufacturer manufacturer) {
-        manufacturer.getVehicleModel().stream().filter(v -> v.getToDelete()).findFirst().ifPresent(vehicleModel -> {
-            manufacturer.getVehicleModel().remove(vehicleModel);
-        });
+        manufacturer.getVehicleModel().stream().filter(VehicleModel::getToDelete).findFirst()
+                .ifPresent(vehicleModel -> manufacturer.getVehicleModel().remove(vehicleModel));
 
         return "manufacturer/manufacturerEdit";
     }
@@ -99,9 +99,7 @@ public class ManufacturerController {
     @RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
     public String edit(@PathVariable("id") Long id, Model model) {
 
-        manufacturerRepository.findById(id).ifPresentOrElse(manufacturer -> {
-            model.addAttribute("manufacturer", model.asMap().getOrDefault("manufacturerWithAddedModel", manufacturerMapper.convertToDto(manufacturer)));
-        }, () -> {
+        manufacturerRepository.findById(id).ifPresentOrElse(manufacturer -> model.addAttribute("manufacturer", model.asMap().getOrDefault("manufacturerWithAddedModel", manufacturerMapper.convertToDto(manufacturer))), () -> {
             throw new IllegalArgumentException("Manufacturer not found");
         });
 
