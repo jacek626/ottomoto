@@ -1,8 +1,8 @@
 package com.app.searchform;
 
-import com.app.dto.UserDto;
-import com.app.entity.User;
-import com.app.repository.UserRepository;
+import com.app.user.dto.UserDto;
+import com.app.user.entity.User;
+import com.app.user.repository.UserRepository;
 import com.querydsl.core.types.Predicate;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;

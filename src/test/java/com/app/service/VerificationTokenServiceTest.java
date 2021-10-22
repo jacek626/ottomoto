@@ -1,8 +1,9 @@
 package com.app.service;
 
-import com.app.entity.User;
-import com.app.entity.VerificationToken;
-import com.app.repository.VerificationTokenRepository;
+import com.app.user.entity.User;
+import com.app.verification.VerificationTokenService;
+import com.app.verification.entity.VerificationToken;
+import com.app.verification.repository.VerificationTokenRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

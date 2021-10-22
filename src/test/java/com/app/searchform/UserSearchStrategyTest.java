@@ -1,9 +1,9 @@
 package com.app.searchform;
 
-import com.app.entity.QUser;
-import com.app.entity.User;
-import com.app.repository.UserRepository;
-import com.app.utils.search.PaginationDetails;
+import com.app.common.utils.search.PaginationDetails;
+import com.app.user.entity.QUser;
+import com.app.user.entity.User;
+import com.app.user.repository.UserRepository;
 import com.querydsl.core.types.Predicate;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;

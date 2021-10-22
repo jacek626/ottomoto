@@ -1,6 +1,7 @@
 package com.app.service;
 
-import com.app.utils.site.element.UploadedPicture;
+import com.app.common.utils.site.element.UploadedPicture;
+import com.app.picture.PictureService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

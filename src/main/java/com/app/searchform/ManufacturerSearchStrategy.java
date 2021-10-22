@@ -1,8 +1,8 @@
 package com.app.searchform;
 
-import com.app.dto.ManufacturerDto;
-import com.app.entity.Manufacturer;
-import com.app.repository.ManufacturerRepository;
+import com.app.manufacturer.dto.ManufacturerDto;
+import com.app.manufacturer.entity.Manufacturer;
+import com.app.manufacturer.repository.ManufacturerRepository;
 import com.querydsl.core.types.Predicate;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;

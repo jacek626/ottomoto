@@ -1,11 +1,11 @@
 package com.app.searchform;
 
-import com.app.dto.AnnouncementDto;
-import com.app.entity.Announcement;
-import com.app.entity.QAnnouncement;
-import com.app.entity.QObservedAnnouncement;
-import com.app.repository.AnnouncementRepository;
-import com.app.repository.UserRepository;
+import com.app.announcement.dto.AnnouncementDto;
+import com.app.announcement.entity.Announcement;
+import com.app.announcement.entity.QAnnouncement;
+import com.app.announcement.entity.QObservedAnnouncement;
+import com.app.announcement.repository.AnnouncementRepository;
+import com.app.user.repository.UserRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;

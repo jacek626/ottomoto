@@ -1,7 +1,10 @@
 package com.app.repository;
 
-import com.app.entity.Announcement;
-import com.app.entity.QAnnouncement;
+import com.app.announcement.entity.Announcement;
+import com.app.announcement.entity.QAnnouncement;
+import com.app.announcement.repository.AnnouncementRepository;
+import com.app.manufacturer.repository.ManufacturerRepository;
+import com.app.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

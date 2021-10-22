@@ -1,14 +1,18 @@
 package com.app.searchform;
 
-import com.app.entity.*;
-import com.app.enums.BooleanValuesForDropDown;
-import com.app.enums.VehicleSubtype;
-import com.app.enums.VehicleType;
-import com.app.repository.AnnouncementRepository;
-import com.app.repository.ManufacturerRepository;
-import com.app.repository.VehicleModelRepository;
-import com.app.utils.mapper.AnnouncementMapper;
-import com.app.utils.search.PaginationDetails;
+import com.app.announcement.entity.Announcement;
+import com.app.announcement.entity.QAnnouncement;
+import com.app.announcement.repository.AnnouncementRepository;
+import com.app.common.enums.BooleanValuesForDropDown;
+import com.app.common.enums.VehicleSubtype;
+import com.app.common.enums.VehicleType;
+import com.app.common.utils.mapper.AnnouncementMapper;
+import com.app.common.utils.search.PaginationDetails;
+import com.app.manufacturer.entity.Manufacturer;
+import com.app.manufacturer.repository.ManufacturerRepository;
+import com.app.user.entity.User;
+import com.app.vehiclemodel.entity.VehicleModel;
+import com.app.vehiclemodel.repository.VehicleModelRepository;
 import com.google.common.collect.Lists;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;

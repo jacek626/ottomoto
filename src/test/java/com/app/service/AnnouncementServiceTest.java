@@ -1,11 +1,12 @@
 package com.app.service;
 
-import com.app.entity.Announcement;
-import com.app.entity.Picture;
-import com.app.repository.AnnouncementRepository;
-import com.app.utils.TestUtils;
-import com.app.utils.validation.Result;
-import com.app.validator.AnnouncementValidator;
+import com.app.announcement.entity.Announcement;
+import com.app.announcement.repository.AnnouncementRepository;
+import com.app.announcement.service.AnnouncementService;
+import com.app.announcement.validator.AnnouncementValidator;
+import com.app.common.utils.TestUtils;
+import com.app.common.utils.validation.Result;
+import com.app.picture.entity.Picture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

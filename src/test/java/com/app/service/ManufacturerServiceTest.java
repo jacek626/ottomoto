@@ -1,11 +1,12 @@
 package com.app.service;
 
-import com.app.entity.Manufacturer;
-import com.app.entity.VehicleModel;
-import com.app.enums.VehicleType;
-import com.app.repository.ManufacturerRepository;
-import com.app.utils.validation.Result;
-import com.app.validator.ManufacturerValidator;
+import com.app.common.enums.VehicleType;
+import com.app.common.utils.validation.Result;
+import com.app.manufacturer.ManufacturerService;
+import com.app.manufacturer.entity.Manufacturer;
+import com.app.manufacturer.repository.ManufacturerRepository;
+import com.app.manufacturer.validator.ManufacturerValidator;
+import com.app.vehiclemodel.entity.VehicleModel;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

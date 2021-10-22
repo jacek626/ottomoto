@@ -1,10 +1,12 @@
 package com.app.service;
 
-import com.app.entity.User;
-import com.app.utils.email.EmailMessage;
-import com.app.utils.email.SystemEmail;
-import com.app.utils.validation.Result;
-import com.app.validator.EmailValidator;
+import com.app.common.utils.email.EmailMessage;
+import com.app.common.utils.email.SystemEmail;
+import com.app.common.utils.validation.Result;
+import com.app.email.EmailService;
+import com.app.email.validator.EmailValidator;
+import com.app.user.entity.User;
+import com.app.verification.VerificationTokenService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

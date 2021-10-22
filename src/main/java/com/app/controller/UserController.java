@@ -1,15 +1,15 @@
 package com.app.controller;
 
-import com.app.dto.UserDto;
-import com.app.entity.User;
-import com.app.repository.UserRepository;
+import com.app.common.utils.search.PaginationDetails;
+import com.app.common.utils.validation.Result;
+import com.app.email.EmailService;
 import com.app.searchform.SearchStrategy;
-import com.app.service.EmailService;
-import com.app.service.UserService;
-import com.app.utils.search.PaginationDetails;
-import com.app.utils.validation.Result;
-import com.app.validator.groups.ValidateAllFieldsWithoutPass;
-import com.app.validator.groups.ValidatePassOnly;
+import com.app.user.dto.UserDto;
+import com.app.user.entity.User;
+import com.app.user.repository.UserRepository;
+import com.app.user.service.UserService;
+import com.app.user.validator.groups.ValidateAllFieldsWithoutPass;
+import com.app.user.validator.groups.ValidatePassOnly;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -79,11 +79,9 @@ public class UserController {
 	@RequestMapping(value = "edit/{id}", method = RequestMethod.GET)
 	public String edit(@PathVariable(value = "id") Long id, Model model) {
 		Optional<User> user = userRepository.findById(id);
+		user.orElseThrow(() -> new NoSuchElementException("User with id " + id + " not exists"));
 
-        if (user.isPresent())
-            model.addAttribute("user", convertToDto(user.get()));
-        else
-            throw new NoSuchElementException("User with id " + id + " not exists");
+        model.addAttribute("user", convertToDto(user.get()));
 
 		return "user/registerUser";
 	}

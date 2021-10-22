@@ -1,7 +1,7 @@
 package com.app.searchform;
 
-import com.app.enums.PaginationPageSize;
-import com.app.utils.search.PaginationDetails;
+import com.app.common.enums.PaginationPageSize;
+import com.app.common.utils.search.PaginationDetails;
 import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

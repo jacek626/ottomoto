@@ -1,14 +1,15 @@
 package com.app.service;
 
-import com.app.entity.Role;
-import com.app.entity.User;
-import com.app.entity.VerificationToken;
-import com.app.repository.AnnouncementRepository;
-import com.app.repository.RoleRepository;
-import com.app.repository.UserRepository;
-import com.app.repository.VerificationTokenRepository;
-import com.app.utils.email.SystemEmail;
-import com.app.utils.validation.Result;
+import com.app.announcement.repository.AnnouncementRepository;
+import com.app.common.utils.email.SystemEmail;
+import com.app.common.utils.validation.Result;
+import com.app.security.entity.Role;
+import com.app.security.repository.RoleRepository;
+import com.app.user.entity.User;
+import com.app.user.repository.UserRepository;
+import com.app.user.service.UserService;
+import com.app.verification.entity.VerificationToken;
+import com.app.verification.repository.VerificationTokenRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

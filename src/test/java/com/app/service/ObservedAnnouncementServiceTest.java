@@ -1,13 +1,14 @@
 package com.app.service;
 
-import com.app.entity.Announcement;
-import com.app.entity.ObservedAnnouncement;
-import com.app.entity.User;
-import com.app.entity.VehicleModel;
-import com.app.enums.VehicleSubtype;
-import com.app.repository.ObservedAnnouncementRepository;
-import com.app.utils.validation.Result;
-import com.app.validator.ObservedAnnouncementValidator;
+import com.app.announcement.ObservedAnnouncementRepository;
+import com.app.announcement.ObservedAnnouncementService;
+import com.app.announcement.entity.Announcement;
+import com.app.announcement.entity.ObservedAnnouncement;
+import com.app.announcement.validator.ObservedAnnouncementValidator;
+import com.app.common.enums.VehicleSubtype;
+import com.app.common.utils.validation.Result;
+import com.app.user.entity.User;
+import com.app.vehiclemodel.entity.VehicleModel;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

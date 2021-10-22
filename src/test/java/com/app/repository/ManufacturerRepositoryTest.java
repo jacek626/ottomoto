@@ -1,8 +1,10 @@
 package com.app.repository;
 
-import com.app.entity.Manufacturer;
-import com.app.entity.VehicleModel;
-import com.app.enums.VehicleType;
+import com.app.common.enums.VehicleType;
+import com.app.manufacturer.entity.Manufacturer;
+import com.app.manufacturer.repository.ManufacturerRepository;
+import com.app.vehiclemodel.entity.VehicleModel;
+import com.app.vehiclemodel.repository.VehicleModelRepository;
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,8 +1,8 @@
 package com.app.controller;
 
-import com.app.entity.VehicleModel;
-import com.app.enums.VehicleType;
-import com.app.repository.VehicleModelRepository;
+import com.app.common.enums.VehicleType;
+import com.app.vehiclemodel.entity.VehicleModel;
+import com.app.vehiclemodel.repository.VehicleModelRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

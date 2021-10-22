@@ -1,7 +1,7 @@
 package com.app.searchform;
 
-import com.app.utils.search.PredicatePreparer;
-import com.app.utils.search.UrlParamsPreparer;
+import com.app.common.utils.search.PredicatePreparer;
+import com.app.common.utils.search.UrlParamsPreparer;
 
 public interface EntityForSearchStrategy<E> extends UrlParamsPreparer, PredicatePreparer {
 }
