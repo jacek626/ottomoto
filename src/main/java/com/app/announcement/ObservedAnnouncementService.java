@@ -4,16 +4,16 @@ import com.app.announcement.entity.ObservedAnnouncement;
 import com.app.announcement.validator.ObservedAnnouncementValidator;
 import com.app.common.enums.ValidatorCode;
 import com.app.common.utils.validation.Result;
-import com.app.common.utils.validation.ValidationDetails;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
+import static com.app.common.utils.validation.ValidationDetails.*;
+
+@AllArgsConstructor
+@Service
 public class ObservedAnnouncementService {
-
-    @Autowired
-    private ObservedAnnouncementRepository observedAnnouncementRepository;
-
-    @Autowired
-    private ObservedAnnouncementValidator observedAnnouncementValidator;
+    private final ObservedAnnouncementRepository observedAnnouncementRepository;
+    private final ObservedAnnouncementValidator observedAnnouncementValidator;
 
     public Result saveObservedAnnouncement(ObservedAnnouncement observedAnnouncement) {
         Result result = observedAnnouncementValidator.checkBeforeSave(observedAnnouncement);
@@ -25,11 +25,9 @@ public class ObservedAnnouncementService {
     public Result deleteObservedAnnouncement(ObservedAnnouncement observedAnnouncement) {
         final Result result = Result.success();
 
-        observedAnnouncementRepository.findById(observedAnnouncement.getId()).ifPresentOrElse(
-                e -> observedAnnouncementRepository.delete(e),
-                () -> {
-                    result.appendValidationResult("observedAnnouncement", ValidationDetails.of(ValidatorCode.NOT_EXISTS));
-                }
+        observedAnnouncementRepository.findById(observedAnnouncement.getId())
+                .ifPresentOrElse(observedAnnouncementRepository::delete,
+                    () -> result.addValidationResult("observedAnnouncement", of(ValidatorCode.NOT_EXISTS))
         );
 
         return result;

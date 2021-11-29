@@ -7,25 +7,22 @@ import com.app.common.utils.validation.ValidationDetails;
 import com.app.common.validator.ValidatorCommonMethods;
 import com.app.user.entity.User;
 import com.app.user.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Component
+@AllArgsConstructor
 public class UserValidator implements ValidatorCommonMethods<User> {
-
     private final UserRepository userRepository;
-
     private final AnnouncementRepository announcementRepository;
-
-    public UserValidator(UserRepository userRepository, AnnouncementRepository announcementRepository) {
-        this.userRepository = userRepository;
-        this.announcementRepository = announcementRepository;
-    }
 
     @Override
     public Result checkBeforeDelete(User user) {
-        var errors = createErrorMap();
+        var errors = createErrorsContainer();
 
         if (announcementRepository.existsByUserIdAndActiveIsTrue(user.getId()))
             errors.put("announcements", ValidationDetails.of(ValidatorCode.HAVE_REF_OBJECTS));
@@ -35,7 +32,7 @@ public class UserValidator implements ValidatorCommonMethods<User> {
 
     @Override
     public Result checkBeforeSave(User user) {
-        var errors = createErrorMap();
+        var errors = createErrorsContainer();
 
         errors.putAll(validatePassword(user.getPassword(), user.getPasswordConfirm()));
         errors.putAll(validateEmail(user.getEmail()));
@@ -46,7 +43,7 @@ public class UserValidator implements ValidatorCommonMethods<User> {
     }
 
     private Map<String, ValidationDetails> checkLoginAlreadyExists(User user) {
-        var errors = createErrorMap();
+        var errors = createErrorsContainer();
 
         if (StringUtils.isNotBlank(user.getLogin()) &&
                 ((user.getId() == null && userRepository.countByLogin(user.getLogin()) > 0) ||
@@ -58,7 +55,7 @@ public class UserValidator implements ValidatorCommonMethods<User> {
     }
 
     private Map<String, ValidationDetails> checkEmailAlreadyExists(User user) {
-        var errors = createErrorMap();
+        var errors = createErrorsContainer();
 
         if (StringUtils.isNotBlank(user.getEmail()) &&
                 (user.getId() == null && userRepository.countByEmail(user.getEmail()) > 0) ||
@@ -71,7 +68,7 @@ public class UserValidator implements ValidatorCommonMethods<User> {
 
 
     private Map<String, ValidationDetails> validateEmail(String email) {
-        var errors = createErrorMap();
+        var errors = createErrorsContainer();
 
         if (StringUtils.isBlank(email)) {
             errors.put("email", ValidationDetails.of(ValidatorCode.IS_EMPTY, email));
@@ -83,7 +80,7 @@ public class UserValidator implements ValidatorCommonMethods<User> {
     }
 
     private Map<String, ValidationDetails> validatePassword(String password, String passwordConfirm) {
-        var errors = createErrorMap();
+        var errors = createErrorsContainer();
 
         if (password == null && passwordConfirm == null)
             return errors;
@@ -102,7 +99,7 @@ public class UserValidator implements ValidatorCommonMethods<User> {
     }
 
     public Result checkBeforeChangePass(User user) {
-        var errors = createErrorMap();
+        var errors = createErrorsContainer();
 
         errors.putAll(validatePassword(user.getPassword(), user.getPasswordConfirm()));
 

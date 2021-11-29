@@ -6,23 +6,16 @@ import com.app.manufacturer.repository.ManufacturerRepository;
 import com.app.manufacturer.validator.ManufacturerValidator;
 import com.app.vehiclemodel.entity.VehicleModel;
 import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
-@Service("manufacturerService")
+@Service
+@AllArgsConstructor
 public class ManufacturerService {
-
     private final ManufacturerRepository manufacturerRepository;
-
     private final ManufacturerValidator manufacturerValidator;
-
-
-    public ManufacturerService(ManufacturerRepository manufacturerRepository, ManufacturerValidator manufacturerValidator) {
-		this.manufacturerRepository = manufacturerRepository;
-		this.manufacturerValidator = manufacturerValidator;
-	}
-
 
 	public Result saveManufacturer(Manufacturer manufacturer) {
         Result result = manufacturerValidator.checkBeforeSave(manufacturer);

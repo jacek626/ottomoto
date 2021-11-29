@@ -9,7 +9,7 @@ public interface ValidatorCommonMethods<T> {
     Result checkBeforeSave(T objectToValidate);
     Result checkBeforeDelete(T objectToValidate);
 
-    default HashMap<String, ValidationDetails> createErrorMap() {
-        return new HashMap<String, ValidationDetails>();
+    default HashMap<String, ValidationDetails> createErrorsContainer() {
+        return new HashMap<>();
     }
 }

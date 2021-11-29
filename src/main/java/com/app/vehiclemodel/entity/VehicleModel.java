@@ -3,20 +3,19 @@ package com.app.vehiclemodel.entity;
 import com.app.common.enums.VehicleType;
 import com.app.common.utils.search.ObjectWithId;
 import com.app.manufacturer.entity.Manufacturer;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Setter
-@Getter
-@AllArgsConstructor
 @Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString(exclude = {"toDelete"})
 public class VehicleModel implements ObjectWithId {
 
     @Id
@@ -37,8 +36,4 @@ public class VehicleModel implements ObjectWithId {
 	
 	@Transient
 	private Boolean toDelete = false;
-
-	public VehicleModel() {
-	}
-
 }

@@ -4,6 +4,7 @@ import com.app.security.entity.Privilege;
 import com.app.security.entity.Role;
 import com.app.user.entity.User;
 import com.app.user.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,13 +19,10 @@ import java.util.List;
 
 @Service
 @Transactional
+@AllArgsConstructor
 public class UserDetailsServiceCustomLoad implements UserDetailsService {
 
 	private final UserRepository userRepository;
-
-	public UserDetailsServiceCustomLoad(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
 
 	@Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
@@ -48,7 +46,7 @@ public class UserDetailsServiceCustomLoad implements UserDetailsService {
                 getAuthorities(user.getRole()));
     }
 
-    private final List<GrantedAuthority> getGrantedAuthorities(final List<String> privileges) {
+    private List<GrantedAuthority> getGrantedAuthorities(final List<String> privileges) {
         final List<GrantedAuthority> authorities = new ArrayList<>();
         for (final String privilege : privileges) {
             authorities.add(new SimpleGrantedAuthority(privilege));
@@ -57,11 +55,11 @@ public class UserDetailsServiceCustomLoad implements UserDetailsService {
         return authorities;
     }
 
-    private final Collection<? extends GrantedAuthority> getAuthorities(final Role role) {
+    private Collection<? extends GrantedAuthority> getAuthorities(final Role role) {
         return getGrantedAuthorities(getPrivileges(role));
     }
 
-    private final List<String> getPrivileges(final Role role) {
+    private List<String> getPrivileges(final Role role) {
         final List<String> privileges = new ArrayList<>();
 
         for (final Privilege item : role.getPrivileges()) {

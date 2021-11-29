@@ -22,6 +22,7 @@ import java.util.List;
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Announcement implements EntityForSearchStrategy {
 
     @Id
@@ -65,18 +66,18 @@ public class Announcement implements EntityForSearchStrategy {
     @Digits(integer = 9, fraction = 2)
     private BigDecimal price;
 
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	@Builder.Default
-	private Currency currency = Currency.PLN;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Currency currency = Currency.PLN;
 
-	@NotNull
-	@Builder.Default
-	private Boolean netPrice = false;
+    @NotNull
+    @Builder.Default
+    private Boolean netPrice = false;
 
-	@NotNull
-	@Builder.Default
-	private Boolean priceNegotiate = true;
+    @NotNull
+    @Builder.Default
+    private Boolean priceNegotiate = true;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -120,63 +121,60 @@ public class Announcement implements EntityForSearchStrategy {
     private Long manufacturerId;
     @Transient
     private String miniatureRepositoryName;
-	@Transient
-	private VehicleType vehicleType;
-	@Transient
-	private StringBuilder urlParams;
-	@Transient
-	@Builder.Default
-	private AnnouncementSearchFields searchFields = new AnnouncementSearchFields();
-	@Transient
-	@Getter(AccessLevel.NONE)
-	private BooleanBuilder predicates;
+    @Transient
+    private VehicleType vehicleType;
+    @Transient
+    private StringBuilder urlParams;
+    @Transient
+    @Builder.Default
+    private AnnouncementSearchFields searchFields = new AnnouncementSearchFields();
+    @Transient
+    @Getter(AccessLevel.NONE)
+    private BooleanBuilder predicates;
 
-	public Announcement() {
-	}
+    @Override
+    public String prepareUrlParams() {
+        urlParams = new StringBuilder();
 
-	@Override
-	public String prepareUrlParams() {
-		urlParams = new StringBuilder();
+        addUrlParam("user", user);
+        addUrlParam("manufacturerId", manufacturerId);
+        addUrlParam("vehicleModel.id", vehicleModel);
+        addUrlParam("vehicleType", vehicleType);
+        addUrlParam("vehicleSubtype", vehicleSubtype);
 
-		addUrlParam("user", user);
-		addUrlParam("manufacturerId", manufacturerId);
-		addUrlParam("vehicleModel.id", vehicleModel);
-		addUrlParam("vehicleType", vehicleType);
-		addUrlParam("vehicleSubtype", vehicleSubtype);
+        urlParams.append(getSearchFields().prepareUrlParams());
 
-		urlParams.append(getSearchFields().prepareUrlParams());
+        return urlParams.toString();
+    }
 
-		return urlParams.toString();
-	}
+    @Override
+    public Predicate preparePredicates() {
+        predicates = new BooleanBuilder();
 
-	@Override
-	public Predicate preparePredicates() {
-		predicates = new BooleanBuilder();
+        preparePredicates(QAnnouncement.announcement.user.id, (user == null ? null : user.getId()));
+        preparePredicates(QAnnouncement.announcement.vehicleModel.manufacturer.id, manufacturerId);
+        preparePredicates(QAnnouncement.announcement.vehicleModel.id, (vehicleModel == null ? null : vehicleModel.getId()));
+        preparePredicateForVehicleType();
+        preparePredicateForVehicleSubtype();
 
-		preparePredicates(QAnnouncement.announcement.user.id, (user == null ? null : user.getId()));
-		preparePredicates(QAnnouncement.announcement.vehicleModel.manufacturer.id, manufacturerId);
-		preparePredicates(QAnnouncement.announcement.vehicleModel.id, (vehicleModel == null ? null : vehicleModel.getId()));
-		preparePredicateForVehicleType();
-		preparePredicateForVehicleSubtype();
+        predicates.and(getSearchFields().prepareQueryAndSearchArguments());
 
-		predicates.and(getSearchFields().prepareQueryAndSearchArguments());
+        return predicates;
+    }
 
-		return predicates;
-	}
+    @Override
+    public BooleanBuilder getPredicate() {
+        return predicates;
+    }
 
-	@Override
-	public BooleanBuilder getPredicate() {
-		return predicates;
-	}
+    private void preparePredicateForVehicleSubtype() {
+        if (vehicleSubtype != null) {
+            predicates.and(QAnnouncement.announcement.vehicleSubtype.eq(vehicleSubtype));
+        }
+    }
 
-	private void preparePredicateForVehicleSubtype() {
-		if (vehicleSubtype != null) {
-			predicates.and(QAnnouncement.announcement.vehicleSubtype.eq(vehicleSubtype));
-		}
-	}
-
-	private void preparePredicateForVehicleType() {
-		if (vehicleType != null) {
+    private void preparePredicateForVehicleType() {
+        if (vehicleType != null) {
             predicates.and(QAnnouncement.announcement.vehicleModel.vehicleType.eq(vehicleType));
         }
     }
@@ -190,7 +188,7 @@ public class Announcement implements EntityForSearchStrategy {
     }
 
     public Long getManufacturerId() {
-        return (vehicleModel != null && vehicleModel.getManufacturer() != null) ?
+        return vehicleModel != null && vehicleModel.getManufacturer() != null ?
                 vehicleModel.getManufacturer().getId() :
                 manufacturerId;
     }

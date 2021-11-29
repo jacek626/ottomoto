@@ -8,6 +8,7 @@ import com.app.manufacturer.entity.Manufacturer;
 import com.app.manufacturer.repository.ManufacturerRepository;
 import com.app.vehiclemodel.entity.VehicleModel;
 import com.app.vehiclemodel.validator.VehicleModelValidator;
+import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -17,15 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@AllArgsConstructor
 public class ManufacturerValidator implements ValidatorCommonMethods<Manufacturer> {
-
     private final ManufacturerRepository manufacturerRepository;
     private final VehicleModelValidator vehicleModelValidator;
-
-    public ManufacturerValidator(ManufacturerRepository manufacturerRepository, VehicleModelValidator vehicleModelValidator) {
-        this.manufacturerRepository = manufacturerRepository;
-        this.vehicleModelValidator = vehicleModelValidator;
-    }
 
     public Result checkBeforeSave(Manufacturer manufacturer) {
         Map<String, ValidationDetails> errors = new HashMap<>();
@@ -42,7 +38,7 @@ public class ManufacturerValidator implements ValidatorCommonMethods<Manufacture
     }
 
     private Map<String, ValidationDetails> checkNameIsSet(String name) {
-        var errors = createErrorMap();
+        var errors = createErrorsContainer();
 
         if (StringUtils.isBlank(name))
             errors.put("name", ValidationDetails.of(ValidatorCode.IS_EMPTY));
@@ -51,7 +47,7 @@ public class ManufacturerValidator implements ValidatorCommonMethods<Manufacture
     }
 
     private Map<String, ValidationDetails> checkManufacturerWithSameNameExists(Manufacturer manufacturer) {
-        var errors = createErrorMap();
+        var errors = createErrorsContainer();
 
         List<Manufacturer> manufacturersWithSameName = manufacturerRepository.findByName(manufacturer.getName());
 

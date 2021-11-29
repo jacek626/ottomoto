@@ -16,7 +16,7 @@ public class ObservedAnnouncementValidator implements ValidatorCommonMethods<Obs
 
 	@Override
 	public Result checkBeforeSave(ObservedAnnouncement observedAnnouncement) {
-		var errors = createErrorMap();
+		var errors = createErrorsContainer();
 
 		errors.putAll(checkUserIsSetAndNotEmpty(observedAnnouncement.getUser()));
 		errors.putAll(checkAnnouncementIsSetAndNotEmpty(observedAnnouncement.getAnnouncement()));
@@ -25,18 +25,20 @@ public class ObservedAnnouncementValidator implements ValidatorCommonMethods<Obs
 	}
 
 	private Map<String, ValidationDetails> checkUserIsSetAndNotEmpty(User user) {
-		var errors = createErrorMap();
+		var errors = createErrorsContainer();
 
-		if (user == null)
+		if (user == null) {
 			errors.put("user", ValidationDetails.of(ValidatorCode.IS_EMPTY));
-		else if (!user.getActive())
+		}
+		else if (!user.getActive()) {
 			errors.put("user", ValidationDetails.of(ValidatorCode.IS_DEACTIVATED));
+		}
 
 		return errors;
 	}
 
 	private Map<String, ValidationDetails> checkAnnouncementIsSetAndNotEmpty(Announcement announcement) {
-		var errors = createErrorMap();
+		var errors = createErrorsContainer();
 
 		if (announcement == null)
 			errors.put("announcement", ValidationDetails.of(ValidatorCode.IS_EMPTY));

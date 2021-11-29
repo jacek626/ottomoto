@@ -36,7 +36,7 @@ public class Result<E> extends ResultBase {
 		this.getValidationResult().putAll(result.getValidationResult());
 	}
 
-	public void appendValidationResult(String key, ValidationDetails validationDetails) {
+	public void addValidationResult(String key, ValidationDetails validationDetails) {
         if (validationResult.containsKey(key) && !validationResult.get(key).getRelatedElements().isEmpty()) {
             validationResult.get(key).getRelatedElements().addAll(validationDetails.getRelatedElements());
         } else {
@@ -49,20 +49,26 @@ public class Result<E> extends ResultBase {
 
     public void convertToMvcError(BindingResult bindingResult) {
         validationResult.entrySet().stream()
-                .map(e -> new FieldError(e.getValue().getObjectName().orElse(bindingResult.getObjectName()), e.getKey(), e.getValue().getRejectedValue(), false, null, new Object[]{e.getValue().getRejectedValue()}, e.getValue().getValidatorCode().toString()))
+                .map(e -> new FieldError(e.getValue().getObjectName()
+                        .orElse(bindingResult.getObjectName()),
+                        e.getKey(), e.getValue().getRejectedValue(), false, null, new Object[]{e.getValue().getRejectedValue()}, e.getValue().getValidatorCode().toString()))
                 .forEach(e -> bindingResult.addError(e));
     }
 
-    public void ifSuccess(Runnable action) {
+    public Result ifSuccess(Runnable action) {
         if (isSuccess()) {
             action.run();
         }
+
+		return this;
     }
 
-    public void ifSuccess(Consumer<Result> action) {
+    public Result ifSuccess(Consumer action) {
         if (isSuccess()) {
             action.accept(this);
 		}
+
+		return this;
 	}
 
 	public void ifError(Consumer<Result> action) {

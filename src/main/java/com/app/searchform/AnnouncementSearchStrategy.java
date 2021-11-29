@@ -13,6 +13,7 @@ import com.app.manufacturer.repository.ManufacturerRepository;
 import com.app.vehiclemodel.entity.VehicleModel;
 import com.app.vehiclemodel.repository.VehicleModelRepository;
 import com.querydsl.core.types.Predicate;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -22,23 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@AllArgsConstructor
 public class AnnouncementSearchStrategy implements SearchStrategy<Announcement, AnnouncementDto> {
-
     private final AnnouncementRepository announcementRepository;
-
     private final VehicleModelRepository vehicleModelRepository;
-
     private final ManufacturerRepository manufacturerRepository;
-
     private final AnnouncementMapper announcementMapper;
-
-
-    public AnnouncementSearchStrategy(AnnouncementRepository announcementRepository, VehicleModelRepository vehicleModelRepository, ManufacturerRepository manufacturerRepository, AnnouncementMapper announcementMapper) {
-        this.announcementRepository = announcementRepository;
-        this.vehicleModelRepository = vehicleModelRepository;
-        this.manufacturerRepository = manufacturerRepository;
-        this.announcementMapper = announcementMapper;
-    }
 
     @Override
     public Page<Announcement> loadData(PageRequest pageRequest, Predicate predicate) {

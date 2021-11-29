@@ -38,11 +38,9 @@ public class AnnouncementService {
 
 	public Result deactivateAnnouncement(Long announcementId) {
 		Result result = announcementValidator.checkBeforeDeactivate(announcementId);
-		
-		if(result.isSuccess()) {
-            announcementRepository.deactivateByAnnouncementId(announcementId);
-        }
-		
+
+		result.ifSuccess(() -> announcementRepository.deactivateByAnnouncementId(announcementId));
+
 		return result;
 	}
 

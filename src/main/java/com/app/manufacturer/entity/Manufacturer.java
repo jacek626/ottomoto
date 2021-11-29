@@ -4,10 +4,7 @@ import com.app.searchform.EntityForSearchStrategy;
 import com.app.vehiclemodel.entity.VehicleModel;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -24,6 +21,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Manufacturer implements EntityForSearchStrategy {
 
     @Id
@@ -49,9 +47,6 @@ public class Manufacturer implements EntityForSearchStrategy {
     public Manufacturer(@NotNull String name) {
         super();
         this.name = name;
-    }
-
-    public Manufacturer() {
     }
 
     public Manufacturer(@NotNull String name, List<VehicleModel> vehicleModel) {

@@ -8,6 +8,7 @@ import com.app.email.validator.EmailValidator;
 import com.app.user.entity.User;
 import com.app.verification.VerificationTokenService;
 import com.app.verification.entity.VerificationToken;
+import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -19,22 +20,13 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Locale;
 import java.util.Properties;
 
-@Service("emailService")
+@Service
+@AllArgsConstructor
 public class EmailService {
 	private final EmailValidator emailValidator;
-
 	private final MessageSource messageSource;
-
 	private final SystemEmail systemEmail;
-
 	private final VerificationTokenService verificationTokenService;
-
-	public EmailService(EmailValidator emailValidator, MessageSource messageSource, SystemEmail systemEmail, VerificationTokenService verificationTokenService) {
-		this.emailValidator = emailValidator;
-		this.messageSource = messageSource;
-		this.systemEmail = systemEmail;
-		this.verificationTokenService = verificationTokenService;
-	}
 
 	public Result sendEmail(EmailMessage emailMessage) {
 		Result result = emailValidator.checkBeforeSend(emailMessage);
@@ -93,6 +85,8 @@ public class EmailService {
 	private Message createMessage(EmailMessage emailMessage, Session session) throws MessagingException {
 		Message message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(systemEmail.getAddress()));
+
+        message.setReplyTo(new Address[]{new InternetAddress(emailMessage.getSenderEmail().get())});
 
         emailMessage.getSenderEmail().ifPresent(email -> {
             try {

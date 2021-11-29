@@ -7,7 +7,7 @@
                             id="vehicleType"
                             onchange="clearVehicleModel(); loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');"
                             th:field="*{vehicleType}">
-                        <option th:each="vehicleTypeElement : ${T(com.app.enums.VehicleType).values()}"
+                        <option th:each="vehicleTypeElement : ${T(com.app.common.enums.VehicleType).values()}"
                                 th:selected="*{vehicleType}" th:text="${vehicleTypeElement.label}"
                                 th:value="${vehicleTypeElement}"></option>
                     </select>
@@ -126,7 +126,7 @@
                 <div class="input-group">
                     <select class="selectpicker" data-live-search="true" data-width="200px" id="carColor" multiple
                             th:field="*{searchFields.carColors}" th:title="#{color}">
-                        <option th:each="element : ${T(com.app.enums.CarColor).values()}"
+                        <option th:each="element : ${T(com.app.common.enums.CarColor).values()}"
                                 th:selected="*{searchFields.carColors}" th:text="${element.label}"
                                 th:value="${element}"></option>
                     </select>
@@ -135,7 +135,7 @@
                     </div>
                     <select class="selectpicker" data-live-search="true" data-width="200px" id="fuelType" multiple
                             th:field="*{searchFields.fuelTypes}" th:title="#{fuelType}">
-                        <option th:each="element : ${T(com.app.enums.FuelType).values()}"
+                        <option th:each="element : ${T(com.app.common.enums.FuelType).values()}"
                                 th:selected="*{searchFields.fuelTypes}" th:text="${element.label}"
                                 th:value="${element}"></option>
                     </select>
