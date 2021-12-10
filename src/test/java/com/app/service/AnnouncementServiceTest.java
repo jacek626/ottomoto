@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -35,10 +36,10 @@ public class AnnouncementServiceTest {
 	@Test
 	public void shouldSaveAnnouncement() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
 
         //when
-        Result result = announcementService.saveAnnouncement(announcement);
+        var result = announcementService.saveAnnouncement(announcement);
 
         //then
         assertThat(result.isSuccess()).isTrue();
@@ -48,13 +49,13 @@ public class AnnouncementServiceTest {
 	@Test
 	public void shouldSaveAnnouncementWithPictures() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
         List<Picture> pictures = List.of(Picture.builder().fileName("test").announcement(announcement).repositoryName("test").build(),
                 Picture.builder().fileName("test2").announcement(announcement).pictureToDelete(true).repositoryName("test2").build());
         announcement.setPictures(pictures);
 
         //when
-        Result result = announcementService.saveAnnouncement(announcement);
+        var result = announcementService.saveAnnouncement(announcement);
 
         //then
         assertThat(result.isSuccess()).isTrue();
@@ -64,12 +65,12 @@ public class AnnouncementServiceTest {
 	@Test
 	public void shouldDeactivateAnnouncement() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
         announcement.setId(-999L);
-        when(announcementRepository.existsByUserIdAndActiveIsTrue(any(Long.class))).thenReturn(true);
+        given(announcementRepository.existsByUserIdAndActiveIsTrue(any(Long.class))).willReturn(true);
 
         //when
-        Result deactivationResult = announcementService.deactivateAnnouncement(announcement.getId());
+        var deactivationResult = announcementService.deactivateAnnouncement(announcement.getId());
 
         //then
         assertThat(deactivationResult.isSuccess()).isTrue();
