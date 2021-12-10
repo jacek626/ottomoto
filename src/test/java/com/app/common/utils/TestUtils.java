@@ -1,8 +1,8 @@
 package com.app.common.utils;
 
 import com.app.announcement.entity.Announcement;
-import com.app.common.enums.VehicleSubtype;
-import com.app.common.enums.VehicleType;
+import com.app.announcement.types.VehicleSubtype;
+import com.app.announcement.types.VehicleType;
 import com.app.manufacturer.entity.Manufacturer;
 import com.app.user.entity.User;
 import com.app.vehiclemodel.entity.VehicleModel;

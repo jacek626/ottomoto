@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class UserSearchStrategyTest {
+public class UserSearchTest {
 
     private final static PaginationDetails paginationDetails = PaginationDetails.builder().page(1).size(10).orderBy("id").sort("ASC").build();
 
@@ -38,7 +38,7 @@ public class UserSearchStrategyTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserSearchStrategy userSearchStrategy;
+    private UserSearch userSearch;
 
     @Test
     public void checkThatSearchStrategyReturnAllRequiredElements() {
@@ -47,7 +47,7 @@ public class UserSearchStrategyTest {
         when(userRepository.findAll(any(Predicate.class), any(PageRequest.class))).thenReturn(new PageImpl<>(Lists.newArrayList(user), paginationDetails.convertToPageRequest(), 10));
 
         //when
-        Map<String, Object> users = userSearchStrategy.prepareSearchForm(user, paginationDetails);
+        Map<String, Object> users = userSearch.prepareSearchForm(user, paginationDetails);
 
         //then
         assertThat(users).containsKey("pageSizes");

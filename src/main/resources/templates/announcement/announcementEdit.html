@@ -22,12 +22,12 @@
               </div>
               <div class="row">
                   <div class="form-group col-6">
-                      <label for="vehicleType">Kategoria pojazdu</label><br/>
+                      <label for="vehicleType">Vehicle type</label><br/>
                       <select class="selectpicker w-100" id="vehicleType"
                               onchange="clearVehicleModel(); loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option')"
                               required
                               th:field="*{vehicleType}">
-                          <option th:each="vehicleTypeElement : ${T(com.app.common.enums.VehicleType).values()}"
+                          <option th:each="vehicleTypeElement : ${T(com.app.announcement.types.VehicleType).values()}"
                                   th:selected="*{vehicleType}" th:text="${vehicleTypeElement.label}"
                                   th:value="${vehicleTypeElement}"></option>
                       </select>
@@ -42,7 +42,7 @@
                   <div class="form-group col-6 text-right">
                       <br/>
                       <input id="active" th:field="*{active}" type="checkbox"/>
-                      <label for="active">Ogloszenie aktywne</label>
+                      <label for="active">Active announcement</label>
                   </div>
               </div>
               <div class="row">
@@ -58,7 +58,7 @@
                       </select>
                   </div>
                   <div class="form-group col-6">
-                      <label for="vehicleModel">Model pojazdu</label><br/>
+                      <label for="vehicleModel">Vehicle model</label><br/>
                       <select class="selectpicker  w-100" data-max-options="1"
                               id="vehicleModel" multiple required th:field="*{vehicleModel.id}">
                           <option th:each="model : ${vehicleModelList}" th:selected="*{vehicleModel.id}"
@@ -68,7 +68,7 @@
               </div>
               <div class="row">
                   <div class="form-group col-4">
-                      <label for="productionYear">Rok produkcji</label><br/>
+                      <label for="productionYear">Production year</label><br/>
                       <select class="form-control" id="productionYear" required th:field="*{productionYear}">
                           <option
                                   th:each="productionYears : ${#numbers.sequence(#dates.year(#dates.createNow()), 1900 )}"
@@ -80,7 +80,7 @@
                             th:text="${error}"></span>
                   </div>
                   <div class="form-group col-4">
-                      <label for="mileage">Przebieg</label><br/>
+                      <label for="mileage">Mileage</label><br/>
                       <div class="input-group">
                           <input class="form-control" id="mileage" maxlength="9" pattern="[0-9]*" required size="9"
                                  th:field="*{mileage}"
@@ -100,8 +100,8 @@
               </div>
               <div class="row">
                   <div class="form-group col-12" style="padding-top: 10px;">
-                      <label>Rodzaj paliwa</label>
-                      <span th:each="fuelTypeElement : ${T(com.app.common.enums.FuelType).values()}">
+                      <label>Fuel type</label>
+                      <span th:each="fuelTypeElement : ${T(com.app.announcement.types.FuelType).values()}">
 								<input th:field="*{fuelType}" th:id="${fuelTypeElement}" th:value="${fuelTypeElement}"
                                        type="radio"/>
 								<label class="btn btn-secondary" th:for="${fuelTypeElement}"
@@ -111,13 +111,13 @@
               </div>
               <div class="row">
                   <div class="form-group col-6 ">
-                      <label for="price">Cena</label>
+                      <label for="price">Price</label>
                       <div class="input-group w-100">
                           <input class="form-control w-75" id="price" maxlength="12" pattern="^\d+(\.\d+)*$" required
                                  size="12" th:field="*{price}"
                                  th:title="#{numberOnly}" type="text"/>
                           <select class="selectpicker w-25" th:field="*{currency}">
-                              <option th:each="currencyItem : ${T(com.app.common.enums.Currency).values()}"
+                              <option th:each="currencyItem : ${T(com.app.announcement.types.Currency).values()}"
                                       th:selected="*{currency}"
                                       th:text="${currencyItem}"
                                       th:value="${currencyItem}">
@@ -130,26 +130,26 @@
                   <div class="col-3">
                       <br/><br/>
                       <input id="netPrice" th:field="*{netPrice}" type="checkbox"/>
-                      <label for="netPrice">Cena netto</label>
+                      <label for="netPrice">net price</label>
                   </div>
                   <div class="col-3">
                       <br/><br/>
                       <input id="priceNegotiate" th:field="*{priceNegotiate}" type="checkbox"/>
-                      <label for="priceNegotiate">Do negocjacji</label>
+                      <label for="priceNegotiate">price negotiation</label>
                   </div>
               </div>
               <div class="row">
                   <div class="form-group col-6">
-                      <label for="vehicleSubtype">typ</label><br/>
+                      <label for="vehicleSubtype">type</label><br/>
                       <select class="selectpicker w-100" id="vehicleSubtype" required th:field="*{vehicleSubtype}">
                           <option th:each="element : ${vehicleSubtypeList}" th:selected="*{vehicleSubtype}"
                                   th:text="${element.label}" th:value="${element}"></option>
                       </select>
                   </div>
                   <div class="form-group col-6">
-                      <label for="carColor">kolor</label><br/>
+                      <label for="carColor">color</label><br/>
                       <select class="form-control" id="carColor" th:field="*{carColor}">
-                          <option th:each="color : ${T(com.app.common.enums.CarColor).values()}"
+                          <option th:each="color : ${T(com.app.announcement.types.CarColor).values()}"
                                   th:selected="*{carColor}"
                                   th:text="${color.label}"
                                   th:value="${color}">
@@ -207,7 +207,7 @@
               </div>
               <div class="row">
                   <div class="form-group col-12">
-                      <label for="title">Tytuł</label><br/>
+                      <label for="title">Title</label><br/>
                       <input class="w-100 form-control" id="title" maxlength="200" required size="9" th:field="*{title}"
                              type="text"/>
                       <span class="validationError" th:each="error: ${#fields.errors('title')}"
@@ -216,7 +216,7 @@
               </div>
               <div class="row">
                   <div class="col-12">
-                      <label for="description">Opis</label><br/>
+                      <label for="description">Description</label><br/>
                       <textarea class="w-100" id="description" maxlength="3000" rows="5" th:field="*{description}">
 							</textarea>
                   </div>

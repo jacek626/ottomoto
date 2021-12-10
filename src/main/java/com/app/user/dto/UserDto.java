@@ -2,7 +2,7 @@ package com.app.user.dto;
 
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.entity.ObservedAnnouncement;
-import com.app.common.enums.Province;
+import com.app.common.types.Province;
 import com.app.user.validator.groups.ValidateAllFieldsWithoutPass;
 import com.app.user.validator.groups.ValidatePassOnly;
 import lombok.Getter;

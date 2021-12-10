@@ -1,10 +1,10 @@
 package com.app.user.validator;
 
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.common.enums.ValidatorCode;
+import com.app.common.types.ValidatorCode;
 import com.app.common.utils.validation.Result;
 import com.app.common.utils.validation.ValidationDetails;
-import com.app.common.validator.ValidatorCommonMethods;
+import com.app.common.validator.Validation;
 import com.app.user.entity.User;
 import com.app.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -16,22 +16,23 @@ import java.util.Map;
 
 @Component
 @AllArgsConstructor
-public class UserValidator implements ValidatorCommonMethods<User> {
+public class UserValidator implements Validation<User> {
     private final UserRepository userRepository;
     private final AnnouncementRepository announcementRepository;
 
     @Override
-    public Result checkBeforeDelete(User user) {
+    public Result<User> validateForDelete(User user) {
         var errors = createErrorsContainer();
 
-        if (announcementRepository.existsByUserIdAndActiveIsTrue(user.getId()))
+        if (announcementRepository.existsByUserIdAndActiveIsTrue(user.getId())) {
             errors.put("announcements", ValidationDetails.of(ValidatorCode.HAVE_REF_OBJECTS));
+        }
 
-        return Result.create(errors);
+        return Result.create(errors).setValidatedObject(user);
     }
 
     @Override
-    public Result checkBeforeSave(User user) {
+    public Result<User> validateForSave(User user) {
         var errors = createErrorsContainer();
 
         errors.putAll(validatePassword(user.getPassword(), user.getPasswordConfirm()));
@@ -39,7 +40,15 @@ public class UserValidator implements ValidatorCommonMethods<User> {
         errors.putAll(checkLoginAlreadyExists(user));
         errors.putAll(checkEmailAlreadyExists(user));
 
-        return Result.create(errors);
+        return Result.create(errors).setValidatedObject(user);
+    }
+
+    public Result<User> checkBeforeChangePass(User user) {
+        var errors = createErrorsContainer();
+
+        errors.putAll(validatePassword(user.getPassword(), user.getPasswordConfirm()));
+
+        return Result.create(errors).setValidatedObject(user);
     }
 
     private Map<String, ValidationDetails> checkLoginAlreadyExists(User user) {
@@ -47,7 +56,7 @@ public class UserValidator implements ValidatorCommonMethods<User> {
 
         if (StringUtils.isNotBlank(user.getLogin()) &&
                 ((user.getId() == null && userRepository.countByLogin(user.getLogin()) > 0) ||
-                        (user.getId() != null && userRepository.countByLoginAndIdNot(user.getLogin(), user.getId()) > 0))) {
+                 (user.getId() != null && userRepository.countByLoginAndIdNot(user.getLogin(), user.getId()) > 0))) {
             errors.put("login", ValidationDetails.of(ValidatorCode.ALREADY_EXISTS, user.getLogin()));
         }
 
@@ -96,13 +105,5 @@ public class UserValidator implements ValidatorCommonMethods<User> {
         }
 
         return errors;
-    }
-
-    public Result checkBeforeChangePass(User user) {
-        var errors = createErrorsContainer();
-
-        errors.putAll(validatePassword(user.getPassword(), user.getPasswordConfirm()));
-
-        return Result.create(errors);
     }
 }

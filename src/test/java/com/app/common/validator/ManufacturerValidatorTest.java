@@ -1,8 +1,8 @@
 package com.app.common.validator;
 
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.common.enums.ValidatorCode;
-import com.app.common.enums.VehicleType;
+import com.app.common.types.ValidatorCode;
+import com.app.announcement.types.VehicleType;
 import com.app.common.utils.validation.Result;
 import com.app.manufacturer.entity.Manufacturer;
 import com.app.manufacturer.repository.ManufacturerRepository;
@@ -61,7 +61,7 @@ public class ManufacturerValidatorTest {
         when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer("Manufacturer")));
 
         //when
-        Result result = manufacturerValidator.checkBeforeSave(manufacturer);
+        var result = manufacturerValidator.validateForSave(manufacturer);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -77,7 +77,7 @@ public class ManufacturerValidatorTest {
         when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer(-1L, "Manufacturer")));
 
         //when
-        Result result = manufacturerValidator.checkBeforeSave(manufacturer);
+        var result = manufacturerValidator.validateForSave(manufacturer);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -92,13 +92,12 @@ public class ManufacturerValidatorTest {
                 VehicleModel.builder().id(-1L).name("Vehicle1").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build(),
                 VehicleModel.builder().id(-1L).name("Vehicle2").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build()));
         when(announcementRepository.countByPredicates(any(Predicate.class))).thenReturn(1L);
-        when(vehicleModelValidator.checkBeforeDelete(any(VehicleModel.class))).thenReturn(Result.error());
+        when(vehicleModelValidator.validateForDelete(any(VehicleModel.class))).thenReturn(Result.error());
 
         //when
-        Result saveResult = manufacturerValidator.checkBeforeDelete(manufacturer);
+        var saveResult = manufacturerValidator.validateForDelete(manufacturer);
 
         //then
         assertThat(saveResult.isError()).isTrue();
     }
-
 }

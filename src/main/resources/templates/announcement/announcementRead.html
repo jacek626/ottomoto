@@ -53,8 +53,7 @@
                                th:title="#{functionAvailableAfterLogin}">
                               <input class="custom-control-input" disabled
                                      id="observeAnnouncementDisabled" type="checkbox">
-                              <label class="custom-control-label" for="observeAnnouncementDisabled">Obserwuj
-                                  ogloszenie</label>
+                              <label class="custom-control-label" for="observeAnnouncementDisabled">Observe</label>
                           </div>
 
                           <input class="custom-control-input" id="observeAnnouncement"
@@ -64,8 +63,7 @@
                                  th:checked="${observedAnnouncement}" th:userLogin="${#authentication.name}"
                                  type="checkbox">
                           <label class="custom-control-label" for="observeAnnouncement"
-                                 sec:authorize="isAuthenticated()">Obserwuj
-                              ogloszenie</label>
+                                 sec:authorize="isAuthenticated()">Observe</label>
                       </div>
                   </div>
                   <div class="row mt-2">
@@ -264,7 +262,7 @@
 			  <div class="col-12 col-sm-6">
 				  <div class="card">
 					  <div class="card-header">
-						  <h6>O sprzedajacym</h6>
+						  <h6>About seller</h6>
 					  </div>
                       <div class="card-body">
                           <div class="row card-subtitle mb-2">
@@ -274,10 +272,10 @@
                               <span th:text="${announcement.user.city}"></span>
                           </div>
                           <div class="row card-subtitle mb-2" th:if="${announcement.user.province != null}"
-                               th:text="#{__${announcement.user.province}__}">
+                               th:text="${announcement.user.province}">
                           </div>
                           <div class="row card-subtitle mb-2">
-                              <span th:text="'posiada konto od ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}"></span>
+                              <span th:text="'account active from ' + ${#dates.format(announcement.user.creationDate, 'dd-MM-yyyy')}"></span>
                           </div>
                           <div class="row mb-2">
                               <button class="btn btn-primary" id="questionToSellerInBottom"

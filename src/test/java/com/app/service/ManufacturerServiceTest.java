@@ -1,6 +1,6 @@
 package com.app.service;
 
-import com.app.common.enums.VehicleType;
+import com.app.announcement.types.VehicleType;
 import com.app.common.utils.validation.Result;
 import com.app.manufacturer.ManufacturerService;
 import com.app.manufacturer.entity.Manufacturer;
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -52,10 +53,10 @@ public class ManufacturerServiceTest {
         //given
         Manufacturer manufacturer = Manufacturer.builder().name("Manufacturer").build();
         manufacturer.setId(-1L);
-        when(manufacturerValidator.checkBeforeSave(any(Manufacturer.class))).thenReturn(Result.success());
+        given(manufacturerValidator.validateForSave(any(Manufacturer.class))).willReturn(Result.success());
 
         //when
-        Result result = manufacturerService.saveManufacturer(manufacturer);
+        var result = manufacturerService.saveManufacturer(manufacturer);
         Set<ConstraintViolation<Manufacturer>> manufacturerEntityValidation = validator.validate(manufacturer);
 
         //then
@@ -69,13 +70,13 @@ public class ManufacturerServiceTest {
         //given
         Manufacturer manufacturer = Manufacturer.builder().name("Manufacturer").build();
         manufacturer.setId(-1L);
-        when(manufacturerValidator.checkBeforeSave(any(Manufacturer.class))).thenReturn(Result.success());
+        given(manufacturerValidator.validateForSave(any(Manufacturer.class))).willReturn(Result.success());
 
         //when
         manufacturerService.saveManufacturer(manufacturer);
 
         //then
-        verify(manufacturerValidator, times(1)).checkBeforeSave(any(Manufacturer.class));
+        verify(manufacturerValidator, times(1)).validateForSave(any(Manufacturer.class));
     }
 
     @Test
@@ -85,10 +86,10 @@ public class ManufacturerServiceTest {
         manufacturer.setVehicleModel(Lists.list(
                 VehicleModel.builder().name("VehicleModel1").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build(),
                 VehicleModel.builder().name("VehicleModel2").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build()));
-        when(manufacturerValidator.checkBeforeSave(any(Manufacturer.class))).thenReturn(Result.success());
+        given(manufacturerValidator.validateForSave(any(Manufacturer.class))).willReturn(Result.success());
 
 		//when
-		Result result = manufacturerService.saveManufacturer(manufacturer);
+		var result = manufacturerService.saveManufacturer(manufacturer);
 
 		//then
         assertThat(result.isSuccess()).isTrue();
@@ -99,10 +100,10 @@ public class ManufacturerServiceTest {
     public void shouldDeleteManufacturer() {
         //given
         Manufacturer manufacturer = Manufacturer.builder().name("Manufacturer").build();
-        when(manufacturerValidator.checkBeforeDelete(any(Manufacturer.class))).thenReturn(Result.success());
+        given(manufacturerValidator.validateForDelete(any(Manufacturer.class))).willReturn(Result.success());
 
         //when
-        Result saveResult = manufacturerService.deleteManufacturer(manufacturer);
+        var saveResult = manufacturerService.deleteManufacturer(manufacturer);
 
         //then
         assertThat(saveResult.isSuccess()).isTrue();
@@ -114,13 +115,13 @@ public class ManufacturerServiceTest {
         //given
         Manufacturer manufacturer = Manufacturer.builder().name("Manufacturer").build();
         manufacturer.setId(-1L);
-        when(manufacturerValidator.checkBeforeDelete(any(Manufacturer.class))).thenReturn(Result.success());
+        given(manufacturerValidator.validateForDelete(any(Manufacturer.class))).willReturn(Result.success());
 
         //when
         manufacturerService.deleteManufacturer(manufacturer);
 
         //then
-        verify(manufacturerValidator, times(1)).checkBeforeDelete(any(Manufacturer.class));
+        verify(manufacturerValidator, times(1)).validateForDelete(any(Manufacturer.class));
     }
 
     @Test
@@ -128,11 +129,11 @@ public class ManufacturerServiceTest {
         //given
         Manufacturer baseManufacturer = Manufacturer.builder().name("Manufacturer").id(-2L).build();
         Manufacturer manufacturerAfterEdit = Manufacturer.builder().name("Edited manufacturer").id(-2L).build();
-        when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(baseManufacturer));
-        when(manufacturerValidator.checkBeforeSave(any(Manufacturer.class))).thenReturn(Result.success());
+        given(manufacturerRepository.findByName(anyString())).willReturn(List.of(baseManufacturer));
+        given(manufacturerValidator.validateForSave(any(Manufacturer.class))).willReturn(Result.success());
 
         //when
-        Result result = manufacturerService.saveManufacturer(manufacturerAfterEdit);
+        var result = manufacturerService.saveManufacturer(manufacturerAfterEdit);
 
         //then
         assertThat(result.isSuccess()).isTrue();

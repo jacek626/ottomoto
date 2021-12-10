@@ -61,13 +61,13 @@ public class PictureService {
     }
 
     private static BufferedImage resizeImage(BufferedImage originalImage, int type) {
-        float height = 200f;
-        float percent = (height / (float) originalImage.getHeight()) * 100f;
-        float width = originalImage.getWidth() * (percent / 100.0f);
+        int height = 200;
+        int percent = (int) ((height / (float) originalImage.getHeight()) * 100f);
+        int width = (int) (originalImage.getWidth() * (percent / 100.0f));
 
         BufferedImage resizedImage = new BufferedImage(width, height, type);
         Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, width.intValue(), height.intValue(), null);
+        g.drawImage(originalImage, 0, 0, width, height, null);
         g.dispose();
 
         return resizedImage;

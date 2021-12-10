@@ -1,11 +1,11 @@
-package com.app.common.enums;
+package com.app.announcement.types;
 
 public enum FuelType {
-	PETROL("Benzyna"),
+	PETROL("Petrol"),
 	DIESEL("Diesel"),
-	PETROL_WITH_LPG("Benzyna+LPG"),
-	HYBRID("Hybryda"),
-	ELECTRIC("Elektryczny");
+	PETROL_WITH_LPG("Petrol with LPG"),
+	HYBRID("Hybrid"),
+	ELECTRIC("Electric");
 	
 	private final String label;
 	

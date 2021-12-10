@@ -17,15 +17,15 @@ import java.util.Map;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @Component
-public class ObservedAnnouncementSearchStrategyDecorator implements SearchStrategy<Announcement, AnnouncementDto> {
+public class ObservedAnnouncementSearch implements SearchStrategy<Announcement, AnnouncementDto> {
 
-    private final AnnouncementSearchStrategy announcementSearchFormStrategy;
+    private final AnnouncementSearch announcementSearchFormStrategy;
 
     private final UserRepository userRepository;
 
     private final AnnouncementRepository announcementRepository;
 
-    public ObservedAnnouncementSearchStrategyDecorator(AnnouncementSearchStrategy announcementSearchFormStrategy, UserRepository userRepository, AnnouncementRepository announcementRepository) {
+    public ObservedAnnouncementSearch(AnnouncementSearch announcementSearchFormStrategy, UserRepository userRepository, AnnouncementRepository announcementRepository) {
         this.announcementSearchFormStrategy = announcementSearchFormStrategy;
         this.userRepository = userRepository;
         this.announcementRepository = announcementRepository;

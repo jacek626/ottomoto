@@ -1,6 +1,6 @@
 package com.app.common.utils.validation;
 
-import com.app.common.enums.ValidatorCode;
+import com.app.common.types.ValidatorCode;
 import lombok.Data;
 
 import java.util.ArrayList;

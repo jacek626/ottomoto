@@ -1,17 +1,17 @@
 package com.app.common.utils.validation;
 
-import lombok.Getter;
 import lombok.Setter;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Result<E> extends ResultBase {
-    @Getter
+
     @Setter
-    private E value;
+    private E validatedObject;
 
     private Result(OperationResult operationStatus) {
         this.setStatus(operationStatus);
@@ -55,17 +55,25 @@ public class Result<E> extends ResultBase {
                 .forEach(e -> bindingResult.addError(e));
     }
 
-    public Result ifSuccess(Runnable action) {
-        if (isSuccess()) {
-            action.run();
-        }
+	public Result ifSuccess(Runnable action) {
+		if (isSuccess()) {
+			action.run();
+		}
 
 		return this;
-    }
+	}
 
-    public Result ifSuccess(Consumer action) {
-        if (isSuccess()) {
-            action.accept(this);
+	public Result ifSuccess(Consumer action) {
+		if (isSuccess()) {
+			action.accept(this);
+		}
+
+		return this;
+	}
+
+	public Result ifSuccess(Function<Result, Result> action) {
+		if (isSuccess()) {
+			return action.apply(this);
 		}
 
 		return this;
@@ -81,5 +89,10 @@ public class Result<E> extends ResultBase {
 		if (isError()) {
 			action.run();
 		}
+	}
+
+	public Result<E> setValidatedObject(E validatedObject) {
+		this.validatedObject = validatedObject;
+		return this;
 	}
 }

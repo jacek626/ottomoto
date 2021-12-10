@@ -7,35 +7,35 @@
 		<div class="collapse navbar-collapse mx-auto justify-content-end" id="navbarContainer">
 			<div class="navbar-nav nav">
 				<a class="nav-link nav-item" sec:authorize="!isAuthenticated()" th:href="@{/user/login}">
-					Zaloguj
+					Log in
 				</a>
 				<a class="nav-link nav-item" sec:authorize="!isAuthenticated()" th:href="@{/user/register}">
-					Zarejestruj
+					Sign up
 				</a>
 				<div data-toggle="tooltip" sec:authorize="!isAuthenticated()" th:title="#{functionAvailableAfterLogin}">
 					<a class="nav-link nav-item disabled" th:href="@{/announcement/create}">
-						Dodaj nowe ogloszenie
+						Add advertisement
 					</a>
 				</div>
 				<a class="nav-link nav-item" sec:authorize="isAuthenticated()" th:href="@{/announcement/create}">
-					Dodaj nowe ogloszenie
+					Add advertisement
 				</a>
 				<div data-toggle="tooltip" sec:authorize="!isAuthenticated()" th:title="#{functionAvailableAfterLogin}">
                     <a class="nav-link nav-item disabled" th:href="@{/user/account}">
-                        Moje konto
+                        My account
                     </a>
                 </div>
                 <a class="nav-link nav-item" sec:authorize="isAuthenticated()" th:href="@{/user/account}">
-                    Moje konto
+					My account
                 </a>
                 <a class="nav-link nav-item" sec:authorize="hasRole('USER')" th:href="@{/announcement/create}">
-                    Dodaj ogłoszenie
+					Add advertisement
                 </a>
                 <a class="nav-link nav-item" sec:authorize="hasRole('ADMIN')" th:href="@{/system/home}">
-                    Panel administracyjny
+					Administration panel
                 </a>
                 <a class="nav-link nav-item" sec:authorize="isAuthenticated()" th:href="@{/logout}">
-                    Wyloguj
+                    Log out
                 </a>
             </div>
 		</div>
@@ -51,8 +51,6 @@
 				</div>
 			</div>
 		</div>
-
-
 	</div>
 </nav>
 

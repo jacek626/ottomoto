@@ -3,10 +3,10 @@ package com.app.searchform;
 import com.app.announcement.dto.AnnouncementDto;
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.common.enums.BooleanValuesForDropDown;
-import com.app.common.enums.PaginationPageSize;
-import com.app.common.enums.SearchEngineDropDownValues;
-import com.app.common.enums.VehicleSubtype;
+import com.app.common.types.BooleanValuesForDropDown;
+import com.app.searchform.enums.PaginationPageSize;
+import com.app.searchform.enums.SearchEngineDropDownValues;
+import com.app.announcement.types.VehicleSubtype;
 import com.app.common.utils.mapper.AnnouncementMapper;
 import com.app.manufacturer.repository.ManufacturerProjection;
 import com.app.manufacturer.repository.ManufacturerRepository;
@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Component
 @AllArgsConstructor
-public class AnnouncementSearchStrategy implements SearchStrategy<Announcement, AnnouncementDto> {
+public class AnnouncementSearch implements SearchStrategy<Announcement, AnnouncementDto> {
     private final AnnouncementRepository announcementRepository;
     private final VehicleModelRepository vehicleModelRepository;
     private final ManufacturerRepository manufacturerRepository;
@@ -37,9 +37,7 @@ public class AnnouncementSearchStrategy implements SearchStrategy<Announcement, 
 
     @Override
     public Map<String, Object> prepareDataForHtmlElements(Announcement announcement) {
-        Map<String, Object> model = new HashMap<>();
-
-        model.putAll(prepareModelAttributesFromEnums());
+        Map<String, Object> model = new HashMap<>(prepareModelAttributesFromEnums());
 
         List<ManufacturerProjection> manufacturerList = manufacturerRepository.findByVehicleType(announcement.getVehicleType());
         model.put("manufacturerList", manufacturerList);

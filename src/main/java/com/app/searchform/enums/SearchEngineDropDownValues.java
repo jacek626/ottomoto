@@ -1,4 +1,4 @@
-package com.app.common.enums;
+package com.app.searchform.enums;
 
 import java.util.Arrays;
 import java.util.List;

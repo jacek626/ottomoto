@@ -1,16 +1,16 @@
-package com.app.common.enums;
+package com.app.announcement.types;
 
 public enum CarColor {
-	RED("Czerwony"),
-	BROWN("Brazowy"),
-	WHITE("Bialy"),
-	BLACK("Czarny"),
-	GREY("Szary"),
-	GREEN("Zielony"),
-	YELLOW("Zolty"),
-	SILVER("Srebrny"),
-	GOLD("Zloty"),
-	BLUE("Niebieski");
+	RED("Red"),
+	BROWN("Brown"),
+	WHITE("White"),
+	BLACK("Black"),
+	GREY("Grey"),
+	GREEN("Green"),
+	YELLOW("Yellow"),
+	SILVER("Silver"),
+	GOLD("Gold"),
+	BLUE("Blue");
 	
 	private String label;
 	

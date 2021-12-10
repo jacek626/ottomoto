@@ -1,7 +1,7 @@
 package com.app.controller;
 
-import com.app.common.enums.VehicleSubtype;
-import com.app.common.enums.VehicleType;
+import com.app.announcement.types.VehicleSubtype;
+import com.app.announcement.types.VehicleType;
 import com.app.common.utils.mapper.ManufacturerMapper;
 import com.app.common.utils.search.PaginationDetails;
 import com.app.common.utils.validation.Result;
@@ -86,7 +86,7 @@ public class ManufacturerController {
         if (bindingResult.hasErrors())
             model.setViewName("manufacturer/manufacturerEdit");
         else {
-            Result<Manufacturer> result = manufacturerService.saveManufacturer(manufacturerMapper.convertToEntity(manufacturerDto));
+            var result = manufacturerService.saveManufacturer(manufacturerMapper.convertToEntity(manufacturerDto));
             result.ifError(() -> {
                 result.convertToMvcError(bindingResult);
                 model.setViewName("manufacturer/manufacturerEdit");

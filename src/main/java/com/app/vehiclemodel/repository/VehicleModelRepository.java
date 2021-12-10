@@ -1,6 +1,6 @@
 package com.app.vehiclemodel.repository;
 
-import com.app.common.enums.VehicleType;
+import com.app.announcement.types.VehicleType;
 import com.app.vehiclemodel.entity.VehicleModel;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

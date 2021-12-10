@@ -1,10 +1,10 @@
 package com.app.vehiclemodel.validator;
 
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.common.enums.ValidatorCode;
+import com.app.common.types.ValidatorCode;
 import com.app.common.utils.validation.Result;
 import com.app.common.utils.validation.ValidationDetails;
-import com.app.common.validator.ValidatorCommonMethods;
+import com.app.common.validator.Validation;
 import com.app.vehiclemodel.entity.VehicleModel;
 import com.app.vehiclemodel.repository.VehicleModelRepository;
 import lombok.AllArgsConstructor;
@@ -15,19 +15,28 @@ import java.util.Map;
 
 @Component
 @AllArgsConstructor
-public class VehicleModelValidator implements ValidatorCommonMethods<VehicleModel> {
+public class VehicleModelValidator implements Validation<VehicleModel> {
 
     private final VehicleModelRepository vehicleModelRepository;
     private final AnnouncementRepository announcementRepository;
 
     @Override
-    public Result checkBeforeSave(VehicleModel vehicleModel) {
+    public Result<VehicleModel> validateForSave(VehicleModel vehicleModel) {
         var errors = createErrorsContainer();
 
         errors.putAll(checkNameIsNotEmpty(vehicleModel.getName()));
         errors.putAll(checkNameIsUnique(vehicleModel));
 
-        return Result.create(errors);
+        return Result.create(errors).setValidatedObject(vehicleModel);
+    }
+
+    @Override
+    public Result<VehicleModel> validateForDelete(VehicleModel vehicleModel) {
+        var errors = createErrorsContainer();
+
+        errors.putAll(checkIsAnnouncementsWithThisVehicleModelExists(vehicleModel));
+
+        return Result.create(errors).setValidatedObject(vehicleModel);
     }
 
     private Map<String, ValidationDetails> checkNameIsUnique(VehicleModel vehicleModel) {
@@ -50,15 +59,6 @@ public class VehicleModelValidator implements ValidatorCommonMethods<VehicleMode
         }
 
         return errors;
-    }
-
-    @Override
-    public Result checkBeforeDelete(VehicleModel vehicleModel) {
-        var errors = createErrorsContainer();
-
-        errors.putAll(checkIsAnnouncementsWithThisVehicleModelExists(vehicleModel));
-
-        return Result.create(errors);
     }
 
     private Map<String, ValidationDetails> checkIsAnnouncementsWithThisVehicleModelExists(VehicleModel vehicleModel) {

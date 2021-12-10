@@ -3,9 +3,9 @@ package com.app.searchform;
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.entity.QAnnouncement;
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.common.enums.BooleanValuesForDropDown;
-import com.app.common.enums.VehicleSubtype;
-import com.app.common.enums.VehicleType;
+import com.app.common.types.BooleanValuesForDropDown;
+import com.app.announcement.types.VehicleSubtype;
+import com.app.announcement.types.VehicleType;
 import com.app.common.utils.mapper.AnnouncementMapper;
 import com.app.common.utils.search.PaginationDetails;
 import com.app.manufacturer.entity.Manufacturer;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class AnnouncementSearchStrategyTest {
+public class AnnouncementSearchTest {
 
     private final static PaginationDetails paginationDetails = PaginationDetails.builder().page(1).size(10).orderBy("id").sort("ASC").build();
 
@@ -52,7 +52,7 @@ public class AnnouncementSearchStrategyTest {
     private ManufacturerRepository manufacturerRepository;
 
     @InjectMocks
-    private AnnouncementSearchStrategy announcementSearchStrategy;
+    private AnnouncementSearch announcementSearch;
 
 
     @Test
@@ -60,10 +60,10 @@ public class AnnouncementSearchStrategyTest {
         //given
         var announcement = Announcement.builder().build();
 
-        when(announcementSearchStrategy.loadData(any(PageRequest.class), any(Predicate.class))).thenReturn(new PageImpl<>(Lists.newArrayList(announcement), paginationDetails.convertToPageRequest(), 10));
+        when(announcementSearch.loadData(any(PageRequest.class), any(Predicate.class))).thenReturn(new PageImpl<>(Lists.newArrayList(announcement), paginationDetails.convertToPageRequest(), 10));
 
         //when
-        Map<String, Object> announcements = announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails);
+        Map<String, Object> announcements = announcementSearch.prepareSearchForm(announcement, paginationDetails);
 
         //then
         assertThat(announcements).containsKey("mileages");
@@ -86,8 +86,8 @@ public class AnnouncementSearchStrategyTest {
     @Test
     public void shouldPreparePredicatesInAnnouncement() {
         //given
-        Manufacturer manufacturer = Manufacturer.builder().id(-1L).build();
-        VehicleModel vehicleModel = VehicleModel.builder().id(-3L).name("vehicleModel").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build();
+        var manufacturer = Manufacturer.builder().id(-1L).build();
+        var vehicleModel = VehicleModel.builder().id(-3L).name("vehicleModel").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build();
 
         Announcement announcement = Announcement.builder().
                 vehicleSubtype(VehicleSubtype.COMPACT).
@@ -145,9 +145,4 @@ public class AnnouncementSearchStrategyTest {
         assertThat(predicate.toString()).contains(QAnnouncement.announcement.netPrice.eq(false).toString());
         assertThat(predicate.toString()).contains(QAnnouncement.announcement.priceNegotiate.eq(false).toString());
     }
-
-
-    // spr urla
-    //  Map<String, Object> prepareDataForHtmlElements(E entity);
-
 }

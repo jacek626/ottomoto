@@ -1,10 +1,8 @@
 package com.app.service;
 
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.common.utils.email.SystemEmail;
 import com.app.common.utils.validation.Result;
 import com.app.security.entity.Role;
-import com.app.security.repository.RoleRepository;
 import com.app.user.entity.User;
 import com.app.user.repository.UserRepository;
 import com.app.user.service.UserService;
@@ -67,17 +65,17 @@ public class UserServiceTest {
     @BeforeEach
     public void mockEmailAndLoginValidation() {
         given(userValidator.checkBeforeChangePass(any())).willReturn(Result.success());
-        when(userRepository.countByLogin(any(String.class))).thenReturn(0);
+        given(userRepository.countByLogin(any(String.class))).willReturn(0);
 	}
 
 	@Test
 	public void shouldSaveUser() {
         //given
-        User user = prepareUser();
-        given(userValidator.checkBeforeSave(any(User.class))).willReturn(Result.success());
+        var user = prepareUser();
+        given(userValidator.validateForSave(any(User.class))).willReturn(Result.success());
 
         //when
-        Result result = userService.saveUser(user);
+        var result = userService.saveUser(user);
         Set<ConstraintViolation<User>> userEntityValidation = entityValidator.validate(user);
 
         //then
@@ -108,9 +106,9 @@ public class UserServiceTest {
 	@Test
 	public void shouldDeleteUser() {
         //given
-        User user = prepareUser();
+        var user = prepareUser();
         given(announcementRepository.existsByUserIdAndActiveIsTrue(any(Long.class))).willReturn(false);
-        given(userValidator.checkBeforeDelete(any(User.class))).willReturn(Result.success());
+        given(userValidator.validateForDelete(any(User.class))).willReturn(Result.success());
 
         //when
         Result result = userService.deleteUser(user);
@@ -123,11 +121,11 @@ public class UserServiceTest {
     @Test
     public void shouldChangeUserPass() {
         //given
-        User user = User.builder().id(1L).password("test123").passwordConfirm("test123").build();
+        var user = User.builder().id(1L).password("test123").passwordConfirm("test123").build();
         given(userValidator.checkBeforeChangePass(any(User.class))).willReturn(Result.success());
 
         //when
-        Result result = userService.changePass(user);
+        var result = userService.changePass(user);
 
         //then
         assertThat(result.isSuccess()).isTrue();

@@ -7,11 +7,11 @@
                             id="vehicleType"
                             onchange="clearVehicleModel(); loadManufacturer(this.value, 'option'); loadVehicleSubtypes(this.value, 'option');"
                             th:field="*{vehicleType}">
-                        <option th:each="vehicleTypeElement : ${T(com.app.common.enums.VehicleType).values()}"
+                        <option th:each="vehicleTypeElement : ${T(com.app.announcement.types.VehicleType).values()}"
                                 th:selected="*{vehicleType}" th:text="${vehicleTypeElement.label}"
                                 th:value="${vehicleTypeElement}"></option>
                     </select>
-                    <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="110px"
+                    <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="120px"
                             data-show-subtext="true" id="priceFrom"
                             onchange="validateRange($(this), $('#priceTo'), $(this).val());"
                             th:field="*{searchFields.priceFrom}" th:title="#{priceFrom}">
@@ -41,7 +41,7 @@
                     <select class="selectpicker" data-live-search="true" data-width="200px"
                             id="manufacturer"
                             onchange="loadVehicleModel(this.value, $('#vehicleType').val(), 'option');"
-                            th:field="*{manufacturerId}" title="Marka">
+                            th:field="*{manufacturerId}" title="manufacturer">
                         <option th:each="manufacturer : ${manufacturerList}" th:selected="*{manufacturerId}"
                                 th:text="${manufacturer.name}" th:value="${manufacturer.id}">
                         </option>
@@ -51,7 +51,7 @@
                     </div>
 
                     <select class="selectpicker" data-actions-box="true" data-live-search="true" data-width="200px"
-                            id="vehicleModel" th:field="*{vehicleModel.id}" title="Model">
+                            id="vehicleModel" th:field="*{vehicleModel.id}" title="model">
                         <option th:each="element : ${vehicleModelList}" th:if="*{vehicleModel == null}"
                                 th:text="${element.name}" th:value="${element.id}"></option>
                         <option th:each="element : ${vehicleModelList}" th:if="*{vehicleModel != null}"
@@ -126,7 +126,7 @@
                 <div class="input-group">
                     <select class="selectpicker" data-live-search="true" data-width="200px" id="carColor" multiple
                             th:field="*{searchFields.carColors}" th:title="#{color}">
-                        <option th:each="element : ${T(com.app.common.enums.CarColor).values()}"
+                        <option th:each="element : ${T(com.app.announcement.types.CarColor).values()}"
                                 th:selected="*{searchFields.carColors}" th:text="${element.label}"
                                 th:value="${element}"></option>
                     </select>
@@ -135,7 +135,7 @@
                     </div>
                     <select class="selectpicker" data-live-search="true" data-width="200px" id="fuelType" multiple
                             th:field="*{searchFields.fuelTypes}" th:title="#{fuelType}">
-                        <option th:each="element : ${T(com.app.common.enums.FuelType).values()}"
+                        <option th:each="element : ${T(com.app.announcement.types.FuelType).values()}"
                                 th:selected="*{searchFields.fuelTypes}" th:text="${element.label}"
                                 th:value="${element}"></option>
                     </select>
@@ -246,7 +246,7 @@
 
         <div class="row my-1">
             <div class="col text-right">
-                <div class="btn btn-secondary" data-target="#searchCollapse" data-toggle="collapse">schowaj</div>
+                <div class="btn btn-secondary" data-target="#searchCollapse" data-toggle="collapse">hide</div>
                 <button class="btn btn-primary" th:text="#{search}" type="submit"/>
             </div>
         </div>

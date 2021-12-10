@@ -10,12 +10,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ManufacturerSearchStrategy implements SearchStrategy<Manufacturer, ManufacturerDto> {
+public class ManufacturerSearch implements SearchStrategy<Manufacturer, ManufacturerDto> {
 
     private final ManufacturerRepository manufacturerRepository;
     private final ModelMapper modelMapper;
 
-    public ManufacturerSearchStrategy(ManufacturerRepository manufacturerRepository, ModelMapper modelMapper) {
+    public ManufacturerSearch(ManufacturerRepository manufacturerRepository, ModelMapper modelMapper) {
         this.manufacturerRepository = manufacturerRepository;
         this.modelMapper = modelMapper;
     }

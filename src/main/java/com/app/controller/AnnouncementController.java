@@ -6,8 +6,8 @@ import com.app.announcement.entity.Announcement;
 import com.app.announcement.repository.AnnouncementRepository;
 import com.app.announcement.service.AnnouncementBreadCrumbService;
 import com.app.announcement.service.AnnouncementService;
-import com.app.common.enums.VehicleType;
-import com.app.common.utils.email.MessageToSellerData;
+import com.app.announcement.types.VehicleType;
+import com.app.email.MessageToSellerData;
 import com.app.common.utils.mapper.AnnouncementMapper;
 import com.app.common.utils.search.PaginationDetails;
 import com.app.common.utils.validation.Result;
@@ -34,6 +34,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @Controller
@@ -48,7 +49,7 @@ public class AnnouncementController {
 
 	private final EmailService emailService;
 
-	private final SearchStrategy<Announcement, AnnouncementDto> announcementSearchStrategy;
+	private final SearchStrategy<Announcement, AnnouncementDto> announcementSearch;
 
 	private final ObservedAnnouncementRepository observedAnnouncementRepository;
 
@@ -56,12 +57,12 @@ public class AnnouncementController {
 
 	private final AnnouncementBreadCrumbService breadCrumb;
 
-	public AnnouncementController(AnnouncementService announcementService, AnnouncementRepository announcementRepository, UserRepository userRepository, EmailService emailService, SearchStrategy<Announcement, AnnouncementDto> announcementSearchStrategy, ObservedAnnouncementRepository observedAnnouncementRepository, AnnouncementMapper announcementMapper, AnnouncementBreadCrumbService breadCrumb) {
+	public AnnouncementController(AnnouncementService announcementService, AnnouncementRepository announcementRepository, UserRepository userRepository, EmailService emailService, SearchStrategy<Announcement, AnnouncementDto> announcementSearch, ObservedAnnouncementRepository observedAnnouncementRepository, AnnouncementMapper announcementMapper, AnnouncementBreadCrumbService breadCrumb) {
 		this.announcementService = announcementService;
 		this.announcementRepository = announcementRepository;
 		this.userRepository = userRepository;
 		this.emailService = emailService;
-		this.announcementSearchStrategy = announcementSearchStrategy;
+		this.announcementSearch = announcementSearch;
 		this.observedAnnouncementRepository = observedAnnouncementRepository;
 		this.announcementMapper = announcementMapper;
 		this.breadCrumb = breadCrumb;
@@ -71,7 +72,7 @@ public class AnnouncementController {
 	public String create(Model model, Authentication authentication) {
 		Announcement announcement = Announcement.builder().active(true).vehicleType(VehicleType.CAR).build();
 		announcement.setUser(userRepository.findByLogin(authentication.getName()));
-		model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
+		model.addAllAttributes(announcementSearch.prepareDataForHtmlElements(announcement));
 		model.addAttribute("announcement", announcementMapper.convertToDto(announcement));
 
 		return "announcement/announcementEdit";
@@ -102,7 +103,7 @@ public class AnnouncementController {
 		announcementRepository.findById(id).ifPresentOrElse(announcement -> {
 					if (authentication.getAuthorities().stream().anyMatch(e -> e.getAuthority().equals("ROLE_ADMIN")) || announcement.getUser().getLogin().equals(authentication.getName())) {
 						var announcementDto = announcementMapper.convertToDto(announcement);
-						model.addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
+						model.addAllAttributes(announcementSearch.prepareDataForHtmlElements(announcement));
 						model.addAttribute("announcement", announcementMapper.convertToDto(announcement));
 						model.addAttribute("breadCrumb", breadCrumb.create(announcementDto));
 					} else
@@ -123,17 +124,15 @@ public class AnnouncementController {
 		announcement.setCreationDate(new Date());
 
 		if (bindingResult.hasErrors()) {
-			model.getModelMap().addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
+			model.getModelMap().addAllAttributes(announcementSearch.prepareDataForHtmlElements(announcement));
 			return model;
 		} else {
 			Result<Announcement> result = announcementService.saveAnnouncement(announcement);
 			result.ifError(e -> {
 				e.convertToMvcError(bindingResult);
-				model.getModelMap().addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
+				model.getModelMap().addAllAttributes(announcementSearch.prepareDataForHtmlElements(announcement));
 			});
-			result.ifSuccess(() -> {
-				model.setViewName("redirect:/announcement/edit/" + announcement.getId());
-			});
+			result.ifSuccess(() -> model.setViewName("redirect:/announcement/edit/" + announcement.getId()));
 		}
 
 		return model;
@@ -166,7 +165,7 @@ public class AnnouncementController {
 
 	private void prepareFormWithError(Announcement announcement, ModelAndView model) {
 		model.setViewName("announcement/announcementEdit");
-		model.getModelMap().addAllAttributes(announcementSearchStrategy.prepareDataForHtmlElements(announcement));
+		model.getModelMap().addAllAttributes(announcementSearch.prepareDataForHtmlElements(announcement));
 		model.getModelMap().addAttribute("message", "incorrectData");
 	}
 
@@ -180,7 +179,7 @@ public class AnnouncementController {
 		model.addAttribute("requestMapping", "list");
 
 		var paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
-		model.addAllAttributes(announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails));
+		model.addAllAttributes(announcementSearch.prepareSearchForm(announcement, paginationDetails));
 
 		return "announcement/announcementList";
 	}
@@ -195,7 +194,7 @@ public class AnnouncementController {
 		model.addAttribute("requestMapping", "my");
 		announcement.setUser(userRepository.findByLogin(getContext().getAuthentication().getName()));
 		PaginationDetails paginationDetails = PaginationDetails.builder().page(page).size(size).orderBy(orderBy).sort(sort).build();
-		model.addAllAttributes(announcementSearchStrategy.prepareSearchForm(announcement, paginationDetails));
+		model.addAllAttributes(announcementSearch.prepareSearchForm(announcement, paginationDetails));
 
 		return "announcement/announcementList";
 	}
@@ -213,7 +212,7 @@ public class AnnouncementController {
 				.messageText(json.getString("messageText"))
 				.build();
 
-		Result sentResult = emailService.sentMessageToSeller(messageToSellerData);
+		var sentResult = emailService.sentMessageToSeller(messageToSellerData);
 
 		return sentResult.isSuccess();
 	}
@@ -226,7 +225,7 @@ public class AnnouncementController {
 		String reportText = json.getString("reportText");
 		Long announcementId = json.getLong("announcementId");
 
-		return StringUtils.isNotBlank(reportText) && announcementId != null;
+		return isNotBlank(reportText) && announcementId != null;
 	}
 
 }

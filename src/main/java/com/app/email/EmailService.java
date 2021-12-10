@@ -1,14 +1,12 @@
 package com.app.email;
 
-import com.app.common.utils.email.EmailMessage;
-import com.app.common.utils.email.MessageToSellerData;
-import com.app.common.utils.email.SystemEmail;
 import com.app.common.utils.validation.Result;
 import com.app.email.validator.EmailValidator;
 import com.app.user.entity.User;
 import com.app.verification.VerificationTokenService;
 import com.app.verification.entity.VerificationToken;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +15,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -29,18 +28,16 @@ public class EmailService {
 	private final VerificationTokenService verificationTokenService;
 
 	public Result sendEmail(EmailMessage emailMessage) {
-		Result result = emailValidator.checkBeforeSend(emailMessage);
-
-		if (result.isSuccess())
-			try {
+        return  emailValidator.checkBeforeSend(emailMessage).ifSuccess(result -> {
+            try {
                 Session session = setUpMailSession(setUpSystemMailProperties(), systemEmail.getAddress(), systemEmail.getPassword());
                 Transport.send(createMessage(emailMessage, session));
+                return result;
             } catch (MessagingException e) {
                 e.printStackTrace();
                 return Result.error();
             }
-
-        return result;
+        });
     }
 
     public Result sentMessageToSeller(MessageToSellerData messageToSellerData) {
@@ -54,7 +51,7 @@ public class EmailService {
                 subject(emailSubject).
                 content(emailText.toString()).
                 senderEmail(messageToSellerData.getCustomerEmail()).
-                receiverEmailsAddress(messageToSellerData.getSellerEmail()).
+                emailReceivers(List.of(messageToSellerData.getSellerEmail())).
                 build();
 
         return sendEmail(emailToSend);
@@ -78,7 +75,7 @@ public class EmailService {
                 subject(emailSubject).
                 content(emailText.toString()).
                 senderEmail(systemEmail.getAddress()).
-                receiverEmailsAddress(user.getEmail()).
+                emailReceivers(List.of(user.getEmail())).
                 build();
     }
 
@@ -86,17 +83,17 @@ public class EmailService {
 		Message message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(systemEmail.getAddress()));
 
-        message.setReplyTo(new Address[]{new InternetAddress(emailMessage.getSenderEmail().get())});
+        message.setReplyTo(new Address[]{new InternetAddress(emailMessage.getSenderEmail())});
 
-        emailMessage.getSenderEmail().ifPresent(email -> {
+        if(StringUtils.isNotBlank(emailMessage.getSenderEmail())) {
             try {
-                message.setReplyTo(new Address[]{new InternetAddress(emailMessage.getSenderEmail().get())});
+                message.setReplyTo(new Address[]{new InternetAddress(emailMessage.getSenderEmail())});
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
-        });
+        }
 
-		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(String.join(",", emailMessage.getReceiverEmailsAddresses())));
+		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(String.join(",", emailMessage.getEmailReceivers())));
 		message.setSubject(emailMessage.getSubject());
 		MimeBodyPart mimeBodyPart = new MimeBodyPart();
 		mimeBodyPart.setContent(emailMessage.getContent(), "text/plain; charset=UTF-8");

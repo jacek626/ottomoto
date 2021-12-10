@@ -1,6 +1,6 @@
 package com.app.manufacturer.repository;
 
-import com.app.common.enums.VehicleType;
+import com.app.announcement.types.VehicleType;
 import com.app.manufacturer.entity.Manufacturer;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;

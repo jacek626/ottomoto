@@ -1,6 +1,6 @@
 package com.app.announcement.dto;
 
-import com.app.common.enums.*;
+import com.app.announcement.types.*;
 import com.app.picture.dto.PictureDto;
 import com.app.user.dto.UserDto;
 import com.app.vehiclemodel.entity.VehicleModel;

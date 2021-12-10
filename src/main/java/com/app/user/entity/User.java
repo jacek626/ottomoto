@@ -2,7 +2,7 @@ package com.app.user.entity;
 
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.entity.ObservedAnnouncement;
-import com.app.common.enums.Province;
+import com.app.common.types.Province;
 import com.app.searchform.EntityForSearchStrategy;
 import com.app.security.entity.Role;
 import com.app.user.validator.groups.ValidateAllFieldsWithoutPass;

@@ -1,6 +1,5 @@
 package com.app;
 
-import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
@@ -40,16 +39,16 @@ public class OttomotoApplication {
 @Configuration
 @AutoConfigureAfter(DispatcherServletAutoConfiguration.class)
 class StaticResourceConfiguration implements WebMvcConfigurer {
-    private String s3Location;
+	private String s3Location;
 
-    @Value("${amazon.aws.endpointUrl}")
+	@Value("${amazon.aws.endpointUrl}")
     private String endpointUrl;
     @Value("${amazon.aws.bucketName}")
     private String bucketName;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        s3Location = endpointUrl + "/" + bucketName + "/";
+		String s3Location = endpointUrl + "/" + bucketName + "/";
         registry.addResourceHandler("/images/**").addResourceLocations(s3Location);
     }
 }
@@ -59,21 +58,14 @@ class AWSConfiguration {
 	@Value("${cloud.aws.region.static}")
 	private String region;
 
-	private String accessKeyId = "AKIAU63H6NLW5S3KACLU";
-
-	private String accessKeySecret = "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";
-
-
-/*	@Bean
+	@Bean
 	public BasicAWSCredentials basicAWSCredentials() {
-		return new BasicAWSCredentials("AKIAU63H6NLW5S3KACLU", "2N+y6SnEf6zjxdg1nPhVr0CSIJhBVR/2+u02xVKv");
-		//return new BasicAWSCredentials(System.getenv("S3_KEY"), System.getenv("S3_SECRET"));
-	}*/
-
+		return new BasicAWSCredentials(System.getenv("S3_KEY"), System.getenv("S3_SECRET"));
+	}
 
 	@Bean
 	public AmazonS3 getAmazonS3Client() {
-		final BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(accessKeyId, accessKeySecret);
+		final BasicAWSCredentials basicAWSCredentials = new BasicAWSCredentials(System.getenv("S3_KEY"), System.getenv("S3_SECRET"));
 		// Get Amazon S3 client and return the S3 client object
 		return AmazonS3ClientBuilder
 				.standard()
@@ -81,16 +73,6 @@ class AWSConfiguration {
 				.withRegion(region)
 				.build();
 	}
-
-/*
-	@Bean
-	public AmazonS3 amazonS3Client(AWSCredentials awsCredentials) {
-		AmazonS3ClientBuilder builder = AmazonS3ClientBuilder.standard();
-		builder.withCredentials(new AWSStaticCredentialsProvider(awsCredentials));
-		builder.setRegion(region);
-		AmazonS3 amazonS3 = builder.build();
-		return amazonS3;
-	}*/
 }
 
 @Configuration

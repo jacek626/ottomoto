@@ -3,9 +3,8 @@ package com.app.common.validator;
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.repository.AnnouncementRepository;
 import com.app.announcement.validator.AnnouncementValidator;
-import com.app.common.enums.ValidatorCode;
+import com.app.common.types.ValidatorCode;
 import com.app.common.utils.TestUtils;
-import com.app.common.utils.validation.Result;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,12 +41,12 @@ public class AnnouncementValidatorTest {
     }
 
     @Test
-    public void shouldValidateAnnouncementCorrectly() {
+    public void shouldValidateAnnouncement() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
 
         //when
-        Result result = announcementValidator.checkBeforeSave(announcement);
+        var result = announcementValidator.validateForSave(announcement);
         Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate(announcement);
 
         //then
@@ -56,13 +55,13 @@ public class AnnouncementValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecMillageIsNull() {
+    public void shouldReturnValidationErrorWhenMillageIsNull() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
         announcement.setMileage(null);
 
         //when
-        Result result = announcementValidator.checkBeforeSave(announcement);
+        var result = announcementValidator.validateForSave(announcement);
         Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate(announcement);
 
         //then
@@ -71,13 +70,13 @@ public class AnnouncementValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecEnginePowerIsNull() {
+    public void shouldReturnValidationErrorWhenEnginePowerIsNull() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
         announcement.setEnginePower(null);
 
         //when
-        Result result = announcementValidator.checkBeforeSave(announcement);
+        var result = announcementValidator.validateForSave(announcement);
         Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate(announcement);
 
         //then
@@ -86,13 +85,13 @@ public class AnnouncementValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecPriceIsNull() {
+    public void shouldReturnValidationErrorWhenPriceIsNull() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
         announcement.setPrice(null);
 
         //when
-        Result result = announcementValidator.checkBeforeSave(announcement);
+        var result = announcementValidator.validateForSave(announcement);
         Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate(announcement);
 
         //then
@@ -101,13 +100,13 @@ public class AnnouncementValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecPriceIsBelowZero() {
+    public void shouldReturnValidationErrorWhenPriceIsBelowZero() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
         announcement.setPrice(BigDecimal.valueOf(-1));
 
         //when
-        Result result = announcementValidator.checkBeforeSave(announcement);
+        var result = announcementValidator.validateForSave(announcement);
         Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate(announcement);
 
         //then
@@ -116,13 +115,13 @@ public class AnnouncementValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecUserIsNull() {
+    public void shouldReturnValidationErrorWhenUserIsNull() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
         announcement.setUser(null);
 
         //when
-        Result result = announcementValidator.checkBeforeSave(announcement);
+        var result = announcementValidator.validateForSave(announcement);
         Set<ConstraintViolation<Announcement>> announcementEntityValidation = validator.validate(announcement);
 
         //then
@@ -132,13 +131,13 @@ public class AnnouncementValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecausePriceIsBelowZero() {
+    public void shouldReturnValidationErrorWhenPriceIsBelowZero_2() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
         announcement.setPrice(BigDecimal.valueOf(-100));
 
         //when
-        Result result = announcementValidator.checkBeforeSave(announcement);
+        var result = announcementValidator.validateForSave(announcement);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -146,13 +145,13 @@ public class AnnouncementValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecauseUserIsDeactivated() {
+    public void shouldReturnValidationErrorWhenUserIsDeactivated() {
         //given
-        Announcement announcement = TestUtils.prepareAnnouncement();
+        var announcement = TestUtils.prepareAnnouncement();
         announcement.getUser().setActive(false);
 
         //when
-        Result result = announcementValidator.checkBeforeSave(announcement);
+        var result = announcementValidator.validateForSave(announcement);
 
         //then
         assertThat(result.isError()).isTrue();

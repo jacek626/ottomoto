@@ -1,9 +1,9 @@
-package com.app.common.enums;
+package com.app.announcement.types;
 
 public enum VehicleType {
-	CAR("Osobowy"),
-	MOTORCYCLE("Motocykl"),
-	TRUCK( "Dostawczy/ciężarowy");
+	CAR("Car"),
+	MOTORCYCLE("Motorcycle"),
+	TRUCK( "Truck");
 	
 	private final String label;
 	

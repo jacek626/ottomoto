@@ -1,7 +1,7 @@
 package com.app.common.validator;
 
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.common.enums.ValidatorCode;
+import com.app.common.types.ValidatorCode;
 import com.app.common.utils.validation.Result;
 import com.app.security.entity.Role;
 import com.app.user.entity.User;
@@ -32,12 +32,12 @@ public class UserValidatorTest {
     private UserValidator userValidator;
 
     @Test
-    public void shouldReturnErrorBecPasswordsAreNotSame() {
+    public void shouldReturnValidationErrorWhenPasswordsAreNotSame() {
         //given
         User user = User.builder().id(1L).password("test123").passwordConfirm("test12345").build();
 
         //when
-        Result result = userValidator.checkBeforeChangePass(user);
+        var result = userValidator.checkBeforeChangePass(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -46,14 +46,14 @@ public class UserValidatorTest {
 
 
     @Test
-    public void shouldReturnErrorDuringDeleteUserBecauseUserNotExistsOrIsDeactivated() {
+    public void shouldReturnValidationErrorDuringDeleteUserBecauseUserNotExistsOrIsDeactivated() {
         //given
         User user = prepareUser();
         user.setId(-1L);
         when(announcementRepository.existsByUserIdAndActiveIsTrue(any(Long.class))).thenReturn(true);
 
         //when
-        Result result = userValidator.checkBeforeDelete(user);
+        var result = userValidator.validateForDelete(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -62,13 +62,13 @@ public class UserValidatorTest {
 
 
     @Test
-    public void shouldReturnErrorBecausePasswordConfirmIsEmpty() {
+    public void shouldReturnValidationErrorWhenPasswordConfirmIsEmpty() {
         //given
         User user = prepareUser();
         user.setPasswordConfirm("");
 
         //when
-        Result result = userValidator.checkBeforeSave(user);
+        var result = userValidator.validateForSave(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -77,13 +77,13 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecauseEmailIsNotValidCase1() {
+    public void shouldReturnValidationErrorWhenEmailIsNotValidCase1() {
         //given
         User user = prepareUser();
         user.setEmail("test@");
 
         //when
-        Result result = userValidator.checkBeforeSave(user);
+        var result = userValidator.validateForSave(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -92,13 +92,13 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecauseEmailIsNotValidCase2() {
+    public void shouldReturnValidationErrorWhenEmailIsNotValid_2() {
         //given
         User user = prepareUser();
         user.setEmail("test@test");
 
         //when
-        Result result = userValidator.checkBeforeSave(user);
+        var result = userValidator.validateForSave(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -107,13 +107,13 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecauseEmailIsNotValidCase3() {
+    public void shouldReturnValidationErrorWhenEmailIsNotValid_3() {
         //given
         User user = prepareUser();
         user.setEmail("testtest.pl");
 
         //when
-        Result result = userValidator.checkBeforeSave(user);
+        var result = userValidator.validateForSave(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -122,13 +122,13 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecauseEmailIsNotValidCase4() {
+    public void shouldReturnValidationErrorWhenEmailIsNotValid_4() {
         //given
         User user = prepareUser();
         user.setEmail("@test.pl");
 
         //when
-        Result result = userValidator.checkBeforeSave(user);
+        var result = userValidator.validateForSave(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -138,14 +138,14 @@ public class UserValidatorTest {
 
 
     @Test
-    public void shouldReturnErrorDuringUserEditionBecUserWithSameLoginExists() {
+    public void shouldReturnValidationErrorDuringUserEditionWhenUserWithSameLoginExists() {
         //given
         User user = prepareUser();
         user.setId(-1L);
         when(userRepository.countByLoginAndIdNot(any(String.class), any(Long.class))).thenReturn(1);
 
         //when
-        Result result = userValidator.checkBeforeSave(user);
+        var result = userValidator.validateForSave(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -154,14 +154,14 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorDuringUserEditionBecUserWithSameEmailExists() {
+    public void shouldReturnValidationErrorDuringUserEditionWhenUserWithSameEmailExists() {
         //given
         User user = prepareUser();
         user.setId(-1L);
         when(userRepository.countByEmailAndIdNot(any(String.class), any(Long.class))).thenReturn(1);
 
         //when
-        Result result = userValidator.checkBeforeSave(user);
+        var result = userValidator.validateForSave(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -170,13 +170,13 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorDuringUserCreationBecUserWithSameEmailExists() {
+    public void shouldReturnValidationErrorDuringUserCreationWhenUserWithSameEmailExists() {
         //given
         User user = prepareUser();
         when(userRepository.countByEmail(any(String.class))).thenReturn(1);
 
         //when
-        Result result = userValidator.checkBeforeSave(user);
+        var result = userValidator.validateForSave(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -186,13 +186,13 @@ public class UserValidatorTest {
 
 
     @Test
-    public void shouldReturnErrorDuringUserCreationBecUserWithSameLoginExists() {
+    public void shouldReturnValidationErrorDuringUserCreationWhenUserWithSameLoginExists() {
         //given
         User user = prepareUser();
         when(userRepository.countByLogin(any(String.class))).thenReturn(1);
 
         //when
-        Result result = userValidator.checkBeforeSave(user);
+        var result = userValidator.validateForSave(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -201,13 +201,13 @@ public class UserValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecausePasswordAndPasswordConfirmAreNotSame() {
+    public void shouldReturnValidationErrorWhenPasswordAndPasswordConfirmAreNotSame() {
         //given
         User user = prepareUser();
         user.setPasswordConfirm("OTHERPASS");
 
         //when
-        Result result = userValidator.checkBeforeSave(user);
+        var result = userValidator.validateForSave(user);
 
         //then
         assertThat(result.isError()).isTrue();
@@ -219,5 +219,4 @@ public class UserValidatorTest {
     private User prepareUser() {
         return User.builder().login("User").password("password").passwordConfirm("password").email("usert@mail.com").active(true).role(new Role()).build();
     }
-
 }

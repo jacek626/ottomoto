@@ -1,4 +1,4 @@
-package com.app.common.enums;
+package com.app.common.types;
 
 public enum Province {
 	LUBELSKIE,

@@ -1,9 +1,9 @@
 package com.app.common.utils.search;
 
 import com.app.announcement.entity.QAnnouncement;
-import com.app.common.enums.BooleanValuesForDropDown;
-import com.app.common.enums.CarColor;
-import com.app.common.enums.FuelType;
+import com.app.common.types.BooleanValuesForDropDown;
+import com.app.announcement.types.CarColor;
+import com.app.announcement.types.FuelType;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanPath;

@@ -1,4 +1,4 @@
-package com.app.common.enums;
+package com.app.announcement.types;
 
 import java.util.List;
 import java.util.Map;
@@ -6,20 +6,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum VehicleSubtype {
-	CITY_CAR("Auta miejskie", VehicleType.CAR),
-	SMALL("Auta małe", VehicleType.CAR),
-	COMPACT("Kompakt", VehicleType.CAR), 
-	SEDAN("Sedan", VehicleType.CAR), 
-	COMBI("Kombi", VehicleType.CAR), 
+	CITY_CAR("City car", VehicleType.CAR),
+	SMALL("Small", VehicleType.CAR),
+	COMPACT("Compact", VehicleType.CAR),
+	SEDAN("Sedan", VehicleType.CAR),
+	COMBI("Combi", VehicleType.CAR),
 	MINIVAN("Minivan", VehicleType.CAR), 
 	SUV("SUV", VehicleType.CAR), 
-	CABRIO("Kabriolet", VehicleType.CAR),
+	CABRIO("Cabrio", VehicleType.CAR),
 	COUPE("Coupe", VehicleType.CAR),
-	VANS("Auto dostawcze", VehicleType.TRUCK),
-	TRUCK("Auto ciężarowe", VehicleType.TRUCK),
-	SPORT_BIKE("Sporotwy", VehicleType.MOTORCYCLE),
-	TOURIST_MOTORCYCLE("Turystyczny", VehicleType.MOTORCYCLE),
-	SCOOTER("Skuter", VehicleType.MOTORCYCLE);
+	VANS("Van", VehicleType.TRUCK),
+	TRUCK("Truck", VehicleType.TRUCK),
+	SPORT_BIKE("Sport", VehicleType.MOTORCYCLE),
+	TOURIST_MOTORCYCLE("Tourist", VehicleType.MOTORCYCLE),
+	SCOOTER("Scooter", VehicleType.MOTORCYCLE);
 	
 	private String label;
 	private VehicleType vehicleType;

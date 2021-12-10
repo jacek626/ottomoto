@@ -1,6 +1,6 @@
 package com.app.repository;
 
-import com.app.common.enums.VehicleType;
+import com.app.announcement.types.VehicleType;
 import com.app.manufacturer.entity.Manufacturer;
 import com.app.manufacturer.repository.ManufacturerRepository;
 import com.app.vehiclemodel.entity.VehicleModel;

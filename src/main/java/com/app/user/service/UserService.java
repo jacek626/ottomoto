@@ -25,8 +25,8 @@ public class UserService {
 
     public Result deleteUser(User user) {
         return userValidator
-                .checkBeforeDelete(user)
-                .ifSuccess(e -> userRepository.delete(user));
+                .validateForDelete(user)
+                .ifSuccess(() -> userRepository.delete(user));
     }
 
 	public Result saveNewUser(User user) {
@@ -35,8 +35,8 @@ public class UserService {
 		return saveUser(user);
 	}
 
-	public Result saveUser(User user) {
-        return userValidator.checkBeforeSave(user).ifSuccess(result -> {
+	public Result<User> saveUser(User user) {
+        return userValidator.validateForSave(user).ifSuccess(result -> {
             if (isUserExists(user)) {
                 usePassFromDatabase(user);
             }
@@ -53,14 +53,12 @@ public class UserService {
 		Result result = Result.success();
 
 		verificationTokenRepository.findByToken(token).ifPresentOrElse(
-				e -> {
-					e.getUser().setActive(true);
-                    userRepository.save(e.getUser());
-                    verificationTokenRepository.delete(e);
+				verification -> {
+					verification.getUser().setActive(true);
+                    userRepository.save(verification.getUser());
+                    verificationTokenRepository.delete(verification);
                 },
-                () -> {
-                    result.changeStatusToError();
-                });
+                result::changeStatusToError);
 
         return result;
     }

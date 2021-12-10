@@ -1,6 +1,6 @@
 package com.app.announcement.entity;
 
-import com.app.common.enums.*;
+import com.app.announcement.types.*;
 import com.app.common.utils.search.AnnouncementSearchFields;
 import com.app.picture.entity.Picture;
 import com.app.searchform.EntityForSearchStrategy;

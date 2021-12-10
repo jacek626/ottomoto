@@ -14,17 +14,13 @@ public class VehicleModelService {
     private final VehicleModelRepository vehicleModelRepository;
     private final VehicleModelValidator vehicleModelValidator;
 
-    public Result save(VehicleModel vehicleModel) {
-        Result<VehicleModel> result = vehicleModelValidator.checkBeforeSave(vehicleModel);
-        result.ifSuccess(() -> vehicleModelRepository.save(vehicleModel));
-
-        return result;
+    public Result<VehicleModel> save(VehicleModel vehicleModel) {
+        return vehicleModelValidator.validateForSave(vehicleModel).
+                ifSuccess(() -> vehicleModelRepository.save(vehicleModel));
     }
 
-    public Result delete(VehicleModel vehicleModel) {
-        Result result = vehicleModelValidator.checkBeforeDelete(vehicleModel);
-        result.ifSuccess(() -> vehicleModelRepository.delete(vehicleModel));
-
-        return result;
+    public Result<VehicleModel> delete(VehicleModel vehicleModel) {
+        return vehicleModelValidator.validateForDelete(vehicleModel)
+                .ifSuccess(() -> vehicleModelRepository.delete(vehicleModel));
     }
 }

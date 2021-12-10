@@ -2,7 +2,7 @@ package com.app.announcement;
 
 import com.app.announcement.entity.ObservedAnnouncement;
 import com.app.announcement.validator.ObservedAnnouncementValidator;
-import com.app.common.enums.ValidatorCode;
+import com.app.common.types.ValidatorCode;
 import com.app.common.utils.validation.Result;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,15 +15,13 @@ public class ObservedAnnouncementService {
     private final ObservedAnnouncementRepository observedAnnouncementRepository;
     private final ObservedAnnouncementValidator observedAnnouncementValidator;
 
-    public Result saveObservedAnnouncement(ObservedAnnouncement observedAnnouncement) {
-        Result result = observedAnnouncementValidator.checkBeforeSave(observedAnnouncement);
-        result.ifSuccess(() -> observedAnnouncementRepository.save(observedAnnouncement));
-
-        return result;
+    public Result<ObservedAnnouncement> saveObservedAnnouncement(ObservedAnnouncement observedAnnouncement) {
+        return observedAnnouncementValidator.validateForSave(observedAnnouncement)
+                .ifSuccess(() -> observedAnnouncementRepository.save(observedAnnouncement));
     }
 
-    public Result deleteObservedAnnouncement(ObservedAnnouncement observedAnnouncement) {
-        final Result result = Result.success();
+    public Result<ObservedAnnouncement> deleteObservedAnnouncement(ObservedAnnouncement observedAnnouncement) {
+        var result = Result.success();
 
         observedAnnouncementRepository.findById(observedAnnouncement.getId())
                 .ifPresentOrElse(observedAnnouncementRepository::delete,

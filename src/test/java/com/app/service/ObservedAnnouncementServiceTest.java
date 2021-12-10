@@ -5,7 +5,7 @@ import com.app.announcement.ObservedAnnouncementService;
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.entity.ObservedAnnouncement;
 import com.app.announcement.validator.ObservedAnnouncementValidator;
-import com.app.common.enums.VehicleSubtype;
+import com.app.announcement.types.VehicleSubtype;
 import com.app.common.utils.validation.Result;
 import com.app.user.entity.User;
 import com.app.vehiclemodel.entity.VehicleModel;
@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -38,13 +39,13 @@ public class ObservedAnnouncementServiceTest {
     @Test
     public void shouldSaveObservedAnnouncement() {
         //given
-        Announcement announcement = Announcement.builder().user(new User()).vehicleModel(new VehicleModel()).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
-        User user = User.builder().login("userLoginTest6").password("testPass").passwordConfirm("testPass").email("mailTest6@test.com").active(true).build();
-        ObservedAnnouncement observedAnnouncement = new ObservedAnnouncement(announcement, user);
-        when(observedAnnouncementValidator.checkBeforeSave(any(ObservedAnnouncement.class))).thenReturn(Result.success());
+        var announcement = Announcement.builder().user(new User()).vehicleModel(new VehicleModel()).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
+        var user = User.builder().login("userLoginTest6").password("testPass").passwordConfirm("testPass").email("mailTest6@test.com").active(true).build();
+        var observedAnnouncement = new ObservedAnnouncement(announcement, user);
+        when(observedAnnouncementValidator.validateForSave(any(ObservedAnnouncement.class))).thenReturn(Result.success());
 
         //when
-        Result result = observedAnnouncementService.saveObservedAnnouncement(observedAnnouncement);
+        var result = observedAnnouncementService.saveObservedAnnouncement(observedAnnouncement);
 
         //then
         assertThat(result.isSuccess()).isTrue();
@@ -54,14 +55,14 @@ public class ObservedAnnouncementServiceTest {
     @Test
     public void shouldDeleteObservedAnnouncement() {
         //given
-        Announcement announcement = Announcement.builder().user(new User()).vehicleModel(new VehicleModel()).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
-        User user = User.builder().login("userLoginTest6").password("testPass").passwordConfirm("testPass").email("mailTest6@test.com").active(true).build();
-        ObservedAnnouncement observedAnnouncement = new ObservedAnnouncement(announcement, user);
+        var announcement = Announcement.builder().user(new User()).vehicleModel(new VehicleModel()).vehicleSubtype(VehicleSubtype.COMPACT).productionYear(2_000).price(BigDecimal.valueOf(180_000)).build();
+        var user = User.builder().login("userLoginTest6").password("testPass").passwordConfirm("testPass").email("mailTest6@test.com").active(true).build();
+        var observedAnnouncement = new ObservedAnnouncement(announcement, user);
         observedAnnouncement.setId(-2L);
-        when(observedAnnouncementRepository.findById(any(Long.class))).thenReturn(Optional.of(new ObservedAnnouncement(announcement, user)));
+        given(observedAnnouncementRepository.findById(any(Long.class))).willReturn(Optional.of(new ObservedAnnouncement(announcement, user)));
 
         //when
-        Result result = observedAnnouncementService.deleteObservedAnnouncement(observedAnnouncement);
+        var result = observedAnnouncementService.deleteObservedAnnouncement(observedAnnouncement);
 
         //then
         assertThat(result.isSuccess()).isTrue();

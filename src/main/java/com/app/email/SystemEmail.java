@@ -1,4 +1,4 @@
-package com.app.common.utils.email;
+package com.app.email;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;

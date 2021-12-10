@@ -33,7 +33,7 @@
                             <div class="col-12 col-md-6 text-right order-md-2">
                                 <h4 class="primary-red mb-0">[[${#numbers.formatDecimal({announcement.price}, 0,
                                     'COMMA', 2, 'POINT')}]] <span th:text="#{zl}"></span></h4>
-                                <small class="text-secondary ">Do negocjacji</small>
+                                <small class="text-secondary ">To negotiate</small>
                             </div>
                             <div class="col-12 col-md-6  order-md-1">
                                 <h5 th:text="${announcement.vehicleModel.manufacturer.name + ' '+ announcement.vehicleModel.name}"></h5>
@@ -42,11 +42,9 @@
                             </div>
                         </a>
                     </div>
-                    <!-- <div class="col-1" sec:authorize="hasRole('ADMIN')">-->
-
                     <div th:if="${#authorization.expression('hasRole(''ADMIN'')') || #authentication.name == announcement.user.login}">
                         <a th:href="@{'/announcement/edit/' + ${announcement.id}}"
-                           th:text="edycja">
+                           th:text="edit">
                         </a>
                     </div>
                 </div>

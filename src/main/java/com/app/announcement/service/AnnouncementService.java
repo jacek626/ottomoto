@@ -20,28 +20,21 @@ public class AnnouncementService {
 		this.announcementValidator = announcementValidator;
 	}
 
-	public Result saveAnnouncement(Announcement announcement) {
-		Result result = announcementValidator.checkBeforeSave(announcement);
-
+	public Result<Announcement> saveAnnouncement(Announcement announcement) {
+		var result = announcementValidator.validateForSave(announcement);
 		setAnnouncementToPictures(announcement);
-
-		if (result.isSuccess()) {
-			announcementRepository.save(announcement);
-		}
+		result.ifSuccess(() -> announcementRepository.save(announcement));
 
 		return result;
+	}
+
+	public Result<Announcement> deactivateAnnouncement(Long announcementId) {
+		return announcementValidator.checkBeforeDeactivate(announcementId)
+				.ifSuccess(() -> announcementRepository.deactivateByAnnouncementId(announcementId));
 	}
 
 	private void setAnnouncementToPictures(Announcement announcement) {
 		announcement.getPictures().stream().filter(e -> e.getAnnouncement() == null).forEach(picture -> picture.setAnnouncement(announcement));
-	}
-
-	public Result deactivateAnnouncement(Long announcementId) {
-		Result result = announcementValidator.checkBeforeDeactivate(announcementId);
-
-		result.ifSuccess(() -> announcementRepository.deactivateByAnnouncementId(announcementId));
-
-		return result;
 	}
 
 }

@@ -2,10 +2,10 @@ package com.app.announcement.validator;
 
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.common.enums.ValidatorCode;
+import com.app.common.types.ValidatorCode;
 import com.app.common.utils.validation.Result;
 import com.app.common.utils.validation.ValidationDetails;
-import com.app.common.validator.ValidatorCommonMethods;
+import com.app.common.validator.Validation;
 import com.app.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -21,24 +21,28 @@ import static com.app.common.utils.validation.ValidationDetails.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Component
-public class AnnouncementValidator implements ValidatorCommonMethods<Announcement> {
+public class AnnouncementValidator implements Validation<Announcement> {
 
     private AnnouncementRepository announcementRepository;
 
     @Override
-    public Result checkBeforeSave(Announcement announcement) {
+    public Result<Announcement> validateForSave(Announcement announcement) {
         var errors = createErrorsContainer();
 
         errors.putAll(checkUserIsSet(announcement.getUser()));
         errors.putAll(checkUserIsActive(announcement.getUser()));
         errors.putAll(checkPriceIsGraterThanZero(announcement.getPrice()));
 
-        return Result.create(errors);
+        return Result.create(errors).setValidatedObject(announcement);
     }
 
     @Override
-    public Result checkBeforeDelete(Announcement objectToValidate) {
+    public Result<Announcement> validateForDelete(Announcement objectToValidate) {
         throw new NotImplementedException("Not implemented");
+    }
+
+    public Result<Announcement> checkBeforeDeactivate(Long announcementId) {
+        return Result.create(validateAnnouncementBeforeDeactivate(announcementId));
     }
 
     private Map<String, ValidationDetails> checkUserIsSet(User user) {
@@ -68,10 +72,6 @@ public class AnnouncementValidator implements ValidatorCommonMethods<Announcemen
         }
 
         return errors;
-    }
-
-    public Result checkBeforeDeactivate(Long announcementId) {
-        return Result.create(validateAnnouncementBeforeDeactivate(announcementId));
     }
 
     private Map<String, ValidationDetails> validateAnnouncementBeforeDeactivate(Long announcementId) {

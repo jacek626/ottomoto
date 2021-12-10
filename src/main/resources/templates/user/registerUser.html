@@ -122,7 +122,7 @@
             <select id="province"
                     th:class="${#fields.hasErrors('province')} ? 'form-control is-invalid' : 'form-control'"
                     th:field="*{province}" th:placeholder="#{province}">
-                <option th:each="province : ${T(com.app.common.enums.Province).values()}"
+                <option th:each="province : ${T(com.app.common.types.Province).values()}"
                         th:selected="*{province}"
                         th:text="#{__${province}__}"
                         th:value="${province}">

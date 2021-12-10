@@ -1,9 +1,9 @@
 package com.app.manufacturer.validator;
 
-import com.app.common.enums.ValidatorCode;
+import com.app.common.types.ValidatorCode;
 import com.app.common.utils.validation.Result;
 import com.app.common.utils.validation.ValidationDetails;
-import com.app.common.validator.ValidatorCommonMethods;
+import com.app.common.validator.Validation;
 import com.app.manufacturer.entity.Manufacturer;
 import com.app.manufacturer.repository.ManufacturerRepository;
 import com.app.vehiclemodel.entity.VehicleModel;
@@ -19,22 +19,31 @@ import java.util.Map;
 
 @Component
 @AllArgsConstructor
-public class ManufacturerValidator implements ValidatorCommonMethods<Manufacturer> {
+public class ManufacturerValidator implements Validation<Manufacturer> {
     private final ManufacturerRepository manufacturerRepository;
     private final VehicleModelValidator vehicleModelValidator;
 
-    public Result checkBeforeSave(Manufacturer manufacturer) {
+    public Result<Manufacturer> validateForSave(Manufacturer manufacturer) {
         Map<String, ValidationDetails> errors = new HashMap<>();
 
         errors.putAll(checkNameIsSet(manufacturer.getName()));
         errors.putAll(checkManufacturerWithSameNameExists(manufacturer));
 
-        Result result = Result.create(errors);
+        var result = Result.create(errors);
 
         for (VehicleModel vehicleModel : manufacturer.getVehicleModelAsOptional().orElse(Collections.emptyList()))
-            result.appendResult(vehicleModelValidator.checkBeforeSave(vehicleModel));
+            result.appendResult(vehicleModelValidator.validateForSave(vehicleModel));
 
-        return Result.create(errors);
+        return Result.create(errors).setValidatedObject(manufacturer);
+    }
+
+    public Result<Manufacturer> validateForDelete(Manufacturer manufacturer) {
+        var result = Result.success();
+
+        for (VehicleModel vehicleModel : manufacturer.getVehicleModelAsOptional().orElse(Collections.emptyList()))
+            result.appendResult(vehicleModelValidator.validateForDelete(vehicleModel));
+
+        return result.setValidatedObject(manufacturer);
     }
 
     private Map<String, ValidationDetails> checkNameIsSet(String name) {
@@ -59,14 +68,4 @@ public class ManufacturerValidator implements ValidatorCommonMethods<Manufacture
 
         return errors;
 	}
-
-	public Result checkBeforeDelete(Manufacturer manufacturer) {
-        Result result = Result.success();
-
-        for (VehicleModel vehicleModel : manufacturer.getVehicleModelAsOptional().orElse(Collections.emptyList()))
-            result.appendResult(vehicleModelValidator.checkBeforeDelete(vehicleModel));
-
-        return result;
-    }
-
 }

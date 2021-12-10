@@ -5,9 +5,9 @@ import com.app.common.utils.validation.ValidationDetails;
 
 import java.util.HashMap;
 
-public interface ValidatorCommonMethods<T> {
-    Result checkBeforeSave(T objectToValidate);
-    Result checkBeforeDelete(T objectToValidate);
+public interface Validation<T> {
+    Result<T> validateForSave(T objectToValidate);
+    Result<T> validateForDelete(T objectToValidate);
 
     default HashMap<String, ValidationDetails> createErrorsContainer() {
         return new HashMap<>();

@@ -81,22 +81,14 @@
 						<td th:text="${user.phoneNumber}" />
 						<td>
 							<a th:href="@{'/user/edit/' + ${user.id}}"
-							th:text="edycja">
+							th:text="edit">
 							</a>
 						</td>
 					</tr>
 				</tbody>
 			</table>
-			
 			<div th:replace="fragments/pagination :: pagination('/user/list')"></div>
 	</div>
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-		//	changePageAndSize();
-		});
-		
-	</script>
 	<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>

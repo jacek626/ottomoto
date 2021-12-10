@@ -10,12 +10,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserSearchStrategy implements SearchStrategy<User, UserDto> {
+public class UserSearch implements SearchStrategy<User, UserDto> {
 
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public UserSearchStrategy(UserRepository userRepository, ModelMapper modelMapper) {
+    public UserSearch(UserRepository userRepository, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }

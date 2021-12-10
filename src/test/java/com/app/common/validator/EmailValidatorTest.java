@@ -1,7 +1,6 @@
 package com.app.common.validator;
 
-import com.app.common.utils.email.EmailMessage;
-import com.app.common.utils.validation.Result;
+import com.app.email.EmailMessage;
 import com.app.email.validator.EmailValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,9 +8,9 @@ import org.mockito.InjectMocks;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
-
+import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -21,12 +20,12 @@ public class EmailValidatorTest {
     private EmailValidator emailValidator;
 
     @Test
-    public void shouldVerifyEmailMessageAsCorrect() {
+    public void shouldVerifyEmailMessage() {
         //given
-        EmailMessage emailMessage = EmailMessage.builder().content("content").subject("subject").receiverEmailsAddress("test@email.com").senderEmail("sender@email.com").build();
+        var emailMessage = EmailMessage.builder().content("content").subject("subject").emailReceivers(of("test@email.com")).senderEmail("sender@email.com").build();
 
         //when
-        Result result = emailValidator.checkBeforeSend(emailMessage);
+        var result = emailValidator.checkBeforeSend(emailMessage);
 
         //then
         assertThat(result.getValidationResult().size()).isEqualTo(0);
@@ -34,12 +33,12 @@ public class EmailValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecSenderEmailIsNotValid() {
+    public void shouldReturnValidationErrorWhenSenderEmailIsNotValid() {
         //given
-        EmailMessage emailMessage = EmailMessage.builder().content("content").subject("subject").receiverEmailsAddress("test@email.com").senderEmail("senderemailtest.com").build();
+        var emailMessage = EmailMessage.builder().content("content").subject("subject").emailReceivers(of("test@email.com")).senderEmail("senderemailtest.com").build();
 
         //when
-        Result result = emailValidator.checkBeforeSend(emailMessage);
+        var result = emailValidator.checkBeforeSend(emailMessage);
 
         //then
         assertThat(result.getValidationResult().size()).isEqualTo(1);
@@ -48,12 +47,12 @@ public class EmailValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecSenderEmailIsNotValid_2() {
+    public void shouldReturnValidationErrorWhenSenderEmailIsNotValid_2() {
         //given
-        EmailMessage emailMessage = EmailMessage.builder().content("content").subject("subject").receiverEmailsAddress("test@email.com").senderEmail("sender@.com").build();
+        var emailMessage = EmailMessage.builder().content("content").subject("subject").emailReceivers(of("test@email.com")).senderEmail("sender@.com").build();
 
         //when
-        Result result = emailValidator.checkBeforeSend(emailMessage);
+        var result = emailValidator.checkBeforeSend(emailMessage);
 
         //then
         assertThat(result.getValidationResult().size()).isEqualTo(1);
@@ -62,12 +61,12 @@ public class EmailValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecSenderEmailIsNotValid_3() {
+    public void shouldReturnValidationErrorWhenSenderEmailIsNotValid_3() {
         //given
-        EmailMessage emailMessage = EmailMessage.builder().content("content").subject("subject").receiverEmailsAddress("test@email.com").senderEmail("@mail.com").build();
+        var emailMessage = EmailMessage.builder().content("content").subject("subject").emailReceivers(of("test@email.com")).senderEmail("@mail.com").build();
 
         //when
-        Result result = emailValidator.checkBeforeSend(emailMessage);
+        var result = emailValidator.checkBeforeSend(emailMessage);
 
         //then
         assertThat(result.getValidationResult().size()).isEqualTo(1);
@@ -76,12 +75,12 @@ public class EmailValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecReceiverEmailIsNotValid() {
+    public void shouldReturnValidationErrorWhenReceiverEmailIsNotValid() {
         //given
-        EmailMessage emailMessage = EmailMessage.builder().content("content").subject("subject").receiverEmailsAddress("receiveremail.com").senderEmail("seder@test.com").build();
+        var emailMessage = EmailMessage.builder().content("content").subject("subject").emailReceivers(of("receiveremail.com")).senderEmail("seder@test.com").build();
 
         //when
-        Result result = emailValidator.checkBeforeSend(emailMessage);
+        var result = emailValidator.checkBeforeSend(emailMessage);
 
         //then
         assertThat(result.getValidationResult().size()).isEqualTo(1);
@@ -90,12 +89,12 @@ public class EmailValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecReceiverEmailIsNotValid_2() {
+    public void shouldReturnValidationErrorWhenReceiverEmailIsNotValid_2() {
         //given
-        EmailMessage emailMessage = EmailMessage.builder().content("content").subject("subject").receiverEmailsAddresses(List.of("test@.com", "@email.com", "test@email.com")).senderEmail("seder@test.com").build();
+        var emailMessage = EmailMessage.builder().content("content").subject("subject").emailReceivers(of("test@.com", "@email.com", "test@email.com")).senderEmail("seder@test.com").build();
 
         //when
-        Result result = emailValidator.checkBeforeSend(emailMessage);
+        var result = emailValidator.checkBeforeSend(emailMessage);
 
         //then
         assertThat(result.getValidationResult().size()).isEqualTo(1);
@@ -105,16 +104,56 @@ public class EmailValidatorTest {
     }
 
     @Test
-    public void shouldReturnErrorBecReceiverAndSenderAreNotValid() {
+    public void shouldReturnValidationErrorWhenReceiverAndSenderAreNotValid() {
         //given
-        EmailMessage emailMessage = EmailMessage.builder().content("content").subject("subject").receiverEmailsAddress("receiveremail.com").senderEmail("sedertest.com").build();
+        var emailMessage = EmailMessage.builder()
+                .content("content")
+                .subject("subject")
+                .emailReceivers(of("receiveremail.com"))
+                .senderEmail("sedertest.com")
+                .build();
 
         //when
-        Result result = emailValidator.checkBeforeSend(emailMessage);
+        var result = emailValidator.checkBeforeSend(emailMessage);
 
         //then
         assertThat(result.getValidationResult().size()).isEqualTo(2);
         assertThat(result.isError()).isTrue();
     }
 
+    @Test
+    public void shouldThrowExceptionWhenContentIsNull()  {
+        // given
+        EmailMessage.EmailMessageBuilder emailMessageBuilder = EmailMessage.builder().
+                subject("subject").
+                emailReceivers(of("test@test.gmail")).
+                senderEmail("test@test.gmail");
+
+        //then
+        assertThrows(NullPointerException.class, emailMessageBuilder::build);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenSenderIsNull() {
+        // given
+        EmailMessage.EmailMessageBuilder emailMessageBuilder = EmailMessage.builder().
+                subject("subject").
+                content("content").
+                emailReceivers(of("test@test.gmail"));
+
+        //then
+        assertThrows(NullPointerException.class, emailMessageBuilder::build);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenEmailReceiverIsEmpty() {
+        // given
+        EmailMessage.EmailMessageBuilder emailMessageBuilder = EmailMessage.builder().
+                subject("subject").
+                content("content").
+                emailReceivers(of(""));
+
+        //then
+        assertThrows(NullPointerException.class, emailMessageBuilder::build);
+    }
 }

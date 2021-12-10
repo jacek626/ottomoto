@@ -14,8 +14,8 @@ public class HomeController {
 
     private final SearchStrategy<Announcement, AnnouncementDto> announcementSearchStrategy;
 
-    public HomeController(SearchStrategy<Announcement, AnnouncementDto> announcementSearchStrategy) {
-        this.announcementSearchStrategy = announcementSearchStrategy;
+    public HomeController(SearchStrategy<Announcement, AnnouncementDto> announcementSearch) {
+        this.announcementSearchStrategy = announcementSearch;
     }
 
     @RequestMapping("/")

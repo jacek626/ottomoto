@@ -26,8 +26,8 @@ public class ObservedAnnouncementsController {
     private final ObservedAnnouncementRepository observedAnnouncementRepository;
     private final AnnouncementRepository announcementRepository;
 
-    public ObservedAnnouncementsController(SearchStrategy<Announcement, AnnouncementDto> observedAnnouncementSearchStrategyDecorator, UserRepository userRepository, ObservedAnnouncementRepository observedAnnouncementRepository, AnnouncementRepository announcementRepository) {
-        this.observedAnnouncementSearchStrategyDecorator = observedAnnouncementSearchStrategyDecorator;
+    public ObservedAnnouncementsController(SearchStrategy<Announcement, AnnouncementDto> observedAnnouncementSearch, UserRepository userRepository, ObservedAnnouncementRepository observedAnnouncementRepository, AnnouncementRepository announcementRepository) {
+        this.observedAnnouncementSearchStrategyDecorator = observedAnnouncementSearch;
         this.userRepository = userRepository;
         this.observedAnnouncementRepository = observedAnnouncementRepository;
         this.announcementRepository = announcementRepository;
@@ -56,10 +56,9 @@ public class ObservedAnnouncementsController {
             observedAnnouncementRepository.deleteByUserIdAndAnnouncementId(userRepository.findIdByLogin(userLogin), announcementId);
             return false;
         } else {
-            User user = userRepository.findByLogin(userLogin);
-            Optional<Announcement> announcement = announcementRepository.findById(announcementId);
-            observedAnnouncementRepository.save(new ObservedAnnouncement(announcement.get(), user));
-
+            announcementRepository.findById(announcementId)
+                    .ifPresent(announcement -> observedAnnouncementRepository
+                            .save(new ObservedAnnouncement(announcement, userRepository.findByLogin(userLogin))));
             return true;
         }
     }

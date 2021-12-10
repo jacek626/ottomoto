@@ -1,6 +1,6 @@
 package com.app.controller;
 
-import com.app.common.enums.VehicleType;
+import com.app.announcement.types.VehicleType;
 import com.app.vehiclemodel.entity.VehicleModel;
 import com.app.vehiclemodel.repository.VehicleModelRepository;
 import org.springframework.stereotype.Controller;

@@ -1,6 +1,6 @@
 package com.app.vehiclemodel.entity;
 
-import com.app.common.enums.VehicleType;
+import com.app.announcement.types.VehicleType;
 import com.app.common.utils.search.ObjectWithId;
 import com.app.manufacturer.entity.Manufacturer;
 import lombok.*;

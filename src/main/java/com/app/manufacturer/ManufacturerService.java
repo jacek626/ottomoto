@@ -17,8 +17,8 @@ public class ManufacturerService {
     private final ManufacturerRepository manufacturerRepository;
     private final ManufacturerValidator manufacturerValidator;
 
-	public Result saveManufacturer(Manufacturer manufacturer) {
-        Result result = manufacturerValidator.checkBeforeSave(manufacturer);
+	public Result<Manufacturer> saveManufacturer(Manufacturer manufacturer) {
+        var result = manufacturerValidator.validateForSave(manufacturer);
 
         for (VehicleModel vehicleModel : manufacturer.getVehicleModelAsOptional().orElse(Collections.emptyList())) {
             vehicleModel.setManufacturer(manufacturer);
@@ -30,26 +30,21 @@ public class ManufacturerService {
     }
 
     public Manufacturer addVehicle(Manufacturer manufacturer) {
-        VehicleModel vehicleModel = new VehicleModel();
+        var vehicleModel = new VehicleModel();
         vehicleModel.setManufacturer(manufacturer);
 
-        manufacturer.getVehicleModelAsOptional().ifPresentOrElse(e -> {
-            e.add(vehicleModel);
-        }, () -> {
-            manufacturer.setVehicleModel(Lists.newArrayList());
-            manufacturer.getVehicleModel().add(vehicleModel);
+        manufacturer.getVehicleModelAsOptional().
+                ifPresentOrElse(e -> e.add(vehicleModel), () -> {
+                    manufacturer.setVehicleModel(Lists.newArrayList());
+                    manufacturer.getVehicleModel().add(vehicleModel);
         });
 
         return manufacturer;
     }
 
-    public Result deleteManufacturer(Manufacturer manufacturer) {
-        Result result = manufacturerValidator.checkBeforeDelete(manufacturer);
-
-        if (result.isSuccess())
-            manufacturerRepository.delete(manufacturer);
-
-        return result;
+    public Result<Manufacturer> deleteManufacturer(Manufacturer manufacturer) {
+        return manufacturerValidator.validateForDelete(manufacturer)
+                .ifSuccess(() -> manufacturerRepository.delete(manufacturer));
     }
 	
 
