@@ -1,8 +1,8 @@
 package com.app.common.validator;
 
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.common.types.ValidatorCode;
 import com.app.announcement.types.VehicleType;
+import com.app.common.types.ValidatorCode;
 import com.app.common.utils.validation.Result;
 import com.app.manufacturer.entity.Manufacturer;
 import com.app.manufacturer.repository.ManufacturerRepository;
@@ -11,7 +11,6 @@ import com.app.vehiclemodel.entity.VehicleModel;
 import com.app.vehiclemodel.validator.VehicleModelValidator;
 import com.querydsl.core.types.Predicate;
 import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,22 +18,16 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class ManufacturerValidatorTest {
-
-    private static Validator validator;
-
     @Mock
     private ManufacturerRepository manufacturerRepository;
 
@@ -47,18 +40,11 @@ public class ManufacturerValidatorTest {
     @InjectMocks
     private ManufacturerValidator manufacturerValidator;
 
-    @BeforeAll
-    public static void setUp() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
-
-
     @Test
     public void shouldReturnValidationErrorDuringCreateNewManufacturerBecElementWithSameNameExists() {
         //given
-        Manufacturer manufacturer = new Manufacturer("Manufacturer");
-        when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer("Manufacturer")));
+        var manufacturer = new Manufacturer("Manufacturer");
+        given(manufacturerRepository.findByName(anyString())).willReturn(List.of(new Manufacturer("Manufacturer")));
 
         //when
         var result = manufacturerValidator.validateForSave(manufacturer);
@@ -72,9 +58,9 @@ public class ManufacturerValidatorTest {
     @Test
     public void shouldReturnValidationErrorDuringEditManufacturerBecElementWithSameNameExists() {
         //given
-        Manufacturer manufacturer = new Manufacturer("Manufacturer");
+        var manufacturer = new Manufacturer("Manufacturer");
         manufacturer.setId(-2L);
-        when(manufacturerRepository.findByName(anyString())).thenReturn(List.of(new Manufacturer(-1L, "Manufacturer")));
+        given(manufacturerRepository.findByName(anyString())).willReturn(List.of(new Manufacturer(-1L, "Manufacturer")));
 
         //when
         var result = manufacturerValidator.validateForSave(manufacturer);
@@ -87,12 +73,12 @@ public class ManufacturerValidatorTest {
     @Test
     public void shouldReturnValidationErrorBecManufacturerHaveVehicleModels() {
         //given
-        Manufacturer manufacturer = new Manufacturer("Manufacturer");
+        var manufacturer = new Manufacturer("Manufacturer");
         manufacturer.setVehicleModel(Lists.list(
                 VehicleModel.builder().id(-1L).name("Vehicle1").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build(),
                 VehicleModel.builder().id(-1L).name("Vehicle2").manufacturer(manufacturer).vehicleType(VehicleType.CAR).build()));
-        when(announcementRepository.countByPredicates(any(Predicate.class))).thenReturn(1L);
-        when(vehicleModelValidator.validateForDelete(any(VehicleModel.class))).thenReturn(Result.error());
+        given(announcementRepository.countByPredicates(any(Predicate.class))).willReturn(1L);
+        given(vehicleModelValidator.validateForDelete(any(VehicleModel.class))).willReturn(Result.error());
 
         //when
         var saveResult = manufacturerValidator.validateForDelete(manufacturer);

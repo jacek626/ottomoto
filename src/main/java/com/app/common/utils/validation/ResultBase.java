@@ -9,10 +9,6 @@ public abstract class ResultBase {
     @Setter
     protected OperationResult status;
 
-    public boolean isSuccess() {
-        return (status == OperationResult.SUCCESS);
-    }
-
     protected Map<String, ValidationDetails> validationResult = new HashMap<>();
 
     public Map<String, ValidationDetails> getValidationResult() {
@@ -29,6 +25,10 @@ public abstract class ResultBase {
 
     public void setValidationResult(Map<String, ValidationDetails> validationResult) {
         this.validationResult = validationResult;
+    }
+
+    public boolean isSuccess() {
+        return (status == OperationResult.SUCCESS);
     }
 
     public void changeStatusToError() {

@@ -3,16 +3,15 @@ package com.app.searchform;
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.entity.QAnnouncement;
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.common.types.BooleanValuesForDropDown;
 import com.app.announcement.types.VehicleSubtype;
 import com.app.announcement.types.VehicleType;
+import com.app.common.types.BooleanValuesForDropDown;
 import com.app.common.utils.mapper.AnnouncementMapper;
 import com.app.common.utils.search.PaginationDetails;
 import com.app.manufacturer.entity.Manufacturer;
 import com.app.manufacturer.repository.ManufacturerRepository;
 import com.app.user.entity.User;
 import com.app.vehiclemodel.entity.VehicleModel;
-import com.app.vehiclemodel.repository.VehicleModelRepository;
 import com.google.common.collect.Lists;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
@@ -31,7 +30,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -40,27 +39,27 @@ public class AnnouncementSearchTest {
     private final static PaginationDetails paginationDetails = PaginationDetails.builder().page(1).size(10).orderBy("id").sort("ASC").build();
 
     @Mock
+    @SuppressWarnings("unused")
     private AnnouncementMapper announcementMapper;
 
     @Mock
-    private AnnouncementRepository announcementRepository;
-
-    @Mock
-    private VehicleModelRepository vehicleModelRepository;
-
-    @Mock
+    @SuppressWarnings("unused")
     private ManufacturerRepository manufacturerRepository;
+
+    @Mock
+    @SuppressWarnings("unused")
+    private AnnouncementRepository announcementRepository;
 
     @InjectMocks
     private AnnouncementSearch announcementSearch;
-
 
     @Test
     public void checkThatSearchStrategyReturnAllRequiredElements() {
         //given
         var announcement = Announcement.builder().build();
 
-        when(announcementSearch.loadData(any(PageRequest.class), any(Predicate.class))).thenReturn(new PageImpl<>(Lists.newArrayList(announcement), paginationDetails.convertToPageRequest(), 10));
+        given(announcementRepository.findByPredicatesAndLoadMainPicture(any(PageRequest.class), any(Predicate.class)))
+                .willReturn(new PageImpl<>(Lists.newArrayList(announcement), paginationDetails.convertToPageRequest(), 10));
 
         //when
         Map<String, Object> announcements = announcementSearch.prepareSearchForm(announcement, paginationDetails);

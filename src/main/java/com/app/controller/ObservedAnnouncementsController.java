@@ -7,13 +7,10 @@ import com.app.announcement.entity.ObservedAnnouncement;
 import com.app.announcement.repository.AnnouncementRepository;
 import com.app.common.utils.search.PaginationDetails;
 import com.app.searchform.SearchStrategy;
-import com.app.user.entity.User;
 import com.app.user.repository.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 

@@ -4,7 +4,6 @@ import com.app.announcement.types.VehicleSubtype;
 import com.app.announcement.types.VehicleType;
 import com.app.common.utils.mapper.ManufacturerMapper;
 import com.app.common.utils.search.PaginationDetails;
-import com.app.common.utils.validation.Result;
 import com.app.manufacturer.ManufacturerService;
 import com.app.manufacturer.dto.ManufacturerDto;
 import com.app.manufacturer.entity.Manufacturer;

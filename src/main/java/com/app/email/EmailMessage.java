@@ -2,7 +2,6 @@ package com.app.email;
 
 import lombok.Builder;
 import lombok.NonNull;
-import lombok.Singular;
 import lombok.Value;
 
 import javax.validation.constraints.NotBlank;
@@ -19,7 +18,6 @@ public class EmailMessage {
     @NonNull
     private String senderEmail;
 
-    //@Singular
     @NonNull
     private List<@NotBlank String> emailReceivers;
 }

@@ -16,7 +16,7 @@ public class SystemSettingsController {
     }
 
     @RequestMapping(value = "settings")
-    public String Settings(Model model) {
+    public String settings(Model model) {
         model.addAttribute(systemEmail);
 
         return "system/settings";

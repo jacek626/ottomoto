@@ -3,8 +3,6 @@ package com.app.repository;
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.entity.QAnnouncement;
 import com.app.announcement.repository.AnnouncementRepository;
-import com.app.manufacturer.repository.ManufacturerRepository;
-import com.app.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +23,8 @@ public class AnnouncementRepositoryTest {
     @Autowired
     private AnnouncementRepository announcementRepository;
 
-    @Autowired
-    private ManufacturerRepository manufacturerRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private static final boolean initialized = false;
-
 	@Test
 	public void findFirst10ByDeactivationDateIsNullOrderByCreationDateDescTest() {
-
         List<Announcement> announcementList = announcementRepository.findFirst10ByActiveIsTrueOrderByCreationDateDesc();
 
         assertThat(announcementList).isNotEmpty();
@@ -45,7 +34,6 @@ public class AnnouncementRepositoryTest {
 	
 	@Test
 	public void findFirst5ByUserIdAndDeactivationDateIsNullOrderByCreationDateDescTest() {
-
         List<Announcement> announcementList = announcementRepository.findFirst5ByUserIdAndActiveIsTrueOrderByCreationDateDesc(-1L);
 
         assertThat(announcementList).isNotEmpty();
@@ -73,5 +61,4 @@ public class AnnouncementRepositoryTest {
 
         assertThat(announcementList).isNotEmpty();
     }
-
 }

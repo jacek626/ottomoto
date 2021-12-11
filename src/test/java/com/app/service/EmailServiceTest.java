@@ -1,9 +1,8 @@
 package com.app.service;
 
 import com.app.email.EmailMessage;
-import com.app.email.SystemEmail;
-import com.app.common.utils.validation.Result;
 import com.app.email.EmailService;
+import com.app.email.SystemEmail;
 import com.app.email.validator.EmailValidator;
 import com.app.user.entity.User;
 import com.app.verification.VerificationTokenService;
@@ -19,17 +18,16 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Arrays;
 import java.util.Locale;
 
-import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class EmailServiceTest {
 
     @Mock
+    @SuppressWarnings("unused")
     private VerificationTokenService verificationTokenService;
 
     @Mock
@@ -39,6 +37,7 @@ public class EmailServiceTest {
     private SystemEmail systemEmail;
 
     @Spy
+    @SuppressWarnings("unused")
     private EmailValidator emailValidator;
 
     @InjectMocks
@@ -47,12 +46,12 @@ public class EmailServiceTest {
     @Test
     public void createEmailWithAccountActivationLink() {
         //given
-        User user = User.builder().email("test@test.com").build();
-        when(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class))).thenReturn("test");
-        when(systemEmail.getAddress()).thenReturn("test@test.pl");
+        var user = User.builder().email("test@test.com").build();
+        given(messageSource.getMessage(any(String.class), any(Object[].class), any(Locale.class))).willReturn("test");
+        given(systemEmail.getAddress()).willReturn("test@test.pl");
 
         //when
-        EmailMessage activationMessage = emailService.createActivationEmail(user, "appAddress", "token123456");
+        var activationMessage = emailService.createActivationEmail(user, "appAddress", "token123456");
 
         //then
         assertThat(activationMessage.getContent()).isNotBlank();
@@ -62,7 +61,7 @@ public class EmailServiceTest {
 	@Test
 	public void shouldReturnSendErrorWhenSenderEmailIsWrong()  {
 		// given
-		EmailMessage emailToSend = EmailMessage.builder().
+		var emailToSend = EmailMessage.builder().
 				subject("subject").
 				content("content").
 				senderEmail("test.gmail").

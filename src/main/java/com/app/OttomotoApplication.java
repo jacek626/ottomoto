@@ -39,8 +39,6 @@ public class OttomotoApplication {
 @Configuration
 @AutoConfigureAfter(DispatcherServletAutoConfiguration.class)
 class StaticResourceConfiguration implements WebMvcConfigurer {
-	private String s3Location;
-
 	@Value("${amazon.aws.endpointUrl}")
     private String endpointUrl;
     @Value("${amazon.aws.bucketName}")

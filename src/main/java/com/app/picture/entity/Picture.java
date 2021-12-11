@@ -1,10 +1,7 @@
 package com.app.picture.entity;
 
 import com.app.announcement.entity.Announcement;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Picture {
 	@Id
 	@GeneratedValue(strategy= GenerationType.SEQUENCE, generator="seq_Picture")
@@ -36,9 +34,4 @@ public class Picture {
     @Transient
     @Builder.Default
     private boolean pictureToDelete = false;
-
-    @SuppressWarnings("unused")
-    public Picture() {
-    }
-
 }

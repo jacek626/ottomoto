@@ -1,15 +1,13 @@
 package com.app.common.validator;
 
 import com.app.announcement.entity.Announcement;
-import com.app.announcement.repository.AnnouncementRepository;
 import com.app.announcement.validator.AnnouncementValidator;
 import com.app.common.types.ValidatorCode;
 import com.app.common.utils.TestUtils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -28,16 +26,17 @@ public class AnnouncementValidatorTest {
 
     private static Validator validator;
 
-    @Mock
-    private AnnouncementRepository announcementRepository;
-
-    @InjectMocks
     private AnnouncementValidator announcementValidator;
 
     @BeforeAll
     public static void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+    }
+
+    @BeforeEach
+    public void beforeEach() {
+        announcementValidator = new AnnouncementValidator();
     }
 
     @Test

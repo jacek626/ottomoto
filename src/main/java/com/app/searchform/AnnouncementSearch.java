@@ -41,7 +41,7 @@ public class AnnouncementSearch implements SearchStrategy<Announcement, Announce
 
         List<ManufacturerProjection> manufacturerList = manufacturerRepository.findByVehicleType(announcement.getVehicleType());
         model.put("manufacturerList", manufacturerList);
-        model.putAll(prepareVehicleModelsIfManufacturerIsSet(announcement, manufacturerList));
+        model.putAll(prepareVehicleModelsIfManufacturerIsSet(announcement));
         model.put("vehicleSubtypeList", VehicleSubtype.getVehicleSubtypesByVehicleType(announcement.getVehicleType()));
 
         return model;
@@ -52,7 +52,7 @@ public class AnnouncementSearch implements SearchStrategy<Announcement, Announce
         return announcementMapper.convertToDto(entity);
     }
 
-    private Map<String, Object> prepareVehicleModelsIfManufacturerIsSet(Announcement announcement, List<ManufacturerProjection> manufacturerList) {
+    private Map<String, Object> prepareVehicleModelsIfManufacturerIsSet(Announcement announcement) {
         Map<String, Object> model = new HashMap<>();
 
         if (announcement.getManufacturerId() != null) {
