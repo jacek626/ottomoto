@@ -5,11 +5,13 @@ function validateEmail(email) {
 
 function sentMessageToSeller(customerEmail, messageText, button) {
 
-    if (!validateEmail(customerEmail.value))
+    if (!validateEmail(customerEmail.value)) {
         customerEmail.classList.add('is-invalid');
-    else if (messageText.value.length < 5)
+    }
+    else if (messageText.value.length < 5) {
         messageText.classList.add('is-invalid');
-    else
+    }
+    else {
         fetch(`/ottomoto/announcement/sentMessageToSeller`, {
             method: 'POST',
             headers: {
@@ -23,7 +25,7 @@ function sentMessageToSeller(customerEmail, messageText, button) {
             })
         })
             .then(response => response.json())
-            .then(result => {
+            .then(() => {
                 customerEmail.disabled = true;
                 messageText.disabled = true;
                 button.disabled = true;
@@ -31,8 +33,9 @@ function sentMessageToSeller(customerEmail, messageText, button) {
             })
             .catch(error => {
                 showInfo('Wystąpił blad');
-                console.error(error);
+                throw new Error(error);
             });
+    }
 }
 
 function reportAnnouncement(announcementId, reportText, modalWindow) {
@@ -51,14 +54,14 @@ function reportAnnouncement(announcementId, reportText, modalWindow) {
             })
         })
             .then(response => response.json())
-            .then(result => {
+            .then(() => {
                 reportText.value = '';
                 $(modalWindow).modal('hide');
                 showInfo('Wiadomosc wysłana, dziękujemy za kontakt');
             })
             .catch(error => {
                 showInfo('Wystąpił blad');
-                console.error(error);
+                throw new Error(error);
             });
 }
 
