@@ -14,9 +14,7 @@ import com.app.common.utils.validation.Result;
 import com.app.email.EmailService;
 import com.app.searchform.SearchStrategy;
 import com.app.user.repository.UserRepository;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.ObjectNotFoundException;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -202,7 +200,7 @@ public class AnnouncementController {
 
 	@RequestMapping(value = "sentMessageToSeller", method = RequestMethod.POST, consumes = "application/json;")
 	public @ResponseBody
-	Boolean sentMessageToSeller(@RequestBody String jsonStr, HttpServletRequest request) throws JSONException {
+	Boolean sentMessageToSeller(@RequestBody String jsonStr, HttpServletRequest request) throws Exception {
 		JSONObject json = new JSONObject(jsonStr);
 		var messageToSellerData = MessageToSellerData.builder()
 				.requestUrl(request.getRequestURL().toString().replace("sentMessageToSeller", ""))
@@ -219,7 +217,7 @@ public class AnnouncementController {
 
 	@RequestMapping(value = "reportAnnouncement", method = RequestMethod.POST)
 	public @ResponseBody
-	Boolean reportAnnouncement(@RequestBody String jsonStr) throws JSONException {
+	Boolean reportAnnouncement(@RequestBody String jsonStr) throws Exception {
 		JSONObject json = new JSONObject(jsonStr);
 
 		String reportText = json.getString("reportText");
