@@ -54,8 +54,9 @@ function loadVehicleSubtypes(vehicleType, typeOfHtmlElement) {
 }
 
 function validateRange(from, to, currentElementValue) {
-    if (from === undefined || to === undefined)
+    if (from === undefined || to === undefined) {
         return;
+    }
 
     let fromAsNumber = parseInt(from.val().replace(/\D/g, ""));
     let toAsNumber = parseInt(to.val().replace(/\D/g, ""));

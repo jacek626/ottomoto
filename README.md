@@ -38,5 +38,4 @@ Wykorzystane technologie:
 <li>Heroku</li>
 <li>Amazon S3</li>
 </ul>
-<br/>
 

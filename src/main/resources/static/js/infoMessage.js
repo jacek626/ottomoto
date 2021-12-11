@@ -1,7 +1,3 @@
-function showError(error) {
-    showInfo("Przepraszamy, wystąpił błąd " + error);
-}
-
 function showInfo(message) {
     $("#infoText div").text(message);
     $("#infoText").show();
@@ -11,3 +7,6 @@ function showInfo(message) {
     }, 5000);
 }
 
+function showError(error) {
+    showInfo("Przepraszamy, wystąpił błąd " + error);
+}
