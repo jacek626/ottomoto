@@ -22,6 +22,7 @@ import java.util.List;
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class User implements EntityForSearchStrategy {
     @Id
@@ -93,9 +94,6 @@ public class User implements EntityForSearchStrategy {
     @Transient
     @Setter(AccessLevel.NONE)
     private StringBuilder urlParams;
-
-    public User() {
-    }
 
     @Override
     public Predicate preparePredicates() {

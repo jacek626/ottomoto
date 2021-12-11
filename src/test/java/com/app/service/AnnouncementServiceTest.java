@@ -5,7 +5,6 @@ import com.app.announcement.repository.AnnouncementRepository;
 import com.app.announcement.service.AnnouncementService;
 import com.app.announcement.validator.AnnouncementValidator;
 import com.app.common.utils.TestUtils;
-import com.app.common.utils.validation.Result;
 import com.app.picture.entity.Picture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

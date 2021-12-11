@@ -39,5 +39,4 @@ Wykorzystane technologie:
 <li>Amazon S3</li>
 </ul>
 <br/>
-Projekt jest jeszcze w fazie rozwoju
 

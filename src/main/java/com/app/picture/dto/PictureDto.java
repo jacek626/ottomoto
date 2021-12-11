@@ -1,9 +1,6 @@
 package com.app.picture.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
@@ -11,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class PictureDto {
     private Long id;
 
@@ -25,9 +23,5 @@ public class PictureDto {
 
     @Builder.Default
     private boolean pictureToDelete = false;
-
-    @SuppressWarnings("unused")
-    public PictureDto() {
-    }
 
 }
