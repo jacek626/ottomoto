@@ -2,7 +2,6 @@ function loadUserPhoneNumber(userId, elementIdToReturnResult) {
     fetch(`/ottomoto/user/loadUserPhoneNumber?userId=${userId}`, {
         method: 'GET',
     })
-        .then(response => response.json())
         .then(result => {
             document.querySelector(`#${elementIdToReturnResult}`).innerHTML = result;
         });

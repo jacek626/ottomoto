@@ -9,7 +9,7 @@ function loadVehicleModel(manufacturer, vehicleType, typeOfHtmlElement) {
             typeOfHtmlElement
         },
         success(result) {
-            $('#vehicleModel').empty().append(result).selectpicker('refresh');
+            $("#vehicleModel").empty().append(result).selectpicker("refresh");
         },
         error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
@@ -27,7 +27,7 @@ function loadManufacturer(vehicleType, typeOfHtmlElement) {
             typeOfHtmlElement
         },
         success(result) {
-            $('#manufacturer').empty().append(result).selectpicker('refresh');
+            $("#manufacturer").empty().append(result).selectpicker("refresh");
         },
         error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
@@ -45,7 +45,7 @@ function loadVehicleSubtypes(vehicleType, typeOfHtmlElement) {
             typeOfHtmlElement
         },
         success(result) {
-            $('#vehicleSubtype').empty().append(result).selectpicker('refresh');
+            $("#vehicleSubtype").empty().append(result).selectpicker("refresh");
         },
         error(jqXHR, textStatus, errorThrown) {
             showError(errorThrown);
@@ -54,30 +54,30 @@ function loadVehicleSubtypes(vehicleType, typeOfHtmlElement) {
 }
 
 function validateRange(from, to, currentElementValue) {
-    if (from === undefined || to === undefined) {
+    if (typeof from === undefined || typeof to === undefined) {
         return;
     }
 
-    let fromAsNumber = parseInt(from.val().replace(/\D/g, ""));
-    let toAsNumber = parseInt(to.val().replace(/\D/g, ""));
+    let fromAsNumber = parseInt(from.val().replace(/\D/g, ""), 10);
+    let toAsNumber = parseInt(to.val().replace(/\D/g, ""), 10);
 
     if (fromAsNumber > toAsNumber) {
-        if (currentElementValue === undefined) {
+        if (typeof currentElementValue === undefined) {
             from.val("");
-            from.selectpicker('refresh');
+            from.selectpicker("refresh");
         } else {
             if (currentElementValue === from.val()) {
                 to.val("");
-                to.selectpicker('refresh');
+                to.selectpicker("refresh");
             } else {
                 from.val("");
-                from.selectpicker('refresh');
+                from.selectpicker("refresh");
             }
         }
     }
 }
 
-$('#pageSizeSelect').on('changed.bs.select', function (event, clickedIndex, isSelected, previousValue) {
+$('#pageSizeSelect').on("changed.bs.select", function (event, clickedIndex, isSelected, previousValue) {
     let current = $(this).val();
     let href = window.location.href;
 
@@ -102,7 +102,7 @@ $('#pageSizeSelect').on('changed.bs.select', function (event, clickedIndex, isSe
 
 
 function clearVehicleModel() {
-    $("#vehicleModel").empty().selectpicker('refresh');
+    $("#vehicleModel").empty().selectpicker("refresh");
 }
 
 
