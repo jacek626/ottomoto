@@ -24,14 +24,15 @@ function sentMessageToSeller(customerEmail, messageText, button) {
                 announcementId: button.getAttribute('announcementId')
             })
         })
+            .then(response => response.json())
             .then(() => {
                 customerEmail.disabled = true;
                 messageText.disabled = true;
                 button.disabled = true;
-                showInfo("Message sended");
+                showInfo("Wiadomosc wysłana, dziękujemy za kontakt");
             })
             .catch(error => {
-                showInfo('Error');
+                showInfo('Wystąpił blad');
                 throw new Error(error);
             });
     }
@@ -52,13 +53,14 @@ function reportAnnouncement(announcementId, reportText, modalWindow) {
                 announcementId: announcementId
             })
         })
+            .then(response => response.json())
             .then(() => {
-                reportText.value = "";
+                reportText.value = '';
                 $(modalWindow).modal('hide');
-                showInfo("Message sended");
+                showInfo('Wiadomosc wysłana, dziękujemy za kontakt');
             })
             .catch(error => {
-                showInfo("Error");
+                showInfo('Wystąpił blad');
                 throw new Error(error);
             });
 }

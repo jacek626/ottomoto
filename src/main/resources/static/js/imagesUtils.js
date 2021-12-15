@@ -2,10 +2,10 @@ function markPictureInAnnouncementAsMain(element) {
     let mainPhotoInAnnouncement = $(element).parent().find("input.mainPhotoInAnnouncement");
     let currentValue = mainPhotoInAnnouncement.val();
 
-    $("input.mainPhotoInAnnouncement").val("false");
+    $("input.mainPhotoInAnnouncement").val('false');
     $(".markPictureAsMain ").css("text-decoration", "none");
 
-    if (currentValue === 'true') {
+    if (currentValue == 'true') {
         currentValue = true;
         $(element).css("text-decoration", "none");
 
@@ -100,20 +100,17 @@ function findNextImage(direction) {
     let elementToReturn = $("#imagesScroll li[index='" + currentImageIndex + "']").find("img")[0];
 
     if (elementToReturn) {
-        return findGalleryArrow();
+        $('.photoGalleryMiniArrow').parent().find('img').attr('currentImageIndex', currentImageIndex);
+        return elementToReturn;
     }
 
-    currentImageIndex = (direction === "next") ? $("#imagesScroll li").first().attr("index") : $("#imagesScroll li").last().attr("index");
+    currentImageIndex = direction === "next" ? $("#imagesScroll li").first().attr("index") : $("#imagesScroll li").last().attr("index");
     elementToReturn = $("#imagesScroll li[index='" + currentImageIndex + "']").find("img")[0];
 
     if (elementToReturn) {
-        return findGalleryArrow();
+        $(".photoGalleryMiniArrow").parent().find("img").attr("currentImageIndex", currentImageIndex);
+        return elementToReturn;
     }
 
     return null;
-}
-
-function findGalleryArrow() {
-    $(".photoGalleryMiniArrow").parent().find("img").attr("currentImageIndex", currentImageIndex);
-    return elementToReturn;
 }

@@ -8,5 +8,5 @@ function showInfo(message) {
 }
 
 function showError(error) {
-    showInfo("Sorry, there was an error " + error);
+    showInfo("Przepraszamy, wystąpił błąd " + error);
 }
