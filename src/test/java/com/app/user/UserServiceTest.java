@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.user;
 
 import com.app.announcement.repository.AnnouncementRepository;
 import com.app.common.utils.validation.Result;

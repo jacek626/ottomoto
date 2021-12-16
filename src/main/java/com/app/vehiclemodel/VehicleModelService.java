@@ -15,8 +15,8 @@ public class VehicleModelService {
     private final VehicleModelValidator vehicleModelValidator;
 
     public Result<VehicleModel> save(VehicleModel vehicleModel) {
-        return vehicleModelValidator.validateForSave(vehicleModel).
-                ifSuccess(() -> vehicleModelRepository.save(vehicleModel));
+        return vehicleModelValidator.validateForSave(vehicleModel)
+                .ifSuccess(() -> vehicleModelRepository.save(vehicleModel));
     }
 
     public Result<VehicleModel> delete(VehicleModel vehicleModel) {

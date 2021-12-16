@@ -1,6 +1,5 @@
-package com.app.common.validator;
+package com.app.email;
 
-import com.app.email.EmailMessage;
 import com.app.email.validator.EmailValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

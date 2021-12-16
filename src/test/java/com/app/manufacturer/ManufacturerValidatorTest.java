@@ -1,4 +1,4 @@
-package com.app.common.validator;
+package com.app.manufacturer;
 
 import com.app.announcement.repository.AnnouncementRepository;
 import com.app.announcement.types.VehicleType;

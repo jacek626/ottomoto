@@ -1,4 +1,4 @@
-package com.app.common.validator;
+package com.app.announcement;
 
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.validator.AnnouncementValidator;

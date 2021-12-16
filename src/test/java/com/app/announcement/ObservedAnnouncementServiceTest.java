@@ -1,11 +1,9 @@
-package com.app.service;
+package com.app.announcement;
 
-import com.app.announcement.ObservedAnnouncementRepository;
-import com.app.announcement.ObservedAnnouncementService;
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.entity.ObservedAnnouncement;
-import com.app.announcement.validator.ObservedAnnouncementValidator;
 import com.app.announcement.types.VehicleSubtype;
+import com.app.announcement.validator.ObservedAnnouncementValidator;
 import com.app.common.utils.validation.Result;
 import com.app.user.entity.User;
 import com.app.vehiclemodel.entity.VehicleModel;

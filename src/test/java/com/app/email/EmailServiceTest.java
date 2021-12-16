@@ -1,8 +1,5 @@
-package com.app.service;
+package com.app.email;
 
-import com.app.email.EmailMessage;
-import com.app.email.EmailService;
-import com.app.email.SystemEmail;
 import com.app.email.validator.EmailValidator;
 import com.app.user.entity.User;
 import com.app.verification.VerificationTokenService;

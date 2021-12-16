@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.user;
 
 import com.app.user.entity.User;
 import com.app.verification.VerificationTokenService;
@@ -30,7 +30,7 @@ public class VerificationTokenServiceTest {
     @Test
     public void shouldCreateNewVerificationToken() {
         //given
-        User user = User.builder().build();
+        var user = User.builder().build();
         when(verificationTokenRepository.findByUser(any(User.class))).thenReturn(Optional.empty());
 
         //when
@@ -45,7 +45,7 @@ public class VerificationTokenServiceTest {
     @Test
     public void shouldUseExistingVerificationToken() {
         //given
-        User user = User.builder().build();
+        var user = User.builder().build();
         when(verificationTokenRepository.findByUser(any(User.class))).thenReturn(Optional.of(VerificationToken.builder().token("tokenValue").user(new User()).build()));
 
         //when

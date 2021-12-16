@@ -1,8 +1,7 @@
-package com.app.common.validator;
+package com.app.user;
 
 import com.app.announcement.repository.AnnouncementRepository;
 import com.app.common.types.ValidatorCode;
-import com.app.common.utils.validation.Result;
 import com.app.security.entity.Role;
 import com.app.user.entity.User;
 import com.app.user.repository.UserRepository;

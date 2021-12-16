@@ -1,4 +1,4 @@
-package com.app.service;
+package com.app.announcement;
 
 import com.app.announcement.entity.Announcement;
 import com.app.announcement.repository.AnnouncementRepository;

@@ -1,8 +1,7 @@
-package com.app.service;
+package com.app.manufacturer;
 
 import com.app.announcement.types.VehicleType;
 import com.app.common.utils.validation.Result;
-import com.app.manufacturer.ManufacturerService;
 import com.app.manufacturer.entity.Manufacturer;
 import com.app.manufacturer.repository.ManufacturerRepository;
 import com.app.manufacturer.validator.ManufacturerValidator;
