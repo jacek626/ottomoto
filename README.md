@@ -1,41 +1,14 @@
-# ottomoto
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0dde325e8fb34d6bb9957711959c9311)](https://www.codacy.com/manual/jacek626/otomoto?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=jacek626/otomoto&amp;utm_campaign=Badge_Grade)
+<b>Portal with automotive announcements</b><br/>
 
-<b>Portal z ogłoszeniami motoryzacyjnymi inspirowany OTOMOTO.pl stworzony w celach edukacyjnych</b>
-
-Dostępne funkcje:<br/>
+Functions available:<br/>
 <ul>
-<li>Tworzenie nowego konta oraz jego aktywacja</li>
-<li>Logowanie dla zarejestrowanych użytkowników z podziałem na strefę użytkowników i administratorów</li>
-<li>Oznaczanie ogłoszenia jako obserwowanego</li>
-<li>Wyszukiwanie ogłoszeń po wielu parametrach</li>
-<li>Tworzenie nowego ogłoszenia oraz jego edycja i dezaktywacja</li>
-<li>Dodawanie zdjęć do ogłoszeń wraz z automatycznym generowaniem miniatur</li>
-<li>Zgłaszanie naruszeń do ogłoszeń</li>
-<li>Formularz kontaktowy do sprzedającego</li>
-<li>Administratorzy mogą dodawać nowe modele pojazdów i producentów</li>
-<li>Administratorzy mogą zarządzać ogłoszeniami i użytkownikami</li>
+<li>Creating a new account and its activation</li>
+<li>Creating announcements</li>
+<li>User login with division into user and administrator zones</li>
+<li>Marking announcement as observed</li>
+<li>Searching for announcements by multiple parameters</li>
+<li>Management of advertisements, users, car models, and car manufacturers</li>
+<li>Adding photos to announcements with automatic thumbnail generation</li>
+<li>Reporting infringements to advertisements</li>
+<li>Contact form to the seller</li>
 </ul>
-
-Login i hasło do konta administratora</br>
-osadmin:osadmin
-
-link do aplikacji
-<a href="http://ottomoto.herokuapp.com/ottomoto/">herokuapp.com/ottomoto/</a>
-<br/><br/>
-Wykorzystane technologie:
-<ul>
-<li>Spring Boot</li>
-<li>Spring Data</li>
-<li>Spring Security</li>
-<li>Thymeleaf</li>
-<li>Bootstrap</li>
-<li>JUnit</li>
-<li>Assertj</li>
- <li>Mockito</li>
-<li>Querydsl</li>
-<li>Postgresql</li>
-<li>Heroku</li>
-<li>Amazon S3</li>
-</ul>
-
